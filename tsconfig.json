@@ -25,7 +25,7 @@
       "lib": ["dom", "dom.iterable", "esnext"],
   },
   "include": [
-      "src"
+      "src", "src/types"
   ],
   "exclude": [
       "node_modules"
