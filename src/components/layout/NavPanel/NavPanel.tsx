@@ -1,26 +1,28 @@
 import { Box, List, MenuItem } from '@mui/material';
+import { TFunction, useTranslation } from 'react-i18next';
 
-const getNavItems = () => [
+const getNavItems = (t: TFunction<'translation', undefined>) => [
   {
-    text: 'Home',
+    text: t('Home'),
     path: '/'
   },
   {
-    text: 'About',
+    text: t('About'),
     path: '/about'
   },
   {
-    text: 'Become a content creator',
+    text: t('Become a content creator'),
     path: '/join'
   },
   {
-    text: 'Creator Login',
+    text: t('Creator Login'),
     path: '/login'
   }
 ];
 
 const NavPanel = () => {
-  const navItems = getNavItems();
+  const { t } = useTranslation();
+  const navItems = getNavItems(t);
   return (
     <Box component="nav">
       <List component="ul" sx={{ display: 'flex', alignItems: 'center' }}>
