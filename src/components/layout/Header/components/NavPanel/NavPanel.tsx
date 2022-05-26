@@ -25,7 +25,10 @@ const NavPanel = () => {
   const navItems = getNavItems(t);
   return (
     <Box component="nav">
-      <List component="ul" sx={{ display: 'flex', alignItems: 'center' }}>
+      <List
+        component="ul"
+        sx={{ display: 'flex', alignItems: 'center' }}
+      >
         {navItems.map((item) => (
           <MenuItem key={item.path}>{item.text}</MenuItem>
         ))}

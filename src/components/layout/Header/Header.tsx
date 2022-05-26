@@ -1,5 +1,5 @@
 import { ReactComponent as CubeLogo } from 'assets/icons/cube.svg';
-import NavPanel from '../NavPanel';
+import NavPanel from './components/NavPanel';
 
 import * as s from './Header.styled';
 
