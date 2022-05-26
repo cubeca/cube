@@ -1,5 +1,8 @@
 import { Box, List, MenuItem } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+
+import * as s from './NavPanel.styled';
 
 const NavPanel = () => {
   const { t } = useTranslation();
@@ -11,10 +14,21 @@ const NavPanel = () => {
       px="5rem"
     >
       <List component="ul" sx={{ display: 'flex', alignItems: 'center' }}>
-        <MenuItem>{t('Home')}</MenuItem>
-        <MenuItem>{t('About')}</MenuItem>
-        <MenuItem>{t('Become a content creator')}</MenuItem>
-        <MenuItem>{t('Creator Login')}</MenuItem>
+        <MenuItem sx={{ margin: '0 2rem' }}>
+          <s.NavLink to="/">{t('Home')}</s.NavLink>
+        </MenuItem>
+        <ArrowForwardIcon />
+        <MenuItem sx={{ margin: '0 2rem' }}>
+          <s.NavLink to="/about">{t('About')}</s.NavLink>
+        </MenuItem>
+        <ArrowForwardIcon />
+        <MenuItem sx={{ margin: '0 2rem' }}>
+          <s.NavLink to="/join">{t('Become a content creator')}</s.NavLink>
+        </MenuItem>
+        <ArrowForwardIcon />
+        <MenuItem sx={{ margin: '0 2rem' }}>
+          <s.NavLink to="/login">{t('Creator Login')}</s.NavLink>
+        </MenuItem>
       </List>
     </Box>
   );

@@ -1,5 +1,6 @@
 import { Box, List, MenuItem } from '@mui/material';
 import { TFunction, useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 const getNavItems = (t: TFunction<'translation', undefined>) => [
   {
@@ -25,12 +26,16 @@ const NavPanel = () => {
   const navItems = getNavItems(t);
   return (
     <Box component="nav">
-      <List
-        component="ul"
-        sx={{ display: 'flex', alignItems: 'center' }}
-      >
+      <List component="ul" sx={{ display: 'flex', alignItems: 'center' }}>
         {navItems.map((item) => (
-          <MenuItem key={item.path}>{item.text}</MenuItem>
+          <MenuItem key={item.path}>
+            <Link
+              to={item.path}
+              style={{ textDecoration: 'none', color: '#ffffff' }}
+            >
+              {item.text}
+            </Link>
+          </MenuItem>
         ))}
       </List>
     </Box>
