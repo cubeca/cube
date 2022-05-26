@@ -1,5 +1,5 @@
 import { Stack, Box } from '@mui/material';
-import { ReactComponent as CubeLogo } from 'assets/icons/cube-bw.svg';
+import { ReactComponent as CubeLogo } from 'assets/icons/cube-inverted-bw.svg';
 import NavPanel from './components/NavPanel';
 import Social from './components/Social';
 
