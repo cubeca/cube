@@ -19,12 +19,25 @@ const getTheme = (mode?: 'dark' | 'light') =>
       },
       typography: {
         fontFamily: FONT_FAMILY,
-        fontSize: DEFAULT_FONT_SIZE
+        fontSize: DEFAULT_FONT_SIZE,
+        body2: {
+          padding: '1.5rem 0'
+        }
       },
       palette: {
         mode: mode || DEFAULT_THEME_MODE,
         primary: {
           main: THEME_COLORS.primary.main
+        }
+      },
+      components: {
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              textTransform: 'none',
+              padding: '1rem 2rem'
+            }
+          }
         }
       }
     })

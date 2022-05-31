@@ -1,26 +1,33 @@
-import { Box, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import { FC, ReactNode } from 'react';
 
 interface AboutPanelProps {
   textContent: ReactNode;
-  imageContent: ReactNode;
+  imageContent?: ReactNode;
   isReversed?: boolean;
+  className?: string;
 }
 
 const AboutPanel: FC<AboutPanelProps> = ({
   textContent,
   imageContent,
+  className,
   isReversed
 }) => (
-  <Stack
+  <Grid
+    container
+    spacing={6}
+    py="5rem"
+    className={className}
     direction={isReversed ? 'row-reverse' : 'row'}
-    spacing={4}
-    justifyContent="center"
-    py="2rem"
   >
-    <Box>{textContent}</Box>
-    <Box>{imageContent}</Box>
-  </Stack>
+    <Grid item xs={6}>
+      {textContent}
+    </Grid>
+    <Grid item xs={6}>
+      {imageContent}
+    </Grid>
+  </Grid>
 );
 
 export default AboutPanel;
