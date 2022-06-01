@@ -5,6 +5,8 @@
     },
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
         "plugin:react/recommended",
         "plugin:react/recommended",
         "plugin:jsx-a11y/recommended",
@@ -25,7 +27,8 @@
         "import"
     ],
     "rules":  {
-      "react/react-in-jsx-scope": "off"
+      "react/react-in-jsx-scope": "off",
+      "@typescript-eslint/no-empty-function": "off"
     },
     "settings": {
       "react": {
