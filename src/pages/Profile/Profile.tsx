@@ -4,7 +4,7 @@ import MoaIcon from 'assets/icons/moa.svg';
 import MediaPlayer from 'components/MediaPlayer';
 import { useTranslation } from 'react-i18next';
 import VideoImage from 'assets/images/video-image.jpg';
-import VideoList from './components/VideoList';
+import VideoList from 'components/VideoList';
 
 const Profile = () => {
   const { t } = useTranslation();

@@ -4,15 +4,17 @@ import { FC } from 'react';
 
 interface VideoListProps {
   videos: VideoCardProps[];
-  heading: string;
+  heading?: string;
 }
 
 const VideoList: FC<VideoListProps> = ({ heading, videos }) => {
   return (
     <Stack>
-      <Typography pb="2rem" pt="1.5rem">
-        {heading}
-      </Typography>
+      {heading && (
+        <Typography pb="2rem" pt="1.5rem">
+          {heading}
+        </Typography>
+      )}
       <Stack direction="row" spacing={2}>
         {videos.map((video) => (
           <VideoCard

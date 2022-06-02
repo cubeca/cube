@@ -19,7 +19,7 @@ const MediaPlayer: FC<MediaPlayerProps> = ({ url, isAudio, width = '50%' }) => {
       }}
       controls
       width={width}
-      height="40px"
+      height={isAudio ? '40px' : undefined}
     />
   );
 };
