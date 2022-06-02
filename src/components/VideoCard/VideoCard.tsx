@@ -1,12 +1,12 @@
 import { Box, Card, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 
-interface VideoCardProps {
+export interface VideoCardProps {
   url: string;
-  creator: string;
+  creator?: string;
   image: string;
   title: string;
-  icon: string;
+  icon?: string;
 }
 
 const VideoCard: FC<VideoCardProps> = ({ creator, title, image, icon }) => {
@@ -17,11 +17,13 @@ const VideoCard: FC<VideoCardProps> = ({ creator, title, image, icon }) => {
           <img src={image} alt="" />
         </Box>
         <Stack direction="row" alignItems="flex-start">
-          <img src={icon} alt="" style={{ padding: '10px' }} />
+          {icon && <img src={icon} alt="" style={{ padding: '10px' }} />}
           <Stack direction="column">
-            <Typography component="span" sx={{ fontWeight: 'bold' }} pt="7px">
-              {creator}
-            </Typography>
+            {creator && (
+              <Typography component="span" sx={{ fontWeight: 'bold' }} pt="7px">
+                {creator}
+              </Typography>
+            )}
             <Typography component="span">{title}</Typography>
           </Stack>
         </Stack>
