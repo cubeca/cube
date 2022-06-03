@@ -1,10 +1,11 @@
-import { Box, Button, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { Trans, useTranslation } from 'react-i18next';
 import AboutPanel from '../AboutPanel';
 import HeroLeft from 'assets/images/cubedao-hero-left.png';
 import HeroRight from 'assets/images/cubedao-hero-right.png';
 import CubeDao from 'assets/images/cubedao.png';
 import MediaPlayer from 'components/MediaPlayer';
+import Button from 'components/Button';
 
 const HeroPanel = () => {
   const { t } = useTranslation('about');
@@ -36,9 +37,7 @@ const HeroPanel = () => {
               isAudio
             />
             <Box py="2rem">
-              <Button variant="contained">
-                {t('Start watching', { ns: 'common' })}
-              </Button>
+              <Button>{t('Start watching', { ns: 'common' })}</Button>
             </Box>
           </Box>
         }

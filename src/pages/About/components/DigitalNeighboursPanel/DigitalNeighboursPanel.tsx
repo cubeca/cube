@@ -42,9 +42,7 @@ const DigitalNeighboursPanel = () => {
       <Typography component="h2" variant="h2">
         {t('Digital Neighbours')}
       </Typography>
-      <Typography component="p">
-        {t('digitalNeighboursText')}
-      </Typography>
+      <Typography component="p">{t('digitalNeighboursText')}</Typography>
       <Stack
         direction="row"
         justifyContent="space-between"
@@ -52,7 +50,7 @@ const DigitalNeighboursPanel = () => {
         px="2rem"
       >
         {cards.map((card, index) => (
-          <s.NeighbourCard key={card.title} filled={index % 2 === 0}>
+          <s.NeighbourCard key={card.title} $filled={index % 2 === 0}>
             <Typography component="h4" variant="h4">
               {card.title}
             </Typography>

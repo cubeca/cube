@@ -21,7 +21,7 @@ const VirtualExperiencesPanel = () => {
             isAudio
           />
           <Box py="2rem">
-            <Button variant="contained">{t('Enquire about event')}</Button>
+            <Button>{t('Enquire about event')}</Button>
           </Box>
         </Box>
       }

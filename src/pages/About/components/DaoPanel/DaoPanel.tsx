@@ -38,9 +38,7 @@ const DaoPanel = () => {
             isAudio
           />
           <Box py="2rem">
-            <Button variant="contained">
-              {t('Start watching', { ns: 'common' })}
-            </Button>
+            <Button>{t('Start watching', { ns: 'common' })}</Button>
           </Box>
         </Box>
       }

@@ -19,7 +19,7 @@ const CollaborationsPanel = () => {
             isAudio
           />
           <Box py="2rem">
-            <Button variant="contained">
+            <Button>
               {t('Become a content creator', { ns: 'common' })}
             </Button>
           </Box>

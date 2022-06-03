@@ -7,5 +7,10 @@
   "Sign Language": "Sign Language",
   "Subtitles": "Subtitles",
   "Close Captioning": "Close Captioning",
-  "Audio Transcripts": "Audio Transcripts"
+  "Audio Transcripts": "Audio Transcripts",
+  "Sign In": "Sign In",
+  "E-mail Address": "E-mail Address",
+  "Password": "Password",
+  "E-mail Address required": "E-mail Address required",
+  "Password required": "Password required"
 }

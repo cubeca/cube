@@ -1,11 +1,15 @@
-import { Box, List, MenuItem } from '@mui/material';
+import { Box, Link, List, MenuItem } from '@mui/material';
+import { useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+import LoginDialog from 'components/dialogs/Login';
+
+import * as s from './NavPanel.styled';
 
 const getNavItems = (t: TFunction<'translation', undefined>) => [
   {
     text: t('Home'),
-    path: '/'
+    path: '/home'
   },
   {
     text: t('About'),
@@ -14,31 +18,44 @@ const getNavItems = (t: TFunction<'translation', undefined>) => [
   {
     text: t('Become a content creator'),
     path: '/join'
-  },
-  {
-    text: t('Creator Login'),
-    path: '/login'
   }
 ];
 
 const NavPanel = () => {
   const { t } = useTranslation();
   const navItems = getNavItems(t);
+  const location = useLocation();
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
   return (
-    <Box component="nav">
-      <List component="ul" sx={{ display: 'flex', alignItems: 'center' }}>
-        {navItems.map((item) => (
-          <MenuItem key={item.path}>
-            <Link
-              to={item.path}
-              style={{ textDecoration: 'none', color: '#ffffff' }}
+    <>
+      <Box component="nav">
+        <List component="ul" sx={{ display: 'flex', alignItems: 'center' }}>
+          {navItems.map((item) => (
+            <s.NavItem
+              key={item.path}
+              selected={location.pathname.startsWith(item.path)}
             >
-              {item.text}
-            </Link>
-          </MenuItem>
-        ))}
-      </List>
-    </Box>
+              <RouterLink
+                to={item.path}
+                style={{ textDecoration: 'none', color: '#ffffff' }}
+              >
+                {item.text}
+              </RouterLink>
+            </s.NavItem>
+          ))}
+          <s.NavItem>
+            <s.LinkButton
+              component="button"
+              onClick={() => setIsLoginOpen(true)}
+            >
+              {t('Creator Login')}
+            </s.LinkButton>
+          </s.NavItem>
+        </List>
+      </Box>
+      <LoginDialog open={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+    </>
   );
 };
 

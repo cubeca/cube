@@ -1,8 +1,9 @@
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AboutPanel from '../AboutPanel';
 import CreatorsHero from 'assets/images/creators.jpg';
 import MediaPlayer from 'components/MediaPlayer';
+import Button from 'components/Button';
 
 const CreatorsPanel = () => {
   const { t } = useTranslation('about');
@@ -26,7 +27,7 @@ const CreatorsPanel = () => {
             isAudio
           />
           <Box py="2rem">
-            <Button variant="contained">
+            <Button>
               {t('Become a content creator', { ns: 'common' })}
             </Button>
           </Box>
