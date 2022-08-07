@@ -1,9 +1,10 @@
 import { Stack, Typography } from '@mui/material';
-import VideoCard, { VideoCardProps } from 'components/VideoCard/VideoCard';
+import VideoCard from 'components/VideoCard/VideoCard';
 import { FC } from 'react';
+import { Video } from 'types/media';
 
 interface VideoListProps {
-  videos: VideoCardProps[];
+  videos: Video[];
   heading?: string;
 }
 
@@ -18,10 +19,12 @@ const VideoList: FC<VideoListProps> = ({ heading, videos }) => {
       <Stack direction="row" spacing={2}>
         {videos.map((video) => (
           <VideoCard
-            key={video.title}
-            image={video.image}
+            key={video.id}
+            image={video.thumbnailUrl}
             title={video.title}
+            creator={video.creator}
             url={video.url}
+            icon={video.iconUrl}
           />
         ))}
       </Stack>

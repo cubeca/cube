@@ -1,6 +1,6 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
-const DEFAULT_BORDER_RADIUS = '5px';
+const DEFAULT_BORDER_RADIUS = 5;
 const DEFAULT_FONT_SIZE = 16;
 const FONT_FAMILY = ['Arimo'].join(',');
 const DEFAULT_THEME_MODE = 'dark';

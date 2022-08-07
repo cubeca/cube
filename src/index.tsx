@@ -1,17 +1,30 @@
 import '@fontsource/arimo';
+import ErrorBoundary from 'components/ErrorBoundary';
 import 'i18n/config';
+import { QueryProvider } from 'providers';
+import SnackbarProvider from 'providers/SnackbarProvider';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
+if (process.env.REACT_APP_ENABLE_MOCK === 'true') {
+  const { worker } = require('mocks'); // eslint-disable-line
+  worker.start({ onUnhandledRequest: 'bypass' });
+}
+const root = ReactDOM.createRoot(document.getElementById('root')!); // eslint-disable-line
 root.render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ErrorBoundary>
+      <QueryProvider>
+        <SnackbarProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </SnackbarProvider>
+      </QueryProvider>
+    </ErrorBoundary>
   </StrictMode>
 );
 

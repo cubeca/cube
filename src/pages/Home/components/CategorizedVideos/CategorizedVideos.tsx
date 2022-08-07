@@ -2,76 +2,47 @@ import { MenuItem, Stack } from '@mui/material';
 import VideoCard from 'components/VideoCard';
 import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedVideos.styled';
-import VideoImage from 'assets/images/video-image.jpg';
-import CreatorAvatar from 'assets/icons/creator-avatar.svg';
 import { useState } from 'react';
-import { MediaTypes } from 'types/enums';
+import { MediaCategories, VideoLists } from 'types/enums';
+import useVideos from 'hooks/useVideos';
+import { VideosLoader } from 'components/Loaders';
 
 const CategorizedVideos = () => {
   const { t } = useTranslation();
-  const [selectedCategory, setSelectedCategory] = useState(MediaTypes.Video);
-  const videos = [
-    {
-      image: VideoImage,
-      title: 'title',
-      creator: 'creator',
-      url: '/videos/abc123',
-      icon: CreatorAvatar
-    },
-    {
-      image: VideoImage,
-      title: 'title',
-      creator: 'creator',
-      url: '/videos/abc123',
-      icon: CreatorAvatar
-    },
-    {
-      image: VideoImage,
-      title: 'title',
-      creator: 'creator',
-      url: '/videos/abc123',
-      icon: CreatorAvatar
-    },
-    {
-      image: VideoImage,
-      title: 'title',
-      creator: 'creator',
-      url: '/videos/abc123',
-      icon: CreatorAvatar
-    },
-    {
-      image: VideoImage,
-      title: 'title',
-      creator: 'creator',
-      url: '/videos/abc123',
-      icon: CreatorAvatar
-    }
-  ];
+  const [selectedCategory, setSelectedCategory] = useState(
+    MediaCategories.Video
+  );
+  const { data, isLoading } = useVideos(
+    VideoLists.Categorized,
+    selectedCategory
+  );
+
+  const videos = data?.videos ?? [];
 
   const categories = [
     {
       text: t('Video'),
-      value: MediaTypes.Video
+      value: MediaCategories.Video
     },
     {
       text: t('VR'),
-      value: MediaTypes.VR
+      value: MediaCategories.VR
     },
     {
       text: t('Digital Publications'),
-      value: MediaTypes.DigitalPublications
+      value: MediaCategories.DigitalPublications
     },
     {
       text: t('Talks'),
-      value: MediaTypes.Talks
+      value: MediaCategories.Talks
     },
     {
       text: t('Performances'),
-      value: MediaTypes.Performances
+      value: MediaCategories.Performances
     },
     {
       text: t('Cultural Teachings'),
-      value: MediaTypes.CulturalTeachings
+      value: MediaCategories.CulturalTeachings
     }
   ];
 
@@ -92,41 +63,21 @@ const CategorizedVideos = () => {
         ))}
       </s.Categories>
       <Stack spacing={2} py="4rem">
-        <Stack direction="row" spacing={2}>
-          {videos.map((video) => (
-            <VideoCard
-              key={video.title}
-              image={video.image}
-              title={video.title}
-              creator={video.creator}
-              url={video.url}
-              icon={video.icon}
-            />
-          ))}
-        </Stack>
-        <Stack direction="row" spacing={2}>
-          {videos.map((video) => (
-            <VideoCard
-              key={video.title}
-              image={video.image}
-              title={video.title}
-              creator={video.creator}
-              url={video.url}
-              icon={video.icon}
-            />
-          ))}
-        </Stack>
-        <Stack direction="row" spacing={2}>
-          {videos.map((video) => (
-            <VideoCard
-              key={video.title}
-              image={video.image}
-              title={video.title}
-              creator={video.creator}
-              url={video.url}
-              icon={video.icon}
-            />
-          ))}
+        <Stack direction="row" spacing={6}>
+          {!isLoading ? (
+            videos.map((video) => (
+              <VideoCard
+                key={video.title}
+                image={video.thumbnailUrl}
+                title={video.title}
+                creator={video.creator}
+                url={video.url}
+                icon={video.iconUrl}
+              />
+            ))
+          ) : (
+            <VideosLoader size={6} />
+          )}
         </Stack>
       </Stack>
     </Stack>
