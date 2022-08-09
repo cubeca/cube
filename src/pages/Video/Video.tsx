@@ -4,7 +4,9 @@ import {
   Stack,
   Typography,
   useTheme,
-  Link as MuiLink
+  Link as MuiLink,
+  Chip,
+  Box
 } from '@mui/material';
 import MediaPlayer from 'components/MediaPlayer';
 import { useTranslation } from 'react-i18next';
@@ -47,7 +49,22 @@ const Video = () => {
             <Typography component="p">{video?.description}</Typography>
             <MediaPlayer url={video?.descriptionUrl || ''} isAudio />
           </Stack>
-          <Stack pt="2rem">
+          {video && video.tags.length > 0 && (
+            <Stack py="1rem">
+              <Typography component="p">{t('Content Search Tags')}</Typography>
+              <Box sx={{ display: 'flex' }}>
+                {video.tags.map((tag) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    variant="outlined"
+                    sx={{ m: 0.5 }}
+                  />
+                ))}
+              </Box>
+            </Stack>
+          )}
+          <Stack>
             <Typography component="h4" sx={{ fontWeight: 'bold' }}>
               {t('Credits')}
             </Typography>

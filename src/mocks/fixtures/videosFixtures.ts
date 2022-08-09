@@ -46,7 +46,7 @@ export const VIDEO_DETAILS: VideoDetails = {
       name: 'Dana Claxton'
     }
   ],
-  tags: ['tag 1', 'tag 2']
+  tags: ['tag 1', 'tag 2', 'tag 3']
 };
 
 export const FEATURED_VIDEOS: VideoList = { videos: createVideoList(7) };
