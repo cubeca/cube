@@ -11,23 +11,17 @@ RUN apt-get update \
 
 COPY .env /work/.env
 COPY .env.example /work/.env.example
-COPY .eslintignore /work/.eslintignore
-COPY .eslintrc.json /work/.eslintrc.json
-COPY .prettierignore /work/.prettierignore
-COPY .prettierrc /work/.prettierrc
 COPY Makefile.in-container.mk /work/Makefile
 COPY package.json /work/package.json
 COPY package-lock.json /work/package-lock.json
 COPY tsconfig.json /work/tsconfig.json
-
 # See https://docs.docker.com/engine/reference/builder/#copy
 # > If <src> is a directory, the entire contents of the directory are copied, including filesystem metadata.
 # > NOTE: The directory itself is not copied, just its contents.
-COPY public /work/public/
 COPY src /work/src/
 
 WORKDIR /work/
 
 RUN make dependencies
 
-ENTRYPOINT ["/bin/bash", "-c", "echo 'Waiting for you to log into this container via `make login_frontend`'; while true; do sleep 99999; done"]
+ENTRYPOINT ["/bin/bash", "-c", "echo 'Waiting for you to log into this container via `make login`'; while true; do sleep 99999; done"]

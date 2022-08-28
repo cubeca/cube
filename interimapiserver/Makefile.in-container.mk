@@ -6,5 +6,4 @@ dependencies:
 
 .PHONY: run
 run:
-	# npm run start:mock
 	npm run start
