@@ -10,7 +10,6 @@ const App = () => (
     <Main>
       <Router />
     </Main>
-    ;
   </ThemeProvider>
 );
 export default App;
