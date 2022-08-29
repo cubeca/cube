@@ -50,7 +50,10 @@ const FeaturedVideos = () => {
           setFilter(VideosQueryKeys.Creator, value as string)
         }
       >
-        <MenuItem value={'some content creator'}>Some content creator</MenuItem>
+        <MenuItem value={'artist 1'}>Artist 1</MenuItem>
+        <MenuItem value={'artist 2'}>Artist 2</MenuItem>
+        <MenuItem value={'artist 3'}>Artist 3</MenuItem>
+        <MenuItem value={'artist 4'}>Artist 4</MenuItem>
       </Select>
       <Select
         label={t('Items per Page')}

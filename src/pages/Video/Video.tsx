@@ -4,7 +4,6 @@ import {
   Stack,
   Typography,
   useTheme,
-  Link as MuiLink,
   Chip,
   Box
 } from '@mui/material';
@@ -12,7 +11,6 @@ import MediaPlayer from 'components/MediaPlayer';
 import { useTranslation } from 'react-i18next';
 import useVideoDetails from 'hooks/useVideoDetails';
 import MoreContent from './MoreContent';
-import { Link } from 'react-router-dom';
 import Contributors from './Contributors';
 
 const Video = () => {

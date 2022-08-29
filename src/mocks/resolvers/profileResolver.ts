@@ -15,3 +15,38 @@ export const getProfile = (
     })
   );
 };
+
+export const updateProfileSection = async (
+  req: MockedRequest,
+  res: ResponseComposition,
+  ctx: ContextType
+) => {
+  const data = await req.json();
+  console.log(data);
+
+  return res(
+    ctx.status(200),
+    (ctx as any).json({
+      data: {
+        ...PROFILE,
+        name: data.name,
+        description: data.description
+      }
+    })
+  );
+};
+
+export const updateProfileLogo = async (
+  req: MockedRequest,
+  res: ResponseComposition,
+  ctx: ContextType
+) => {
+  return res(
+    ctx.status(200),
+    (ctx as any).json({
+      data: {
+        ...PROFILE
+      }
+    })
+  );
+};

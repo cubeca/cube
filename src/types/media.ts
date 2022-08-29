@@ -44,3 +44,23 @@ export interface Contributor {
 export interface VideoDetailsAPIResponse {
   data: VideoDetails;
 }
+
+export interface MediaPayload {
+  profileId: string;
+  type: string;
+  title: string;
+  expiry: string;
+  description: string;
+  coverImageFile: File;
+  mediaFile: File;
+  coverImageText: string;
+  collaborators: string[];
+  contributors: string[];
+  tags?: string[];
+}
+
+export interface MediaAPIResponse {
+  data: {
+    id: string;
+  };
+}

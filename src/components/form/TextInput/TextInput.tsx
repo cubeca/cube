@@ -8,6 +8,9 @@ import { InputProps } from '../types';
 interface TextInputProps extends InputProps {
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
+  variant?: 'standard' | 'outlined';
+  rows?: string | number;
+  multiline?: boolean;
 }
 
 const defaultRules = {
@@ -28,6 +31,9 @@ const TextInput: FC<TextInputProps> = ({
   placeholder,
   fullWidth,
   sx,
+  variant = 'standard',
+  rows,
+  multiline,
   errorMessage
 }) => (
   <Controller
@@ -51,11 +57,13 @@ const TextInput: FC<TextInputProps> = ({
         <MuiTextField
           sx={sx}
           placeholder={placeholder}
-          variant="standard"
+          variant={variant}
           size="medium"
           type={type}
           error={!!error}
           fullWidth={fullWidth}
+          multiline={multiline}
+          rows={rows}
           {...field}
         />
       </FormControl>

@@ -1,13 +1,4 @@
-import {
-  Divider,
-  Grid,
-  Link,
-  Stack,
-  Typography,
-  useTheme
-} from '@mui/material';
-import MediaPlayer from 'components/MediaPlayer';
-import VideoImage from 'assets/images/video-image.jpg';
+import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import VideoList from 'components/VideoList';
 import useVideos from 'hooks/useVideos';

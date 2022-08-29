@@ -1,14 +1,25 @@
 import { Stack, Typography } from '@mui/material';
+import Button from 'components/Button';
 import VideoCard from 'components/VideoCard/VideoCard';
 import { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Video } from 'types/media';
 
 interface VideoListProps {
   videos: Video[];
   heading?: string;
+  isLoggedIn?: boolean;
+  handleNewMedia?: () => void;
 }
 
-const VideoList: FC<VideoListProps> = ({ heading, videos }) => {
+const VideoList: FC<VideoListProps> = ({
+  heading,
+  videos,
+  isLoggedIn = false,
+  handleNewMedia
+}) => {
+  const { t } = useTranslation();
+
   return (
     <Stack>
       {heading && (
