@@ -1,4 +1,4 @@
-import { Box, MenuItem, Stack, Typography } from '@mui/material';
+import { Box, MenuItem, Stack, TextField, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
 import ChipInput from 'components/form/ChipInput';
@@ -12,6 +12,8 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { MediaTypes } from 'types/enums';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const Upload = () => {
   const { t } = useTranslation();
@@ -24,6 +26,7 @@ const Upload = () => {
   const [VTTFiles, setVTTFiles] = useState<File[]>([]);
   const { data: collaborators, isLoading: isCollaboratorsLoading } =
     useCollaborators();
+  const [value, setValue] = useState<dateFns | null>(null);
 
   const onSubmit = (values: FieldValues) => {
     addMedia({
@@ -97,13 +100,23 @@ const Upload = () => {
             'You can include an expiration date for content that is only licensed for a period.'
           )}
         </Box>
-        <Box>
-          <TextInput
-            control={control}
-            name="expiry"
-            placeholder={t('Expiry Date')}
-            fullWidth
-            variant="outlined"
+        <Box pt="1rem">
+          <DatePicker
+            label={t('Expiry Date')}
+            value={value}
+            onChange={(newValue) => {
+              setValue(newValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                // control={control}
+                // name="expiry"
+                // placeholder={t('Expiry Date')}
+                // fullWidth
+                // variant="outlined"
+                {...params}
+              />
+            )}
           />
         </Box>
       </Box>
@@ -141,7 +154,22 @@ const Upload = () => {
         </Grid>
       </Grid>
       <Box>
-        <Button>{t('Upload an audio of the description')}</Button>
+        <Button
+          onClick={() => {}}
+          variant="text"
+          endIcon={
+            <Box
+              border="solid"
+              borderRadius="5px"
+              display="inline-block"
+              lineHeight="0"
+            >
+              <FileUploadIcon />
+            </Box>
+          }
+        >
+          {t('Upload an audio file describing the information above')}
+        </Button>
       </Box>
       <Box pt="2rem" width="50%">
         <Box pb="1rem">{t('Upload a Cover Image')}</Box>
@@ -264,7 +292,9 @@ const Upload = () => {
             placeholder={t('e.g. Editor -> Editor Name')}
           />
         </Box>
-        <Box>{t('+ add more')}</Box>
+        <Box>
+          <Button variant="text">{t('+ add more')}</Button>
+        </Box>
       </Box>
       <Typography variant="h4" component="h4" pt="2rem">
         {t('Add Your Content Tags')}
