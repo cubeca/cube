@@ -1,4 +1,4 @@
-import { Link, Stack } from '@mui/material';
+import { Box, Link, Stack } from '@mui/material';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import { FC, useState } from 'react';
@@ -6,6 +6,8 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Profile } from 'types/profile';
 import useEditProfile from './useEditProfile';
+import EditIcon from '@mui/icons-material/Edit';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 interface EditSectionProps {
   profile: Profile;
@@ -39,26 +41,41 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
 
   return (
     <Stack direction="column">
-      <Link
-        component="button"
-        variant="body2"
-        onClick={() => {
-          setEditLogo(!editLogo);
-        }}
-      >
-        {editLogo ? t('Cancel') : t('Edit Logo')}
-      </Link>
-      {editLogo && <input type="file" id="logo" onChange={onChangeLogo} />}
-      <Stack direction="row">
-        {logoUrl && <img src={logoUrl} alt="" />}
-        <TextInput
-          id="profileName"
-          name="profileName"
-          control={control}
-          defaultValue={profile.name}
-        />
-        <Button onClick={handleSubmit(onSubmitSection)}>{t('Done')}</Button>
-        <Button onClick={() => setIsEditing(false)}>{t('Cancel')}</Button>
+      <Box>
+        <Button
+          onClick={() => {
+            setEditLogo(!editLogo);
+          }}
+          variant="text"
+          startIcon={<EditIcon />}
+        >
+          {editLogo ? t('Cancel') : t('Edit Logo')}
+        </Button>
+        {editLogo && (
+          <Box component="span" pl="1rem">
+            <input type="file" id="logo" onChange={onChangeLogo} />
+          </Box>
+        )}
+      </Box>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack direction="row" alignItems="center">
+          {logoUrl && (
+            <Box component="span" pr="1rem">
+              <img src={logoUrl} alt="" />
+            </Box>
+          )}
+          <TextInput
+            id="profileName"
+            name="profileName"
+            control={control}
+            defaultValue={profile.name}
+            variant="outlined"
+            sx={{ fontSize: '2rem' }}
+          />
+        </Stack>
+        <Box>
+          <Button onClick={handleSubmit(onSubmitSection)}>{t('Done')}</Button>
+        </Box>
       </Stack>
       <TextInput
         defaultValue={profile.description}
@@ -68,24 +85,38 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
         multiline
         rows={4}
         fullWidth
+        variant="outlined"
       />
-      <Link
-        component="button"
-        variant="body2"
+      <Button
         onClick={() => {
           setEditAudio(!editAudio);
         }}
+        variant="text"
+        endIcon={
+          !editAudio && (
+            <Box
+              border="solid"
+              borderRadius="5px"
+              display="inline-block"
+              lineHeight="0"
+            >
+              <FileUploadIcon />
+            </Box>
+          )
+        }
       >
         {editAudio
           ? t('Cancel')
           : t('Upload an audio file describing the information above')}
-      </Link>
+      </Button>
       {editAudio && (
-        <input
-          type="file"
-          id="audio-description"
-          onChange={onChangeAudioDescription}
-        />
+        <Box textAlign="center" pt="0.5rem">
+          <input
+            type="file"
+            id="audio-description"
+            onChange={onChangeAudioDescription}
+          />
+        </Box>
       )}
     </Stack>
   );

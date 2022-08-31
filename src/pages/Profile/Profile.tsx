@@ -7,6 +7,7 @@ import ViewSection from './View/ViewSection';
 import EditSection from './Edit/EditSection';
 import { useNavigate } from 'react-router-dom';
 import Button from 'components/Button';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -19,6 +20,8 @@ const Profile = () => {
     navigate(`/profile/${profile!.id}/upload`);
   };
 
+  const onEditCoverPhoto = () => {};
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -26,8 +29,15 @@ const Profile = () => {
   return (
     <Stack px="5rem">
       <Grid container spacing={10}>
-        <Grid item xs={8}>
+        <Grid item xs={8} position="relative">
           <img src={profile!.heroUrl} alt="" width="100%" />
+          {isLoggedIn && (
+            <Box position="absolute" top="100px" right="20px">
+              <Button onClick={onEditCoverPhoto} startIcon={<EditIcon />}>
+                {t('Edit Photo')}
+              </Button>
+            </Box>
+          )}
         </Grid>
         <Grid item xs={4}>
           {editSection ? (
