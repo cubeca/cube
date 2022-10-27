@@ -28,3 +28,7 @@ export enum Country {
   //"As Indigenous communities use the term Nation instead of Country, and Nation can stand in for Country in most European or Canadian contexts I think we should change this to Nation"//
   Canada = 'CA'
 }
+
+export enum SignLanguage {
+  SignLanguage = 'available'
+}

@@ -1,20 +1,23 @@
 import { MenuItem, Typography } from '@mui/material';
 import { VideosQueryKeys } from 'api/enums';
 import Select from 'components/form/Select';
+import TextInput from 'components/form/TextInput';
 import useFilterVideos from 'hooks/useFilterVideos';
+import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Country, MediaCategories } from 'types/enums';
+import { Country, MediaCategories, SignLanguage, } from 'types/enums';
 
 import * as s from './FeaturedVideos.styled';
 
 const FeaturedVideos = () => {
+  const { control, handleSubmit } = useForm();
   const { t } = useTranslation();
   const { setFilter } = useFilterVideos();
   return (
     <s.Filters direction="row" spacing={2} alignItems="center">
-      <Typography component="span">{t('Show me')}</Typography>
+      <Typography component="span">{t('Select')}</Typography>
       <Select
-        label={t('All Media Types')}
+        label={t('Media Type')}
         onChange={(value: string | number) =>
           setFilter(VideosQueryKeys.Type, value as string)
         }
@@ -22,7 +25,14 @@ const FeaturedVideos = () => {
         <MenuItem value={MediaCategories.All}>{t('All')}</MenuItem>
         <MenuItem value={MediaCategories.Video}>{t('Video')}</MenuItem>
         <MenuItem value={MediaCategories.Audio}>{t('Audio')}</MenuItem>
-        <MenuItem value={MediaCategories.VR}>{t('VR')}</MenuItem>
+        <MenuItem value={MediaCategories.VR}>{t('PDF')}</MenuItem>
+      </Select>
+      <Select
+        label={t('Content Type')}
+        onChange={(value: string | number) =>
+          setFilter(VideosQueryKeys.Type, value as string)
+        }
+      >
         <MenuItem value={MediaCategories.DigitalPublications}>
           {t('Digital Publications')}
         </MenuItem>
@@ -34,17 +44,24 @@ const FeaturedVideos = () => {
           {t('Cultural Teachings')}
         </MenuItem>
       </Select>
-      <Typography component="span">{t('of content')}</Typography>
+      {/* <Typography component="span">{t('content type')}</Typography> */}
       <Select
-        label={t('In Country')}
+        label={t('Sign Language')}
         onChange={(value: string | number) =>
-          setFilter(VideosQueryKeys.Country, value as string)
+          setFilter(VideosQueryKeys.SignLanguage, value as string)
         }
-        value={Country.Canada}
+        value={SignLanguage.SignLanguage}
       >
-        <MenuItem value={Country.Canada}>{t('In')} Canada</MenuItem>
+        <MenuItem value={SignLanguage.SignLanguage}>{t('Available In')} ASL</MenuItem>
       </Select>
-      <Select
+      <Typography component="span">{t('Search')}</Typography>
+      <TextInput id="profileName"
+            name="profileName"
+            control={control}
+            variant="outlined"
+            fullWidth
+            sx={{ fontSize: '2rem' }}/>
+      {/* <Select
         label={t('By Any Content Creator')}
         onChange={(value: string | number) =>
           setFilter(VideosQueryKeys.Creator, value as string)
@@ -65,7 +82,7 @@ const FeaturedVideos = () => {
         <MenuItem value={10}>10</MenuItem>
         <MenuItem value={15}>15</MenuItem>
         <MenuItem value={20}>20</MenuItem>
-      </Select>
+      </Select> */}
     </s.Filters>
   );
 };

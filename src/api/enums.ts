@@ -7,5 +7,6 @@ export enum VideosQueryKeys {
   Category = 'category',
   Type = 'type',
   Country = 'country',
-  Creator = 'creator'
+  Creator = 'creator',
+  SignLanguage = 'available'
 }
