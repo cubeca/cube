@@ -5,7 +5,7 @@ export interface ProfileVideos {
   category: MediaCategories;
   videos: Video[];
 }
-
+//"will ProfileVideos allow people to put video in their profile banner image? I like this idea."//
 export interface Profile {
   id: string;
   name: string;

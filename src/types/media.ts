@@ -1,4 +1,5 @@
 import { MediaCategories, MediaTypes } from './enums';
+//"This would have to change to ContentCategories, ContentTypes  & this file would become content.ts"//
 
 export interface Video {
   id: string;
@@ -14,6 +15,7 @@ export interface Video {
 export interface VideoList {
   videos: Video[];
 }
+//"Because we have VideList I assume we will have AudioList & PdfList & LinkList which all filter through FeaturedContent formerly VideoLists"
 
 export interface VideoListAPIResponse {
   data: VideoList;
