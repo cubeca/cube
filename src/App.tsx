@@ -11,7 +11,6 @@ const App = () => (
     <ThemeProvider theme={getTheme()}>
       <CssBaseline />
       <Main>
-        {'Hello'}
         <Router />
       </Main>
     </ThemeProvider>
