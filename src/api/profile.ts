@@ -1,6 +1,7 @@
 import { ProfileAPIResponse } from 'types/profile';
 import { PROFILE_API_PATH } from './constants';
 import httpClient from './httpClient';
+import { blobToBase64 } from './helpers';
 
 export const getProfile = (id: string) =>
   httpClient.get<ProfileAPIResponse>(`${PROFILE_API_PATH}/${id}`);
@@ -15,35 +16,35 @@ export const updateProfileSection = (
     description
   });
 
-export const updateProfileLogo = (id: string, file: File) => {
-  const formData = new FormData();
-  formData.append('profile-logo', file, file.name);
+export const updateProfileLogo = async (id: string, file: File) => {
+  const fileContents = await blobToBase64(file);
   return httpClient.post<ProfileAPIResponse>(
     `${PROFILE_API_PATH}/${id}/update-logo`,
     {
-      file
+      name: file.name,
+      file_contents_base64: fileContents
     }
   );
 };
 
-export const updateProfileHero = (id: string, file: File) => {
-  const formData = new FormData();
-  formData.append('profile-hero', file, file.name);
+export const updateProfileHero = async (id: string, file: File) => {
+  const fileContents = await blobToBase64(file);
   return httpClient.post<ProfileAPIResponse>(
     `${PROFILE_API_PATH}/${id}/update-hero`,
     {
-      file
+      name: file.name,
+      file_contents_base64: fileContents
     }
   );
 };
 
-export const updateProfileAudioDescription = (id: string, file: File) => {
-  const formData = new FormData();
-  formData.append('profile-audio-description', file, file.name);
+export const updateProfileAudioDescription = async (id: string, file: File) => {
+  const fileContents = await blobToBase64(file);
   return httpClient.post<ProfileAPIResponse>(
     `${PROFILE_API_PATH}/${id}/update-audio-description`,
     {
-      file
+      name: file.name,
+      file_contents_base64: fileContents
     }
   );
 };
