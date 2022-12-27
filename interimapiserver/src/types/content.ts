@@ -1,25 +1,25 @@
-import { MediaCategories, MediaTypes } from './enums';
+import { ContentCategories, ContentTypes } from './enums';
 
-export interface Video {
+export interface Content {
   id: string;
   title: string;
   creator: string;
   url: string;
   thumbnailUrl: string;
   iconUrl: string;
-  category: MediaCategories;
-  type: MediaTypes;
+  category: ContentCategories;
+  type: ContentTypes;
 }
 
-export interface VideoList {
-  videos: Video[];
+export interface ContentList {
+  content: Content[];
 }
 
-export interface VideoListAPIResponse {
-  data: VideoList;
+export interface ContentListAPIResponse {
+  data: ContentList;
 }
 
-export interface VideoDetails {
+export interface ContentDetails {
   id: string;
   url: string;
   title: string;
@@ -41,6 +41,6 @@ export interface Contributor {
   logoUrl?: string;
 }
 
-export interface VideoDetailsAPIResponse {
-  data: VideoDetails;
+export interface ContentDetailsAPIResponse {
+  data: ContentDetails;
 }

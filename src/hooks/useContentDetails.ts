@@ -1,13 +1,13 @@
-import { getVideoDetails } from 'api/videos';
+import { getContentDetails } from 'api/content';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 
-const useVideoDetails = () => {
+const useContentDetails = () => {
   const { id } = useParams();
 
   const { isLoading, isError, data } = useQuery(
-    ['video-details', id],
-    () => getVideoDetails(id ?? ''),
+    ['content-details', id],
+    () => getContentDetails(id ?? ''),
     { enabled: !!id }
   );
 
@@ -18,4 +18,4 @@ const useVideoDetails = () => {
   };
 };
 
-export default useVideoDetails;
+export default useContentDetails;

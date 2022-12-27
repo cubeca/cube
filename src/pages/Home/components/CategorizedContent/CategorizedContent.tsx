@@ -1,48 +1,48 @@
 import { MenuItem, Stack } from '@mui/material';
-import VideoCard from 'components/VideoCard';
+import ContentCard from 'components/ContentCard';
 import { useTranslation } from 'react-i18next';
-import * as s from './CategorizedVideos.styled';
+import * as s from './CategorizedContent.styled';
 import { useState } from 'react';
-import { MediaCategories, VideoLists } from 'types/enums';
-import useVideos from 'hooks/useVideos';
-import { VideosLoader } from 'components/Loaders';
+import { ContentCategories, ContentLists } from 'types/enums';
+import useContent from 'hooks/useContent';
+import { ContentLoader } from 'components/Loaders';
 
-const CategorizedVideos = () => {
+const CategorizedContent = () => {
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState(
-    MediaCategories.Video
+    ContentCategories.Video
   );
-  const { data, isLoading } = useVideos(
-    VideoLists.Categorized,
+  const { data, isLoading } = useContent(
+    ContentLists.Categorized,
     selectedCategory
   );
 
-  const videos = data?.videos ?? [];
+  const content = data?.content ?? [];
 
   const categories = [
     {
       text: t('Video'),
-      value: MediaCategories.Video
+      value: ContentCategories.Video
     },
     {
       text: t('VR'),
-      value: MediaCategories.VR
+      value: ContentCategories.VR
     },
     {
       text: t('Digital Publications'),
-      value: MediaCategories.DigitalPublications
+      value: ContentCategories.DigitalPublications
     },
     {
       text: t('Talks'),
-      value: MediaCategories.Talks
+      value: ContentCategories.Talks
     },
     {
       text: t('Performances'),
-      value: MediaCategories.Performances
+      value: ContentCategories.Performances
     },
     {
       text: t('Cultural Teachings'),
-      value: MediaCategories.CulturalTeachings
+      value: ContentCategories.CulturalTeachings
     }
   ];
 
@@ -65,18 +65,18 @@ const CategorizedVideos = () => {
       <Stack spacing={2} py="4rem">
         <Stack direction="row" spacing={6}>
           {!isLoading ? (
-            videos.map((video) => (
-              <VideoCard
-                key={video.title}
-                image={video.thumbnailUrl}
-                title={video.title}
-                creator={video.creator}
-                url={video.url}
-                icon={video.iconUrl}
+            content.map((c) => (
+              <ContentCard
+                key={c.title}
+                image={c.thumbnailUrl}
+                title={c.title}
+                creator={c.creator}
+                url={c.url}
+                icon={c.iconUrl}
               />
             ))
           ) : (
-            <VideosLoader size={6} />
+            <ContentLoader size={6} />
           )}
         </Stack>
       </Stack>
@@ -84,4 +84,4 @@ const CategorizedVideos = () => {
   );
 };
 
-export default CategorizedVideos;
+export default CategorizedContent;

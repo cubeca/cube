@@ -1,46 +1,46 @@
 import { MenuItem, Typography } from '@mui/material';
-import { VideosQueryKeys } from 'api/enums';
+import { ContentQueryKeys } from 'api/enums';
 import Select from 'components/form/Select';
 import TextInput from 'components/form/TextInput';
-import useFilterVideos from 'hooks/useFilterVideos';
+import useFilterContent from 'hooks/useFilterContent';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Country, MediaCategories, SignLanguage, } from 'types/enums';
+import { ContentCategories, SignLanguage } from 'types/enums';
 
-import * as s from './FeaturedVideos.styled';
+import * as s from './FeaturedContent.styled';
 
-const FeaturedVideos = () => {
+const FeaturedContent = () => {
   const { control, handleSubmit } = useForm();
   const { t } = useTranslation();
-  const { setFilter } = useFilterVideos();
+  const { setFilter } = useFilterContent();
   return (
     <s.Filters direction="row" spacing={2} alignItems="center">
       <Typography component="span">{t('Select')}</Typography>
       <Select
         label={t('Media Type')}
         onChange={(value: string | number) =>
-          setFilter(VideosQueryKeys.Type, value as string)
+          setFilter(ContentQueryKeys.Type, value as string)
         }
       >
-        <MenuItem value={MediaCategories.All}>{t('All')}</MenuItem>
-        <MenuItem value={MediaCategories.Video}>{t('Video')}</MenuItem>
-        <MenuItem value={MediaCategories.Audio}>{t('Audio')}</MenuItem>
-        <MenuItem value={MediaCategories.VR}>{t('PDF')}</MenuItem>
+        <MenuItem value={ContentCategories.All}>{t('All')}</MenuItem>
+        <MenuItem value={ContentCategories.Video}>{t('Video')}</MenuItem>
+        <MenuItem value={ContentCategories.Audio}>{t('Audio')}</MenuItem>
+        <MenuItem value={ContentCategories.VR}>{t('PDF')}</MenuItem>
       </Select>
       <Select
         label={t('Content Type')}
         onChange={(value: string | number) =>
-          setFilter(VideosQueryKeys.Type, value as string)
+          setFilter(ContentQueryKeys.Type, value as string)
         }
       >
-        <MenuItem value={MediaCategories.DigitalPublications}>
+        <MenuItem value={ContentCategories.DigitalPublications}>
           {t('Digital Publications')}
         </MenuItem>
-        <MenuItem value={MediaCategories.Talks}>{t('Talks')}</MenuItem>
-        <MenuItem value={MediaCategories.Performances}>
+        <MenuItem value={ContentCategories.Talks}>{t('Talks')}</MenuItem>
+        <MenuItem value={ContentCategories.Performances}>
           {t('Performances')}
         </MenuItem>
-        <MenuItem value={MediaCategories.CulturalTeachings}>
+        <MenuItem value={ContentCategories.CulturalTeachings}>
           {t('Cultural Teachings')}
         </MenuItem>
       </Select>
@@ -48,23 +48,25 @@ const FeaturedVideos = () => {
       <Select
         label={t('Sign Language')}
         onChange={(value: string | number) =>
-          setFilter(VideosQueryKeys.SignLanguage, value as string)
+          setFilter(ContentQueryKeys.SignLanguage, value as string)
         }
-        value={SignLanguage.SignLanguage}
+        value={SignLanguage.ASL}
       >
-        <MenuItem value={SignLanguage.SignLanguage}>{t('Available In')} ASL</MenuItem>
+        <MenuItem value={SignLanguage.ASL}>{t('Available In')} ASL</MenuItem>
       </Select>
       <Typography component="span">{t('Search')}</Typography>
-      <TextInput id="profileName"
-            name="profileName"
-            control={control}
-            variant="outlined"
-            fullWidth
-            sx={{ fontSize: '2rem' }}/>
+      <TextInput
+        id="profileName"
+        name="profileName"
+        control={control}
+        variant="outlined"
+        fullWidth
+        sx={{ fontSize: '2rem' }}
+      />
       {/* <Select
         label={t('By Any Content Creator')}
         onChange={(value: string | number) =>
-          setFilter(VideosQueryKeys.Creator, value as string)
+          setFilter(ContentQueryKeys.Creator, value as string)
         }
       >
         <MenuItem value={'artist 1'}>Artist 1</MenuItem>
@@ -87,4 +89,4 @@ const FeaturedVideos = () => {
   );
 };
 
-export default FeaturedVideos;
+export default FeaturedContent;

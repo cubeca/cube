@@ -2,7 +2,7 @@ import About from './About';
 import Home from './Home';
 import NotFound from './NotFound';
 import Profile from './Profile';
-import Video from './Video';
+import Content from './Content';
 import Upload from './Upload';
 
-export { About, Home, NotFound, Profile, Upload, Video };
+export { About, Home, NotFound, Profile, Upload, Content };

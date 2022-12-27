@@ -1,20 +1,20 @@
-import { Video, VideoDetails, VideoList } from 'types/media';
-import { MediaCategories, MediaTypes } from 'types/enums';
+import { Content, ContentDetails, ContentList } from 'types/content';
+import { ContentCategories, ContentTypes } from 'types/enums';
 
-export const createVideoList = (num: number): Video[] => {
-  return [...Array(num)].map((video, i) => ({
+export const createContentList = (num: number): Content[] => {
+  return [...Array(num)].map((content, i) => ({
     id: `${i + 1}`,
     title: `Title ${i + 1}`,
     creator: `Creator ${i + 1}`,
-    url: `/videos/${i + 1}`,
+    url: `/content/${i + 1}`,
     thumbnailUrl: 'images/video_thumbnail.jpg',
     iconUrl: 'images/creator_icon.png',
-    category: MediaCategories.Video,
-    type: MediaTypes.Video
+    category: ContentCategories.Video,
+    type: ContentTypes.Video
   }));
 };
 
-export const VIDEO_DETAILS: VideoDetails = {
+export const CONTENT_DETAILS: ContentDetails = {
   id: '1',
   url: '/video.mp4',
   title: 'Video 1',
@@ -49,4 +49,4 @@ export const VIDEO_DETAILS: VideoDetails = {
   tags: ['tag 1', 'tag 2', 'tag 3']
 };
 
-export const FEATURED_VIDEOS: VideoList = { videos: createVideoList(7) };
+export const FEATURED_CONTENT: ContentList = { content: createContentList(7) };

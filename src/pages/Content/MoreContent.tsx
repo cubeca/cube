@@ -1,14 +1,14 @@
 import { Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import VideoList from 'components/VideoList';
-import useVideos from 'hooks/useVideos';
-import { VideosLoader } from 'components/Loaders';
+import ContentList from 'components/ContentList';
+import useContent from 'hooks/useContent';
+import { ContentLoader } from 'components/Loaders';
 
 const MoreContent = () => {
   const { t } = useTranslation();
-  const { data, isLoading } = useVideos();
+  const { data, isLoading } = useContent();
 
-  const videos = data?.videos ?? [];
+  const content = data?.content ?? [];
 
   return (
     <Stack pb="2rem">
@@ -16,10 +16,10 @@ const MoreContent = () => {
         {t('More Content')}
       </Typography>
       {!isLoading ? (
-        <VideoList videos={videos.slice(0, 3)} />
+        <ContentList content={content.slice(0, 3)} />
       ) : (
         <Stack direction="row" spacing={4}>
-          <VideosLoader size={2} />
+          <ContentLoader size={2} />
         </Stack>
       )}
     </Stack>

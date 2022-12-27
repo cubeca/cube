@@ -1,7 +1,7 @@
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from './constants';
-import { PaginationQueryKeys, VideosQueryKeys } from './enums';
+import { PaginationQueryKeys, ContentQueryKeys } from './enums';
 
-type QueryKeys = typeof VideosQueryKeys;
+type QueryKeys = typeof ContentQueryKeys;
 
 const setPaginationParams = (params: URLSearchParams) => {
   // Set Paging defaults if no paging provided

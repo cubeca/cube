@@ -1,12 +1,12 @@
-import { VideosQueryKeys } from 'api/enums';
+import { ContentQueryKeys } from 'api/enums';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
-const useFilterVideos = () => {
+const useFilterContent = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const setFilter = (key: VideosQueryKeys, value: string) => {
+  const setFilter = (key: ContentQueryKeys, value: string) => {
     if (!value) {
       searchParams.delete(key);
     } else {
@@ -20,4 +20,4 @@ const useFilterVideos = () => {
   };
 };
 
-export default useFilterVideos;
+export default useFilterContent;

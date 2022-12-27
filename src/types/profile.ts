@@ -1,11 +1,11 @@
-import { MediaCategories } from './enums';
-import { Video } from './media';
+import { ContentCategories } from './enums';
+import { Content } from './content';
 
-export interface ProfileVideos {
-  category: MediaCategories;
-  videos: Video[];
+export interface ProfileContent {
+  category: ContentCategories;
+  content: Content[];
 }
-//"will ProfileVideos allow people to put video in their profile banner image? I like this idea."//
+
 export interface Profile {
   id: string;
   name: string;
@@ -13,7 +13,7 @@ export interface Profile {
   logoUrl?: string;
   description: string;
   descriptionUrl: string;
-  videos: ProfileVideos[];
+  content: ProfileContent[];
 }
 
 export interface ProfileAPIResponse {

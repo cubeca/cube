@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ReactComponent as PlayButton } from 'assets/icons/play.svg';
 
-export interface VideoCardProps {
+export interface ContentCardProps {
   url: string;
   creator?: string;
   image: string;
@@ -11,7 +11,7 @@ export interface VideoCardProps {
   icon?: string;
 }
 
-const VideoCard: FC<VideoCardProps> = ({
+const ContentCard: FC<ContentCardProps> = ({
   creator,
   title,
   image,
@@ -56,4 +56,4 @@ const VideoCard: FC<VideoCardProps> = ({
   );
 };
 
-export default VideoCard;
+export default ContentCard;
