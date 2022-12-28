@@ -3,9 +3,10 @@ export enum PaginationQueryKeys {
   PageSize = 'page_size'
 }
 
-export enum VideosQueryKeys {
+export enum ContentQueryKeys {
   Category = 'category',
   Type = 'type',
   Country = 'country',
-  Creator = 'creator'
+  Creator = 'creator',
+  SignLanguage = 'signlanguage'
 }

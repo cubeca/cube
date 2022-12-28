@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import MediaPlayer from 'components/MediaPlayer';
 import { useTranslation } from 'react-i18next';
-import useVideoDetails from 'hooks/useVideoDetails';
+import useContentDetails from 'hooks/useContentDetails';
 import MoreContent from './MoreContent';
 import Contributors from './Contributors';
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
@@ -17,7 +17,7 @@ import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 const Video = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { data: video, isLoading } = useVideoDetails();
+  const { data: content, isLoading } = useContentDetails();
 
   return (
     <Grid container spacing={5} px="5rem">
@@ -25,7 +25,7 @@ const Video = () => {
         {isLoading ? (
           <MediaPlayerLoader type="video" />
         ) : (
-          <MediaPlayer url={video?.url || ''} width="100%" />
+          <MediaPlayer url={content?.url || ''} width="100%" />
         )}
       </Grid>
       <Grid item xs={4}>
@@ -34,12 +34,12 @@ const Video = () => {
             <MediaMetaDataLoader />
           ) : (
             <>
-              <Contributors contributors={video?.contributors ?? []} />
+              <Contributors contributors={content?.contributors ?? []} />
               <Typography component="h4" variant="body1">
-                {video?.title}
+                {content?.title}
               </Typography>
               <Typography component="p" variant="body1">
-                {video?.createdDate}
+                {content?.createdDate}
               </Typography>
               <Stack
                 spacing={3}
@@ -49,16 +49,16 @@ const Video = () => {
                   borderRadius: theme.shape.borderRadius
                 }}
               >
-                <Typography component="p">{video?.description}</Typography>
-                <MediaPlayer url={video?.descriptionUrl || ''} isAudio />
+                <Typography component="p">{content?.description}</Typography>
+                <MediaPlayer url={content?.descriptionUrl || ''} isAudio />
               </Stack>
-              {video && video.tags.length > 0 && (
+              {content && content.tags.length > 0 && (
                 <Stack py="1rem">
                   <Typography component="p">
                     {t('Content Search Tags')}
                   </Typography>
                   <Box sx={{ display: 'flex' }}>
-                    {video.tags.map((tag) => (
+                    {content.tags.map((tag) => (
                       <Chip
                         key={tag}
                         label={tag}
@@ -74,7 +74,7 @@ const Video = () => {
                   {t('Credits')}
                 </Typography>
                 <Typography component="p" sx={{ fontWeight: 'bold' }}>
-                  {video?.credits}
+                  {content?.credits}
                 </Typography>
               </Stack>
             </>

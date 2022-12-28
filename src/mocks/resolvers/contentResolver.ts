@@ -1,5 +1,5 @@
 import { defaultContext, MockedRequest, ResponseComposition } from 'msw';
-import { FEATURED_VIDEOS, VIDEO_DETAILS } from '../fixtures/videosFixtures';
+import { FEATURED_CONTENT, CONTENT_DETAILS } from '../fixtures/contentFixtures';
 
 type ContextType = typeof defaultContext;
 
@@ -12,7 +12,7 @@ export const getFeatured = (
     ctx.status(200),
     (ctx as any).json({
       data: {
-        ...FEATURED_VIDEOS
+        ...FEATURED_CONTENT
         // page_number: page,
         // page_size,
         // total_entries: transactions.length,
@@ -30,7 +30,24 @@ export const getSingle = (
   return res(
     ctx.status(200),
     (ctx as any).json({
-      data: VIDEO_DETAILS
+      data: CONTENT_DETAILS
+    })
+  );
+};
+
+export const addContent = async (
+  req: MockedRequest,
+  res: ResponseComposition,
+  ctx: ContextType
+) => {
+  const data = await req.json();
+  console.log(data);
+  return res(
+    ctx.status(201),
+    (ctx as any).json({
+      data: {
+        id: 'abc123'
+      }
     })
   );
 };

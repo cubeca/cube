@@ -1,15 +1,15 @@
 import { Stack, Typography, Link as MuiLink } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Contributor } from 'types/media';
+import { Contributor } from 'types/content';
 
 const Contributors: FC<{ contributors: Contributor[] }> = ({
   contributors
 }) => {
   return (
     <>
-      {contributors.map((contributor) => (
-        <Stack key={contributor.socialHandle} pb="1rem">
+      {contributors.map((contributor, i) => (
+        <Stack key={`${contributor.name}-${i}`} pb="1rem">
           <Stack direction="row" alignItems="flex-start">
             <img
               src={contributor.logoUrl}

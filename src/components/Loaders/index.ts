@@ -1,5 +1,5 @@
 export {
-  VideosLoader,
+  ContentLoader,
   MediaPlayerLoader,
   MediaMetaDataLoader
 } from './Loaders';

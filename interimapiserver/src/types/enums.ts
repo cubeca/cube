@@ -1,9 +1,9 @@
-export enum VideoLists {
+export enum ContentLists {
   Featured = 'featured',
   Categorized = 'Categorized'
 }
 
-export enum MediaCategories {
+export enum ContentCategories {
   All = 'all',
   Video = 'video',
   Audio = 'audio',
@@ -15,12 +15,12 @@ export enum MediaCategories {
   CulturalTeachings = 'cultural-teachings'
 }
 
-export enum MediaTypes {
+export enum ContentTypes {
   Video = 'video',
   Audio = 'audio',
   PDF = 'pdf'
 }
 
-export enum Country {
+export enum Nation {
   Canada = 'CA'
 }

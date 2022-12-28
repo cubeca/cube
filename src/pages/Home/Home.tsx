@@ -1,12 +1,12 @@
 import { Stack } from '@mui/material';
-import CategorizedVideos from './components/CategorizedVideos';
-import FeaturedVideos from './components/FeaturedVideos';
+import CategorizedContent from './components/CategorizedContent';
+import FeaturedContent from './components/FeaturedContent';
 
 const Home = () => {
   return (
     <Stack py="2rem" px="4rem">
-      <FeaturedVideos />
-      <CategorizedVideos />
+      <FeaturedContent />
+      <CategorizedContent />
     </Stack>
   );
 };

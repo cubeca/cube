@@ -1,6 +1,6 @@
-import { MediaCategories } from 'types/enums';
+import { ContentCategories } from 'types/enums';
 import { Profile } from 'types/profile';
-import { createVideoList } from './videosFixtures';
+import { createContentList } from './contentFixtures';
 
 export const PROFILE: Profile = {
   id: '1',
@@ -11,10 +11,10 @@ export const PROFILE: Profile = {
     'Description of MOA Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare risus pretium vivamus leo, pharetra placerat mauris, viverra. Phasellus parturient amet sapien praesent semper tellus porttitor at auctor. Faucibus in at blandit dui eget in ut enim. Ultricies eu, lobortis vitae bibendum nunc tempor. Quam.',
   descriptionUrl:
     'https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3',
-  videos: [
+  content: [
     {
-      category: MediaCategories.Video,
-      videos: createVideoList(3)
+      category: ContentCategories.Video,
+      content: createContentList(3)
     }
   ]
 };

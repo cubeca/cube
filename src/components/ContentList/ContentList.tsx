@@ -1,20 +1,20 @@
 import { Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
-import VideoCard from 'components/VideoCard/VideoCard';
+import ContentCard from 'components/ContentCard/ContentCard';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Video } from 'types/media';
+import { Content } from 'types/content';
 
-interface VideoListProps {
-  videos: Video[];
+interface ContentListProps {
+  content: Content[];
   heading?: string;
   isLoggedIn?: boolean;
   handleNewMedia?: () => void;
 }
 
-const VideoList: FC<VideoListProps> = ({
+const ContentList: FC<ContentListProps> = ({
   heading,
-  videos,
+  content,
   isLoggedIn = false,
   handleNewMedia
 }) => {
@@ -28,14 +28,14 @@ const VideoList: FC<VideoListProps> = ({
         </Typography>
       )}
       <Stack direction="row" spacing={2}>
-        {videos.map((video) => (
-          <VideoCard
-            key={video.id}
-            image={video.thumbnailUrl}
-            title={video.title}
-            creator={video.creator}
-            url={video.url}
-            icon={video.iconUrl}
+        {content.map((c) => (
+          <ContentCard
+            key={c.id}
+            image={c.thumbnailUrl}
+            title={c.title}
+            creator={c.creator}
+            url={c.url}
+            icon={c.iconUrl}
           />
         ))}
       </Stack>
@@ -43,4 +43,4 @@ const VideoList: FC<VideoListProps> = ({
   );
 };
 
-export default VideoList;
+export default ContentList;

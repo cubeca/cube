@@ -1,25 +1,26 @@
-import { MediaCategories, MediaTypes } from './enums';
+import { ContentCategories, ContentTypes } from './enums';
+//"This would have to change to ContentCategories, ContentTypes  & this file would become content.ts"//
 
-export interface Video {
+export interface Content {
   id: string;
   title: string;
   creator: string;
   url: string;
   thumbnailUrl: string;
   iconUrl: string;
-  category: MediaCategories;
-  type: MediaTypes;
+  category: ContentCategories;
+  type: ContentTypes;
 }
 
-export interface VideoList {
-  videos: Video[];
+export interface ContentList {
+  content: Content[];
 }
 
-export interface VideoListAPIResponse {
-  data: VideoList;
+export interface ContentListAPIResponse {
+  data: ContentList;
 }
 
-export interface VideoDetails {
+export interface ContentDetails {
   id: string;
   url: string;
   title: string;
@@ -41,11 +42,11 @@ export interface Contributor {
   logoUrl?: string;
 }
 
-export interface VideoDetailsAPIResponse {
-  data: VideoDetails;
+export interface ContentDetailsAPIResponse {
+  data: ContentDetails;
 }
 
-export interface MediaPayload {
+export interface ContentPayload {
   profileId: string;
   type: string;
   title: string;
@@ -59,7 +60,7 @@ export interface MediaPayload {
   tags?: string[];
 }
 
-export interface MediaAPIResponse {
+export interface ContentAPIResponse {
   data: {
     id: string;
   };

@@ -6,19 +6,24 @@ import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
 import useCollaborators from 'hooks/useCollaborators';
-import useMedia from 'hooks/useMedia';
+import useContent from 'hooks/useContent';
 import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
-import { MediaTypes } from 'types/enums';
+import { ContentTypes } from 'types/enums';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const Upload = () => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
-  const { addMedia, isLoading, isError, isSuccess } = useMedia();
+  const {
+    addContent,
+    isUploadLoading: isLoading,
+    isUploadError: isError,
+    isUploadSuccess: isSuccess
+  } = useContent();
   const { id } = useParams();
   const navigate = useNavigate();
   const [coverImageFile, setCoverImageFile] = useState<File>();
@@ -29,7 +34,7 @@ const Upload = () => {
   const [value, setValue] = useState<dateFns | null>(null);
 
   const onSubmit = (values: FieldValues) => {
-    addMedia({
+    addContent({
       profileId: id!,
       title: values.title,
       type: values.type,
@@ -76,9 +81,9 @@ const Upload = () => {
             fullWidth={false}
             defaultValue=""
           >
-            <MenuItem value={MediaTypes.Video}>{t('Video')}</MenuItem>
-            <MenuItem value={MediaTypes.Audio}>{t('Audio')}</MenuItem>
-            <MenuItem value={MediaTypes.PDF}>{t('PDF')}</MenuItem>
+            <MenuItem value={ContentTypes.Video}>{t('Video')}</MenuItem>
+            <MenuItem value={ContentTypes.Audio}>{t('Audio')}</MenuItem>
+            <MenuItem value={ContentTypes.PDF}>{t('PDF')}</MenuItem>
           </Select>
         </Box>
       </Box>
