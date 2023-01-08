@@ -3,10 +3,10 @@ import Button from 'components/Button';
 import ContentCard from 'components/ContentCard/ContentCard';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Content } from 'types/content';
+import { ContentListed } from 'cubeca-bff-client';
 
 interface ContentListProps {
-  content: Content[];
+  content: ContentListed[];
   heading?: string;
   isLoggedIn?: boolean;
   handleNewMedia?: () => void;

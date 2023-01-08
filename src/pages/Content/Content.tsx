@@ -58,7 +58,7 @@ const Video = () => {
                     {t('Content Search Tags')}
                   </Typography>
                   <Box sx={{ display: 'flex' }}>
-                    {content.tags.map((tag) => (
+                    {content.tags.map((tag: string) => (
                       <Chip
                         key={tag}
                         label={tag}

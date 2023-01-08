@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { ContentCategories, ContentLists } from 'types/enums';
 import useContent from 'hooks/useContent';
 import { ContentLoader } from 'components/Loaders';
+import { ContentListed } from 'cubeca-bff-client';
 
 const CategorizedContent = () => {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ const CategorizedContent = () => {
     selectedCategory
   );
 
-  const content = data?.content ?? [];
+  const content = data ?? [];
 
   const categories = [
     {
@@ -65,7 +66,7 @@ const CategorizedContent = () => {
       <Stack spacing={2} py="4rem">
         <Stack direction="row" spacing={6}>
           {!isLoading ? (
-            content.map((c) => (
+            content.map((c: ContentListed) => (
               <ContentCard
                 key={c.title}
                 image={c.thumbnailUrl}

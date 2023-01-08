@@ -8,7 +8,7 @@ const MoreContent = () => {
   const { t } = useTranslation();
   const { data, isLoading } = useContent();
 
-  const content = data?.content ?? [];
+  const content = data ?? [];
 
   return (
     <Stack pb="2rem">
