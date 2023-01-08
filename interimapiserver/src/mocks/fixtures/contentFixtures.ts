@@ -6,7 +6,7 @@ export const createContentList = (num: number): Content[] => {
     id: `${i + 1}`,
     title: `Title ${i + 1}`,
     creator: `Creator ${i + 1}`,
-    url: `/videos/${i + 1}`,
+    url: `/content/${i + 1}`,
     thumbnailUrl: 'images/video_thumbnail.jpg',
     iconUrl: 'images/creator_icon.png',
     category: ContentCategories.Video,

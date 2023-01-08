@@ -34,19 +34,21 @@ const Upload = () => {
   const [value, setValue] = useState<dateFns | null>(null);
 
   const onSubmit = (values: FieldValues) => {
-    addContent({
-      profileId: id!,
-      title: values.title,
-      type: values.type,
-      expiry: values.expiry,
-      description: values.description,
-      coverImageText: values.imageText,
-      coverImageFile: coverImageFile!,
-      mediaFile: mediaFile!,
-      collaborators: [values.collaborators],
-      contributors: [values.contributors],
-      tags: [values.tags]
-    });
+    addContent(
+      {
+        profileId: id!,
+        title: values.title,
+        type: values.type,
+        expiry: values.expiry,
+        description: values.description,
+        coverImageText: values.imageText,
+        collaborators: [values.collaborators],
+        contributors: [values.contributors],
+        tags: [values.tags]
+      },
+      coverImageFile!,
+      mediaFile!
+    );
   };
 
   const handleCoverImageUpload = (files: File[]) => {

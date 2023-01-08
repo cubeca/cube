@@ -1,8 +1,14 @@
-import { getContent, addContent } from 'api/content';
+import {
+  getContent,
+  addContent,
+  CategoryType,
+  ContentType,
+  NationType,
+  AddContent
+} from 'api/content';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { ContentQueryKeys } from 'api/enums';
-import { ContentPayload } from 'types/content';
 
 const useContent = (list = 'videos', category?: string) => {
   const [searchParams] = useSearchParams();
@@ -12,10 +18,19 @@ const useContent = (list = 'videos', category?: string) => {
   }
 
   const _category = category ?? searchParams.get(ContentQueryKeys.Category);
+  const contentType = searchParams.get(ContentQueryKeys.Type);
+  const nation = searchParams.get(ContentQueryKeys.Nation);
+  const creator = searchParams.get(ContentQueryKeys.Creator) ?? undefined;
 
   const { isLoading, isError, data } = useQuery(
     [list, _category],
-    () => getContent(searchParams),
+    () =>
+      getContent(
+        category as CategoryType,
+        contentType as ContentType,
+        nation as NationType,
+        creator
+      ),
     { keepPreviousData: true }
   );
 
@@ -26,7 +41,16 @@ const useContent = (list = 'videos', category?: string) => {
     mutate
   } = useMutation(addContent);
 
-  const handleAddContent = (payload: ContentPayload) => mutate(payload);
+  const handleAddContent = (
+    payload: Omit<AddContent, 'coverImageFile' | 'mediaFile'>,
+    coverImageFile: File,
+    mediaFile: File
+  ) =>
+    mutate({
+      payload,
+      coverImageFile,
+      mediaFile
+    });
 
   return {
     isLoading,

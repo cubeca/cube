@@ -6,7 +6,7 @@ export enum PaginationQueryKeys {
 export enum ContentQueryKeys {
   Category = 'category',
   Type = 'type',
-  Country = 'country',
+  Nation = 'nation',
   Creator = 'creator',
   SignLanguage = 'signlanguage'
 }

@@ -1,23 +1,77 @@
-import {
-  ContentAPIResponse,
-  ContentDetailsAPIResponse,
-  ContentListAPIResponse,
-  ContentPayload
-} from 'types/content';
+import { blobToBase64 } from './helpers';
+import { AddContent, contentApi, contentFilesApi } from './httpClient';
 
-import { CONTENT_API_PATH } from './constants';
-import { ContentQueryKeys } from './enums';
-import { getRequestParams } from './helpers';
-import httpClient from './httpClient';
+export type CategoryType =
+  | 'all'
+  | 'video'
+  | 'audio'
+  | 'vr'
+  | 'pdf'
+  | 'digital-publications'
+  | 'talks'
+  | 'performances'
+  | 'cultural-teachings';
 
-const getContentPath = (params?: URLSearchParams) =>
-  `${CONTENT_API_PATH}?${getRequestParams(ContentQueryKeys, params)}`;
+export type ContentType = 'video' | 'audio' | 'pdf';
 
-export const getContent = (params?: URLSearchParams) =>
-  httpClient.get<ContentListAPIResponse>(getContentPath(params));
+export type NationType = 'CA';
 
-export const getContentDetails = (id: string) =>
-  httpClient.get<ContentDetailsAPIResponse>(`${CONTENT_API_PATH}/${id}`);
+export type { AddContent } from './httpClient';
 
-export const addContent = (payload: ContentPayload) =>
-  httpClient.post<ContentAPIResponse>(`${CONTENT_API_PATH}`, payload);
+export const getContent = async (
+  category?: CategoryType,
+  type?: ContentType,
+  nation?: NationType,
+  creator?: string
+) => {
+  const listApi = await contentApi.contentList(
+    1,
+    10,
+    category,
+    type,
+    nation,
+    creator
+  );
+  return await listApi();
+};
+
+export const getContentDetails = async (id: string) => {
+  const detailsApi = await contentApi.contentDetails(id);
+  return await detailsApi();
+};
+
+export const addContent = async ({
+  payload,
+  coverImageFile,
+  mediaFile
+}: {
+  payload: Omit<AddContent, 'coverImageFile' | 'mediaFile'>;
+  coverImageFile?: File;
+  mediaFile?: File;
+}) => {
+  const coverImagePayload = coverImageFile
+    ? {
+        name: coverImageFile.name,
+        file_contents_base64: (await blobToBase64(coverImageFile)) as string
+      }
+    : {
+        name: '',
+        file_contents_base64: ''
+      };
+  const mediaFilePayload = mediaFile
+    ? {
+        name: mediaFile.name,
+        file_contents_base64: (await blobToBase64(mediaFile)) as string
+      }
+    : {
+        name: '',
+        file_contents_base64: ''
+      };
+
+  const addContentApi = await contentFilesApi.addContent({
+    ...payload,
+    coverImageFile: coverImagePayload,
+    mediaFile: mediaFilePayload
+  });
+  return await addContentApi();
+};

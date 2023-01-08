@@ -58,7 +58,7 @@ const Profile = () => {
           </Button>
         </Box>
       )}
-      <Stack pt="2rem" pb="10rem" px="5rem">
+      {/* <Stack pt="2rem" pb="10rem" px="5rem">
         {profile!.content?.map((list) => (
           <ContentList
             key={list.category}
@@ -68,7 +68,7 @@ const Profile = () => {
             handleNewMedia={handleNewMedia}
           />
         ))}
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 };
