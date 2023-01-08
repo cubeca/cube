@@ -68,7 +68,7 @@ const Upload = () => {
   }
 
   if (isError) {
-    alert('Error');
+    console.log('Error Uploading');
   }
 
   return (
