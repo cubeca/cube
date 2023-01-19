@@ -8,6 +8,7 @@ export const API_BASE_PATH = '';
 export const PROFILE_API_PATH = `${API_URL}${API_BASE_PATH}/profiles`;
 export const CONTENT_API_PATH = `${API_URL}${API_BASE_PATH}/content`;
 export const COLLABORATORS_API_PATH = `${API_URL}${API_BASE_PATH}/collaborators`;
+export const UPLOADS_API_PATH = `${API_URL}${API_BASE_PATH}/uploads`;
 
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_PAGE_SIZE = 10;

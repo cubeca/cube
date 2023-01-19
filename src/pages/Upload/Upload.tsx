@@ -29,8 +29,8 @@ const Upload = () => {
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
   const [VTTFiles, setVTTFiles] = useState<File[]>([]);
-  const { data: collaborators, isLoading: isCollaboratorsLoading } =
-    useCollaborators();
+  // const { data: collaborators, isLoading: isCollaboratorsLoading } =
+  //   useCollaborators();
   const [value, setValue] = useState<dateFns | null>(null);
 
   const onSubmit = (values: FieldValues) => {
@@ -280,7 +280,8 @@ const Upload = () => {
             control={control}
             name="collaborators"
             fullWidth
-            chips={collaborators || []}
+            // chips={collaborators || []}
+            chips={[]}
           />
         </Box>
       </Box>

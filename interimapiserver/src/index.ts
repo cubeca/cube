@@ -2,6 +2,8 @@ import * as dotenv from 'dotenv';
 import * as express from 'express';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
+// import * as tus from '@tus/server';
+// import * as tusFilestore from '@tus/file-store';
 
 const inspect = (...things: any) =>
   things.forEach((thing: any) =>
@@ -30,9 +32,18 @@ const PORT: number = parseInt(process.env.PORT as string, 10);
 
 const app = express();
 
+// const uploadApp = express();
+// const server = new tus.Server({
+//   datastore: new tusFilestore.FileStore({ directory: './files' }),
+//   path: '/files'
+// });
+
+// uploadApp.all('*', server.handle.bind(server));
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+// app.use('/uploads', uploadApp);
 
 app.use(PROFILE_API_PATH, profileRouter);
 app.use(CONTENT_API_PATH, contentRouter);
