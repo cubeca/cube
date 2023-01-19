@@ -56,6 +56,7 @@ docker_build: check_user_npmrc
 	$(DOCKER) buildx build \
 	--file ./Dockerfile \
 	--tag $(FRONTEND_DOCKER_IMAGE) \
+	--output=type=docker \
 	--secret id=npmrc,src=$(NPMRC_FILEPATH) \
 	.
 

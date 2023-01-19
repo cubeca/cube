@@ -64,12 +64,13 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: "Run make docker_build"
+        # FRONTEND_DOCKER_IMAGE=$GCP_FRONTEND_DOCKER_IMAGE make docker_build
         run: |
-          FRONTEND_DOCKER_IMAGE=$GCP_FRONTEND_DOCKER_IMAGE make docker_build
+          make docker_build
 
       - name: "Run docker tag and push"
-        # docker tag $FRONTEND_DOCKER_IMAGE $GCP_FRONTEND_DOCKER_IMAGE
         run: |
+          docker tag $FRONTEND_DOCKER_IMAGE $GCP_FRONTEND_DOCKER_IMAGE
           docker push $GCP_FRONTEND_DOCKER_IMAGE
 
       # # Recommended in an earlier warning from `gcloud run deploy`, not sure why it would be necessary.
