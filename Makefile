@@ -53,7 +53,7 @@ check_npmrc:
 
 .PHONY: docker_build
 docker_build: check_user_npmrc
-	$(DOCKER) build \
+	$(DOCKER) buildx build \
 	--file ./Dockerfile \
 	--tag $(FRONTEND_DOCKER_IMAGE) \
 	--secret id=npmrc,src=$(NPMRC_FILEPATH) \
