@@ -58,6 +58,9 @@ jobs:
         run: |
           gcloud auth configure-docker $GCP_ARTIFACT_REGISTRY_DOMAIN
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: "Run make docker_build"
         run: |
           make docker_build
