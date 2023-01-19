@@ -46,7 +46,6 @@ contentRouter.get('/', async (req: Request, res: Response) => {
 });
 
 contentRouter.get('/get-upload-url', async (req: Request, res: Response) => {
-  console.log(req.headers);
   if (!req.headers['upload-length']) {
     res.status(400).send(`Invalid Request Header. 'upload-length' required`);
   }
