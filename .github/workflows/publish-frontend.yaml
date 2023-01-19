@@ -1,0 +1,92 @@
+name: Publish Frontend
+
+run-name: Publish Frontend @ ${{ github.sha }}
+
+on: push
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  FRONTEND_DOCKER_IMAGE: cubeca/frontend:latest
+  GCP_PROJECT: cubecommons-dev
+  GCP_ARTIFACT_REGISTRY_DOMAIN: northamerica-northeast2-docker.pkg.dev
+  GCP_FRONTEND_DOCKER_IMAGE: northamerica-northeast2-docker.pkg.dev/cubecommons-dev/cube-docker-images/frontend:${{ github.sha }}
+  GCP_RUN_APPNAME: frontend
+  GCP_RUN_REGION: northamerica-northeast2
+  # # TODO try using {{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+  # GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
+  # GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+
+# See https://www.padok.fr/en/blog/github-action-gcp-identity
+
+jobs:
+  publish_package:
+    runs-on: ubuntu-22.04
+    name: Publish Frontend
+
+    # Add "id-token" with the intended permissions.
+    # See https://github.com/google-github-actions/auth#usage
+    # See https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+    # See https://github.com/cubeca/api-specs/settings/actions
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+
+      - name: Set up node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
+        env:
+          NPMRC_FILEPATH: $GITHUB_WORKSPACE/.npmrc
+        run: |
+          ./scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
+
+      - name: 'GCP auth'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          workload_identity_provider: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
+          service_account: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+
+      - name: 'Set up GCP Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v1'
+
+      - name: 'Configure Docker to use GCP Artifact Registry'
+        run: |
+          gcloud auth configure-docker $GCP_ARTIFACT_REGISTRY_DOMAIN
+
+      - name: "Run make docker_build"
+        env:
+          NPMRC_FILEPATH: $GITHUB_WORKSPACE/.npmrc
+        run: |
+          make docker_build
+
+      - name: "Run docker tag and push"
+        run: |
+          docker tag $FRONTEND_DOCKER_IMAGE $GCP_FRONTEND_DOCKER_IMAGE
+          docker push $GCP_FRONTEND_DOCKER_IMAGE
+
+      # # Recommended in an earlier warning from `gcloud run deploy`, not sure why it would be necessary.
+      # # Giving the Service Account the "Cloud Run Invoker" role didn't help, either.
+      # # Turns out we can't set IAM policy here without "Cloud Run Admin" role, which I find excessive.
+      # # I was able to run this in the Google Cloud Shell as a user. I hope this was only a one-time thing.
+      # - name: "Setting IAM policy"
+      #   run: |
+      #     gcloud run services add-iam-policy-binding \
+      #       --region=$GCP_RUN_REGION \
+      #       --member=allUsers \
+      #       --role=roles/run.invoker \
+      #       $GCP_RUN_APPNAME
+
+      - name: "Deploy to GCP Cloud Run"
+        run: |
+          gcloud run deploy $GCP_RUN_APPNAME \
+            --project=$GCP_PROJECT \
+            --platform=managed \
+            --region=$GCP_RUN_REGION \
+            --image=$GCP_FRONTEND_DOCKER_IMAGE \
+            --allow-unauthenticated
