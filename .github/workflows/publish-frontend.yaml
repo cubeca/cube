@@ -15,6 +15,7 @@ env:
   # # TODO try using {{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
   # GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
   # GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+  NPMRC_FILEPATH: ${{ github.workspace }}/.npmrc
 
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 
@@ -41,8 +42,6 @@ jobs:
           node-version: 16
 
       - name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
-        env:
-          NPMRC_FILEPATH: $GITHUB_WORKSPACE/.npmrc
         run: |
           ./scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
 
@@ -60,8 +59,6 @@ jobs:
           gcloud auth configure-docker $GCP_ARTIFACT_REGISTRY_DOMAIN
 
       - name: "Run make docker_build"
-        env:
-          NPMRC_FILEPATH: $GITHUB_WORKSPACE/.npmrc
         run: |
           make docker_build
 
