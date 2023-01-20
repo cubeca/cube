@@ -42,50 +42,37 @@ jobs:
         with:
           node-version: 16
 
-      - name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
-        # See also https://stackoverflow.com/questions/71056103/how-to-access-github-package-registry-from-one-repo-to-other-under-same-organiza
+      - # See also https://stackoverflow.com/questions/71056103/how-to-access-github-package-registry-from-one-repo-to-other-under-same-organiza
+        name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
         run: |
           ./scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
 
-      - name: 'GCP auth'
-        uses: 'google-github-actions/auth@v1'
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
           service_account: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
 
-      - name: 'Set up GCP Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
+      - name: Set up GCP Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
 
-      - name: 'Configure Docker to use GCP Artifact Registry'
+      - name: Configure Docker to use GCP Artifact Registry
         run: |
           gcloud auth configure-docker $GCP_ARTIFACT_REGISTRY_DOMAIN
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: "Run make docker_build"
-        # FRONTEND_DOCKER_IMAGE=$GCP_FRONTEND_DOCKER_IMAGE make docker_build
+      - name: Run make docker_build
         run: |
           make docker_build
 
-      - name: "Run docker tag and push"
+      - name: Run docker tag and push
         run: |
           docker tag $FRONTEND_DOCKER_IMAGE $GCP_FRONTEND_DOCKER_IMAGE
           docker push $GCP_FRONTEND_DOCKER_IMAGE
 
-      # # Recommended in an earlier warning from `gcloud run deploy`, not sure why it would be necessary.
-      # # Giving the Service Account the "Cloud Run Invoker" role didn't help, either.
-      # # Turns out we can't set IAM policy here without "Cloud Run Admin" role, which I find excessive.
-      # # I was able to run this in the Google Cloud Shell as a user. I hope this was only a one-time thing.
-      # - name: "Setting IAM policy"
-      #   run: |
-      #     gcloud run services add-iam-policy-binding \
-      #       --region=$GCP_RUN_REGION \
-      #       --member=allUsers \
-      #       --role=roles/run.invoker \
-      #       $GCP_RUN_APPNAME
-
-      - name: "Deploy to GCP Cloud Run"
+      - name: Deploy to GCP Cloud Run
         run: |
           gcloud run deploy $GCP_RUN_APPNAME \
             --project=$GCP_PROJECT \

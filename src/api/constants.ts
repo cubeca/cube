@@ -1,4 +1,3 @@
-export const APP_URL: string = process.env.REACT_APP_ORIGIN || '';
 export const API_URL: string = process.env.REACT_APP_API_URL || '';
 
 export const DEFAULT_API_VERSION = 'v1';
