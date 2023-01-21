@@ -7,7 +7,7 @@ You can preview the latest commit at https://frontend-tjjg4pjowa-pd.a.run.app/ a
 ## How to run this as a Docker container
 
 1. Gain access to the CUBE private NPM packages. Pick one of these 2 methods, both work for building the Docker image:
-  - via [private NPM package registry](https://www.notion.so/How-to-get-private-NPM-packages-from-GPR-Github-Packages-Registry-at-npm-pkg-github-com-fb4982cd852c405ba1350b4a748ef0a0)
+  - via [private NPM package registry](https://www.notion.so/How-to-get-private-NPM-packages-from-GPR-Github-Packages-Registry-at-npm-pkg-github-com-fb4982cd852c405ba1350b4a748ef0a0) (preferred)
   - use [`npm link` for local Frontend development](https://www.notion.so/How-to-use-npm-link-for-local-Frontend-development-7e5a42b1b0cc42cbb751e36d78bb679f) (i.e. development of both frontend AND api-spec in parallel)
 1. Run `make docker_build`
 1. Run `REACT_APP_API_URL=https://bff-mock-server-tjjg4pjowa-pd.a.run.app/ make docker_run`
