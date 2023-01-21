@@ -13,9 +13,9 @@ PROJECT_DOCKER_COMPOSE = $(DOCKER_COMPOSE) --project-name $(PROJECT_NAME) --file
 
 FRONTEND_DOCKER_IMAGE ?= cubeca/frontend:latest
 
-PORT ?= 8080
+PORT ?= 3000
 NPMRC_FILEPATH ?= $(HOME)/.npmrc
-API_URL ?= http://localhost:4550
+REACT_APP_API_URL ?= http://localhost:4550
 
 .PHONY: sync
 sync:
@@ -60,6 +60,8 @@ docker_build: check_user_npmrc
 	--secret id=npmrc,src=$(NPMRC_FILEPATH) \
 	.
 
+# This defaults to running in the foreground to see any log messages right away.
+# To run this in the background, replace `--tty` AND `--interactive` with `--detach`.
 .PHONY: docker_run
 docker_run:
 	$(DOCKER) run \
@@ -68,7 +70,7 @@ docker_run:
 	--interactive \
 	--publish 127.0.0.1:$(PORT):$(PORT)/tcp \
 	--env PORT=$(PORT) \
-	--env REACT_APP_API_URL=$(API_URL) \
+	--env REACT_APP_API_URL=$(REACT_APP_API_URL) \
 	--env REACT_APP_ENABLE_MOCK=false \
 	$(FRONTEND_DOCKER_IMAGE)
 

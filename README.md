@@ -1,3 +1,30 @@
+# CUBE Frontend
+
+## How to run this as a Docker image
+
+- Run `make docker_build`
+- Run `REACT_APP_API_URL=https://bff-mock-server-tjjg4pjowa-pd.a.run.app/ make docker_run`
+
+Of course you can set the `REACT_APP_API_URL` environment variable to wherever else you might have the API (or it's mock server) running.
+
+https://bff-mock-server-tjjg4pjowa-pd.a.run.app/ is a mock server which gets auto-deployed by the latest commit in https://github.com/cubeca/api-specs
+
+### Caveat
+
+The Docker image starts really slow because it is still running the React dev server, until we've sorted out some issues with building this into a static app.
+
+### Docker environment variables:
+
+- `REACT_APP_API_URL`: The URL of the API instance you want the frontend to use
+- `PORT`: The port to serve the frontend from, defaults to 3000
+
+
+Deprecated / transitioning out:
+- ~`REACT_APP_ENABLE_MOCK`~: This used to toggle a browser-internal API mock (via service workers) which has been removed in the latest versions. It's only mentioned in the Makefile in case an old-ish version is being run, and will be removed soon.
+
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
