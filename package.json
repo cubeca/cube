@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "cubeca-bff-client": "file:~/cubeca-bff-client.tgz",
+    "@cubeca/bff-auth-client-oas-axios": "^0.0.1-SNAPSHOT.202301202257",
+    "@cubeca/bff-client-oas-axios": "^0.0.1-SNAPSHOT.202301202257",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fontsource/arimo": "^4.5.8",
@@ -17,6 +18,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.27.2",
     "date-fns": "^2.29.2",
+    "http-server": "^14.1.1",
     "i18next": "^21.8.4",
     "i18next-browser-languagedetector": "^6.1.4",
     "install": "^0.13.0",
@@ -28,6 +30,7 @@
     "react-error-boundary": "^3.1.4",
     "react-hook-form": "^7.31.3",
     "react-i18next": "^11.16.9",
+    "react-inject-env": "^2.1.0",
     "react-player": "^2.10.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
@@ -37,7 +40,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start:mock": "REACT_APP_ENABLE_MOCK=true npm start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

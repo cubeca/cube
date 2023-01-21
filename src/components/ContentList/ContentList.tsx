@@ -3,7 +3,7 @@ import Button from 'components/Button';
 import ContentCard from 'components/ContentCard/ContentCard';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ContentListed } from 'cubeca-bff-client';
+import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 interface ContentListProps {
   content: ContentListed[];

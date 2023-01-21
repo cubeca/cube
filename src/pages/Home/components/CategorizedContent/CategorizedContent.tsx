@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { ContentCategories, ContentLists } from 'types/enums';
 import useContent from 'hooks/useContent';
 import { ContentLoader } from 'components/Loaders';
-import { ContentListed } from 'cubeca-bff-client';
+import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 const CategorizedContent = () => {
   const { t } = useTranslation();

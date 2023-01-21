@@ -5,7 +5,7 @@ import useContent from 'hooks/useContent';
 import { ContentLoader } from 'components/Loaders';
 import FeaturedContentFilter from './FeaturedContentFilter';
 import { ContentLists } from 'types/enums';
-import { ContentListed } from 'cubeca-bff-client';
+import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 const FeaturedContent = () => {
   const { data, isLoading } = useContent('featured', ContentLists.Featured);
