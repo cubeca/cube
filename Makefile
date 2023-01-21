@@ -71,3 +71,16 @@ docker_run:
 	--env REACT_APP_API_URL=$(API_URL) \
 	--env REACT_APP_ENABLE_MOCK=false \
 	$(FRONTEND_DOCKER_IMAGE)
+
+
+# Link the BFF API client package(s) locally
+# See https://docs.npmjs.com/cli/v9/commands/npm-link
+# See https://www.geeksforgeeks.org/how-to-install-a-local-module-using-npm/
+# See https://hirok.io/posts/avoid-npm-link#4-unexpected-link-removal
+.PHONY: npm_link
+npm_link:
+	npm link @cubeca/bff-client-oas-axios @cubeca/bff-auth-client-oas-axios
+
+.PHONY: npm_link_check
+npm_link_check:
+	ls -la ./node_modules/\@cubeca
