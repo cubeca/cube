@@ -6,7 +6,7 @@ import {
   ContentApiFp,
   ContentFilesApiFp,
   UserApiFp
-} from 'cubeca-bff-client';
+} from '@cubeca/bff-client-oas-axios';
 
 // Call backend requests via generated client
 const configuration = new Configuration({
@@ -16,7 +16,7 @@ const configuration = new Configuration({
 export const contentApi = ContentApiFp(configuration);
 export const contentFilesApi = ContentFilesApiFp(configuration);
 export const profileApi = UserApiFp(configuration);
-export type { AddContent, ProfileMainSchema } from 'cubeca-bff-client';
+export type { AddContent, ProfileMainSchema } from '@cubeca/bff-client-oas-axios';
 
 // Standard http requests
 const httpClient = axios.create({

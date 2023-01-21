@@ -9,6 +9,7 @@ RUN apt-get update \
     && \
     apt clean
 
+COPY .env /work/.env
 COPY .env.example /work/.env.example
 COPY .eslintignore /work/.eslintignore
 COPY .eslintrc.json /work/.eslintrc.json
@@ -27,14 +28,6 @@ COPY src /work/src/
 
 WORKDIR /work/
 
-RUN --mount=type=secret,id=npmrc,required=true,target=/root/.npmrc npm i
+RUN make dependencies
 
-# # TODO make it runnable from a built app
-# RUN npm run build
-
-EXPOSE 8080
-
-# # TODO make it runnable from a built app
-# ENTRYPOINT npx react-inject-env set && npx http-server build
-
-ENTRYPOINT npm run start
+ENTRYPOINT ["/bin/bash", "-c", "echo 'Waiting for you to log into this container via `make login_frontend`'; while true; do sleep 99999; done"]
