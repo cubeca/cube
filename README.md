@@ -1,5 +1,9 @@
 # CUBE Frontend
 
+## Auto-deployed preview of the latest commit
+
+You can preview the latest commit at https://frontend-tjjg4pjowa-pd.a.run.app/ after the deploy Github Action has finished running, which can be monitored here: https://github.com/cubeca/cube_ui/actions
+
 ## How to run this as a Docker container
 
 1. Gain access to the CUBE private NPM packages. Pick one of these 2 methods, both work for building the Docker image:
@@ -20,11 +24,6 @@ The Docker image starts really slow because it is still running the React dev se
 
 - `REACT_APP_API_URL`: The URL of the API instance you want the frontend to use
 - `PORT`: The port to serve the frontend from, defaults to 3000
-
-
-Deprecated / transitioning out:
-
-- ~`REACT_APP_ENABLE_MOCK`~: This used to toggle a browser-internal API mock (via service workers) which has been removed in the latest versions. It's only mentioned in the Makefile in case an old-ish version is being run, and will be removed soon.
 
 
 ---

@@ -71,7 +71,6 @@ docker_run:
 	--publish 127.0.0.1:$(PORT):$(PORT)/tcp \
 	--env PORT=$(PORT) \
 	--env REACT_APP_API_URL=$(REACT_APP_API_URL) \
-	--env REACT_APP_ENABLE_MOCK=false \
 	$(FRONTEND_DOCKER_IMAGE)
 
 
