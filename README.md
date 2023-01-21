@@ -1,9 +1,12 @@
 # CUBE Frontend
 
-## How to run this as a Docker image
+## How to run this as a Docker container
 
-- Run `make docker_build`
-- Run `REACT_APP_API_URL=https://bff-mock-server-tjjg4pjowa-pd.a.run.app/ make docker_run`
+1. Gain access to the CUBE private NPM packages. Pick one of these 2 methods, both work for building the Docker image:
+  - via [private NPM package registry](https://www.notion.so/How-to-get-private-NPM-packages-from-GPR-Github-Packages-Registry-at-npm-pkg-github-com-fb4982cd852c405ba1350b4a748ef0a0)
+  - use [`npm link` for local Frontend development](https://www.notion.so/How-to-use-npm-link-for-local-Frontend-development-7e5a42b1b0cc42cbb751e36d78bb679f) (i.e. development of both frontend AND api-spec in parallel)
+1. Run `make docker_build`
+1. Run `REACT_APP_API_URL=https://bff-mock-server-tjjg4pjowa-pd.a.run.app/ make docker_run`
 
 Of course you can set the `REACT_APP_API_URL` environment variable to wherever else you might have the API (or it's mock server) running.
 
@@ -20,6 +23,7 @@ The Docker image starts really slow because it is still running the React dev se
 
 
 Deprecated / transitioning out:
+
 - ~`REACT_APP_ENABLE_MOCK`~: This used to toggle a browser-internal API mock (via service workers) which has been removed in the latest versions. It's only mentioned in the Makefile in case an old-ish version is being run, and will be removed soon.
 
 

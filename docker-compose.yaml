@@ -5,7 +5,7 @@ services:
     container_name: ${PROJECT_NAME}_frontend
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: local.dockerfile
     image: ${PROJECT_NAME}_frontend
     environment:
       PROJECT_NAME: $PROJECT_NAME
@@ -30,7 +30,7 @@ services:
     container_name: ${PROJECT_NAME}_interimapiserver
     build:
       context: ./interimapiserver/
-      dockerfile: ./Dockerfile
+      dockerfile: ./local.dockerfile
     image: ${PROJECT_NAME}_interimapiserver
     environment:
       PROJECT_NAME: $PROJECT_NAME
