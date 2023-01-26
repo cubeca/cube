@@ -68,7 +68,7 @@ export const addContent = async ({
         file_contents_base64: ''
       };
 
-  if (coverImageFile) upload(coverImageFile);
+  // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
   if (mediaFile) upload(mediaFile);
 
   const addContentApi = await contentFilesApi.addContent({
