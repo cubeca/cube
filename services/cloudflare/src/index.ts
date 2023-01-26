@@ -3,11 +3,8 @@ import * as express from 'express';
 import * as cors from 'cors';
 // import * as helmet from 'helmet';
 import axios from 'axios';
-
-const inspect = (...things: any) =>
-  things.forEach((thing: any) =>
-    console.dir(thing, { depth: null, color: true })
-  );
+import * as db from '../db/queries';
+import * as jwt from 'jsonwebtoken';
 
 dotenv.config();
 
@@ -21,7 +18,7 @@ export const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 export const CLOUDFLARE_API_STREAM = `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/stream?direct_user=true`;
 const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 
-const PORT: number = parseInt(process.env.PORT as string || '8080', 10);
+const PORT: number = parseInt((process.env.PORT as string) || '8080', 10);
 
 const app = express();
 
@@ -35,25 +32,48 @@ function authenticateToken(req, res, next) {
 
   if (token == null) return res.sendStatus(401);
 
-  next();
+  jwt.verify(
+    token,
+    process.env.TOKEN_SECRET as string,
+    (err: any, data: any) => {
+      if (err) return res.sendStatus(403);
+      req.user = data.user;
+      next();
+    }
+  );
 }
 
 app.get('/get-upload-url', authenticateToken, async (req, res) => {
   if (!req.headers['upload-length']) {
-    res.send(400).send(`Invalid Request Header. 'upload-length' required`);
+    return res
+      .status(400)
+      .send(`Invalid Request Header. 'upload-length' required`);
   }
+
+  if (!req.headers['file-name']) {
+    return res.status(400).send(`Invalid Request Header. 'file-name' required`);
+  }
+
   try {
-    const response = await axios.post(CLOUDFLARE_API_STREAM, null, {
-      method: 'POST',
+    const cfResponse = await axios.post(CLOUDFLARE_API_STREAM, null, {
       headers: {
         Authorization: `bearer ${CLOUDFLARE_API_TOKEN}`,
         'Tus-Resumable': '1.0.0',
         'Upload-Length': req.headers['upload-length'] as string,
-        'Upload-Metadata': req.headers['Upload-Metadata'] as string
+        'Upload-Metadata': req.headers['upload-metadata'] as string
       }
     });
 
-    const destination = response.headers['location'];
+    const destination = cfResponse.headers['location'];
+    const streamId = cfResponse.headers['stream-media-id'];
+
+    await db.insertFileDetails(
+      streamId,
+      req.user.uuid,
+      req.headers['file-name'] as string
+    );
+
+    console.log('Setting Response Headers');
 
     res.set({
       'Access-Control-Expose-Headers': 'Location',
@@ -63,10 +83,11 @@ app.get('/get-upload-url', authenticateToken, async (req, res) => {
     });
     res.status(200).send('OK');
   } catch (e) {
-    res.status(500).send(e.message);
+    console.error(e.message);
+    res.status(500).send('Error retrieving content upload url');
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Listening on port ${PORT}`);
 });
