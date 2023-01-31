@@ -100,7 +100,7 @@
     "include": [
         "src",
         "src/types"
-    ],
+, "db/queries.ts", "db/queries.ts"    ],
     "exclude": [
         "node_modules"
     ]
