@@ -5,7 +5,7 @@ import {
   Configuration,
   ContentApiFp,
   ContentFilesApiFp,
-  UserApiFp
+  ProfileApiFp
 } from '@cubeca/bff-client-oas-axios';
 import { AuthApiFp } from '@cubeca/bff-auth-client-oas-axios';
 
@@ -20,7 +20,7 @@ const authConfiguration = new Configuration({
 
 export const contentApi = ContentApiFp(configuration);
 export const contentFilesApi = ContentFilesApiFp(configuration);
-export const profileApi = UserApiFp(configuration);
+export const profileApi = ProfileApiFp(configuration);
 export const authApi = AuthApiFp(authConfiguration);
 export type {
   AddContent,
