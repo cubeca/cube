@@ -1,4 +1,5 @@
 export const API_URL: string = process.env.REACT_APP_API_URL || '';
+export const AUTH_SERVICE_URL = process.env.REACT_APP_AUTH_SERVICE_URL;
 
 export const DEFAULT_API_VERSION = 'v1';
 // export const API_BASE_PATH = `/api/${DEFAULT_API_VERSION}`;
