@@ -2,7 +2,7 @@ import { authApi } from './httpClient';
 
 export const login = async (email: string, password: string) => {
   const api = await authApi.login({
-    email,
+    username: email,
     password
   });
   return await api();
@@ -49,7 +49,7 @@ export const createUser = async (
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean
 ) => {
-  const api = await authApi.createUser({
+  const api = await authApi.user({
     name,
     email,
     password,
