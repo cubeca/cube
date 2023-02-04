@@ -1,8 +1,8 @@
 import * as dotenv from 'dotenv';
-import * as express from 'express';
-import * as cors from 'cors';
+import express, { Express, Request, Response } from 'express';
+import cors from 'cors';
 // import * as helmet from 'helmet';
-import * as db from '../db/queries';
+import * as db from './db/queries';
 import * as jwt from 'jsonwebtoken';
 import {
   comparePassword,
@@ -10,20 +10,13 @@ import {
   decryptString,
   hashPassword
 } from './utils';
-import { selectUserByEmail } from '../db/queries';
+import { selectUserByEmail } from './db/queries';
 import * as bodyParser from 'body-parser';
+import * as settings from './settings';
 
 dotenv.config();
 
-export const APP_URL: string = process.env.REACT_APP_ORIGIN || '';
-export const API_URL: string = process.env.REACT_APP_API_URL || '';
-
-export const DEFAULT_API_VERSION = 'v1';
-export const API_BASE_PATH = `/api/${DEFAULT_API_VERSION}`;
-
-const PORT: number = parseInt((process.env.PORT as string) || '8080', 10);
-
-const app = express();
+const app: Express = express();
 
 // app.use(helmet());
 app.use(cors());
@@ -31,7 +24,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.post('/auth/user', async (req, res) => {
+app.post('/auth/user', async (req: Request, res: Response) => {
   const {
     name,
     email,
@@ -62,7 +55,7 @@ app.post('/auth/user', async (req, res) => {
       hasAcceptedTerms
     );
     res.status(201).send('OK');
-  } catch (e) {
+  } catch (e: any) {
     if (e.message.indexOf('duplicate key') !== -1) {
       res.status(400).send('Email already exists');
     } else {
@@ -72,7 +65,7 @@ app.post('/auth/user', async (req, res) => {
   }
 });
 
-app.post('/auth/login', async (req, res) => {
+app.post('/auth/login', async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -93,7 +86,7 @@ app.post('/auth/login', async (req, res) => {
           uuid: user.uuid,
           permissionIds: user.permission_ids
         },
-        process.env.JWT_TOKEN_SECRET
+        settings.JWT_TOKEN_SECRET
       );
       res.json({
         data: {
@@ -103,13 +96,13 @@ app.post('/auth/login', async (req, res) => {
     } else {
       res.status(401).send('Invalid Password.');
     }
-  } catch (e) {
+  } catch (e: any) {
     console.log(e.message);
     res.status(500).send('Error occurred during authentication');
   }
 });
 
-app.post('/auth/anonymous', (req, res) => {
+app.post('/auth/anonymous', async (req: Request, res: Response) => {
   const { anonymous } = req.body;
 
   if (!anonymous && anonymous !== true) {
@@ -118,19 +111,19 @@ app.post('/auth/anonymous', (req, res) => {
       .send('Invalid Request Body provided for anonymous token.');
   }
   try {
-    const token = jwt.sign({ anonymous: true }, process.env.JWT_TOKEN_SECRET);
+    const token = jwt.sign({ anonymous: true }, settings.JWT_TOKEN_SECRET);
     res.json({
       data: {
         jwt: token
       }
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e.message);
     res.status(500).send('Error occurred during authentication');
   }
 });
 
-app.put('/auth/email', async (req, res) => {
+app.put('/auth/email', async (req: Request, res: Response) => {
   const { uuid, email } = req.body;
 
   if (!uuid || !email) {
@@ -147,7 +140,7 @@ app.put('/auth/email', async (req, res) => {
   }
 });
 
-app.put('/auth/password', async (req, res) => {
+app.put('/auth/password', async (req: Request, res: Response) => {
   const { uuid, password } = req.body;
 
   if (!uuid || !password) {
@@ -164,7 +157,7 @@ app.put('/auth/password', async (req, res) => {
   }
 });
 
-app.get('/auth/verify', async (req, res) => {
+app.get('/auth/verify', async (req: Request, res: Response) => {
   const { uuid } = req.query;
 
   if (!uuid) {
@@ -179,14 +172,14 @@ app.get('/auth/verify', async (req, res) => {
     } else {
       return res.status(401).send('Incorrect id provided');
     }
-  } catch (e) {
+  } catch (e: any) {
     console.log(e.message);
     return res.status(500).send('Error occurred verifying email');
   }
   res.send('OK');
 });
 
-app.get('/auth/forgot-password', async (req, res) => {
+app.get('/auth/forgot-password', async (req: Request, res: Response) => {
   const { email } = req.query;
 
   if (!email) {
@@ -207,6 +200,6 @@ app.get('/auth/forgot-password', async (req, res) => {
   res.send('OK');
 });
 
-app.listen(PORT, async () => {
-  console.log(`Listening on port ${PORT}`);
+app.listen(settings.PORT, async () => {
+  console.log(`Listening on port ${settings.PORT}`);
 });
