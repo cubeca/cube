@@ -1,7 +1,6 @@
 import * as dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
-// import * as helmet from 'helmet';
 import * as db from './db/queries';
 import * as jwt from 'jsonwebtoken';
 import {

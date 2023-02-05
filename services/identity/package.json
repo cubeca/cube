@@ -7,6 +7,8 @@
     "start": "ts-node-dev --respawn --pretty --transpile-only src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "gcp-build": "tsc -p .",
+    "serve": "npm run migrate:up && node build/index.js",
+    "dbshell": "bash -c 'psql postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}'",
     "migrate:up": "db-migrate up",
     "migrate:down": "db-migrate down",
     "migrate:redo": "db-migrate redo",
@@ -25,7 +27,6 @@
     "db-migrate-pg": "^1.2.2",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "helmet": "^5.1.1",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.8.0"
   },
