@@ -1,31 +1,92 @@
-# CUBE Frontend
+# Cube Commons
 
-## Auto-deployed preview of the latest commit
+This project is a monorepo containing the front-end ui and services required to run the CubeCommons app.
 
-You can preview the latest commit at https://frontend-tjjg4pjowa-pd.a.run.app/ after the deploy Github Action has finished running, which can be monitored here: https://github.com/cubeca/cube_ui/actions
+# File Structure
 
-## How to run this as a Docker container
+## /client
 
-1. Gain access to the CUBE private NPM packages. Pick one of these 2 methods, both work for building the Docker image:
-  - via [private NPM package registry](https://www.notion.so/How-to-get-private-NPM-packages-from-GPR-Github-Packages-Registry-at-npm-pkg-github-com-fb4982cd852c405ba1350b4a748ef0a0) (preferred)
-  - use [`npm link` for local Frontend development](https://www.notion.so/How-to-use-npm-link-for-local-Frontend-development-7e5a42b1b0cc42cbb751e36d78bb679f) (i.e. development of both frontend AND api-spec in parallel)
-1. Run `make docker_build`
-1. Run `REACT_APP_API_URL=https://bff-mock-server-tjjg4pjowa-pd.a.run.app/ make docker_run`
+This is the front-end UI in the form of a typical React App
 
-Of course you can set the `REACT_APP_API_URL` environment variable to wherever else you might have the API (or it's mock server) running.
+# /mock-api-server
 
-https://bff-mock-server-tjjg4pjowa-pd.a.run.app/ is a mock server which gets auto-deployed by the latest commit in https://github.com/cubeca/api-specs
+This is an api-server that allows for local testing of the api that will handle all the data queries for profiles, content, etc
 
-### Caveat
+# /services
 
-The Docker image starts really slow because it is still running the React dev server, until we've sorted out some issues with building this into a static app.
+This includes the micro-services that will be deployed to support the app
 
-### Docker environment variables:
+- */services/cloudflare:* APIs related to uploading files to cloudflare. Specifically can retrieve a TUS upload url for media files on behalf of the client.
+- */services/identity:* APIs related to authenticating the user and creating a user account, email verification and password resets. This service is responsible for providing an authentication jwt used to identify the user to other services.
 
-- `REACT_APP_API_URL`: The URL of the API instance you want the frontend to use
-- `PORT`: The port to serve the frontend from, defaults to 3000
+# Quick Start
 
+## 1. Start the Cloudflare Service
 
----
+- Install a postgres db and set user/password as desired.
+- Create a database called 'cube'
 
-FTR [React README](./README-React.md)
+```
+cd services/cloudflare
+cp .env.example .env
+```
+
+- Add the values for the API keys for cloudflare to `.env`
+- Update the values for `PGUSER` and `PGPASSWORD` to match the admin credentials for your db
+- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used for the identity server.
+
+```
+npm i
+npm run migrate:up
+npm run start
+```
+
+The service will now be running on [http://localhost:8080](http://localhost:8080)
+
+## 2. Start the Identity Service
+
+- You can use the same postgres as above. If using a different postgres server and/or db, update the `.env` values accordingly.
+
+```
+cd services/identity
+cp .env.example .env
+```
+
+- Update the values for `PGUSER` and `PGPASSWORD` to match the admin credentials for your db
+- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used for the cloudflare server.
+- The `ENCRYPT_SECRET` can be any value
+
+```
+npm i
+npm run migrate:up
+npm run start
+```
+
+The service will now be running on [http://localhost:8081](http://localhost:8081)
+
+## 3. Start the Mock API Server
+
+```
+cd mock-api-server
+cp .env.example .env
+```
+
+- Ensure the valued for the `CLOUDFLARE_SERVICE_API_URL` matches the Cloudflare service. Defaults to `localhost:8080`
+
+```
+npm i
+npm run start
+```
+
+The service will now be running on [http://localhost:4550](http://localhost:4550)
+
+## 4. Start the Client
+
+```
+cd client
+cp .env.example .env
+make npm_link
+npm i
+npm run start
+```
+

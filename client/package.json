@@ -41,9 +41,10 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "NODE_ENV=development runtime-env-cra --config-name=./public/runtime-env.js && react-scripts start",
     "build": "react-scripts build",
-    "serve": "npx react-inject-env set && npx http-server build",
+    "serve:dev": "NODE_ENV=development runtime-env-cra --config-name=./public/runtime-env.js && && npx http-server build",
+    "serve:prod": "NODE_ENV=production runtime-env-cra --config-name=./public/runtime-env.js && && npx http-server build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint",
