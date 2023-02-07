@@ -48,3 +48,11 @@ logs:
 .PHONY: login
 login:
 	$(DOCKER) exec -ti $(PROJECT_NAME)_microservice bash
+
+.PHONY: docker_build
+docker_build:
+	$(DOCKER) buildx build \
+	--file ./Dockerfile \
+	--tag $(LOCAL_DOCKER_IMAGE) \
+	--output=type=docker \
+	.
