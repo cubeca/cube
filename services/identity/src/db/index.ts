@@ -1,8 +1,5 @@
 import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
 import * as settings from '../settings';
-
-dotenv.config();
 
 const pool = new Pool({
   host: settings.PGHOST,
