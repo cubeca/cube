@@ -1,6 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import * as CryptoJS from 'crypto-js';
 import * as dotenv from 'dotenv';
+import * as settings from './settings';
 
 dotenv.config();
 
@@ -13,11 +14,11 @@ export const comparePassword = async (password: string, hash: string) => {
 };
 
 export const encryptString = (hash: string) => {
-  return CryptoJS.AES.encrypt(hash, process.env.ENCRYPT_SECRET).toString();
+  return CryptoJS.AES.encrypt(hash, settings.ENCRYPT_SECRET).toString();
 };
 
 export const decryptString = (hash: string) => {
-  return CryptoJS.AES.decrypt(hash, process.env.ENCRYPT_SECRET).toString(
+  return CryptoJS.AES.decrypt(hash, settings.ENCRYPT_SECRET).toString(
     CryptoJS.enc.Utf8
   );
 };

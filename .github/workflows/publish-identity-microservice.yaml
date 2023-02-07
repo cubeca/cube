@@ -1,34 +1,33 @@
-name: Publish Frontend
+name: Publish identity microservice
 
-run-name: Publish Frontend @ ${{ github.sha }}
+run-name: Publish identity microservice @ ${{ github.sha }}
 
 on:
   push:
     paths:
-      - 'client/**'
+      - 'services/identity/**'
 
       # This helps with debugging this GHA itself:
-      - '.github/workflows/publish-frontend.yaml'
+      - '.github/workflows/publish-identity-microservice.yaml'
 
 env:
   GITHUB_SHA: ${{ github.sha }}
-  FRONTEND_DOCKER_IMAGE: cubeca/frontend:latest
+  LOCAL_DOCKER_IMAGE: cubeca/identity:latest
   GCP_PROJECT: cubecommons-dev
   GCP_ARTIFACT_REGISTRY_DOMAIN: northamerica-northeast2-docker.pkg.dev
-  GCP_FRONTEND_DOCKER_IMAGE: northamerica-northeast2-docker.pkg.dev/cubecommons-dev/cube-docker-images/frontend:${{ github.sha }}
-  GCP_RUN_APPNAME: frontend
+  GCP_DOCKER_IMAGE: northamerica-northeast2-docker.pkg.dev/cubecommons-dev/cube-docker-images/identity:${{ github.sha }}
+  GCP_RUN_APPNAME: identity
   GCP_RUN_REGION: northamerica-northeast2
   # # TODO try using {{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
   # GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
   # GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
-  NPMRC_FILEPATH: ${{ github.workspace }}/client/.npmrc
 
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 
 jobs:
   publish_package:
     runs-on: ubuntu-22.04
-    name: Publish Frontend
+    name: Publish identity microservice
 
     # Add "id-token" with the intended permissions.
     # See https://github.com/google-github-actions/auth#usage
@@ -37,8 +36,6 @@ jobs:
     permissions:
       contents: read
       id-token: write
-      packages: read
-
 
     steps:
       - name: Checkout ${{ github.repository }}
@@ -48,12 +45,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-
-      - # See also https://stackoverflow.com/questions/71056103/how-to-access-github-package-registry-from-one-repo-to-other-under-same-organiza
-        name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
-        working-directory: ./client
-        run: |
-          ./scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
 
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v1
@@ -72,14 +63,13 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Run make docker_build
-        working-directory: ./client
         run: |
-          make docker_build
+          make --directory=services/identity docker_build
 
       - name: Run docker tag and push
         run: |
-          docker tag $FRONTEND_DOCKER_IMAGE $GCP_FRONTEND_DOCKER_IMAGE
-          docker push $GCP_FRONTEND_DOCKER_IMAGE
+          docker tag $LOCAL_DOCKER_IMAGE $GCP_DOCKER_IMAGE
+          docker push $GCP_DOCKER_IMAGE
 
       - name: Deploy to GCP Cloud Run
         run: |
@@ -87,5 +77,5 @@ jobs:
             --project=$GCP_PROJECT \
             --platform=managed \
             --region=$GCP_RUN_REGION \
-            --image=$GCP_FRONTEND_DOCKER_IMAGE \
+            --image=$GCP_DOCKER_IMAGE \
             --allow-unauthenticated

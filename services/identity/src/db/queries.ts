@@ -1,4 +1,4 @@
-import * as db from '.';
+import * as db from './index';
 
 export const insertIdentity = (
   name: string,
