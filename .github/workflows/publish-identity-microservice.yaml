@@ -7,6 +7,9 @@ on:
     paths:
       - 'services/identity/**'
 
+      # This helps with debugging this GHA itself:
+      - '.github/workflows/publish-identity-microservice.yaml'
+
 env:
   GITHUB_SHA: ${{ github.sha }}
   LOCAL_DOCKER_IMAGE: cubeca/identity:latest
