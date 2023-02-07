@@ -7,6 +7,9 @@ on:
     paths:
       - 'client/**'
 
+      # This helps with debugging this GHA itself:
+      - '.github/workflows/publish-frontend.yaml'
+
 env:
   GITHUB_SHA: ${{ github.sha }}
   FRONTEND_DOCKER_IMAGE: cubeca/frontend:latest
