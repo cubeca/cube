@@ -9,7 +9,7 @@ const VirtualExperiencesPanel = () => {
   return (
     <AboutPanel
       textContent={
-        <Box pr="10rem">
+        <Box pr="5rem">
           <Typography component="h2" variant="h2">
             {t('virtualExperiences')}
           </Typography>

@@ -7,7 +7,7 @@ import Social from '../Header/components/Social';
 const Main: FC<{ children: ReactNode }> = ({ children }) => (
   <>
     <Header />
-    <Social />
+    {/* <Social /> */}
     <Box component="main">{children}</Box>
     <Footer />
   </>

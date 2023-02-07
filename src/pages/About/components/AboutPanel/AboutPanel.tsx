@@ -16,8 +16,9 @@ const AboutPanel: FC<AboutPanelProps> = ({
 }) => (
   <Grid
     container
-    spacing={6}
+    spacing={0}
     py="5rem"
+    columnGap="none"
     className={className}
     direction={isReversed ? 'row-reverse' : 'row'}
   >

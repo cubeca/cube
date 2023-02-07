@@ -1,13 +1,15 @@
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
 const DEFAULT_BORDER_RADIUS = 5;
-const DEFAULT_FONT_SIZE = 16;
+const DEFAULT_FONT_SIZE = 18;
 const FONT_FAMILY = ['Arimo'].join(',');
 const DEFAULT_THEME_MODE = 'dark';
+const DefaultTheme = '#baf2ef';
 
 const THEME_COLORS = {
   primary: {
-    main: '#5DE6FF'
+    main: '#baf2ef',
+    background: 'red'
   }
 };
 
