@@ -1,14 +1,12 @@
 import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
+import * as settings from '../settings';
 
 const pool = new Pool({
-  host: process.env.PGHOST,
-  port: process.env.PGPORT,
-  user: process.env.PGUSER,
-  password: process.env.PGPASSWORD,
-  database: process.env.PGDATABASE,
+  host: settings.PGHOST,
+  port: settings.PGPORT,
+  user: settings.PGUSER,
+  password: settings.PGPASSWORD,
+  database: settings.PGDATABASE,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000

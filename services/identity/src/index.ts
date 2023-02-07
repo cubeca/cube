@@ -1,4 +1,3 @@
-import * as dotenv from 'dotenv';
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as db from './db/queries';
@@ -12,8 +11,6 @@ import {
 import { selectUserByEmail } from './db/queries';
 import * as bodyParser from 'body-parser';
 import * as settings from './settings';
-
-dotenv.config();
 
 const app: Express = express();
 

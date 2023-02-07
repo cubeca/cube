@@ -1,0 +1,69 @@
+version: "3.9"
+
+services:
+  cube_cloudflare_microservice:
+    container_name: ${PROJECT_NAME}_microservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ${PROJECT_NAME}_microservice
+    depends_on:
+      - postgres
+    networks:
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      PORT: $PORT
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+      ENCRYPT_SECRET: $ENCRYPT_SECRET
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+    volumes:
+      - ./.env.example:/work/.env.example
+      - ./${ENV_FILE}:/work/.env
+      - ./migrations:/work/migrations/
+      - ./src:/work/src/
+      - ./database.json:/work/database.json
+      - ./package-lock.json:/work/package-lock.json
+      - ./package.json:/work/package.json
+      - ./tsconfig.json:/work/tsconfig.json
+    ports:
+      # Serve the microservice on the host
+      - '$PORT:$PORT'
+
+
+  postgres:
+    container_name: ${PROJECT_NAME}_db
+    image: postgres:15.1-alpine3.17
+    # healthcheck:
+    #   test: [ "CMD", "pg_isready", "-q", "-d", "$POSTGRES_DB", "-U", "auth" ]
+    #   timeout: 45s
+    #   interval: 10s
+    #   retries: 10
+    restart: always
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+    networks:
+      - db
+
+
+volumes:
+  pgdata:
+
+networks:
+  db:
