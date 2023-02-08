@@ -1,22 +1,17 @@
-FROM node:16.19.0-bullseye-slim
+FROM node:16.19.0-bullseye-slim AS builder
 
-RUN apt-get update \
-    && \
-    apt-get install -y \
-    bash=5.1-2+deb11u1 \
-    make=4.3-4.1 \
-    vim=2:8.2.2434-3+deb11u1 \
-    && \
-    apt clean
+ENV GENERATE_SOURCEMAP=false
 
+# This is also used as default values for the environments variables.
 COPY .env.example /work/.env.example
+
 COPY .eslintignore /work/.eslintignore
 COPY .eslintrc.json /work/.eslintrc.json
 COPY .prettierignore /work/.prettierignore
 COPY .prettierrc /work/.prettierrc
-COPY Makefile.in-container.mk /work/Makefile
 COPY package.json /work/package.json
 COPY package-lock.json /work/package-lock.json
+COPY serve.json /work/serve.json
 COPY tsconfig.json /work/tsconfig.json
 
 # See https://docs.docker.com/engine/reference/builder/#copy
@@ -27,14 +22,27 @@ COPY src /work/src/
 
 WORKDIR /work/
 
-RUN --mount=type=secret,id=npmrc,required=true,target=/root/.npmrc npm i
+RUN --mount=type=secret,id=npmrc,required=true,target=/root/.npmrc npm install
 
-# # TODO make it runnable from a built app
-# RUN npm run build
+RUN npm run build
 
-EXPOSE 8080
+################################################################################
 
-# # TODO make it runnable from a built app
-# ENTRYPOINT npx react-inject-env set && npx http-server build
+FROM node:16.19.0-bullseye-slim AS server
 
-ENTRYPOINT npm run start
+ENV PORT=4550
+
+COPY --from=builder /work/build /work/build/
+COPY --from=builder /work/.env.example /work/.env.example
+COPY --from=builder /work/serve.json /work/serve.json
+
+# See "Usage in Docker" section in https://www.npmjs.com/package/runtime-env-cra
+COPY --from=builder /work/.env.example /work/.env
+
+WORKDIR /work/
+
+RUN npm install runtime-env-cra serve
+
+EXPOSE ${PORT}
+
+ENTRYPOINT ["/bin/sh", "-c", "NODE_ENV=production npx runtime-env-cra --config-name=./build/runtime-env.js && npx serve --cors --no-clipboard --config ../serve.json build"]

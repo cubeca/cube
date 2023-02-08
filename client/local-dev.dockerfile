@@ -3,9 +3,9 @@ FROM node:16.19.0-bullseye-slim
 RUN apt-get update \
     && \
     apt-get install -y \
-    bash=5.1-2+deb11u1 \
-    make=4.3-4.1 \
-    vim=2:8.2.2434-3+deb11u1 \
+    bash \
+    make \
+    vim \
     && \
     apt clean
 
@@ -25,9 +25,8 @@ COPY tsconfig.json /work/tsconfig.json
 # > NOTE: The directory itself is not copied, just its contents.
 COPY public /work/public/
 COPY src /work/src/
+COPY node_modules /work/node_modules/
 
 WORKDIR /work/
 
-RUN make dependencies
-
-ENTRYPOINT ["/bin/bash", "-c", "echo 'Waiting for you to log into this container via `make login_frontend`'; while true; do sleep 99999; done"]
+ENTRYPOINT ["/bin/bash"]
