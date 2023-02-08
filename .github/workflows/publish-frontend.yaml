@@ -12,10 +12,10 @@ on:
 
 env:
   GITHUB_SHA: ${{ github.sha }}
-  FRONTEND_DOCKER_IMAGE: cubeca/frontend:latest
+  LOCAL_DOCKER_IMAGE: cubeca/frontend:latest
   GCP_PROJECT: cubecommons-dev
   GCP_ARTIFACT_REGISTRY_DOMAIN: northamerica-northeast2-docker.pkg.dev
-  GCP_FRONTEND_DOCKER_IMAGE: northamerica-northeast2-docker.pkg.dev/cubecommons-dev/cube-docker-images/frontend:${{ github.sha }}
+  GCP_DOCKER_IMAGE: northamerica-northeast2-docker.pkg.dev/cubecommons-dev/cube-docker-images/frontend:${{ github.sha }}
   GCP_RUN_APPNAME: frontend
   GCP_RUN_REGION: northamerica-northeast2
   # # TODO try using {{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
@@ -72,14 +72,13 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Run make docker_build
-        working-directory: ./client
         run: |
-          make docker_build
+          make --directory=client docker_build
 
       - name: Run docker tag and push
         run: |
-          docker tag $FRONTEND_DOCKER_IMAGE $GCP_FRONTEND_DOCKER_IMAGE
-          docker push $GCP_FRONTEND_DOCKER_IMAGE
+          docker tag $LOCAL_DOCKER_IMAGE $GCP_DOCKER_IMAGE
+          docker push $GCP_DOCKER_IMAGE
 
       - name: Deploy to GCP Cloud Run
         run: |
@@ -87,5 +86,5 @@ jobs:
             --project=$GCP_PROJECT \
             --platform=managed \
             --region=$GCP_RUN_REGION \
-            --image=$GCP_FRONTEND_DOCKER_IMAGE \
+            --image=$GCP_DOCKER_IMAGE \
             --allow-unauthenticated
