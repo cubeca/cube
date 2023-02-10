@@ -30,7 +30,7 @@ function authenticateToken(req: Request, res: Response, next: NextFunction) {
   )
 }
 
-app.get("/content/get-upload-url", authenticateToken, async (req: Request, res: Response) => {
+app.get("/upload/get-video-tus-url", authenticateToken, async (req: Request, res: Response) => {
   if (!req.headers["upload-length"]) {
     return res
       .status(400)
