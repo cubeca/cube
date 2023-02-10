@@ -4,16 +4,20 @@ import NavPanel from './components/NavPanel';
 import * as s from './Header.styled';
 
 const Header = () => (
+  
   <s.Header
     component="header"
     direction="row"
     justifyContent="space-between"
     alignItems="center"
+    position="absolute"
+width="100%"
     padding={2}
   >
     <CubeLogo />
     <NavPanel />
   </s.Header>
+
 );
 
 export default Header;

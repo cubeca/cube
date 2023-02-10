@@ -38,11 +38,11 @@ const DigitalNeighboursPanel = () => {
   ];
 
   return (
-    <Stack alignItems="center" pb="10rem" pt="5rem" spacing={4} sx={{width: '100%'}}>
+    <Stack alignItems="center" pb="10rem" pt="5rem" spacing={4} sx={{width: '100vw'}}>
       <Typography component="h2" variant="h2">
         {t('Digital Neighbours')}
       </Typography>
-      <Typography component="p">{t('digitalNeighboursText')}</Typography>
+      <Typography component="p" textAlign="center">{t('digitalNeighboursText')}</Typography>
       <Stack
         direction="row"
         justifyContent="space-between"

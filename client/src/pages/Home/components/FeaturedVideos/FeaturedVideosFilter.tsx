@@ -11,7 +11,7 @@ const FeaturedVideos = () => {
   const { t } = useTranslation();
   const { setFilter } = useFilterVideos();
   return (
-    <s.Filters direction="row" spacing={2} alignItems="center">
+    <s.Filters direction="row" spacing={2} alignItems="center" width="100vw">
       <Typography component="span">{t('Show me')}</Typography>
       <Select
         label={t('All Media Types')}

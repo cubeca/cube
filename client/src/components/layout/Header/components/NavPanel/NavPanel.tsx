@@ -29,7 +29,7 @@ const NavPanel = () => {
 
   return (
     <>
-      <Box component="nav">
+      <Box component="nav" marginLeft="2rem">
         <List component="ul" sx={{ display: 'flex', alignItems: 'left'}}>
           {navItems.map((item) => (
             <s.NavItem

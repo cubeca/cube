@@ -1,17 +1,18 @@
+import { Settings } from '@mui/icons-material';
 import { createTheme, responsiveFontSizes } from '@mui/material';
 
 const DEFAULT_BORDER_RADIUS = 5;
 const DEFAULT_FONT_SIZE = 18;
 const FONT_FAMILY = ['Arimo'].join(',');
 const DEFAULT_THEME_MODE = 'dark';
-const DefaultTheme = '#baf2ef';
 
 const THEME_COLORS = {
   primary: {
     main: '#baf2ef',
-    background: 'red'
+    // background: 'red',
   }
 };
+//*// primary dark and primary light are used by folks primary light and dark Settings. But I would like to set background color default here as well. Lance what do you think?//
 
 const getTheme = (mode?: 'dark' | 'light') =>
   responsiveFontSizes(

@@ -15,7 +15,7 @@ const CreatorsPanel = () => {
           px="2rem"
           alignItems="center"
           justifyContent="center"
-          sx={{ textAlign: 'right', backgroundColor: '#95f5cb', p: '5rem'}}
+          sx={{ textAlign: 'right', backgroundColor: '#95f5cb', p:'5vw'}}
         >
           <Typography component="h2" variant="h2">
             {t('We Are A Commons')}
@@ -31,22 +31,10 @@ const CreatorsPanel = () => {
         </Stack>
         
       }
-    // //I am not sure this image is covering and  what the best method of the below
+
       imageContent={
-        <Box sx={{height: '100%'}}>
-          <img src={CreatorsHero} alt="" height="100%" width="100%" object-fit= "cover"/>
-        </Box>
-          // <s.Cover>
-          // </s.Cover>
-          // // <Box sx={{
-          // //   display: 'flex',
-          // //   backgroundImage: `url('${CreatorsHero}')`,
-          // //   backgroundRepeat: 'no-repeat',
-          // //   backgroundSize: 'cover'
-          // // }}
-          // // p="20px"
-          // // justifyContent="center">
-          // // </Box>
+          <s.Cover>
+          </s.Cover>
       }
     />
   );
