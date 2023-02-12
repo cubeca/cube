@@ -25,3 +25,6 @@ yarn-error.log*
 
 /.vscode
 /public/runtime-env.js
+
+/vendor/@cubeca/bff-auth-client-oas-axios/node_modules/
+/vendor/@cubeca/bff-client-oas-axios/node_modules/
