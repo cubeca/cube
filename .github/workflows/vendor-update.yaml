@@ -37,6 +37,7 @@ jobs:
       - # See also https://stackoverflow.com/questions/71056103/how-to-access-github-package-registry-from-one-repo-to-other-under-same-organiza
         name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
         run: |
+          mkdir -p "${{ env.VENDOR_UPDATE_STAGING_DIR }}"
           ./client/scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
 
       - name: "Copy latest API client packages into /client/vendor/ dir"
