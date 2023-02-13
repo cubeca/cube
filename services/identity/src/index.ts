@@ -62,16 +62,21 @@ app.post('/auth/user', async (req: Request, res: Response) => {
 });
 
 app.post('/auth/login', async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!email || !password) {
+  if (!username || !password) {
     return res
       .status(401)
-      .send('Invalid Request Body. email, and password must be provided.');
+      .send('Invalid Request Body. username and password must be provided.');
   }
 
   try {
-    const r = await selectUserByEmail(email);
+    const r = await selectUserByEmail(username);
+
+    if (r.rows.length === 0) {
+      return res.status(403).send('Invalid username or password.');
+    }
+
     const user = r.rows[0];
 
     const decryptedPassword = decryptString(user.password);
@@ -85,12 +90,10 @@ app.post('/auth/login', async (req: Request, res: Response) => {
         settings.JWT_TOKEN_SECRET
       );
       res.json({
-        data: {
-          jwt: token
-        }
+        jwt: token
       });
     } else {
-      res.status(401).send('Invalid Password.');
+      res.status(403).send('Invalid username or password.');
     }
   } catch (e: any) {
     console.log(e.message);

@@ -8,6 +8,7 @@ import { FC } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { login } from 'api/auth';
 
 type LoginProps = Pick<DialogProps, 'open' | 'onClose'>;
 
@@ -16,9 +17,18 @@ const Login: FC<LoginProps> = ({ open, onClose }) => {
   const { control, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(data);
-    handleClose();
+  const onSubmit = async (data: FieldValues) => {
+    const { email, password } = data;
+    try {
+      const response = await login(email, password);
+      // TODO: Update to a more secure method for storing token
+      localStorage.setItem('TOKEN', response.data.jwt);
+      navigate('/profile/1');
+      handleClose();
+    } catch (e: any) {
+      console.log(e);
+      // TODO: Show error message
+    }
   };
 
   const handleClose = () => {
@@ -45,13 +55,7 @@ const Login: FC<LoginProps> = ({ open, onClose }) => {
             helperText={t('Password required')}
           />
           <Box pt="1rem">
-            <Button
-              type="submit"
-              onClick={() => {
-                navigate('/profile/1');
-                handleClose();
-              }}
-            >
+            <Button type="submit" onClick={handleSubmit(onSubmit)}>
               {t('Sign In')}
             </Button>
           </Box>
