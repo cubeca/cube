@@ -10,7 +10,7 @@ const Header = () => (
     direction="row"
     justifyContent="space-between"
     alignItems="center"
-    position="absolute"
+    position="relative"
 width="100%"
     padding={2}
   >
