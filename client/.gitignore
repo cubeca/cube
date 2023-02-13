@@ -28,3 +28,5 @@ yarn-error.log*
 
 /vendor/@cubeca/bff-auth-client-oas-axios/node_modules/
 /vendor/@cubeca/bff-client-oas-axios/node_modules/
+
+/vendor-staging/

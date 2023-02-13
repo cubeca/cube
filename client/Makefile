@@ -83,3 +83,8 @@ npm_link:
 .PHONY: npm_link_check
 npm_link_check:
 	ls -la ./node_modules/\@cubeca
+
+
+.PHONY: vendor_update
+vendor_update:
+	./scripts/vendor_update.sh

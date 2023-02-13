@@ -25,6 +25,7 @@ COPY tsconfig.json /work/tsconfig.json
 # > NOTE: The directory itself is not copied, just its contents.
 COPY public /work/public/
 COPY src /work/src/
+COPY vendor /work/vendor/
 COPY node_modules /work/node_modules/
 
 WORKDIR /work/

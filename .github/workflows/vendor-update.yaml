@@ -1,0 +1,54 @@
+name: Update vendorized API client packages
+
+run-name: Update vendorized API client packages
+
+on:
+  repository_dispatch:
+    types:
+      - vendor-update
+
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  NPMRC_FILEPATH: ${{ github.workspace }}/client/.npmrc
+
+
+jobs:
+  publish_package:
+    runs-on: ubuntu-22.04
+    name: Update vendorized API client packages
+
+    # See https://github.com/cubeca/api-specs/settings/actions
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: read
+
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+
+      - name: Set up node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - # See also https://stackoverflow.com/questions/71056103/how-to-access-github-package-registry-from-one-repo-to-other-under-same-organiza
+        name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
+        working-directory: ./client
+        run: |
+          ./scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
+
+      - name: "Copy latest API client packages into /client/vendor/ dir"
+        working-directory: ./client
+        run: |
+          ./scripts/vendor_update.sh
+
+      - # See also https://github.com/marketplace/actions/create-pull-request
+        name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          branch: update/api-client-packages
+          commit-message: Update API client packages
+          title: Update API client packages
+          base: main
