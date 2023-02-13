@@ -10,8 +10,9 @@ on:
 
 env:
   GITHUB_SHA: ${{ github.sha }}
-  NPMRC_FILEPATH: ${{ github.workspace }}/client/.npmrc
-
+  # FTR /client/vendor-staging/ is ignored in /client/.gitignore
+  VENDOR_UPDATE_STAGING_DIR: ${{ github.workspace }}/client/vendor-staging/
+  NPMRC_FILEPATH: ${{ github.workspace }}/client/vendor-staging/.npmrc
 
 jobs:
   publish_package:
@@ -35,14 +36,12 @@ jobs:
 
       - # See also https://stackoverflow.com/questions/71056103/how-to-access-github-package-registry-from-one-repo-to-other-under-same-organiza
         name: "Use GPR (Github Packages Registry) at npm.pkg.github.com for all @${{ github.repository_owner }}/* packages"
-        working-directory: ./client
         run: |
-          ./scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
+          ./client/scripts/write_npmrc.sh $NPMRC_FILEPATH '${{ secrets.GITHUB_TOKEN }}' '${{ github.repository_owner }}'
 
       - name: "Copy latest API client packages into /client/vendor/ dir"
-        working-directory: ./client
         run: |
-          ./scripts/vendor_update.sh
+          ./client/scripts/vendor_update.sh
 
       - # See also https://github.com/marketplace/actions/create-pull-request
         name: Create Pull Request

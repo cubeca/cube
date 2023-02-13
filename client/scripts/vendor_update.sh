@@ -9,7 +9,7 @@ set -o nounset -o pipefail -o errexit
 # echo "LATEST_PUBLISHED_VERSION=$LATEST_PUBLISHED_VERSION"
 # echo "CURRENT_VENDOR_VERSION=$CURRENT_VENDOR_VERSION"
 
-STAGING_DIR="./vendor-staging/"
+STAGING_DIR="${VENDOR_UPDATE_STAGING_DIR:-./vendor-staging/}"
 
 mkdir -p "$STAGING_DIR"
 pushd "$STAGING_DIR"
