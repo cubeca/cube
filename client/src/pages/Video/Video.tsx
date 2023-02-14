@@ -13,20 +13,42 @@ import useVideoDetails from 'hooks/useVideoDetails';
 import MoreContent from './MoreContent';
 import Contributors from './Contributors';
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const Video = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const { data: video, isLoading } = useVideoDetails();
+  const matches = useMediaQuery('(min-width:600px)');
+  
 
   return (
-    <Grid container spacing={5} px="5rem">
+    <Grid container spacing={5}>{`(max-width:600px) matches: ${matches}`}
       <Grid item xs={8}>
         {isLoading ? (
           <MediaPlayerLoader type="video" />
         ) : (
-          <MediaPlayer url={video?.url || ''} width="100%" />
+          <MediaPlayer url={video?.url || ''} width="100%"/>
         )}
+        <Box sx={{ml: '5rem', mr: '5rem', mt: '2rem'}}>
+         <Typography component="h4" variant="body1">
+                {video?.title}
+              </Typography>
+              <Typography component="p" variant="body2">
+                {video?.createdDate}
+              </Typography>
+              <Stack
+                spacing={3}
+                pt="20px"
+                sx={{
+                  // background: theme.palette.grey[800],
+                  borderRadius: theme.shape.borderRadius
+                }}
+              >
+                <Typography component="p">{video?.description}</Typography>
+                <MediaPlayer url={video?.descriptionUrl || ''} isAudio />
+              </Stack>
+              </Box>
       </Grid>
       <Grid item xs={4}>
         <Stack>
@@ -35,23 +57,16 @@ const Video = () => {
           ) : (
             <>
               <Contributors contributors={video?.contributors ?? []} />
-              <Typography component="h4" variant="body1">
-                {video?.title}
-              </Typography>
-              <Typography component="p" variant="body1">
-                {video?.createdDate}
-              </Typography>
-              <Stack
-                spacing={3}
-                padding="20px"
-                sx={{
-                  background: theme.palette.grey[800],
-                  borderRadius: theme.shape.borderRadius
-                }}
-              >
-                <Typography component="p">{video?.description}</Typography>
-                <MediaPlayer url={video?.descriptionUrl || ''} isAudio />
+              <Stack>
+              <Divider sx={{ margin: '2rem 0' }} light />
+                <Typography component="h4" sx={{ fontWeight: 'bold' }}>
+                  {t('Credits')}
+                </Typography>
+                <Typography component="p" sx={{ fontWeight: 'bold' }}>
+                  {video?.credits}
+                </Typography>
               </Stack>
+              <Divider sx={{ margin: '2rem 0' }} light />
               {video && video.tags.length > 0 && (
                 <Stack py="1rem">
                   <Typography component="p">
@@ -69,14 +84,7 @@ const Video = () => {
                   </Box>
                 </Stack>
               )}
-              <Stack>
-                <Typography component="h4" sx={{ fontWeight: 'bold' }}>
-                  {t('Credits')}
-                </Typography>
-                <Typography component="p" sx={{ fontWeight: 'bold' }}>
-                  {video?.credits}
-                </Typography>
-              </Stack>
+             
             </>
           )}
           <Divider sx={{ margin: '2rem 0' }} light />

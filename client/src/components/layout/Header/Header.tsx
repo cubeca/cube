@@ -12,8 +12,9 @@ const Header = () => (
     alignItems="center"
     position="relative"
 width="100%"
-    padding={2}
+    paddingLeft="50px"
   >
+ 
     <CubeLogo />
     <NavPanel />
   </s.Header>

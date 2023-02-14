@@ -14,7 +14,7 @@ const About = () => (
     <DaoPanel />
     <CreatorsPanel />
     <AccessibilityPanel />
-    {/* <VirtualExperiencesPanel /> */}
+    <VirtualExperiencesPanel />
     {/* <CollaborationsPanel /> */}
     {/* <NftsPanel /> */}
     <DigitalNeighboursPanel />
