@@ -1,6 +1,6 @@
-import { CollaboratorsAPIResponse } from 'types/collaborators';
-import { COLLABORATORS_API_PATH } from './constants';
-import httpClient from './httpClient';
+import { contentApi } from './httpClient';
 
-export const getCollaborators = () =>
-  httpClient.get<CollaboratorsAPIResponse>(`${COLLABORATORS_API_PATH}`);
+export const getCollaborators = async () => {
+  const collaboratorsApi = await contentApi.collaboratorList();
+  return await collaboratorsApi();
+};

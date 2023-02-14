@@ -1,2 +1,1 @@
-// export { default } from './Upload';
-export {};
+export { default } from './Upload';

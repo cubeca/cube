@@ -3,7 +3,7 @@ import Button from 'components/Button';
 import MediaPlayer from 'components/MediaPlayer';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Profile } from 'types/profile';
+import { Profile } from 'api/profile';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface ViewSectionProps {

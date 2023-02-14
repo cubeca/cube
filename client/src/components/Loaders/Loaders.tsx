@@ -1,7 +1,7 @@
 import { Box, Stack } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 
-export const VideosLoader: React.FC<{ size: number }> = ({
+export const ContentLoader: React.FC<{ size: number }> = ({
   size
 }: {
   size: number;
