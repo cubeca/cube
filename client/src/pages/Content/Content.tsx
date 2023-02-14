@@ -21,16 +21,17 @@ const Video = () => {
   const { data: content, isLoading } = useContentDetails();
 
   return (
-    <Grid container spacing={5}>{`(max-width:600px) matches: ${matches}`}
+    <Grid container spacing={5}>
       <Grid item xs={8}>
         {isLoading ? (
           <MediaPlayerLoader type="video" />
         ) : (
           <MediaPlayer url={content?.url || ''} width="100%" />
         )}
+        
         <Box sx={{ml: '5rem', mr: '5rem', mt: '2rem'}}>
          <Typography component="h4" variant="body1">
-                {video?.title}
+                {content?.title}
               </Typography>
               <Typography component="p" variant="body1">
                 {content?.createdDate}
@@ -71,11 +72,11 @@ const Video = () => {
                   {content?.credits}
                 </Typography>
               </Stack>
-            </>
-          )}
+            
+          
           <Divider sx={{ margin: '2rem 0' }} light />
           <MoreContent />
-        </Stack>
+        </Box>
       </Grid>
     </Grid>
   );
