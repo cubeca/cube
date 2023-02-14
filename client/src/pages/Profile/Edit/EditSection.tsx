@@ -4,7 +4,7 @@ import TextInput from 'components/form/TextInput';
 import { FC, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Profile } from 'types/profile';
+import { Profile } from 'api/profile';
 import useEditProfile from './useEditProfile';
 import EditIcon from '@mui/icons-material/Edit';
 import FileUploadIcon from '@mui/icons-material/FileUpload';

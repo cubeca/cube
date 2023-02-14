@@ -9,10 +9,6 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-if (process.env.REACT_APP_ENABLE_MOCK === 'true') {
-  const { worker } = require('mocks'); // eslint-disable-line
-  worker.start({ onUnhandledRequest: 'bypass' });
-}
 const root = ReactDOM.createRoot(document.getElementById('root')!); // eslint-disable-line
 root.render(
   <StrictMode>

@@ -1,49 +1,54 @@
 import { ProfileAPIResponse } from 'types/profile';
 import { PROFILE_API_PATH } from './constants';
-import httpClient from './httpClient';
+import httpClient, { profileApi } from './httpClient';
+import { blobToBase64 } from './helpers';
 
-export const getProfile = (id: string) =>
-  httpClient.get<ProfileAPIResponse>(`${PROFILE_API_PATH}/${id}`);
+export type { ProfileMainSchema as Profile } from './httpClient';
 
-export const updateProfileSection = (
+export const getProfile = async (id: string) => {
+  const profileDetailsApi = await profileApi.profileDetails(id);
+  return await profileDetailsApi();
+};
+
+export const updateProfileSection = async (
   id: string,
   name: string,
   description: string
-) =>
-  httpClient.put<ProfileAPIResponse>(`${PROFILE_API_PATH}/${id}`, {
+) => {
+  const profileSectionApi = await profileApi.profileSectionUpdate(id, {
     name,
     description
   });
-
-export const updateProfileLogo = (id: string, file: File) => {
-  const formData = new FormData();
-  formData.append('profile-logo', file, file.name);
-  return httpClient.post<ProfileAPIResponse>(
-    `${PROFILE_API_PATH}/${id}/update-logo`,
-    {
-      file
-    }
-  );
+  return await profileSectionApi();
 };
 
-export const updateProfileHero = (id: string, file: File) => {
-  const formData = new FormData();
-  formData.append('profile-hero', file, file.name);
+export const updateProfileLogo = async (id: string, file: File) => {
+  const fileContents = (await blobToBase64(file)) as string;
+  const updateProfileLogoApi = await profileApi.profileLogoUpdate(id, {
+    name: file.name,
+    file_contents_base64: fileContents
+  });
+  return updateProfileLogoApi();
+};
+
+export const updateProfileHero = async (id: string, file: File) => {
+  const fileContents = await blobToBase64(file);
   return httpClient.post<ProfileAPIResponse>(
     `${PROFILE_API_PATH}/${id}/update-hero`,
     {
-      file
+      name: file.name,
+      file_contents_base64: fileContents
     }
   );
 };
 
-export const updateProfileAudioDescription = (id: string, file: File) => {
-  const formData = new FormData();
-  formData.append('profile-audio-description', file, file.name);
+export const updateProfileAudioDescription = async (id: string, file: File) => {
+  const fileContents = await blobToBase64(file);
   return httpClient.post<ProfileAPIResponse>(
     `${PROFILE_API_PATH}/${id}/update-audio-description`,
     {
-      file
+      name: file.name,
+      file_contents_base64: fileContents
     }
   );
 };

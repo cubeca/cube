@@ -1,0 +1,81 @@
+name: Publish identity microservice
+
+run-name: Publish identity microservice @ ${{ github.sha }}
+
+on:
+  push:
+    paths:
+      - 'services/identity/**'
+
+      # This helps with debugging this GHA itself:
+      - '.github/workflows/publish-identity-microservice.yaml'
+
+env:
+  GITHUB_SHA: ${{ github.sha }}
+  LOCAL_DOCKER_IMAGE: cubeca/identity:latest
+  GCP_PROJECT: cubecommons-dev
+  GCP_ARTIFACT_REGISTRY_DOMAIN: northamerica-northeast2-docker.pkg.dev
+  GCP_DOCKER_IMAGE: northamerica-northeast2-docker.pkg.dev/cubecommons-dev/cube-docker-images/identity:${{ github.sha }}
+  GCP_RUN_APPNAME: identity
+  GCP_RUN_REGION: northamerica-northeast2
+  # # TODO try using {{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+  # GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
+  # GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+
+# See https://www.padok.fr/en/blog/github-action-gcp-identity
+
+jobs:
+  publish_package:
+    runs-on: ubuntu-22.04
+    name: Publish identity microservice
+
+    # Add "id-token" with the intended permissions.
+    # See https://github.com/google-github-actions/auth#usage
+    # See https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+    # See https://github.com/cubeca/api-specs/settings/actions
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+
+      - name: Set up node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
+          service_account: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+
+      - name: Set up GCP Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Configure Docker to use GCP Artifact Registry
+        run: |
+          gcloud auth configure-docker $GCP_ARTIFACT_REGISTRY_DOMAIN
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Run make docker_build
+        run: |
+          make --directory=services/identity docker_build
+
+      - name: Run docker tag and push
+        run: |
+          docker tag $LOCAL_DOCKER_IMAGE $GCP_DOCKER_IMAGE
+          docker push $GCP_DOCKER_IMAGE
+
+      - name: Deploy to GCP Cloud Run
+        run: |
+          gcloud run deploy $GCP_RUN_APPNAME \
+            --project=$GCP_PROJECT \
+            --platform=managed \
+            --region=$GCP_RUN_REGION \
+            --image=$GCP_DOCKER_IMAGE \
+            --allow-unauthenticated

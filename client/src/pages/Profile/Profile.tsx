@@ -1,6 +1,6 @@
 import { Box, Grid, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import VideoList from 'components/VideoList';
+import ContentList from 'components/ContentList';
 import useProfile from 'hooks/useProfile';
 import { useState } from 'react';
 import ViewSection from './View/ViewSection';
@@ -58,17 +58,17 @@ const Profile = () => {
           </Button>
         </Box>
       )}
-      <Stack pt="2rem" pb="10rem" px="5rem">
-        {profile!.videos?.map((list) => (
-          <VideoList
+      {/* <Stack pt="2rem" pb="10rem" px="5rem">
+        {profile!.content?.map((list) => (
+          <ContentList
             key={list.category}
             heading={t(list.category)}
-            videos={list.videos}
+            content={list.content}
             isLoggedIn={isLoggedIn}
             handleNewMedia={handleNewMedia}
           />
         ))}
-      </Stack>
+      </Stack> */}
     </Stack>
   );
 };
