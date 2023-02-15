@@ -26,26 +26,22 @@ const FormControl: FC<FormControlInputProps> = ({
   helperTextId,
   children,
   fullWidth
-}) => {
-  return (
-    <MuiFormControl
-      className={className}
-      sx={{ flexDirection: 'row', alignItems: 'center' }}
-      id={id}
-      error={!!error}
-      fullWidth={fullWidth}
-    >
-      <Box width="100%">
-        <Box mb="0.85rem">
-          <FormLabel htmlFor={id}>{label}</FormLabel>
-        </Box>
-        {children}
-        <FormHelperText id={helperTextId}>
-          {!!error && helperText}
-        </FormHelperText>
+}) => (
+  <MuiFormControl
+    className={className}
+    sx={{ flexDirection: 'row', alignItems: 'center' }}
+    id={id}
+    error={!!error}
+    fullWidth={fullWidth}
+  >
+    <Box width="100%">
+      <Box mb="0.85rem">
+        <FormLabel htmlFor={id}>{label}</FormLabel>
       </Box>
-    </MuiFormControl>
-  );
-};
+      {children}
+      <FormHelperText id={helperTextId}>{!!error && helperText}</FormHelperText>
+    </Box>
+  </MuiFormControl>
+);
 
 export default FormControl;
