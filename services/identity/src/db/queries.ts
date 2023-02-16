@@ -53,10 +53,7 @@ export const selectUserByID = (id: string) => {
   return db.query(text, values);
 };
 
-export const updateEmailVerification = (
-  id: string,
-  hasBeenVerified: boolean
-) => {
+export const updateEmailVerification = (id: string, hasBeenVerified: boolean) => {
   const text = `UPDATE users SET has_verified_email = $1 where id = $2;`;
   const values = [`${hasBeenVerified}`, id];
 

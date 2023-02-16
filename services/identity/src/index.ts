@@ -2,19 +2,13 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as db from './db/queries';
 import * as jwt from 'jsonwebtoken';
-import {
-  comparePassword,
-  encryptString,
-  decryptString,
-  hashPassword
-} from './utils';
+import { comparePassword, encryptString, decryptString, hashPassword } from './utils';
 import { selectUserByEmail } from './db/queries';
 import * as bodyParser from 'body-parser';
 import * as settings from './settings';
 
 const app: Express = express();
 
-// app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,25 +25,14 @@ app.post('/auth/user', async (req: Request, res: Response) => {
   } = req.body;
 
   if (!name || !email || !password) {
-    return res
-      .status(401)
-      .send(
-        'Invalid Request Body. name, email, and password must be provided.'
-      );
+    return res.status(401).send('Invalid Request Body. name, email, and password must be provided.');
   }
 
   try {
     const hashedPassword = await hashPassword(password);
     const encryptedPassword = encryptString(hashedPassword);
 
-    await db.insertIdentity(
-      name,
-      email,
-      encryptedPassword,
-      permissionIds,
-      hasAcceptedNewsletter,
-      hasAcceptedTerms
-    );
+    await db.insertIdentity(name, email, encryptedPassword, permissionIds, hasAcceptedNewsletter, hasAcceptedTerms);
     res.status(201).send('OK');
   } catch (e: any) {
     if (e.message.indexOf('duplicate key') !== -1) {
@@ -65,9 +48,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res
-      .status(401)
-      .send('Invalid Request Body. username and password must be provided.');
+    return res.status(401).send('Invalid Request Body. username and password must be provided.');
   }
 
   try {
@@ -89,9 +70,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
         },
         settings.JWT_TOKEN_SECRET
       );
-      res.json({
-        jwt: token
-      });
+      res.json({ jwt: token });
     } else {
       res.status(403).send('Invalid username or password.');
     }
@@ -126,15 +105,13 @@ app.put('/auth/email', async (req: Request, res: Response) => {
   const { uuid, email } = req.body;
 
   if (!uuid || !email) {
-    return res
-      .status(401)
-      .send('Invalid Request Body. uuid and email is required.');
+    return res.status(401).send('Invalid Request Body. uuid and email is required.');
   }
 
   try {
     await db.updateEmail(uuid as string, email);
     res.send('OK');
-  } catch (e) {
+  } catch (e: any) {
     return res.status(500).send('Error updating email');
   }
 });
@@ -143,15 +120,13 @@ app.put('/auth/password', async (req: Request, res: Response) => {
   const { uuid, password } = req.body;
 
   if (!uuid || !password) {
-    return res
-      .status(401)
-      .send('Invalid Request Body. uuid and password are required.');
+    return res.status(401).send('Invalid Request Body. uuid and password are required.');
   }
 
   try {
     await db.updatePassword(uuid as string, password);
     res.send('OK');
-  } catch (e) {
+  } catch (e: any) {
     return res.status(500).send('Error updating password');
   }
 });
@@ -192,7 +167,7 @@ app.get('/auth/forgot-password', async (req: Request, res: Response) => {
     } else {
       return res.status(403).send('email does not exist');
     }
-  } catch (e) {
+  } catch (e: any) {
     return res.status(500).send('Error updating email');
   }
 

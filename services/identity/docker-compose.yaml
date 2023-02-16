@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 
 services:
   cube_identity_microservice:
@@ -37,7 +37,6 @@ services:
       # Serve the microservice on the host
       - '$PORT:$PORT'
 
-
   postgres:
     container_name: ${PROJECT_NAME}_db
     image: postgres:15.1-alpine3.17
@@ -60,7 +59,6 @@ services:
           nocopy: true
     networks:
       - db
-
 
 volumes:
   pgdata:
