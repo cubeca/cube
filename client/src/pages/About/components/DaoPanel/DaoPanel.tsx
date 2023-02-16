@@ -2,7 +2,8 @@ import { Box, Button, Typography } from '@mui/material';
 import MediaPlayer from 'components/MediaPlayer';
 import { Trans, useTranslation } from 'react-i18next';
 import ThumbnailGrid from '../ThumbnailGrid';
-import { Gradient } from '@mui/icons-material';
+// import { Gradient } from '@mui/icons-material';
+// import LinearGradient from 'react-native-linear-gradient';
 
 import * as s from './DaoPanel.styled';
 
@@ -10,7 +11,7 @@ const DaoPanel = () => {
   const { t } = useTranslation('about');
   return (
 
-          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', backgroundColor: 'rgba(40,52,60,0.7)', pb:'5rem', width: '100vw'}}>
+          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', backgroundColor: 'purple', pb:'5rem', width: '100vw'}}>
           <ThumbnailGrid></ThumbnailGrid>
           <Trans i18nKey="daoText">
           <Box sx={{display: 'flex', flexDirection: 'column', p: '2rem', marginTop: '20vh'}}>
@@ -39,7 +40,6 @@ const DaoPanel = () => {
           <ThumbnailGrid></ThumbnailGrid>
           </Box>
           </Box>
-         
   ); 
 };
 
