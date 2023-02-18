@@ -14,6 +14,20 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+const sendVerificationEmail = async (email: string, userId: string) => {
+  const token = jwt.sign(
+    {
+      iss: 'CUBE',
+      sub: userId,
+      aud: ['unverified']
+    },
+    settings.JWT_TOKEN_SECRET
+  );
+
+  // TODO implement me
+  console.log(`TODO implement me: Send verification email for ${userId} to ${email}`);
+}
+
 app.post('/auth/user', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
   const {
     name,
@@ -40,7 +54,7 @@ app.post('/auth/user', allowIfAnyOf('userAdmin'), async (req: Request, res: Resp
     }
 
     const user = r.rows[0];
-
+    await sendVerificationEmail(email, user.id);
     res.status(201).json({ id: user.id });
   } catch (e: any) {
     if (e.message.indexOf('duplicate key') !== -1) {
@@ -120,6 +134,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
 
   try {
     await db.updateEmail(uuid as string, email);
+    await sendVerificationEmail(email, uuid);
     res.send('OK');
   } catch (e: any) {
     return res.status(500).send('Error updating email');

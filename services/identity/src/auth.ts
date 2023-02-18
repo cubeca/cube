@@ -20,9 +20,12 @@ function isCubeJwtPayload(x: any): x is CubeJwtPayload {
 
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  let token = authHeader && authHeader.split(' ')[1];
 
-  if (token == null) return res.status(401).send('authorization header missing or malformed');
+  // For get requests
+  token ??= req.query?.authorization ? String(req.query?.authorization) : undefined;
+
+  if (!token) return res.status(401).send('authorization header or query parameter missing or malformed');
 
   jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
     if (isCubeJwtPayload(data)) {

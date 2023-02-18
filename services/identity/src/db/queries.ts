@@ -26,7 +26,7 @@ export const insertIdentity = (
 };
 
 export const updateEmail = (id: string, email: string) => {
-  const text = `UPDATE users SET email = $1 WHERE id = $2;`;
+  const text = `UPDATE users SET email = $1, has_verified_email = false WHERE id = $2;`;
   const values = [email, id];
 
   return db.query(text, values);
