@@ -10,6 +10,7 @@ services:
     depends_on:
       - postgres
     networks:
+      - public_api
       - db
     environment:
       PROJECT_NAME: $PROJECT_NAME
@@ -60,8 +61,50 @@ services:
     networks:
       - db
 
+  cube_identity_testrunner:
+    profiles:
+      - test
+    container_name: ${PROJECT_NAME}_testrunner
+    build:
+      context: .
+      dockerfile: test/Dockerfile
+    image: ${PROJECT_NAME}_testrunner
+    depends_on:
+      - cube_identity_microservice
+    networks:
+      - public_api
+
+      # So that we can empty the DB before runnign the tests.
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      # This must be the same as the service name here in the docker compose file.
+      MICROSERVICE: cube_identity_microservice
+      PORT: $PORT
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+      ENCRYPT_SECRET: $ENCRYPT_SECRET
+    volumes:
+      - ./.env.example:/work/.env.example
+      - ./${ENV_FILE}:/work/.env
+      - ./test/src:/work/src/
+      - ./test/scripts:/work/scripts/
+      - ./test/jest.config.js:/work/jest.config.js
+      - ./test/package-lock.json:/work/package-lock.json
+      - ./test/package.json:/work/package.json
+      - ./test/tsconfig.json:/work/tsconfig.json
+
 volumes:
   pgdata:
 
 networks:
+  public_api:
   db:

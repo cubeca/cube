@@ -29,7 +29,11 @@ export POSTGRES_PASSWORD ?= postgres
 
 .PHONY: up
 up:
-	$(PROJECT_DOCKER_COMPOSE) up -d --force-recreate
+	$(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+
+.PHONY: test
+test:
+	$(PROJECT_DOCKER_COMPOSE) --profile test up --detach --force-recreate
 
 .PHONY: down
 down:
@@ -38,16 +42,16 @@ down:
 .PHONY: clean
 clean:
 	-$(PROJECT_DOCKER_COMPOSE) rm
-	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db
-	-$(DOCKER) image rm $(PROJECT_NAME)_microservice
+	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db $(PROJECT_NAME)_testrunner
+	-$(DOCKER) image rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_testrunner
 
 .PHONY: logs
 logs:
-	$(PROJECT_DOCKER_COMPOSE) logs -f
+	$(PROJECT_DOCKER_COMPOSE) logs --follow
 
 .PHONY: login
 login:
-	$(DOCKER) exec -ti $(PROJECT_NAME)_microservice bash
+	$(DOCKER) exec -ti $(PROJECT_NAME)_testrunner bash
 
 .PHONY: docker_build
 docker_build:
