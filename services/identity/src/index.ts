@@ -74,7 +74,7 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
       const token = jwt.sign(
         {
           iss: 'CUBE',
-          sub: user.uuid,
+          sub: user.id,
           aud: user.permission_ids
         },
         settings.JWT_TOKEN_SECRET

@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as jwt from 'jsonwebtoken';
+import jsonwebtoken from 'jsonwebtoken';
 
 import * as settings from './settings';
 
@@ -9,7 +9,7 @@ const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3
 
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
-const identityMicroservice = axios.create({
+const identityApi = axios.create({
   baseURL: API_URL,
   timeout: 1000,
 
@@ -22,7 +22,7 @@ let uniqueEmailCounter = 1;
 const getUniqueEmail = () => `test-${uniqueEmailCounter++}@example.com`;
 
 const getAuthReqOpts = (...permissions:string[]) => {
-  const requestJwt = jwt.sign(
+  const jwt = jsonwebtoken.sign(
     {
       iss: 'CUBE',
       sub: NIL_UUID,
@@ -31,16 +31,26 @@ const getAuthReqOpts = (...permissions:string[]) => {
     settings.JWT_TOKEN_SECRET
   );
 
-  return {
-    headers: {
-      'Authorization': `Bearer ${requestJwt}`
-    }
-  };
+  return getReqOptsWithJwt(jwt);
 }
 
+const getReqOptsWithJwt = (jwt:string) => ({ headers: { Authorization: `Bearer ${jwt}` }});
+
+const createUser = async ({ userPermissions = ['active'], createPermissions = ['userAdmin'] } = {}) => {
+  const requestBody = {
+    name: 'Real Name',
+    email: getUniqueEmail(),
+    password: 'super-secret',
+    permissionIds: userPermissions,
+    hasAcceptedNewsletter: false,
+    hasAcceptedTerms: false,
+  };
+  const { status, data } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(...createPermissions));
+  return { status, data, requestBody };
+};
 
 test('gets anonymous JWT', async () => {
-  const { status, data } = await identityMicroservice.post('/auth/anonymous', { anonymous: true });
+  const { status, data } = await identityApi.post('/auth/anonymous', { anonymous: true });
 
   expect(status).toEqual(200);
 
@@ -48,7 +58,7 @@ test('gets anonymous JWT', async () => {
     jwt: expect.any(String),
   }));
 
-  const jwtPayload = await jwt.verify(data.jwt, settings.JWT_TOKEN_SECRET);
+  const jwtPayload = await jsonwebtoken.verify(data.jwt, settings.JWT_TOKEN_SECRET);
 
   expect(jwtPayload).toEqual(expect.objectContaining({
     iss: 'CUBE',
@@ -59,16 +69,7 @@ test('gets anonymous JWT', async () => {
 });
 
 test('creates user, but no duplicate', async () => {
-  const createUserRequestBody = {
-    name: 'Real Name',
-    email: getUniqueEmail(),
-    password: 'super-secret',
-    permissionIds: ['active'],
-    hasAcceptedNewsletter: false,
-    hasAcceptedTerms: false,
-  };
-
-  const { status, data } = await identityMicroservice.post('/auth/user', createUserRequestBody, getAuthReqOpts('userAdmin'));
+  const { status, data, requestBody } = await createUser();
 
   expect(status).toEqual(201);
 
@@ -77,34 +78,42 @@ test('creates user, but no duplicate', async () => {
   }));
 
   // Duplicate email should fail.
-  const { status:statusDuplicate } = await identityMicroservice.post('/auth/user', createUserRequestBody, getAuthReqOpts('userAdmin'));
+  const { status:statusDuplicate } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts('userAdmin'));
   expect(statusDuplicate).toEqual(400);
 });
 
 test('can not create user without correct permission', async () => {
-  const createUserRequestJwt = jwt.sign(
-    {
-      iss: 'CUBE',
-      sub: NIL_UUID,
-      aud: ['wrongPermission']
-    },
-    settings.JWT_TOKEN_SECRET
-  );
-
-  const createUserRequestHeaders = {
-    'Authorization': `Bearer ${createUserRequestJwt}`
-  };
-
-  const createUserRequestBody = {
-    name: 'Real Name',
-    email: getUniqueEmail(),
-    password: 'super-secret',
-    permissionIds: ['active'],
-    hasAcceptedNewsletter: false,
-    hasAcceptedTerms: false,
-  };
-
-  const { status, data } = await identityMicroservice.post('/auth/user', createUserRequestBody, { headers: createUserRequestHeaders });
-
+  const { status, data, requestBody } = await createUser({ createPermissions: ['wrongPermission'] });
   expect(status).toEqual(403);
+});
+
+test('logs in', async () => {
+  const { status:statusCreate, data:dataCreate, requestBody:requestBodyCreate } = await createUser();
+  expect(statusCreate).toEqual(201);
+  expect(dataCreate).toEqual(expect.objectContaining({
+    id: expect.stringMatching(UUID_REGEXP),
+  }));
+
+  const requestBodyLogin = {
+    username: requestBodyCreate.email,
+    password: requestBodyCreate.password,
+  };
+  const { status:statusLogin, data:dataLogin } = await identityApi.post('/auth/login', requestBodyLogin, getAuthReqOpts('anonymous'));
+  expect(statusLogin).toEqual(200);
+  expect(dataLogin).toEqual(expect.objectContaining({
+    jwt: expect.any(String),
+  }));
+
+  const jwtPayload = await jsonwebtoken.verify(dataLogin.jwt, settings.JWT_TOKEN_SECRET);
+
+  expect(jwtPayload).toEqual(expect.objectContaining({
+    iss: 'CUBE',
+    sub: dataCreate.id,
+    aud: requestBodyCreate.permissionIds,
+    iat: expect.any(Number),
+  }));
+
+  // Can *NOT* log in a second time
+  const { status:statusRepeatLogin, data:dataRepeatLogin } = await identityApi.post('/auth/login', requestBodyLogin, getReqOptsWithJwt(dataLogin.jwt));
+  expect(statusRepeatLogin).toEqual(403);
 });
