@@ -3,7 +3,9 @@ import { createTheme, responsiveFontSizes } from '@mui/material';
 
 const DEFAULT_BORDER_RADIUS = 5;
 const DEFAULT_FONT_SIZE = 16;
-const FONT_FAMILY = ['Inter'].join(',');
+const DEFAULT_SPACING = 8;
+const FONT_FAMILY = ['Inter', 'sans-serif',].join(',');
+const HEADING_FONT_FAMILY = ['Rubik', 'Inter', 'sans-serif',].join(',');
 const DEFAULT_THEME_MODE = 'dark';
 
 const THEME_COLORS = {
@@ -22,6 +24,7 @@ const THEME_COLORS = {
 const getTheme = (mode?: 'dark' | 'light') =>
   responsiveFontSizes(
     createTheme({
+      spacing: DEFAULT_SPACING,
       shape: {
         borderRadius: DEFAULT_BORDER_RADIUS
       },
@@ -30,23 +33,27 @@ const getTheme = (mode?: 'dark' | 'light') =>
         fontWeightLight: 400,
         fontSize: DEFAULT_FONT_SIZE,
         h1: {
-          fontFamily: 'Rubik',
+          fontFamily: HEADING_FONT_FAMILY,
           fontSize: '3.8rem',
           fontWeight: 400,
           color: THEME_COLORS.primary.main,
+          marginTop: 32,
+          marginBottom: 32,
         },
         h2: {
-          fontFamily: 'Rubik',
+          fontFamily: HEADING_FONT_FAMILY,
           fontSize: '3.5rem',
           color: THEME_COLORS.primary.main,
+          marginTop: 32,
+          marginBottom: 32,
         },
         h3: {
-          fontFamily: 'Rubik',
+          fontFamily: HEADING_FONT_FAMILY,
           fontSize: '2rem',
           color: THEME_COLORS.primary.main,
         },
         h4: {
-          fontFamily: 'Rubik',
+          fontFamily: HEADING_FONT_FAMILY,
           fontSize: '1.5rem',
           color: THEME_COLORS.primary.main,
         },
@@ -71,11 +78,9 @@ const getTheme = (mode?: 'dark' | 'light') =>
         },
         body1: {
           fontSize: '1.125rem',
-          margin: '1.875rem 0'
         },
         body2: {
           fontSize: '1rem',
-          margin: '1.875rem 0'
         }
       },
       palette: {
@@ -114,7 +119,9 @@ const getTheme = (mode?: 'dark' | 'light') =>
           main: '#75b9f7',
         }
       },
+
       components: {
+
         MuiButton: {
           styleOverrides: {
             root: {
@@ -122,7 +129,7 @@ const getTheme = (mode?: 'dark' | 'light') =>
               padding: '1rem 2rem'
             }
           }
-        }
+        },
       }
     })
   );

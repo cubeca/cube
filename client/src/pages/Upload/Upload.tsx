@@ -1,4 +1,4 @@
-import { Box, MenuItem, Stack, TextField, Typography } from '@mui/material';
+import { Box, MenuItem, Stack, TextField, Typography, useTheme } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
 import ChipInput from 'components/form/ChipInput';
@@ -32,6 +32,9 @@ const Upload = () => {
   // const { data: collaborators, isLoading: isCollaboratorsLoading } =
   //   useCollaborators();
   const [value, setValue] = useState<dateFns | null>(null);
+  const theme = useTheme();
+  const vertical_spacing_lg = theme.spacing(5);
+  const vertical_spacing_sm = theme.spacing(2.5);
 
   const onSubmit = (values: FieldValues) => {
     addContent(
@@ -73,14 +76,14 @@ const Upload = () => {
 
   return (
     <Stack>
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
             
             <Box>
               <Typography component="h2" variant="h2">{t('Media')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <Select
                 label={t('Media Type')}
                 name="type"
@@ -92,9 +95,10 @@ const Upload = () => {
                 <MenuItem value={ContentTypes.Audio}>{t('Audio')}</MenuItem>
                 <MenuItem value={ContentTypes.PDF}>{t('PDF')}</MenuItem>
               </Select>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('What type of media are you uploading? Don’t see the type you need in this list? Contact us.')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <TextInput
                 control={control}
                 name="title"
@@ -102,28 +106,28 @@ const Upload = () => {
                 variant="outlined"
                 placeholder={t('Title (required)')}
               />
-              <Typography component="p" variant="body2">{t('What is the title of this work? This is the name that people will see when they search for and view your content. Keep this short, you will be able to provide a longer description on the next screen.')}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('What is the title of this work? This is the name that people will see when they search for and view your content. Keep this short, you will be able to provide a longer description on the next screen.')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <UploadInput
                 text={t('Media file (required)')}
                 onDrop={handleMediaUpload}
                 maxFiles={1}
               />
-              <Typography component="p" variant="body2">{t('Upload your video. This is a shared network, to reduce energy and space consumption please upload files xxx, xxx or xxx, no more than xx mb. While your video uploads you can continue filling out the rest of this form. You will be able to submit your entry once the upload has finished.')}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('Upload your video. This is a shared network, to reduce energy and space consumption please upload files xxx, xxx or xxx, no more than xx mb. While your video uploads you can continue filling out the rest of this form. You will be able to submit your entry once the upload has finished.')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <UploadInput
                 text={t('Thumbnail image (required)')}
                 onDrop={handleCoverImageUpload}
                 maxFiles={1}
               />
-              <Typography component="p" variant="body2">{t('Upload a Thumbnail Image. Recommended image dimensions are xxx by xxx. File size should not exceed xxx kb.')}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('Upload a Thumbnail Image. Recommended image dimensions are xxx by xxx. File size should not exceed xxx kb.')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <TextInput
                 control={control}
                 name="imageText"
@@ -131,10 +135,10 @@ const Upload = () => {
                 fullWidth
                 variant="outlined"
               />
-              <Typography component="p" variant="body2">{t('Alt text should describe who or what is in the picture, atmospheric or prop details and any vibrant colours or important design elements or symbols')}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('Alt text should describe who or what is in the picture, atmospheric or prop details and any vibrant colours or important design elements or symbols')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <TextInput
                 control={control}
                 name="description"
@@ -144,10 +148,10 @@ const Upload = () => {
                 rows={8}
                 fullWidth
               />
-              <Typography component="p" variant="body2">{t(`Though this text will be accessible to screen reading tools, it's important to remember that different accessibilities are assisted by different kinds of description. Use language in your text that considers a broad audience and is no greater than 280 characters.`)}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t(`Though this text will be accessible to screen reading tools, it's important to remember that different accessibilities are assisted by different kinds of description. Use language in your text that considers a broad audience and is no greater than 280 characters.`)}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <Button
                 onClick={() => {}}
                 variant="text"
@@ -164,23 +168,23 @@ const Upload = () => {
               >
                 {t('Upload an audio file describing the information above')}
               </Button>
-              <Typography component="p" variant="body2">{t('Using your phone or computer record a quick 1-2min description that includes not only the information in the text but a description of where the video is shot, and some of the key visuals in the video.')}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('Using your phone or computer record a quick 1-2min description that includes not only the information in the text but a description of where the video is shot, and some of the key visuals in the video.')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <UploadInput
                 text={t('VTT file (required)')}
                 onDrop={handleVTTFilesUpload}
                 maxFiles={1}
               />
-              <Typography component="p" variant="body2">
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>
                 {t('Upload VTT File For Subtitles. VTT files ensure your content has subtitles. Closed captions include information about background sounds and speaker changes. Subtitles assume the viewer hears the audio and as a result does not contain background information. Please format the file to have this code at the top to ensure it adapts to various screen sizes')}
                 <br />
                 {t('Code')}: XXX
               </Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <DatePicker
                 label={t('Expiry Date')}
                 value={value}
@@ -198,19 +202,21 @@ const Upload = () => {
                   />
                 )}
               />
-              <Typography component="p" variant="body2">{t('You can include an expiration date for content that is only licensed for a period.')}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('You can include an expiration date for content that is only licensed for a period.')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <Typography component="h2" variant="h2">{t('Accessibility')}</Typography>
               <Typography component="h5" variant="h5">{t('Add a Sign-language Option To Your Video')}</Typography>
               <Typography component="p">{t('We encourage everyone to add sign language to their video content. Cube has a partnership with Deaf Spectrum who is able to book Signers willing to be videoed for content online. This does not need to be uploaded at the same time your content is. If you book using the button here, which is a portal to Deaf Spectrum’s site, signers are given the time they need to produce video content and the video is added later as a picture on picture option for users who select it.')}</Typography>
               <Button>{t('Book with Deaf Spectrum')}</Button>
             </Box>
             
-            <Typography component="h2" variant="h2">{t('Tags')}</Typography>
-
             <Box>
+              <Typography component="h2" variant="h2">{t('Tags')}</Typography>
+            </Box>
+
+            <Box my={vertical_spacing_lg}>
               <ChipInput
                 control={control}
                 name="collaborators"
@@ -242,11 +248,11 @@ const Upload = () => {
                   'Toronto'
                 ]}
               />
-              <Typography component="p" variant="body2">{t('Separate tags by comma. Tags are our way of expanding the terms by which users can search content. They also contribute to your govenance token holdings by expressing how inclusive and accessible your content is. If you want content to be bundled under an exhibition name please create that tag:')}</Typography>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('Separate tags by comma. Tags are our way of expanding the terms by which users can search content. They also contribute to your govenance token holdings by expressing how inclusive and accessible your content is. If you want content to be bundled under an exhibition name please create that tag:')}</Typography>
             </Box>
               
-            <Box>
-              <Typography component="p" variant="body2">{t('Credit any individuals who contribute to this content, including artists, editors etc. Add as many contributors as needed, using “Add more”. Only one name per field.')}</Typography>
+            <Box my={vertical_spacing_lg}>
+              <Typography component="p" variant="body2" my={vertical_spacing_sm}>{t('Credit any individuals who contribute to this content, including artists, editors etc. Add as many contributors as needed, using “Add more”. Only one name per field.')}</Typography>
               <TextInput
                 control={control}
                 name="contributor"
@@ -257,7 +263,7 @@ const Upload = () => {
               <Button variant="text">{t('+ add more')}</Button>
             </Box>
             
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <ChipInput
                 control={control}
                 name="collaborators"
@@ -268,7 +274,7 @@ const Upload = () => {
               <Typography component="p" variant='body2'>{t('Did you work with another organization? Include them in the credits. Separate collaborators by comma.')}</Typography>
             </Box>
 
-            <Box>
+            <Box my={vertical_spacing_lg}>
               <Button
                 onClick={handleSubmit(onSubmit)}
                 fullWidth={false}
