@@ -74,7 +74,7 @@ services:
     networks:
       - public_api
 
-      # So that we can empty the DB before runnign the tests.
+      # So that we can empty the DB before running the tests.
       - db
     environment:
       PROJECT_NAME: $PROJECT_NAME
