@@ -1,4 +1,4 @@
-import { Stack } from '@mui/material';
+import { Stack, Box } from '@mui/material';
 import AccessibilityPanel from './components/AccessibilityPanel';
 import CollaborationsPanel from './components/CollaborationsPanel';
 import CreatorsPanel from './components/CreatorsPanel';
@@ -10,6 +10,7 @@ import VirtualExperiencesPanel from './components/VirtualExperiencesPanel';
 
 const About = () => (
   <Stack sx={{position: 'absolute', top: '0', bottom: '0'}}>
+    <Box sx={{background: '#28343C'}}>
     <HeroPanel />
     <DaoPanel />
     <CreatorsPanel />
@@ -18,6 +19,7 @@ const About = () => (
     {/* <CollaborationsPanel /> */}
     {/* <NftsPanel /> */}
     <DigitalNeighboursPanel />
+    </Box>
   </Stack>
 );
 

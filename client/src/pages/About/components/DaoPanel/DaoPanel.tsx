@@ -11,7 +11,7 @@ const DaoPanel = () => {
   const { t } = useTranslation('about');
   return (
 
-          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', backgroundImage: 'linear-gradient(rgba(40,52,60,0), rgba(40,52,60,1), rgba(40,52,60,1), rgba(40,52,60,0.9), rgba(40,52,60,0))', pb:'5rem', width: '100vw'}}>
+          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center', backgroundImage: 'linear-gradient(rgba(40,52,60,0),rgba(40,52,60,1), rgba(40,52,60,1), rgba(40,52,60,1),rgba(40,52,60,1), rgba(40,52,60,1))', pb:'5rem', width: '100vw'}}>
           <ThumbnailGrid></ThumbnailGrid>
           <Trans i18nKey="daoText">
           <Box sx={{display: 'flex', flexDirection: 'column', p: '2rem', marginTop: '20vh'}}>
