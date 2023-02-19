@@ -2,13 +2,13 @@
   "defaultEnv": "pg",
   "pg": {
     "driver": "pg",
-    "user": {"ENV": "PGUSER"},
-    "password": {"ENV": "PGPASSWORD"},
-    "host": {"ENV": "PGHOST"},
-    "database": {"ENV": "PGDATABASE"},
-    "port": {"ENV": "PGPORT"},
+    "user": { "ENV": "PGUSER" },
+    "password": { "ENV": "PGPASSWORD" },
+    "host": { "ENV": "PGHOST" },
+    "database": { "ENV": "PGDATABASE" },
+    "port": { "ENV": "PGPORT" },
     "schema": "public",
     "ssl": false
   },
-  "sql-file" : true
+  "sql-file": true
 }

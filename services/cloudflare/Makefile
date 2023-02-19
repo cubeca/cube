@@ -23,6 +23,7 @@ export PORT ?= 3000
 export JWT_TOKEN_SECRET ?= secret
 export CLOUDFLARE_ACCOUNT_ID ?= __INVALID__
 export CLOUDFLARE_API_TOKEN ?= __INVALID__
+export CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN ?= __INVALID__
 
 export POSTGRES_DB ?= $(PROJECT_NAME)
 export POSTGRES_USER ?= postgres
@@ -30,7 +31,11 @@ export POSTGRES_PASSWORD ?= postgres
 
 .PHONY: up
 up:
-	$(PROJECT_DOCKER_COMPOSE) up -d --force-recreate
+	$(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+
+.PHONY: test
+test:
+	$(PROJECT_DOCKER_COMPOSE) --profile test up --detach --force-recreate
 
 .PHONY: down
 down:
@@ -39,15 +44,19 @@ down:
 .PHONY: clean
 clean:
 	-$(PROJECT_DOCKER_COMPOSE) rm
-	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db
-	-$(DOCKER) image rm $(PROJECT_NAME)_microservice
+	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db $(PROJECT_NAME)_testrunner
+	-$(DOCKER) image rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_testrunner
 
 .PHONY: logs
 logs:
-	$(PROJECT_DOCKER_COMPOSE) logs -f
+	$(PROJECT_DOCKER_COMPOSE) logs --follow
 
 .PHONY: login
 login:
+	$(DOCKER) exec -ti $(PROJECT_NAME)_testrunner bash
+
+.PHONY: login_ms
+login_ms:
 	$(DOCKER) exec -ti $(PROJECT_NAME)_microservice bash
 
 .PHONY: docker_build

@@ -1,13 +1,42 @@
 import * as db from './index';
 
-export const insertFileDetails = (
-  streamMediaUUID: string,
-  fileOwnerUUID: string,
-  filename: string
-) => {
-  const text =
-    'INSERT INTO file_upload_details(stream_media_uuid, file_owner_uuid, filename) VALUES($1, $2, $3) RETURNING *';
-  const values = [streamMediaUUID, fileOwnerUUID, filename];
+// CREATE TYPE file_storage_type AS ENUM ('cloudflare_stream', 'cloudflare_r2');
+// CREATE TABLE files (
+//     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+//     storage_type file_storage_type NOT NULL,
+//
+//     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+//
+//     -- An automated `updated_at` would need a trigger, which would need `CREATE
+//     -- LANGUAGE plpgsql;`, etc.
+//     -- See https://stackoverflow.com/questions/1035980/update-timestamp-when-row-is-updated-in-postgresql
+//     -- For now, not automated at SQL level.
+//     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+//
+//     data JSONB NOT NULL DEFAULT '{}'::JSONB
+// );
 
-  return db.query(text, values);
+export const insertVideoFile = async (cloudflareStreamUid: string, uploadingUserId: string, uploadFilename: string) => {
+  const data = {
+    cloudflareStreamUid,
+    uploadingUserId,
+    uploadFilename
+  };
+
+  return (
+    await db.query(
+      `
+        INSERT INTO files (
+          storage_type,
+          data
+        )
+        VALUES (
+          $1,
+          $2
+        )
+        RETURNING *
+      `,
+      ['cloudflare_stream', JSON.stringify(data)]
+    )
+  ).rows[0];
 };
