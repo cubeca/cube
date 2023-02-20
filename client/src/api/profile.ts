@@ -2,14 +2,14 @@ import { ProfileAPIResponse } from 'types/profile';
 import { PROFILE_API_PATH } from './constants';
 import httpClient, { profileApi } from './httpClient';
 import { blobToBase64 } from './helpers';
-import { getToken } from 'utils/jwtToken';
+import { getAuthToken } from 'utils/authToken';
 
 export type { ProfileMainSchema as Profile } from './httpClient';
 
 export const getProfile = async (id: string) => {
   const profileDetailsApi = await profileApi.profileDetails(id, {
     headers: {
-      authorization: `BEARER ${getToken()}`
+      authorization: `BEARER ${getAuthToken()}`
     }
   });
   return await profileDetailsApi();
@@ -28,7 +28,7 @@ export const updateProfileSection = async (
     },
     {
       headers: {
-        authorization: `BEARER ${getToken()}`
+        authorization: `BEARER ${getAuthToken()}`
       }
     }
   );
@@ -45,7 +45,7 @@ export const updateProfileLogo = async (id: string, file: File) => {
     },
     {
       headers: {
-        authorization: `BEARER ${getToken()}`
+        authorization: `BEARER ${getAuthToken()}`
       }
     }
   );
@@ -62,7 +62,7 @@ export const updateProfileHero = async (id: string, file: File) => {
     },
     {
       headers: {
-        authorization: `BEARER ${getToken()}`
+        authorization: `BEARER ${getAuthToken()}`
       }
     }
   );
@@ -78,7 +78,7 @@ export const updateProfileAudioDescription = async (id: string, file: File) => {
     },
     {
       headers: {
-        authorization: `BEARER ${getToken()}`
+        authorization: `BEARER ${getAuthToken()}`
       }
     }
   );

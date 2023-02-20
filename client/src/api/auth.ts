@@ -1,20 +1,35 @@
-import { JWT_TOKEN_KEY } from 'constants/storageKeys';
-import { getToken } from 'utils/jwtToken';
+import { getAnonToken, getAuthToken, setAuthToken } from 'utils/authToken';
 import { authApi } from './httpClient';
-
-export const login = async (email: string, password: string) => {
-  const api = await authApi.login({
-    username: email,
-    password
-  });
-  return await api();
-};
 
 export const anonymousJWT = async () => {
   const api = await authApi.anonymousJWT({
     anonymous: true
   });
-  return await api();
+  const {
+    data: { jwt }
+  } = await api();
+  return jwt;
+};
+
+export const login = async (email: string, password: string) => {
+  const anonToken = await getAnonToken();
+
+  const api = await authApi.login(
+    {
+      username: email,
+      password
+    },
+    {
+      headers: {
+        authorization: `BEARER ${anonToken}`
+      }
+    }
+  );
+  const {
+    data: { jwt }
+  } = await api();
+  setAuthToken(jwt);
+  return jwt;
 };
 
 export const updateEmail = async (uuid: string, email: string) => {
@@ -25,7 +40,7 @@ export const updateEmail = async (uuid: string, email: string) => {
     },
     {
       headers: {
-        authorization: `BEARER ${getToken()}`
+        authorization: `BEARER ${getAuthToken()}`
       }
     }
   );
@@ -40,7 +55,7 @@ export const updatePassword = async (uuid: string, password: string) => {
     },
     {
       headers: {
-        authorization: `BEARER ${getToken()}`
+        authorization: `BEARER ${getAuthToken()}`
       }
     }
   );
@@ -48,12 +63,22 @@ export const updatePassword = async (uuid: string, password: string) => {
 };
 
 export const forgotPassword = async (email: string) => {
-  const api = await authApi.forgotPassword(email);
+  const anonToken = await getAnonToken();
+  const api = await authApi.forgotPassword(email, {
+    headers: {
+      authorization: `BEARER ${anonToken}`
+    }
+  });
   return await api();
 };
 
 export const verifyEmail = async (uuid: string) => {
-  const api = await authApi.verifyEmail(uuid);
+  const anonToken = await getAnonToken();
+  const api = await authApi.verifyEmail(uuid, {
+    headers: {
+      authorization: `BEARER ${anonToken}`
+    }
+  });
   return await api();
 };
 
@@ -65,13 +90,21 @@ export const createUser = async (
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean
 ) => {
-  const api = await authApi.user({
-    name,
-    email,
-    password,
-    permissionIds,
-    hasAcceptedTerms,
-    hasAcceptedNewsletter
-  });
+  const anonToken = await getAnonToken();
+  const api = await authApi.user(
+    {
+      name,
+      email,
+      password,
+      permissionIds,
+      hasAcceptedTerms,
+      hasAcceptedNewsletter
+    },
+    {
+      headers: {
+        authorization: `BEARER ${anonToken}`
+      }
+    }
+  );
   return await api();
 };

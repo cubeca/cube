@@ -1,3 +1,4 @@
+import { getAnonToken, getAuthToken } from 'utils/authToken';
 import { blobToBase64, uploadViaTus } from './helpers';
 import { AddContent, contentApi, contentFilesApi } from './httpClient';
 
@@ -24,19 +25,30 @@ export const getContent = async (
   nation?: NationType,
   creator?: string
 ) => {
+  const anonToken = await getAnonToken();
   const listApi = await contentApi.contentList(
     1,
     10,
     category,
     type,
     nation,
-    creator
+    creator,
+    {
+      headers: {
+        authorization: `BEARER ${anonToken}`
+      }
+    }
   );
   return await listApi();
 };
 
 export const getContentDetails = async (id: string) => {
-  const detailsApi = await contentApi.contentDetails(id);
+  const anonToken = await getAnonToken();
+  const detailsApi = await contentApi.contentDetails(id, {
+    headers: {
+      authorization: `BEARER ${anonToken}`
+    }
+  });
   return await detailsApi();
 };
 
@@ -49,6 +61,7 @@ export const addContent = async ({
   coverImageFile?: File;
   mediaFile?: File;
 }) => {
+  const authToken = await getAuthToken();
   const coverImagePayload = coverImageFile
     ? {
         name: coverImageFile.name,
@@ -71,10 +84,17 @@ export const addContent = async ({
   // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
   if (mediaFile) uploadViaTus(mediaFile, {}, {});
 
-  const addContentApi = await contentFilesApi.addContent({
-    ...payload,
-    coverImageFile: coverImagePayload,
-    mediaFile: mediaFilePayload
-  });
+  const addContentApi = await contentFilesApi.addContent(
+    {
+      ...payload,
+      coverImageFile: coverImagePayload,
+      mediaFile: mediaFilePayload
+    },
+    {
+      headers: {
+        authentication: authToken || ''
+      }
+    }
+  );
   return await addContentApi();
 };

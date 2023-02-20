@@ -10,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { login } from 'api/auth';
 import ErrorMessage from 'components/form/ErrorMessage';
-import { setToken } from 'utils/jwtToken';
 
 type LoginProps = Pick<DialogProps, 'open' | 'onClose'>;
 
@@ -24,8 +23,7 @@ const Login: FC<LoginProps> = ({ open, onClose }) => {
     const { email, password } = data;
     try {
       setError(false);
-      const response = await login(email, password);
-      setToken(response.data.jwt);
+      await login(email, password);
 
       // TODO: Determine profile associated with user
       navigate('/profile/1');
