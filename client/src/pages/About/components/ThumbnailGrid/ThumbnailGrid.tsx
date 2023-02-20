@@ -11,51 +11,46 @@ import { Parallax } from 'react-scroll-parallax';
 // };
 
 
-        // const TranslateY=()=> (
-        //     <Parallax translateY={[-20, 10]}>
-        //        <Box sx={{ flexGrow: 1 }}>
-       
-        // useParallax({
-        //     translateY: [-100, 100],
-        //   }); 
+// const TranslateY=()=> (
+//     <Parallax translateY={[-20, 10]}>
+//        <Box sx={{ flexGrow: 1 }}>
+
+// useParallax({
+//     translateY: [-100, 100],
+//   }); 
 
 
 function ThumbnailGrid() {
   return (
-    <Box sx={{flexGrow: 1}}>
-    <React.Fragment>
-    <Grid container spacing={0}>
-    <Grid container item spacing={0} rowSpacing= "0">
-      <Grid item xs={6}>
-       
-      </Grid>
-      <Grid item xs={6}>
-        <img src={CreatorsHero} alt="" width="100%" height="100%"/>
-      </Grid>
-      <Grid item xs={6}>
-      <img src={CreatorsHero} alt="" width="100%" height="100%"/>
-      </Grid>
-      <Grid item xs={6}>
-      <img src={CreatorsHero} alt="" width="100%" height="100%"/>
-      </Grid>
-      <Grid item xs={6}>
-      <img src={CreatorsHero} alt="" width="100%" height="100%"/>
-      </Grid>
-      <Grid item xs={6}>
-        
-      </Grid>
-      <Grid item xs={6}>
-       
-      </Grid>
-      <Grid item xs={6}>
-      <img src={CreatorsHero} alt="" width="100%" height="100%"/>
-      </Grid>
-      <Grid item xs={6}>
-      <img src={CreatorsHero} alt="" width="100%" height="100%"/>
-      </Grid>
-      </Grid>
-      </Grid>
-    </React.Fragment>
+    <Box sx={{ flexGrow: 1 }}>
+      <React.Fragment>
+        <Grid container spacing={0}>
+          <Grid container item spacing={0} rowSpacing="0">
+            <Grid item xs={6}>
+
+            </Grid>
+            <Grid item xs={6}>
+              <img src={CreatorsHero} alt="" width="100%" height="100%" />
+            </Grid>
+            <Grid item xs={6}>
+              <img src={CreatorsHero} alt="" width="100%" height="100%" />
+            </Grid>
+            <Grid item xs={6}>
+              <img src={CreatorsHero} alt="" width="100%" height="100%" />
+            </Grid>
+            <Grid item xs={6}>
+              <img src={CreatorsHero} alt="" width="100%" height="100%" />
+            </Grid>
+            <Grid container item spacing={0} rowSpacing="0" display={{ xs: 'none', md: 'visible' }}>
+              <Grid item xs={6}>
+                <img src={CreatorsHero} alt="" width="100%" height="100%" />
+              </Grid>
+            </Grid>
+
+          </Grid>
+
+        </Grid>
+      </React.Fragment>
     </Box>
   );
 }
