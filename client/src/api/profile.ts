@@ -2,11 +2,16 @@ import { ProfileAPIResponse } from 'types/profile';
 import { PROFILE_API_PATH } from './constants';
 import httpClient, { profileApi } from './httpClient';
 import { blobToBase64 } from './helpers';
+import { getToken } from 'utils/jwtToken';
 
 export type { ProfileMainSchema as Profile } from './httpClient';
 
 export const getProfile = async (id: string) => {
-  const profileDetailsApi = await profileApi.profileDetails(id);
+  const profileDetailsApi = await profileApi.profileDetails(id, {
+    headers: {
+      authorization: `BEARER ${getToken()}`
+    }
+  });
   return await profileDetailsApi();
 };
 
@@ -15,19 +20,35 @@ export const updateProfileSection = async (
   name: string,
   description: string
 ) => {
-  const profileSectionApi = await profileApi.profileSectionUpdate(id, {
-    name,
-    description
-  });
+  const profileSectionApi = await profileApi.profileSectionUpdate(
+    id,
+    {
+      name,
+      description
+    },
+    {
+      headers: {
+        authorization: `BEARER ${getToken()}`
+      }
+    }
+  );
   return await profileSectionApi();
 };
 
 export const updateProfileLogo = async (id: string, file: File) => {
   const fileContents = (await blobToBase64(file)) as string;
-  const updateProfileLogoApi = await profileApi.profileLogoUpdate(id, {
-    name: file.name,
-    file_contents_base64: fileContents
-  });
+  const updateProfileLogoApi = await profileApi.profileLogoUpdate(
+    id,
+    {
+      name: file.name,
+      file_contents_base64: fileContents
+    },
+    {
+      headers: {
+        authorization: `BEARER ${getToken()}`
+      }
+    }
+  );
   return updateProfileLogoApi();
 };
 
@@ -38,6 +59,11 @@ export const updateProfileHero = async (id: string, file: File) => {
     {
       name: file.name,
       file_contents_base64: fileContents
+    },
+    {
+      headers: {
+        authorization: `BEARER ${getToken()}`
+      }
     }
   );
 };
@@ -49,6 +75,11 @@ export const updateProfileAudioDescription = async (id: string, file: File) => {
     {
       name: file.name,
       file_contents_base64: fileContents
+    },
+    {
+      headers: {
+        authorization: `BEARER ${getToken()}`
+      }
     }
   );
 };

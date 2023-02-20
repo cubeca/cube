@@ -1,3 +1,5 @@
+import { JWT_TOKEN_KEY } from 'constants/storageKeys';
+import { getToken } from 'utils/jwtToken';
 import { authApi } from './httpClient';
 
 export const login = async (email: string, password: string) => {
@@ -16,18 +18,32 @@ export const anonymousJWT = async () => {
 };
 
 export const updateEmail = async (uuid: string, email: string) => {
-  const api = await authApi.updateEmail({
-    uuid,
-    email
-  });
+  const api = await authApi.updateEmail(
+    {
+      uuid,
+      email
+    },
+    {
+      headers: {
+        authorization: `BEARER ${getToken()}`
+      }
+    }
+  );
   return await api();
 };
 
 export const updatePassword = async (uuid: string, password: string) => {
-  const api = await authApi.updatePassword({
-    uuid,
-    password
-  });
+  const api = await authApi.updatePassword(
+    {
+      uuid,
+      password
+    },
+    {
+      headers: {
+        authorization: `BEARER ${getToken()}`
+      }
+    }
+  );
   return await api();
 };
 
