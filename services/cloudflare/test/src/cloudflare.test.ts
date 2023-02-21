@@ -34,13 +34,14 @@ const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer 
 
 test('gets video TUS upload URL', async () => {
   const requestBody = {
-    uploadLength: 1000000,
-    reserveDurationSeconds: 600,
     isPrivate: false,
-    urlValidDurationSeconds: 5 * 60,
-    uploadingUserId: NIL_UUID,
-    orgId: NIL_UUID,
-    fileName: 'test.mp4'
+    upload: {
+      orgId: NIL_UUID,
+      fileName: 'test.mp4',
+      fileSizeBytes: 1000000,
+      reserveDurationSeconds: 600,
+      urlValidDurationSeconds: 5 * 60
+    }
   };
 
   const { status, data } = await cloudflareApi.post(
@@ -53,7 +54,7 @@ test('gets video TUS upload URL', async () => {
 
   expect(data).toEqual(
     expect.objectContaining({
-      id: expect.stringMatching(UUID_REGEXP),
+      fileId: expect.stringMatching(UUID_REGEXP),
       tusUploadUrl: expect.any(String)
     })
   );

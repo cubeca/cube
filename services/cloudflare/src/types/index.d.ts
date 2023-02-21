@@ -2,8 +2,8 @@
 export {};
 
 export interface RequestUser {
-  uuid: string;
-  permissionIds: string[];
+  id: string;
+  permissions: string[];
 }
 
 declare global {

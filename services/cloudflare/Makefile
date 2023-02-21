@@ -31,11 +31,15 @@ export POSTGRES_PASSWORD ?= postgres
 
 .PHONY: up
 up:
-	$(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+
+.PHONY: up-prod
+up-prod:
+	MICROSERVICE_DOCKERFILE=Dockerfile $(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
 
 .PHONY: test
 test:
-	$(PROJECT_DOCKER_COMPOSE) --profile test up --detach --force-recreate
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) --profile test up --detach --force-recreate
 
 .PHONY: down
 down:

@@ -5,8 +5,7 @@ services:
     container_name: ${PROJECT_NAME}_microservice
     build:
       context: .
-      dockerfile: Dockerfile
-      # dockerfile: editable.dockerfile
+      dockerfile: ${MICROSERVICE_DOCKERFILE}
     image: ${PROJECT_NAME}_microservice
     depends_on:
       - postgres

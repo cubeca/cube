@@ -30,8 +30,8 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
     if (isCubeJwtPayload(data)) {
       req.user = {
-        uuid: data.sub,
-        permissionIds: data.aud
+        id: data.sub,
+        permissions: data.aud
       };
       next();
     } else {
@@ -47,10 +47,17 @@ export const allowIfAnyOf = (...allowList: string[]) => [
   authenticateToken,
   (req: Request, res: Response, next: NextFunction) => {
     const isOnAllowList = (perm: string) => allowList.includes(perm);
-    if (req.user?.permissionIds.some(isOnAllowList)) {
+    if (req.user?.permissions.some(isOnAllowList)) {
       next();
     } else {
       res.sendStatus(403);
     }
   }
 ];
+
+export const extractUser = (req: Request) => {
+  if (!req?.user) {
+    throw new Error('user missing from request')
+  }
+  return req.user;
+};
