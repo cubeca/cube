@@ -20,10 +20,10 @@ const VirtualExperiencesPanel = () => {
           justifyContent="center"
           sx={{backgroundColor: '#95f5cb', padding:'5vw'}}
         >
-          <Typography component="h2" variant="h2" textAlign={{sx: 'center', sm: 'center', md: 'right'}} paddingRight={{md: '1rem'}}>
+          <Typography component="h2" variant="h2" textAlign={{xs: 'center', sm: 'center', md: 'right'}} paddingRight={{md: '1rem'}}>
             {t('We Are A Commons')}
           </Typography>
-          <Typography component="p" textAlign={{sx: 'center', sm: 'center', md: 'right'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}}>
+          <Typography component="p" textAlign={{xs: 'center', sm: 'center', md: 'right'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}}>
             {t('creatorsText')}
           </Typography>
           <MediaPlayer

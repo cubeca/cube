@@ -26,7 +26,7 @@ const AboutPanelLeft: FC<AboutPanelProps> = ({
      <Grid item xs={12} md={6}>
       {imageContent}
     </Grid>
-    <Grid item xs={12} md={6} justifyContent={{xs: 'center'}}>
+    <Grid item xs={12} md={6}>
       {textContent}
     </Grid>
   </Grid>
