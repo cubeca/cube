@@ -11,10 +11,9 @@ ifneq (,$(wildcard ./.env))
 endif
 
 DOCKER ?= docker
-DOCKER_COMPOSE ?= docker-compose
 
 export PROJECT_NAME ?= cube_cloudflare
-PROJECT_DOCKER_COMPOSE = $(DOCKER_COMPOSE) --project-name $(PROJECT_NAME) --file ./docker-compose.yaml --project-directory . $(DOCKER_ENV_FILE_PARAM)
+PROJECT_DOCKER_COMPOSE = $(DOCKER) compose --project-name $(PROJECT_NAME) --file ./docker-compose.yaml --project-directory . $(DOCKER_ENV_FILE_PARAM)
 
 LOCAL_DOCKER_IMAGE ?= cubeca/cloudflare:latest
 

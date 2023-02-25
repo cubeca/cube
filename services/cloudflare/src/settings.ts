@@ -11,5 +11,9 @@ export const PGUSER: string = process.env.PGUSER || 'postgres';
 export const PGPASSWORD: string = process.env.PGPASSWORD || 'admin';
 export const PGDATABASE: string = process.env.PGDATABASE || 'cube_identity';
 
-export const CLOUDFLARE_ACCOUNT_ID: string = process.env.CLOUDFLARE_ACCOUNT_ID || '__INVALID__';
-export const CLOUDFLARE_API_TOKEN: string = process.env.CLOUDFLARE_API_TOKEN || '__INVALID__';
+export const CLOUDFLARE_ACCOUNT_ID: string = process.env.CLOUDFLARE_ACCOUNT_ID || '__UNSET__';
+export const CLOUDFLARE_API_TOKEN: string = process.env.CLOUDFLARE_API_TOKEN || '__UNSET__';
+export const CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN: string = process.env.CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN || '__UNSET__';
+export const CLOUDFLARE_R2_ACCESS_KEY_ID: string = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || '__UNSET__';
+export const CLOUDFLARE_R2_SECRET_ACCESS_KEY: string = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || '__UNSET__';
+export const CLOUDFLARE_R2_BUCKET_NAME: string = process.env.CLOUDFLARE_R2_BUCKET_NAME || '__UNSET__';
