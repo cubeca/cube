@@ -1,21 +1,14 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import axios from 'axios';
-import S3 from 'aws-sdk/clients/s3.js';
 
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-import { makeCloudflareTusUploadMetadata } from './utils';
+import { makeCloudflareTusUploadMetadata, inspect } from './utils';
+import { getPresignedUploadUrl } from './r2';
 
 export const CLOUDFLARE_API_STREAM = `https://api.cloudflare.com/client/v4/accounts/${settings.CLOUDFLARE_ACCOUNT_ID}/stream?direct_user=true`;
-
-const s3 = new S3({
-  endpoint: `https://${settings.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  accessKeyId: `${settings.CLOUDFLARE_R2_ACCESS_KEY_ID}`,
-  secretAccessKey: `${settings.CLOUDFLARE_R2_SECRET_ACCESS_KEY}`,
-  signatureVersion: 'v4',
-});
 
 const app = express();
 
@@ -28,7 +21,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const {
     isPrivate = false,
     upload: {
-      orgId,
+      profileId,
       fileName,
       fileSizeBytes,
       reserveDurationSeconds,
@@ -52,11 +45,13 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
       isPrivate,
       upload: {
         userId,
-        orgId,
+        profileId,
         fileName,
         fileSizeBytes,
-        reserveDurationSeconds,
-        urlValidDurationSeconds
+        debug: {
+          reserveDurationSeconds,
+          urlValidDurationSeconds
+        }
       }
     });
 
@@ -89,6 +84,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     res.status(201).json({ fileId, tusUploadUrl });
   } catch (e: any) {
     console.error(e.message);
+    inspect(e);
     res.status(500).send('Error retrieving content upload url');
   }
 });
@@ -97,7 +93,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
   const {
     isPrivate = false,
     upload: {
-      orgId,
+      profileId,
       fileName,
       fileSizeBytes,
       urlValidDurationSeconds = 30 * 60
@@ -105,12 +101,8 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
   } = req.body;
 
 
-  if (!fileSizeBytes) {
-    return res.status(400).send(`Invalid Request. 'upload.fileSizeBytes' required`);
-  }
-
-  if (!reserveDurationSeconds) {
-    return res.status(400).send(`Invalid Request. 'reserveDurationSeconds' required`);
+  if (!fileName) {
+    return res.status(400).send(`Invalid Request. 'upload.fileName' required`);
   }
 
   try {
@@ -120,42 +112,26 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
       isPrivate,
       upload: {
         userId,
-        orgId,
+        profileId,
         fileName,
         fileSizeBytes,
-        urlValidDurationSeconds
+        debug: {
+          urlValidDurationSeconds
+        }
       }
     });
 
     const fileId = dbFileStub.id;
 
-    const headers:Headers = {
-      Authorization: `bearer ${settings.CLOUDFLARE_API_TOKEN}`,
-      'Tus-Resumable': '1.0.0',
-      'Upload-Creator': `file:${fileId}`,
-      'Upload-Length': String(fileSizeBytes),
-      'Upload-Metadata': makeCloudflareTusUploadMetadata({
-        reserveDurationSeconds,
-        isPrivate,
-        urlValidDurationSeconds,
-        uploadingUserId:userId
-      })
-    };
+    const filePathInBucket = `${fileId}/${fileName}`;
+    const presignedUrl = await getPresignedUploadUrl(filePathInBucket, urlValidDurationSeconds);
 
-    const cfResponse = await axios.post(CLOUDFLARE_API_STREAM, null, { headers });
+    await db.updateS3FileWithPresignedUrl(fileId, filePathInBucket, presignedUrl);
 
-    const tusUploadUrl = cfResponse.headers['location'];
-    const cloudflareStreamUid = cfResponse.headers['stream-media-id'];
-
-    if (!tusUploadUrl || !cloudflareStreamUid) {
-      return res.status(500).send('Error retrieving content upload url');
-    }
-
-    await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
-
-    res.status(201).json({ fileId, tusUploadUrl });
+    res.status(201).json({ fileId, presignedUrl });
   } catch (e: any) {
     console.error(e.message);
+    inspect(e);
     res.status(500).send('Error retrieving content upload url');
   }
 });

@@ -62,6 +62,16 @@ login:
 login_ms:
 	$(DOCKER) exec -ti $(PROJECT_NAME)_microservice bash
 
+# This "power-cycles" the Docker Compose setup.
+# A.k.a. "have you turned it off and on again?"
+# See https://en.wikipedia.org/wiki/SIGHUP
+.PHONY: hup
+hup:
+	$(MAKE) down
+	$(MAKE) clean
+	$(MAKE) test
+	$(MAKE) login_ms
+
 .PHONY: docker_build
 docker_build:
 	$(DOCKER) buildx build \

@@ -5,7 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "start": "npm run test",
-    "test": "npm run dbtruncate && npx jest",
+    "test": "npm run dbtruncate && npx jest --silent=false --verbose=true --useStderr=true",
     "dbshell": "bash -c 'psql postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}'",
     "dbtruncate": "./scripts/truncate_db.sh"
   },

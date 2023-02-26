@@ -2,6 +2,7 @@ import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 
 import * as settings from './settings';
+import { inspect, inspectAxiosResponse, inspectAxiosError } from './utils';
 
 const API_URL = `http://${settings.MICROSERVICE}:${settings.PORT}`;
 
@@ -36,7 +37,7 @@ test('gets video TUS upload URL', async () => {
   const requestBody = {
     isPrivate: false,
     upload: {
-      orgId: NIL_UUID,
+      profileId: NIL_UUID,
       fileName: 'test.mp4',
       fileSizeBytes: 1000000,
       reserveDurationSeconds: 600,
@@ -44,11 +45,15 @@ test('gets video TUS upload URL', async () => {
     }
   };
 
-  const { status, data } = await cloudflareApi.post(
+  const cfStreamResponse = await cloudflareApi.post(
     '/upload/video-tus-reservation',
     requestBody,
     getAuthReqOpts('contentEditor')
   );
+  const { status, data } = cfStreamResponse;
+  if (201 !== status) {
+    inspectAxiosResponse(cfStreamResponse);
+  }
 
   expect(status).toEqual(201);
 
@@ -56,6 +61,37 @@ test('gets video TUS upload URL', async () => {
     expect.objectContaining({
       fileId: expect.stringMatching(UUID_REGEXP),
       tusUploadUrl: expect.any(String)
+    })
+  );
+});
+
+test('gets S3 presigned URL', async () => {
+  const requestBody = {
+    isPrivate: false,
+    upload: {
+      profileId: NIL_UUID,
+      fileName: 'test.pdf',
+      fileSizeBytes: 1000000,
+      urlValidDurationSeconds: 5 * 60
+    }
+  };
+
+  const r2Response = await cloudflareApi.post(
+    '/upload/s3-presigned-url',
+    requestBody,
+    getAuthReqOpts('contentEditor')
+  );
+  const { status, data } = r2Response;
+  if (201 !== status) {
+    inspectAxiosResponse(r2Response);
+  }
+
+  expect(status).toEqual(201);
+
+  expect(data).toEqual(
+    expect.objectContaining({
+      fileId: expect.stringMatching(UUID_REGEXP),
+      presignedUrl: expect.any(String)
     })
   );
 });
