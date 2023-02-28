@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as settings from './settings';
-import type { VerifyErrors, Jwt, JwtPayload } from 'jsonwebtoken';
 
 export interface CubeJwtPayload {
   sub: string;
@@ -19,10 +18,10 @@ function isCubeJwtPayload(x: any): x is CubeJwtPayload {
 }
 
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers?.authorization;
   let token = authHeader && authHeader.split(' ')[1];
 
-  // For get requests
+  // For get requests without headers, f.e. links in confirmation emails.
   token ??= req.query?.authorization ? String(req.query?.authorization) : undefined;
 
   if (!token) return res.status(401).send('authorization header or query parameter missing or malformed');

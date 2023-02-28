@@ -42,11 +42,11 @@ test:
 
 .PHONY: down
 down:
-	$(PROJECT_DOCKER_COMPOSE) down
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) --profile test down
 
 .PHONY: clean
 clean:
-	-$(PROJECT_DOCKER_COMPOSE) rm
+	-MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) --profile test rm
 	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db $(PROJECT_NAME)_testrunner
 	-$(DOCKER) image rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_testrunner
 

@@ -1,4 +1,4 @@
-CREATE TYPE file_storage_type AS ENUM ('cloudflare_stream', 'cloudflare_r2');
+CREATE TYPE file_storage_type AS ENUM ('cloudflareStream', 'cloudflareR2');
 CREATE TABLE files (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     storage_type file_storage_type NOT NULL,

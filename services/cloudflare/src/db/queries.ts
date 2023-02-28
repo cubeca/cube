@@ -1,6 +1,6 @@
 import * as db from './index';
 
-// CREATE TYPE file_storage_type AS ENUM ('cloudflare_stream', 'cloudflare_r2');
+// CREATE TYPE file_storage_type AS ENUM ('cloudflareStream', 'cloudflareR2');
 // CREATE TABLE files (
 //     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 //     storage_type file_storage_type NOT NULL,
@@ -16,25 +16,58 @@ import * as db from './index';
 //     data JSONB NOT NULL DEFAULT '{}'::JSONB
 // );
 
-export interface VideoFileData {
-  isStub?: boolean;
-  isPrivate: boolean;
-  upload: {
-    userId: string;
-    profileId: string;
-    fileName: string;
-    fileSizeBytes: number; // TODO: Might need to be string to handle files bigger than `Number.MAX_SAFE_INTEGER` bytes. (Use BigInt in JS/TS.)
-    debug: { // TODO: Imnplement cleanup cron job
-      reserveDurationSeconds: number;
-      urlValidDurationSeconds: number;
-      tusUploadUrl?: string;
-    };
-  };
+export enum FileStatus {
+  Stub = 'stub',
+  UploadAuthorized = 'uploadAuthorized',
+
+}
+
+export interface CommonDebugInfo {
+  urlValidDurationSeconds: number;
+}
+
+export interface CommonUploadInfo {
+  userId: string;
+  fileName: string;
+  fileSizeBytes: number;
+  debug: CommonDebugInfo; // TODO: Implement cleanup cron job
+}
+
+export interface CommonFileData {
+  status?: FileStatus;
+  profileId: string;
+  upload: CommonUploadInfo;
+}
+
+export interface VideoDebugInfo extends CommonDebugInfo {
+  reserveDurationSeconds: number;
+  tusUploadUrl?: string;
+}
+
+export interface VideoUploadInfo extends CommonUploadInfo {
+  debug: VideoDebugInfo; // TODO: Implement cleanup cron job
+}
+
+export interface VideoFileData extends CommonFileData  {
+  upload: VideoUploadInfo;
   cloudflareStreamUid?: string;
 }
 
+export interface S3DebugInfo extends CommonDebugInfo {
+  presignedUrl?: string;
+}
+
+export interface S3UploadInfo extends CommonUploadInfo {
+  debug: S3DebugInfo; // TODO: Implement cleanup cron job
+}
+
+export interface S3FileData extends CommonFileData  {
+  upload: S3UploadInfo;
+  filePathInBucket?: string;
+}
+
 export const insertVideoFileStub = async (data: VideoFileData) => {
-  data.isStub = true;
+  data.status = FileStatus.Stub;
 
   const sql = `
     INSERT INTO files (
@@ -48,7 +81,7 @@ export const insertVideoFileStub = async (data: VideoFileData) => {
     RETURNING *
   `;
 
-  const values = ['cloudflare_stream', JSON.stringify(data)];
+  const values = ['cloudflareStream', JSON.stringify(data)];
 
   return (await db.query(sql, values)).rows[0];
 };
@@ -64,7 +97,7 @@ export const updateVideoFileWithCfStreamUid = async (fileId: string, cloudflareS
         jsonb_set(
           jsonb_set(
             data,
-            '{isStub}', 'false', true
+            '{status}', '"uploadAuthorized"', true
           ),
           '{upload,debug,tusUploadUrl}', $1, true
         ),
@@ -80,24 +113,8 @@ export const updateVideoFileWithCfStreamUid = async (fileId: string, cloudflareS
   await db.query(sql, values);
 };
 
-export interface S3FileData {
-  isStub?: boolean;
-  isPrivate: boolean;
-  upload: {
-    userId: string;
-    profileId: string;
-    fileName: string;
-    fileSizeBytes: number; // TODO: Might need to be string to handle files bigger than `Number.MAX_SAFE_INTEGER` bytes. (Use BigInt in JS/TS.)
-    debug: { // TODO: Imnplement cleanup cron job
-      urlValidDurationSeconds: number;
-      presignedUrl?: string;
-    };
-  };
-  filePathInBucket?: string;
-}
-
 export const insertS3FileStub = async (data: S3FileData) => {
-  data.isStub = true;
+  data.status = FileStatus.Stub;
 
   const sql = `
     INSERT INTO files (
@@ -111,7 +128,7 @@ export const insertS3FileStub = async (data: S3FileData) => {
     RETURNING *
   `;
 
-  const values = ['cloudflare_r2', JSON.stringify(data)];
+  const values = ['cloudflareR2', JSON.stringify(data)];
 
   return (await db.query(sql, values)).rows[0];
 };
@@ -127,7 +144,7 @@ export const updateS3FileWithPresignedUrl = async (fileId: string, filePathInBuc
         jsonb_set(
           jsonb_set(
             data,
-            '{isStub}', 'false', true
+            '{status}', '"uploadAuthorized"', true
           ),
           '{upload,debug,presignedUrl}', $1, true
         ),
@@ -141,4 +158,11 @@ export const updateS3FileWithPresignedUrl = async (fileId: string, filePathInBuc
   const values = [JSON.stringify(presignedUrl), JSON.stringify(filePathInBucket), fileId];
 
   await db.query(sql, values);
+};
+
+export const getFileById = async (fileId: string) => {
+  const sql = `SELECT * FROM files WHERE id = $1`;
+  const values = [fileId];
+  const dbResult = await db.query(sql, values);
+  return (dbResult.rows.length === 0) ? null : dbResult.rows[0];
 };

@@ -1,4 +1,4 @@
-FROM node:16.19.0-bullseye-slim
+FROM node:16.19.1-bullseye-slim
 
 RUN apt-get update \
     && \
@@ -13,7 +13,7 @@ RUN apt-get update \
 # This is also used as default values for the environments variables.
 COPY .env.example /work/.env.example
 
-# This Dockerfile will be run in a Docker Context of the parent directory i.e. `/services/identity/`
+# This Dockerfile will be run in a Docker Context of the parent directory i.e. `/services/cloudflare/`
 COPY test/jest.config.js /work/jest.config.js
 COPY test/package.json /work/package.json
 COPY test/package-lock.json /work/package-lock.json
@@ -22,6 +22,7 @@ COPY test/tsconfig.json /work/tsconfig.json
 # See https://docs.docker.com/engine/reference/builder/#copy
 # > If <src> is a directory, the entire contents of the directory are copied, including filesystem metadata.
 # > NOTE: The directory itself is not copied, just its contents.
+COPY test/example-files /work/example-files/
 COPY test/scripts /work/scripts/
 COPY test/src /work/src/
 

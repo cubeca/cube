@@ -6,6 +6,21 @@ export const inspect = (...things: any) =>
   );
 
 export const base64encode = (s: any) => Buffer.from(String(s), 'utf8').toString('base64');
+export const base64decode = (b64: any): string | Buffer | undefined => {
+  let decoded = undefined;
+  try {
+    decoded = Buffer.from(String(b64), 'base64');
+  }
+  catch (err: any) {
+    return undefined;
+  }
+  try {
+    return decoded.toString('utf8');
+  }
+  catch (err: any) {
+    return decoded;
+  }
+}
 
 export interface UploadMetadata {
   reserveDurationSeconds?: number;
@@ -52,4 +67,12 @@ export const makeCloudflareTusUploadMetadata = ({
 
   return serialized.join(',');
   // maxDurationSeconds NjAw,requiresignedurls,expiry MjAyMy0wMi0yMFQwMDowMDowMFoK,creator ZnJvbS1tZXRhZGF0YS1yYXBoYWVsCg==
+};
+
+export const parseTusUploadMetadata = (headerValue: string):any => {
+  const parsed: { [k: string]: string } = {};
+  for (const [metaName, metaValue] of headerValue.split(',').map((m: string) => m.split(' '))) {
+    parsed[metaName] = (!metaValue) ? true : base64decode(metaValue);
+  }
+  return parsed
 };

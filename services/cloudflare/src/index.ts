@@ -1,38 +1,57 @@
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import axios from 'axios';
+
+// TODO Replace with https://www.npmjs.com/package/file-type
+import mime from 'mime';
 
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-import { makeCloudflareTusUploadMetadata, inspect } from './utils';
+import { inspect, parseTusUploadMetadata } from './utils';
+import * as stream from './stream';
 import { getPresignedUploadUrl } from './r2';
 
-export const CLOUDFLARE_API_STREAM = `https://api.cloudflare.com/client/v4/accounts/${settings.CLOUDFLARE_ACCOUNT_ID}/stream?direct_user=true`;
+export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-export interface Headers { [k: string]: string };
-
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+
   const {
-    isPrivate = false,
-    upload: {
-      profileId,
-      fileName,
-      fileSizeBytes,
-      reserveDurationSeconds,
-      urlValidDurationSeconds = 30 * 60
-    }
-  } = req.body;
+    'upload-length': tusUploadLength,
+    'upload-metadata': tusUploadMetadata,
+  } = req.headers;
 
-
-  if (!fileSizeBytes) {
-    return res.status(400).send(`Invalid Request. 'upload.fileSizeBytes' required`);
+  if (!tusUploadLength) {
+    return res.status(400).send(`Invalid Request. 'Upload-Length' header required`);
   }
+
+  if (!tusUploadMetadata) {
+    return res.status(400).send(`Invalid Request. 'Upload-Metadata' header required`);
+  }
+
+  const meta = parseTusUploadMetadata(tusUploadMetadata);
+
+  const {
+    fileName,
+    // mimeType,
+    profileId,
+    allocVidTime,
+    validFor = 30 * 60
+  } = meta;
+
+  // inspect('meta ==', meta);
+  // return res.status(500).send('Error retrieving content upload url');
+
+  if (!allocVidTime) {
+    return res.status(400).send(`Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
+  }
+
+  const reserveDurationSeconds = Number(allocVidTime);
+  const urlValidDurationSeconds = Number(validFor);
 
   if (!reserveDurationSeconds) {
     return res.status(400).send(`Invalid Request. 'reserveDurationSeconds' required`);
@@ -42,12 +61,11 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     const { id:userId } = extractUser(req);
 
     const dbFileStub = await db.insertVideoFileStub({
-      isPrivate,
+      profileId,
       upload: {
         userId,
-        profileId,
         fileName,
-        fileSizeBytes,
+        fileSizeBytes:tusUploadLength,
         debug: {
           reserveDurationSeconds,
           urlValidDurationSeconds
@@ -57,23 +75,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 
     const fileId = dbFileStub.id;
 
-    const headers:Headers = {
-      Authorization: `bearer ${settings.CLOUDFLARE_API_TOKEN}`,
-      'Tus-Resumable': '1.0.0',
-      'Upload-Creator': `file:${fileId}`,
-      'Upload-Length': String(fileSizeBytes),
-      'Upload-Metadata': makeCloudflareTusUploadMetadata({
-        reserveDurationSeconds,
-        isPrivate,
-        urlValidDurationSeconds,
-        uploadingUserId:userId
-      })
-    };
-
-    const cfResponse = await axios.post(CLOUDFLARE_API_STREAM, null, { headers });
-
-    const tusUploadUrl = cfResponse.headers['location'];
-    const cloudflareStreamUid = cfResponse.headers['stream-media-id'];
+    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(fileId, tusUploadLength, reserveDurationSeconds, urlValidDurationSeconds, userId);
 
     if (!tusUploadUrl || !cloudflareStreamUid) {
       return res.status(500).send('Error retrieving content upload url');
@@ -81,7 +83,14 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
 
-    res.status(201).json({ fileId, tusUploadUrl });
+    res.set({
+      "Access-Control-Expose-Headers": "Location,Cube-File-Id",
+      "Access-Control-Allow-Headers": "*",
+      "Access-Control-Allow-Origin": "*",
+      "Cube-File-Id": fileId,
+      Location: tusUploadUrl,
+    })
+    res.status(200).send("OK")
   } catch (e: any) {
     console.error(e.message);
     inspect(e);
@@ -91,9 +100,8 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 
 app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const {
-    isPrivate = false,
+    profileId,
     upload: {
-      profileId,
       fileName,
       fileSizeBytes,
       urlValidDurationSeconds = 30 * 60
@@ -109,10 +117,9 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     const { id:userId } = extractUser(req);
 
     const dbFileStub = await db.insertS3FileStub({
-      isPrivate,
+      profileId,
       upload: {
         userId,
-        profileId,
         fileName,
         fileSizeBytes,
         debug: {
@@ -134,6 +141,72 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     inspect(e);
     res.status(500).send('Error retrieving content upload url');
   }
+
+});
+
+export interface VideoPlayerInfo {
+  hlsUrl: string;
+  dashUrl: string;
+
+  // See https://www.npmjs.com/package/@cloudflare/stream-react
+  videoIdOrSignedUrl: string;
+}
+
+export interface NonVideoPlayerInfo {
+  mimeType: string;
+
+  // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
+  fileType: string;
+  storageUrl: string;
+}
+
+app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { fileId } = req.params;
+  if (!UUID_REGEXP.test(fileId)) {
+    return res.status(400).send(`Invalid 'fileId' path parameter, must be in UUID format.`);
+  }
+  const dbFile = await db.getFileById(fileId);
+  if (dbFile === null) {
+    return res.status(404).send('File not found.');
+  }
+
+  let playerInfo: VideoPlayerInfo | NonVideoPlayerInfo | undefined = undefined;
+
+  if ('cloudflareStream' === dbFile.storage_type) {
+    const videoDetails = await stream.getVideoDetails(dbFile.data.cloudflareStreamUid);
+    if (!videoDetails) {
+      return res.status(404).send('File not found.');
+    }
+    if (!videoDetails.readyToStream) {
+      inspect('Video is still being processed:', videoDetails);
+      return res.status(409).send('Video is still being processed.');
+    }
+    playerInfo = {
+      hlsUrl: dbFile.data.playback.hls,
+      dashUrl: dbFile.data.playback.dash,
+      videoIdOrSignedUrl: dbFile.data.cloudflareStreamUid
+    };
+  }
+
+  if ('cloudflareR2' === dbFile.storage_type) {
+    // TODO Replace with https://www.npmjs.com/package/file-type
+    const mimeType = mime.getType(dbFile.data.filePathInBucket) || 'application/octet-stream';
+    playerInfo = {
+      mimeType,
+
+      // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
+      fileType: mime.getExtension(mimeType) || 'bin',
+      storageUrl: dbFile.data.filePathInBucket
+    };
+  }
+
+  res.status(200).json({
+    id: fileId,
+    createdAt: dbFile.created_at,
+    updatedAt: dbFile.updated_at,
+    storageType: dbFile.storage_type,
+    playerInfo
+  });
 });
 
 app.listen(settings.PORT, async () => {

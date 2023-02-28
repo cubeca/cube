@@ -1,4 +1,3 @@
-import axios from 'axios';
 import type { AxiosResponse, AxiosError } from 'axios';
 
 export const inspect = (...things: any) =>
