@@ -8,6 +8,9 @@ import EditSection from './Edit/EditSection';
 import { useNavigate } from 'react-router-dom';
 import Button from 'components/Button';
 import EditIcon from '@mui/icons-material/Edit';
+import CategorizedContent from '../Home/components/CategorizedContent/index';
+import FeaturedContent from '../Home/components/FeaturedContent/index';
+import ContentByMedium from './ContentByMedium/index'
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -27,20 +30,15 @@ const Profile = () => {
   }
 
   return (
-    <Stack px="5rem">
-      <Grid container spacing={10}>
-        <Grid item xs={8} position="relative">
-          <img src={profile!.heroUrl} alt="" width="100%" />
-          {isLoggedIn && (
-            <Box position="absolute" top="100px" right="20px">
-              <Button onClick={onEditCoverPhoto} startIcon={<EditIcon />}>
-                {t('Edit Photo')}
-              </Button>
-            </Box>
-          )}
-        </Grid>
-        <Grid item xs={4}>
-          {editSection ? (
+    <Stack>
+      <Box sx={{position:'fixed', zIndex:'9', width: '100%'}}>
+      <img src={profile!.heroUrl} alt="" width="100%"/>
+      {/* <CategorizedContent /> */}
+        <FeaturedContent/>
+      <ContentByMedium />
+  </Box>
+  <Box sx={{zIndex: '12'}}>
+      {editSection ? (
             <EditSection profile={profile!} setIsEditing={setEditSection} />
           ) : (
             <ViewSection
@@ -49,16 +47,16 @@ const Profile = () => {
               onEdit={() => setEditSection(true)}
             />
           )}
-        </Grid>
-      </Grid>
-      {isLoggedIn && (
+  </Box>
+    
+      {/* {isLoggedIn && (
         <Box>
           <Button onClick={handleNewMedia} fullWidth={false}>
             {t('+ New')}
           </Button>
         </Box>
       )}
-      {/* <Stack pt="2rem" pb="10rem" px="5rem">
+      <Stack pt="2rem" pb="10rem" px="5rem">
         {profile!.content?.map((list) => (
           <ContentList
             key={list.category}
@@ -69,7 +67,9 @@ const Profile = () => {
           />
         ))}
       </Stack> */}
+      
     </Stack>
+    
   );
 };
 
