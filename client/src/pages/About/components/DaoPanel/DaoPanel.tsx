@@ -24,8 +24,8 @@ const DaoPanel = () => {
         <Grid item xs={12} md={7}>
           <Trans i18nKey="daoText">
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: { xs: 'flex-end', md: 'flex-start' }, pl: { xs: '0rem', md: '6rem' }, pr: { xs: '2rem', md: '0rem' }, marginTop: { xs: '10vh', md: '20vh' } }}>
-              <Typography component="h2" variant="h4">We are a DAO</Typography>
-              <Typography component="p" variant="body2" sx={{ maxWidth: '75%', textAlign: { xs: 'end', md: 'start' } }}>
+              <Typography component="h2" variant="h2">We are a DAO</Typography>
+              <Typography component="p" variant="body1" sx={{ fontWeight: '400', marginBottom: '3.5rem', maxWidth: '75%', textAlign: { xs: 'end', md: 'start' } }}>
                 A DAO is a decentralized autonomous organization; made possible by
                 blockchain technology. Cube operates like a DAO while
                 fulfilling the requirements of a not-for-profit. This means that
@@ -40,7 +40,7 @@ const DaoPanel = () => {
                 isAudio
               />
               <Box py="2rem">
-                <Button sx={{ backgroundColor: "#95f5cb", color: '#57838B' }}>{t('Howe It Works', { ns: 'common' })}</Button>
+                <Button sx={{ backgroundColor: "#95f5cb", color: '#28343C' }}>{t('Howe It Works', { ns: 'common' })}</Button>
               </Box>
             </Box>
           </Trans>
