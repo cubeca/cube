@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import Button from 'components/Button';
 import { FC, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -12,6 +12,7 @@ interface UploadInputProps {
 
 const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const handleDrop = useCallback((files: File[]) => {
     onDrop(files);
   }, []);
@@ -23,7 +24,7 @@ const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
   return (
     <Box
       {...getRootProps()}
-      bgcolor="#C4C4C4"
+      bgcolor={theme.palette.primary.light}
       color="#000000"
       borderRadius="5px"
       p="2rem"
@@ -34,12 +35,8 @@ const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
         <Typography component="p">{t('Drop the files here...')}</Typography>
       ) : (
         <>
-          <Typography component="p" pb="1rem">
-            {text}
-            <br />
-            {t('or')}
-          </Typography>
-          <Button>{t('Choose file')}</Button>
+          <Typography component="p">{text}</Typography>
+          <Button>{t('Choose a file')}</Button> {t('or drag it here')}
         </>
       )}
     </Box>

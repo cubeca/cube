@@ -1,4 +1,6 @@
-import '@fontsource/arimo';
+import '@fontsource/inter';
+import '@fontsource/inter/700.css';
+import '@fontsource/rubik';
 import ErrorBoundary from 'components/ErrorBoundary';
 import 'i18n/config';
 import { QueryProvider } from 'providers';
