@@ -24,18 +24,18 @@ const HeroPanel = () => {
           pt="20vh"
           pb="60vh"
         >
-          <Grid item xs={12} sm={12} md={6}>
+          <Grid item xs={12} sm={12} md={6} m="5rem">
           <Typography component="h1" variant="h1">
                 {t('What is this?')}
               </Typography>
-              <Typography component="p" variant="body1" width="40vw">
+              <Typography component="p" variant="body1" mr="5rem">
                 One platform for discovering all
                 the video + audio content, digital publications and workbooklets being produced by artists and arts organizations on artistic and cultural practices happening accorss Turtle Island - Canada.
                 Search by name or medium, create playlists for students + friends or play a track while your creating.
               </Typography>
               <Button>Start Watching</Button>
           </Grid>
-          <Grid item xs={12} sm={12} md={3}>
+          <Grid item xs={12} sm={12} md={4}>
            
                 <ReactPlayer
               url="https://vimeo.com/243556536"
