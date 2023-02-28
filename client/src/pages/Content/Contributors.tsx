@@ -18,6 +18,12 @@ const Contributors: FC<{ contributors: Contributor[] }> = ({
               width="50"
             />
             <Stack pt="5px">
+              
+            {contributor.Artist && (
+                <Typography>
+                  Artist
+                </Typography>
+              )}
               <Typography component="p" sx={{ fontWeight: 'bold' }}>
                 {contributor.link ? (
                   <Link

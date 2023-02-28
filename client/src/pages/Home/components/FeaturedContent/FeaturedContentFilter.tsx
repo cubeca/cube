@@ -14,7 +14,7 @@ const FeaturedContent = () => {
   const { t } = useTranslation();
   const { setFilter } = useFilterContent();
   return (
-    <s.Filters direction="row" spacing={2} alignItems="center">
+    <s.Filters direction="row" spacing={2} alignItems="center" width="100vw">
       <Typography component="span">{t('Select')}</Typography>
       <Select
         label={t('Media Type')}

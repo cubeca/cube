@@ -8,7 +8,7 @@ interface AboutPanelProps {
   className?: string;
 }
 
-const AboutPanel: FC<AboutPanelProps> = ({
+const AboutPanelRight: FC<AboutPanelProps> = ({
   textContent,
   imageContent,
   className,
@@ -16,18 +16,21 @@ const AboutPanel: FC<AboutPanelProps> = ({
 }) => (
   <Grid
     container
-    spacing={6}
-    py="5rem"
+    spacing={0}
+    columnGap="none"
     className={className}
     direction={isReversed ? 'row-reverse' : 'row'}
+    xs={12} md={12}
+    flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
+    order={{xs: 'reverse'}}
   >
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6} justifyContent={{xs: 'center'}}>
       {textContent}
     </Grid>
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       {imageContent}
     </Grid>
   </Grid>
 );
 
-export default AboutPanel;
+export default AboutPanelRight;

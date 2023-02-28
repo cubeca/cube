@@ -5,4 +5,4 @@ import Profile from './Profile';
 import Content from './Content';
 import Upload from './Upload';
 
-export { About, Home, NotFound, Profile, Upload, Content };
+export { About, Home, NotFound, Profile, Content, Upload };
