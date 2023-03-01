@@ -1,8 +1,9 @@
 import { Stack, Box } from '@mui/material';
-import { ReactComponent as CubeLogo } from 'assets/icons/cube-inverted-bw.svg';
+import { ReactComponent as CubeLogo } from 'assets/icons/cube.svg';
 import NavPanel from './components/NavPanel';
 import Social from './components/Social';
 import { TFunction, useTranslation } from 'react-i18next';
+import TextInput from 'components/form/TextInput';
 
 const Footer = () => (
   <Stack
@@ -11,7 +12,7 @@ const Footer = () => (
     justifyContent="space-between"
     alignItems="center"
     p="5rem"
-    sx={{ backgroundColor: '#75d6c1' }}
+    sx={{ backgroundColor: 'theme.palette.paper' }}
   >
     <Box sx={{width: '40%'}}>
       <p>Sign Up For Updates</p>

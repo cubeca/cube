@@ -16,15 +16,14 @@ const VirtualExperiencesPanel = () => {
   }
       textContent={
         <Stack
-          alignItems="center"
-          justifyContent="center"
-          sx={{backgroundColor: '#95f5cb', padding:'5vw'}}
+          alignItems="enter"
+          sx={{backgroundColor: '#95f5cb', padding:'5vw', justifyContent: {xs: 'center', sm: 'center', md: 'left'}}}
         >
-          <Typography component="h2" variant="h2" textAlign={{xs: 'center', sm: 'center', md: 'right'}} paddingRight={{md: '1rem'}}>
-            {t('We Are A Commons')}
+          <Typography component="h2" variant="h2" color="#28343C" textAlign={{xs: 'center', sm: 'center', md: 'left'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}}>
+            {t('Want to build an exhibition in VR ?')}
           </Typography>
-          <Typography component="p" textAlign={{xs: 'center', sm: 'center', md: 'right'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}}>
-            {t('creatorsText')}
+          <Typography component="p" color="#28343C" textAlign={{xs: 'center', sm: 'center', md: 'left'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}} marginBottom="1.25rem">
+            {t('Cube Commons own a plat in the popular, artworld of Cryptovoxels. This virtual neighbourhood of artist-run and institutional spaces already has a built in community. It is also free to access by your patrons, and easily accesses as there is no login requires. ')}
           </Typography>
           <MediaPlayer
             url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"

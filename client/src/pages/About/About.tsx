@@ -1,4 +1,5 @@
 import { Stack, Box } from '@mui/material';
+import Footer from 'components/layout/Footer';
 import AccessibilityPanel from './components/AccessibilityPanel';
 import CollaborationsPanel from './components/CollaborationsPanel';
 import CreatorsPanel from './components/CreatorsPanel';
@@ -19,6 +20,7 @@ const About = () => (
     {/* <CollaborationsPanel /> */}
     {/* <NftsPanel /> */}
     <DigitalNeighboursPanel />
+    <Footer />
     </Box>
   </Stack>
 );
