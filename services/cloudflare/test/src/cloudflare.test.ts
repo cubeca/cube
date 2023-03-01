@@ -47,25 +47,28 @@ test('gets video TUS upload URL', async () => {
   };
 
   // See https://file-examples.com/
+  // See /services/cloudflare/test/scripts/download_example_files.sh
   const filePath = `${__dirname}/../example-files/file_example_WEBM_480_900KB.webm`;
 
   const fileId = await uploadViaTus(`${API_URL}/upload/video-tus-reservation`, getAuthReqOpts('contentEditor').headers, filePath, meta);
 
+  // We are waiting for a real video to get encoded over at Cloudflare.
+  // That will take some real wall clock time.
   jest.useRealTimers();
 
-  let detailStatus, detailData = {};
+  let detailStatus, detailData: any = {};
   for (let i = 0; i < 20; i++) {
-    const fileDetailsResponse = await cloudflareApi.get(
+    ({ status: detailStatus, data: detailData } = await cloudflareApi.get(
       `/files/${fileId}`,
       getAuthReqOpts('anonymous')
-    );
-    const { status: detailStatus, data: detailData } = fileDetailsResponse;
+    ));
+
     if (200 === detailStatus) {
       break;
     }
     
     if (409 === detailStatus) {
-      await setTimeout(1000, 'Wait a second!');
+      await setTimeout(5 * 1000, 'Wait a moment!');
     } else {
       expect(detailStatus).toEqual(200);
       break;
@@ -84,7 +87,7 @@ test('gets video TUS upload URL', async () => {
     })
   );
 
-  expect(detailData.playerInfo).toEqual(
+  expect(detailData?.playerInfo).toEqual(
     expect.objectContaining({
         hlsUrl: expect.any(String),
         dashUrl: expect.any(String),

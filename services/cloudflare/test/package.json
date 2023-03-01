@@ -5,9 +5,10 @@
   "main": "build/index.js",
   "scripts": {
     "start": "npm run test",
-    "test": "npm run dbtruncate && npx jest --silent=false --verbose=true --useStderr=true",
+    "test": "npm run dbtruncate && npm run dlfiles && npx jest --silent=false --verbose=true --useStderr=true",
     "dbshell": "bash -c 'psql postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE}'",
-    "dbtruncate": "./scripts/truncate_db.sh"
+    "dbtruncate": "./scripts/truncate_db.sh",
+    "dlfiles": "./scripts/download_example_files.sh"
   },
   "keywords": [],
   "author": "",

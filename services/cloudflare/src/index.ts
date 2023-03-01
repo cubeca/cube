@@ -145,11 +145,11 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
 });
 
 export interface VideoPlayerInfo {
-  hlsUrl: string;
-  dashUrl: string;
+  hlsUrl?: string;
+  dashUrl?: string;
 
   // See https://www.npmjs.com/package/@cloudflare/stream-react
-  videoIdOrSignedUrl: string;
+  videoIdOrSignedUrl?: string;
 }
 
 export interface NonVideoPlayerInfo {
@@ -182,9 +182,9 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
       return res.status(409).send('Video is still being processed.');
     }
     playerInfo = {
-      hlsUrl: dbFile.data.playback.hls,
-      dashUrl: dbFile.data.playback.dash,
-      videoIdOrSignedUrl: dbFile.data.cloudflareStreamUid
+      hlsUrl: dbFile.data?.playback?.hls,
+      dashUrl: dbFile.data?.playback?.dash,
+      videoIdOrSignedUrl: dbFile.data?.cloudflareStreamUid
     };
   }
 
