@@ -12,10 +12,11 @@ const s3 = new S3Client({
   }
 });
 
-export const getPresignedUploadUrl = async (filePathInBucket: string, expiresIn: number) => {
+export const getPresignedUploadUrl = async (filePathInBucket: string, mimeType: string, expiresIn: number) => {
   const putCommand = new PutObjectCommand({
     Bucket: settings.CLOUDFLARE_R2_BUCKET_NAME,
-    Key: filePathInBucket
+    Key: filePathInBucket,
+    ContentType: mimeType
   });
 
   return await getSignedUrl(s3, putCommand, { expiresIn });

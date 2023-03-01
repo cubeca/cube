@@ -65,7 +65,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
       upload: {
         userId,
         fileName,
-        fileSizeBytes:tusUploadLength,
+        fileSizeBytes:Number(tusUploadLength),
         debug: {
           reserveDurationSeconds,
           urlValidDurationSeconds
@@ -75,7 +75,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 
     const fileId = dbFileStub.id;
 
-    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(fileId, tusUploadLength, reserveDurationSeconds, urlValidDurationSeconds, userId);
+    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(fileId, Number(tusUploadLength), reserveDurationSeconds, urlValidDurationSeconds, userId);
 
     if (!tusUploadUrl || !cloudflareStreamUid) {
       return res.status(500).send('Error retrieving content upload url');
@@ -104,6 +104,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     upload: {
       fileName,
       fileSizeBytes,
+      mimeType,
       urlValidDurationSeconds = 30 * 60
     }
   } = req.body;
@@ -122,6 +123,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
         userId,
         fileName,
         fileSizeBytes,
+        mimeType,
         debug: {
           urlValidDurationSeconds
         }
@@ -131,7 +133,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     const fileId = dbFileStub.id;
 
     const filePathInBucket = `${fileId}/${fileName}`;
-    const presignedUrl = await getPresignedUploadUrl(filePathInBucket, urlValidDurationSeconds);
+    const presignedUrl = await getPresignedUploadUrl(filePathInBucket, mimeType, urlValidDurationSeconds);
 
     await db.updateS3FileWithPresignedUrl(fileId, filePathInBucket, presignedUrl);
 
@@ -157,7 +159,7 @@ export interface NonVideoPlayerInfo {
 
   // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
   fileType: string;
-  storageUrl: string;
+  publicUrl: string;
 }
 
 app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
@@ -178,25 +180,27 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
       return res.status(404).send('File not found.');
     }
     if (!videoDetails.readyToStream) {
-      inspect('Video is still being processed:', videoDetails);
+      // inspect('Video is still being processed:', videoDetails);
       return res.status(409).send('Video is still being processed.');
     }
     playerInfo = {
-      hlsUrl: dbFile.data?.playback?.hls,
-      dashUrl: dbFile.data?.playback?.dash,
-      videoIdOrSignedUrl: dbFile.data?.cloudflareStreamUid
+      hlsUrl: videoDetails?.playback?.hls,
+      dashUrl: videoDetails?.playback?.dash,
+      videoIdOrSignedUrl: videoDetails?.uid
     };
   }
 
   if ('cloudflareR2' === dbFile.storage_type) {
     // TODO Replace with https://www.npmjs.com/package/file-type
     const mimeType = mime.getType(dbFile.data.filePathInBucket) || 'application/octet-stream';
+    const publicUrl = `${settings.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL}/${dbFile.data.filePathInBucket}`;
+
     playerInfo = {
       mimeType,
 
       // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
       fileType: mime.getExtension(mimeType) || 'bin',
-      storageUrl: dbFile.data.filePathInBucket
+      publicUrl
     };
   }
 

@@ -17,3 +17,4 @@ export const CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN: string = process.env.CLOUDFLA
 export const CLOUDFLARE_R2_ACCESS_KEY_ID: string = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || '__UNSET__';
 export const CLOUDFLARE_R2_SECRET_ACCESS_KEY: string = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || '__UNSET__';
 export const CLOUDFLARE_R2_BUCKET_NAME: string = process.env.CLOUDFLARE_R2_BUCKET_NAME || '__UNSET__';
+export const CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL: string = process.env.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL || '__UNSET__';

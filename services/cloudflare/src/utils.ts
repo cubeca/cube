@@ -69,10 +69,12 @@ export const makeCloudflareTusUploadMetadata = ({
   // maxDurationSeconds NjAw,requiresignedurls,expiry MjAyMy0wMi0yMFQwMDowMDowMFoK,creator ZnJvbS1tZXRhZGF0YS1yYXBoYWVsCg==
 };
 
-export const parseTusUploadMetadata = (headerValue: string):any => {
-  const parsed: { [k: string]: string } = {};
-  for (const [metaName, metaValue] of headerValue.split(',').map((m: string) => m.split(' '))) {
-    parsed[metaName] = (!metaValue) ? true : base64decode(metaValue);
+export const parseTusUploadMetadata = (headerValues: string | string[]):any => {
+  const parsed: { [k: string]: string | true | Buffer | undefined } = {};
+  for (const headerValue of Array.isArray(headerValues) ? headerValues : [headerValues]) {
+    for (const [metaName, metaValue] of headerValue.split(',').map((m: string) => m.split(' '))) {
+      parsed[metaName] = (!metaValue) ? true : base64decode(metaValue);
+    }
   }
   return parsed
 };

@@ -58,6 +58,7 @@ export interface S3DebugInfo extends CommonDebugInfo {
 }
 
 export interface S3UploadInfo extends CommonUploadInfo {
+  mimeType: string;
   debug: S3DebugInfo; // TODO: Implement cleanup cron job
 }
 

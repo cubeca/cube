@@ -8,14 +8,14 @@ import { Upload, HttpRequest, HttpResponse } from 'tus-js-client';
 // TODO Replace with https://www.npmjs.com/package/file-type
 import mime from 'mime';
 
-export type ProgressLogger = (bytesUploaded: number, bytesTotal: number) => void;
+export type ProgressHandler = (bytesUploaded: number, bytesTotal: number) => void;
 
-const defaultProgressLogger: ProgressLogger = (bytesUploaded: number, bytesTotal: number) => {
+const defaultProgressHandler: ProgressHandler = (bytesUploaded: number, bytesTotal: number) => {
     const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-    console.log(bytesUploaded, bytesTotal, `${percentage}%`);
+    console.log(`${bytesUploaded}/${bytesTotal} = ${percentage}%`);
 }
 
-export const uploadViaTus = async (endpoint: string, headers: any, filePath: string, meta: any, progressLogger: ProgressLogger = defaultProgressLogger) => {
+export const uploadViaTus = async (endpoint: string, headers: any, filePath: string, meta: any, progressHandler: ProgressHandler = defaultProgressHandler) => {
     return await new Promise((resolve, reject) => {
         const file = fs.createReadStream(filePath);
         const fileName = path.basename(filePath);
@@ -26,24 +26,20 @@ export const uploadViaTus = async (endpoint: string, headers: any, filePath: str
         const options = {
             endpoint,
             headers,
-            // chunkSize: 5 * 1024 * 1024,
             metadata: {
                 fileName,
                 mimeType,
                 ...meta
             },
             onAfterResponse(req: HttpRequest, res: HttpResponse) {
-                const url = req.getURL();
-                if (url === endpoint) {
+                if (req.getURL() === endpoint) {
                     fileId = res.getHeader("Cube-File-Id");
                 }
             },
             onError(error: any) {
                 reject(error);
             },
-            onProgress(bytesUploaded: number, bytesTotal: number) {
-                progressLogger(bytesUploaded, bytesTotal);
-            },
+            onProgress: progressHandler,
             onSuccess() {
                 resolve(fileId);
             },
