@@ -16,7 +16,8 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
   const { t } = useTranslation();
   return (
   
-  <Stack sx={{position: 'fixed', right: '-1vw', height: '100%', direction: 'column', backgroundImage: 'linear-gradient(90deg, rgba(40,52,60,0) 0%, rgba(40,52,60,0.2) 10%, rgba(40,52,60,0.4) 20%, rgba(40,52,60,0.7777704831932774) 33%, rgba(40,52,60,0.8702074579831933) 44%, rgba(40,52,60,1) 73%)'}}>
+  <Stack sx={{pt: '0', position: 'fixed', top: '0', right: '-1vw', height: '100%', direction: 'column', backgroundImage: 'linear-gradient(90deg, rgba(40,52,60,0) 0%, rgba(40,52,60,0.2) 10%, rgba(40,52,60,0.4) 20%, rgba(40,52,60,0.7777704831932774) 33%, rgba(40,52,60,0.8702074579831933) 44%, rgba(40,52,60,1) 73%)'}}> 
+      
       <Stack sx={{direction: 'column', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: '5vw', marginLeft: '5vw'}}>
       <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20vh'}}>
     <img src={profile.logoUrl} alt="" style={{border: '5px black solid', borderRadius: '100%', height: '15vh'}}/>
