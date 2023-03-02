@@ -27,7 +27,8 @@ const ContentList: FC<ContentListProps> = ({
           {heading}
         </Typography>
       )}
-      <Stack direction="row" spacing={2}>
+      <Stack direction='column'
+  spacing={{ xs: 3, sm: 3, md: 4 }}>
         {content.map((c) => (
           <ContentCard
             key={c.id}

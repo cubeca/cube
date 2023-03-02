@@ -1,42 +1,37 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import AboutPanel from '../AboutPanel';
-import CreatorsHero from 'assets/images/creators.jpg';
-import MediaPlayer from 'components/MediaPlayer';
+import AboutPanelRight from '../../../../components/AboutPanelRight/index';
 import Button from 'components/Button';
+import { styled } from 'theme/utils';
+
+import * as s from './CreatorsPanel.styled';
 
 const CreatorsPanel = () => {
   const { t } = useTranslation('about');
   return (
-    <AboutPanel
+    <AboutPanelRight
       textContent={
         <Stack
-          px="10rem"
-          alignItems="flex-end"
+          alignItems="center"
           justifyContent="center"
-          sx={{ textAlign: 'right' }}
+          sx={{ backgroundColor: '#95f5cb', padding: '5vw' }}
         >
-          <Typography component="h2" variant="h2">
-            {t('creators')}
+          <Typography component="h2" variant="h2" color="#28343C" textAlign={{ xs: 'center', sm: 'center', md: 'right' }} paddingRight={{ md: '1rem' }}>
+            {t('We Are A Commons')}
           </Typography>
-          <Typography component="p" sx={{ padding: '1.5rem 0' }}>
+          <Typography component="p" variant="body1" fontWeight="400" color="#28343C" textAlign={{ xs: 'center', sm: 'center', md: 'right' }} padding={{ xs: '1.5rem', sm: '2rem', md: '1rem' }}>
             {t('creatorsText')}
           </Typography>
-          <MediaPlayer
-            url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
-            isAudio
-          />
-          <Box py="2rem">
+          <Box pt="2rem">
             <Button>
-              {t('Become a content creator', { ns: 'common' })}
+              {t('Join US', { ns: 'common' })}
             </Button>
           </Box>
         </Stack>
       }
       imageContent={
-        <Box>
-          <img src={CreatorsHero} alt="" />
-        </Box>
+        <s.Cover>
+        </s.Cover>
       }
     />
   );

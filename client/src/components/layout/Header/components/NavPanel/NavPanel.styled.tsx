@@ -8,4 +8,5 @@ export const LinkButton = styled(Link)`
   color: inherit;
   text-decoration: inherit;
   line-height: inherit;
+  padding-right: 5rem;
 `;

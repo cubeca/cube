@@ -1,13 +1,13 @@
 import { Box, Button, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import AboutPanel from '../AboutPanel';
+import AboutPanelRight from '../../../../components/AboutPanelRight/AboutPanelRight';
 import CollaborationsHero from 'assets/images/collaborations.jpg';
 import MediaPlayer from 'components/MediaPlayer';
 
 const CollaborationsPanel = () => {
   const { t } = useTranslation('about');
   return (
-    <AboutPanel
+    <AboutPanelRight
       textContent={
         <Box px="10rem">
           <Typography component="h2" variant="h2">
