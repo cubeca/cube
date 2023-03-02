@@ -41,7 +41,7 @@ export const verifyEmail = async (uuid: string) => {
   return await api();
 };
 
-export const createUser = async (
+export const signup = async (
   name: string,
   email: string,
   password: string,
