@@ -19,8 +19,8 @@ const ContentCard: FC<ContentCardProps> = ({
   url
 }) => {
   return (
-    <Card sx={{display: 'flex'}}>
-      <Stack sx={{flex: '1 0 auto', height: 'auto'}}>
+    <Card>
+      <Stack>
         <Box>
           <Link to={url}>
             <Box
@@ -38,7 +38,7 @@ const ContentCard: FC<ContentCardProps> = ({
             </Box>
           </Link>
         </Box>
-        <Stack direction="row" alignItems="flex-start" sx={{pb:'100%'}}>
+        <Stack direction="row" alignItems="flex-start" sx={{pb:'10%'}}>
           {icon && <img src={icon} alt="" style={{ padding: '10px' }} />}
           <Stack direction="column">
             {creator && (

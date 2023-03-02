@@ -32,7 +32,7 @@ export const CONTENT_DETAILS: ContentDetails = {
       name: 'Museum Of Anthropology',
       socialUrl: 'https://www.twitter.com',
       socialHandle: '@Moa',
-      logoUrl: '/images/moa.svg'
+      logoUrl: '/images/moa.svg',
     },
     {
       id: '2',
@@ -43,7 +43,8 @@ export const CONTENT_DETAILS: ContentDetails = {
     },
     {
       id: '3',
-      name: 'Dana Claxton'
+      name: 'Dana Claxton',
+      // artist: 'true'
     }
   ],
   tags: ['tag 1', 'tag 2']

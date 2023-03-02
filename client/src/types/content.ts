@@ -38,7 +38,7 @@ export interface Contributor {
   link?: string;
   name: string;
   socialUrl?: string;
-  Artist?: boolean;
+  artist?: boolean;
   socialHandle?: string;
   logoUrl?: string;
 }
