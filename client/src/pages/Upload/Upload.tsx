@@ -12,6 +12,7 @@ import Button from 'components/Button';
 import ChipInput from 'components/form/ChipInput';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
+import TagInput from 'components/form/TagInput';
 import UploadInput from 'components/form/UploadInput';
 import useCollaborators from 'hooks/useCollaborators';
 import useContent from 'hooks/useContent';
@@ -295,7 +296,7 @@ const Tags = ({ control }: any) => {
       </Typography>
 
       <Box my={theme.spacing(5)}>
-        <TextInput
+        <TagInput
           control={control}
           name="tags"
           fullWidth
