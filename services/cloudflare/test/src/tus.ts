@@ -33,7 +33,7 @@ export const uploadViaTus = async (endpoint: string, headers: any, filePath: str
             },
             onAfterResponse(req: HttpRequest, res: HttpResponse) {
                 if (req.getURL() === endpoint) {
-                    fileId = res.getHeader("Cube-File-Id");
+                    fileId = res.getHeader("CUBE-File-Id");
                 }
             },
             onError(error: any) {

@@ -53,10 +53,6 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const reserveDurationSeconds = Number(allocVidTime);
   const urlValidDurationSeconds = Number(validFor);
 
-  if (!reserveDurationSeconds) {
-    return res.status(400).send(`Invalid Request. 'reserveDurationSeconds' required`);
-  }
-
   try {
     const { id:userId } = extractUser(req);
 
@@ -84,10 +80,10 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
 
     res.set({
-      "Access-Control-Expose-Headers": "Location,Cube-File-Id",
+      "Access-Control-Expose-Headers": "Location,CUBE-File-Id",
       "Access-Control-Allow-Headers": "*",
       "Access-Control-Allow-Origin": "*",
-      "Cube-File-Id": fileId,
+      "CUBE-File-Id": fileId,
       Location: tusUploadUrl,
     })
     res.status(200).send("OK")
