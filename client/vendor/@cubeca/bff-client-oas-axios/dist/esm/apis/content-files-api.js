@@ -23,7 +23,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import globalAxios from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
-import { DUMMY_BASE_URL, assertParamExists, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../common';
+import { DUMMY_BASE_URL, assertParamExists, setBearerAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from '../common';
 // @ts-ignore
 import { BASE_PATH, BaseAPI } from '../base';
 /**
@@ -52,46 +52,14 @@ export const ContentFilesApiAxiosParamCreator = function (configuration) {
             const localVarRequestOptions = Object.assign(Object.assign({ method: 'POST' }, baseOptions), options);
             const localVarHeaderParameter = {};
             const localVarQueryParameter = {};
+            // authentication jwt_logged_in required
+            // http bearer authentication required
+            yield setBearerAuthToObject(localVarHeaderParameter, configuration);
             localVarHeaderParameter['Content-Type'] = 'application/json';
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
             localVarRequestOptions.data = serializeDataIfNeeded(addContent, localVarRequestOptions, configuration);
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        }),
-        /**
-         * Get tus upload url from cloudflare.
-         * @summary Get tus upload url from cloudflare
-         * @param {string} uploadLength Upload length
-         * @param {string} [uploadMetadata] Upload Metadata
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentUploadUrl: (uploadLength, uploadMetadata, options = {}) => __awaiter(this, void 0, void 0, function* () {
-            // verify required parameter 'uploadLength' is not null or undefined
-            assertParamExists('contentUploadUrl', 'uploadLength', uploadLength);
-            const localVarPath = `/content/get-upload-url`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = Object.assign(Object.assign({ method: 'GET' }, baseOptions), options);
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            if (uploadLength != null) {
-                localVarHeaderParameter['upload-length'] = String(uploadLength);
-            }
-            if (uploadMetadata != null) {
-                localVarHeaderParameter['upload-metadata'] = String(uploadMetadata);
-            }
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
             return {
                 url: toPathString(localVarUrlObj),
                 options: localVarRequestOptions,
@@ -119,20 +87,6 @@ export const ContentFilesApiFp = function (configuration) {
                 return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
             });
         },
-        /**
-         * Get tus upload url from cloudflare.
-         * @summary Get tus upload url from cloudflare
-         * @param {string} uploadLength Upload length
-         * @param {string} [uploadMetadata] Upload Metadata
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentUploadUrl(uploadLength, uploadMetadata, options) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const localVarAxiosArgs = yield localVarAxiosParamCreator.contentUploadUrl(uploadLength, uploadMetadata, options);
-                return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-            });
-        },
     };
 };
 /**
@@ -151,17 +105,6 @@ export const ContentFilesApiFactory = function (configuration, basePath, axios) 
          */
         addContent(addContent, options) {
             return localVarFp.addContent(addContent, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Get tus upload url from cloudflare.
-         * @summary Get tus upload url from cloudflare
-         * @param {string} uploadLength Upload length
-         * @param {string} [uploadMetadata] Upload Metadata
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentUploadUrl(uploadLength, uploadMetadata, options) {
-            return localVarFp.contentUploadUrl(uploadLength, uploadMetadata, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -182,17 +125,5 @@ export class ContentFilesApi extends BaseAPI {
      */
     addContent(addContent, options) {
         return ContentFilesApiFp(this.configuration).addContent(addContent, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ContentFilesApi
-     */
-    contentUploadUrl(uploadLength, uploadMetadata, options) {
-        return ContentFilesApiFp(this.configuration).contentUploadUrl(uploadLength, uploadMetadata, options).then((request) => request(this.axios, this.basePath));
     }
 }

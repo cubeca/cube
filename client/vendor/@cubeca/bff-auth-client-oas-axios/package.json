@@ -1,6 +1,6 @@
 {
   "name": "@cubeca/bff-auth-client-oas-axios",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "description": "OpenAPI client for @cubeca/bff-auth-client-oas-axios",
   "author": "OpenAPI-Generator Contributors",
   "repository": {

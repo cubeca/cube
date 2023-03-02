@@ -11,5 +11,7 @@
  */
 export * from './apis/content-api';
 export * from './apis/content-files-api';
+export * from './apis/files-api';
 export * from './apis/profile-api';
+export * from './apis/upload-api';
 export * from './apis/user-api';
