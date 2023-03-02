@@ -24,7 +24,7 @@ export const getContent = async (
   nation?: NationType,
   creator?: string
 ) => {
-  const listApi = await contentApi.contentList(
+  return await contentApi.contentList(
     1,
     10,
     category,
@@ -32,12 +32,10 @@ export const getContent = async (
     nation,
     creator
   );
-  return await listApi();
 };
 
 export const getContentDetails = async (id: string) => {
-  const detailsApi = await contentApi.contentDetails(id);
-  return await detailsApi();
+  return await contentApi.contentDetails(id);
 };
 
 export const addContent = async ({
@@ -69,12 +67,13 @@ export const addContent = async ({
       };
 
   // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
-  if (mediaFile) uploadViaTus(mediaFile, {}, {});
+  if (mediaFile) uploadViaTus(mediaFile, {});
 
-  const addContentApi = await contentFilesApi.addContent({
-    ...payload,
-    coverImageFile: coverImagePayload,
-    mediaFile: mediaFilePayload
-  });
-  return await addContentApi();
+  return await contentFilesApi.addContent(
+    {
+      ...payload,
+      coverImageFile: coverImagePayload,
+      mediaFile: mediaFilePayload
+    }
+  );
 };
