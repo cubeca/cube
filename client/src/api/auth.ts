@@ -49,7 +49,7 @@ export const verifyEmail = async (userId: string) => {
   return await authApi.verifyEmail(userId);
 };
 
-export const createUser = async (
+export const signup = async (
   name: string,
   email: string,
   password: string,
