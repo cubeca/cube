@@ -31,7 +31,7 @@ const TextInput: FC<TextInputProps> = ({
   placeholder,
   fullWidth,
   sx,
-  variant = 'standard',
+  variant = 'outlined',
   rows,
   multiline
 }) => {

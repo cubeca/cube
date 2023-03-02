@@ -59,8 +59,6 @@ const Screens = ({
 const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const vertical_spacing_lg = theme.spacing(5);
-  const vertical_spacing_sm = theme.spacing(2.5);
 
   return (
     <Box className={'upload__media-screen'}>
@@ -68,7 +66,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
         {t('Media')}
       </Typography>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <Select
           label={t('Media Type')}
           name="type"
@@ -80,63 +78,61 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           <MenuItem value={ContentTypes.Audio}>{t('Audio')}</MenuItem>
           <MenuItem value={ContentTypes.PDF}>{t('PDF')}</MenuItem>
         </Select>
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'What type of media are you uploading? Don’t see the type you need in this list? Contact us.'
           )}
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <TextInput
           control={control}
           name="title"
           fullWidth
-          variant="standard"
           placeholder={t('Title (required)')}
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'What is the title of this work? This is the name that people will see when they search for and view your content. Keep this short, you will be able to provide a longer description on the next screen.'
           )}
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('Media file (required)')}
           onDrop={handleMediaUpload}
           maxFiles={1}
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Upload your video. This is a shared network, to reduce energy and space consumption please upload files xxx, xxx or xxx, no more than xx mb. While your video uploads you can continue filling out the rest of this form. You will be able to submit your entry once the upload has finished.'
           )}
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('Thumbnail image (required)')}
           onDrop={handleCoverImageUpload}
           maxFiles={1}
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Upload a Thumbnail Image. Recommended image dimensions are xxx by xxx. File size should not exceed xxx kb.'
           )}
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <TextInput
           control={control}
           name="imageText"
           placeholder={t('Thumbnail Image alt text (required)')}
           fullWidth
-          variant="standard"
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Alt text should describe who or what is in the picture, atmospheric or prop details and any vibrant colours or important design elements or symbols'
           )}
@@ -154,8 +150,6 @@ const Details = ({
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const vertical_spacing_lg = theme.spacing(5);
-  const vertical_spacing_sm = theme.spacing(2.5);
 
   return (
     <Box className={'upload__details-screen'}>
@@ -163,24 +157,23 @@ const Details = ({
         {t('Details')}
       </Typography>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <TextInput
           control={control}
           name="description"
           placeholder={t('Description (required)')}
-          variant="standard"
           multiline
           rows={8}
           fullWidth
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             `Though this text will be accessible to screen reading tools, it's important to remember that different accessibilities are assisted by different kinds of description. Use language in your text that considers a broad audience and is no greater than 280 characters.`
           )}
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <Button
           onClick={() => {}}
           variant="text"
@@ -197,20 +190,20 @@ const Details = ({
         >
           {t('Upload an audio file describing the information above')}
         </Button>
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Using your phone or computer record a quick 1-2min description that includes not only the information in the text but a description of where the video is shot, and some of the key visuals in the video.'
           )}
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('VTT file (required)')}
           onDrop={handleVTTFilesUpload}
           maxFiles={1}
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Upload VTT File For Subtitles. VTT files ensure your content has subtitles. Closed captions include information about background sounds and speaker changes. Subtitles assume the viewer hears the audio and as a result does not contain background information. Please format the file to have this code at the top to ensure it adapts to various screen sizes'
           )}
@@ -219,7 +212,7 @@ const Details = ({
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <Select
           label={t('Is this video made for kids? (required)')}
           name="audience"
@@ -231,14 +224,14 @@ const Details = ({
           <MenuItem value="nokids">{t('No, it’s not made for kids')}</MenuItem>
         </Select>
 
-        <Typography component="p" variant="body2">
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Regardless of your location, you’re legally required to comply with the Children’s Online Privacy Protection Act (COPPA) and/or other laws. You’re required to tell us whether your videos are made for kids. What’s content made for kids?'
           )}
         </Typography>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <DatePicker
           label={t('Expiry Date')}
           value={expiryValue}
@@ -256,7 +249,7 @@ const Details = ({
             />
           )}
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'You can include an expiration date for content that is only licensed for a period.'
           )}
@@ -269,8 +262,6 @@ const Details = ({
 const Accessibility = () => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const vertical_spacing_lg = theme.spacing(5);
-  const vertical_spacing_sm = theme.spacing(2.5);
 
   return (
     <Box className={'upload__accessibility-screen'}>
@@ -278,11 +269,11 @@ const Accessibility = () => {
         {t('Accessibility')}
       </Typography>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <Typography component="h5" variant="h5">
           {t('Add a Sign-language Option To Your Video')}
         </Typography>
-        <Typography component="p">
+        <Typography component="p" my={theme.spacing(2.5)}>
           {t(
             'We encourage everyone to add sign language to their video content. Cube has a partnership with Deaf Spectrum who is able to book Signers willing to be videoed for content online. This does not need to be uploaded at the same time your content is. If you book using the button here, which is a portal to Deaf Spectrum’s site, signers are given the time they need to produce video content and the video is added later as a picture on picture option for users who select it.'
           )}
@@ -296,8 +287,6 @@ const Accessibility = () => {
 const Tags = ({ control }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const vertical_spacing_lg = theme.spacing(5);
-  const vertical_spacing_sm = theme.spacing(2.5);
 
   return (
     <Box className={'upload__tags-screen'}>
@@ -305,47 +294,68 @@ const Tags = ({ control }: any) => {
         {t('Tags')}
       </Typography>
 
-      <Box my={vertical_spacing_lg}>
-        <ChipInput
+      <Box my={theme.spacing(5)}>
+        <TextInput
           control={control}
-          name="collaborators"
+          name="tags"
           fullWidth
-          chips={[
-            'Live Performance',
-            'Workshop',
-            'Kids Workshop',
-            'Artist Talk',
-            'Language Teaching',
-            'Cultural Teaching',
-            'Studio Visit',
-            'Gathering',
-            'Book Launch',
-            'Subtitles',
-            'Sign Language',
-            'Multilingual Subtitles',
-            'Tsleil-Waututh',
-            'kʷakʷəkʲəʔwakʷ',
-            'Sḵwx̱wúʔmesh',
-            'Anishinaabe',
-            'French',
-            'Chinese',
-            'BC',
-            'Alberta',
-            'Québec',
-            'Regina',
-            'Manitoba',
-            'Toronto'
-          ]}
+          placeholder={t('Content Tags')}
         />
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+
+        <Typography component="p" variant="body2" mt={theme.spacing(2.5)}>
           {t(
             'Separate tags by comma. Tags are our way of expanding the terms by which users can search content. They also contribute to your govenance token holdings by expressing how inclusive and accessible your content is. If you want content to be bundled under an exhibition name please create that tag:'
           )}
         </Typography>
+
+        <Grid container>
+          <Grid xs={12} md={4}>
+            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
+              <li>Live Performance</li>
+              <li>Workshop</li>
+              <li>Kids workshop</li>
+              <li>Artist Talk</li>
+              <li>Language Teaching</li>
+              <li>Cultural Teaching</li>
+              <li>Studio Visit</li>
+              <li>Gathering</li>
+              <li>Book Launch</li>
+              <li>Subtitles</li>
+              <li>Sign language</li>
+              <li>Multilingual Subtitles</li>
+            </Typography>
+          </Grid>
+          <Grid xs={12} md={4}>
+            <Typography component="h6" variant="h6" my={theme.spacing(2)}>
+              Language Tags
+            </Typography>
+            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
+              <li>Tsleil-Waututh</li>
+              <li>kʷakʷəkʲəʔwakʷ</li>
+              <li>Sḵwx̱wúʔmesh</li>
+              <li>Anishinaabe</li>
+              <li>French</li>
+              <li>Chinese</li>
+            </Typography>
+          </Grid>
+          <Grid xs={12} md={4}>
+            <Typography component="h6" variant="h6" my={theme.spacing(2)}>
+              Location Tags
+            </Typography>
+            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
+              <li>BC</li>
+              <li>Alberta</li>
+              <li>Québec</li>
+              <li>Regina</li>
+              <li>Manitoba</li>
+              <li>Toronto</li>
+            </Typography>
+          </Grid>
+        </Grid>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
-        <Typography component="p" variant="body2" my={vertical_spacing_sm}>
+      <Box my={theme.spacing(5)}>
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Credit any individuals who contribute to this content, including artists, editors etc. Add as many contributors as needed, using “Add more”. Only one name per field.'
           )}
@@ -354,13 +364,12 @@ const Tags = ({ control }: any) => {
           control={control}
           name="contributor"
           fullWidth
-          variant="standard"
           placeholder={t('e.g. Editor -> Editor Name')}
         />
         <Button variant="text">{t('+ add more')}</Button>
       </Box>
 
-      <Box my={vertical_spacing_lg}>
+      <Box my={theme.spacing(5)}>
         <ChipInput
           control={control}
           name="collaborators"
