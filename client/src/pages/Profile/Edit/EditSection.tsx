@@ -69,7 +69,7 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
             name="profileName"
             control={control}
             defaultValue={profile.name}
-            variant="outlined"
+            variant="standard"
             sx={{ fontSize: '2rem' }}
           />
         </Stack>
@@ -85,7 +85,7 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
         multiline
         rows={4}
         fullWidth
-        variant="outlined"
+        variant="standard"
       />
       <Button
         onClick={() => {

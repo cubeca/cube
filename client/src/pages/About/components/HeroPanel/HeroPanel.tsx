@@ -31,7 +31,7 @@ const HeroPanel = () => {
               <Typography component="p" variant="body1" mr="5rem">
                 One platform for discovering all
                 the video + audio content, digital publications and workbooklets being produced by artists and arts organizations on artistic and cultural practices happening accorss Turtle Island - Canada.
-                Search by name or medium, create playlists for students + friends or play a track while your creating.
+                Search by name or medium, create playlists for students + friends or play a track while you are creating.
               </Typography>
               <Button>Start Watching</Button>
           </Grid>

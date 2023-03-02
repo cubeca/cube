@@ -92,7 +92,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           control={control}
           name="title"
           fullWidth
-          variant="outlined"
+          variant="standard"
           placeholder={t('Title (required)')}
         />
         <Typography component="p" variant="body2" my={vertical_spacing_sm}>
@@ -134,7 +134,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           name="imageText"
           placeholder={t('Thumbnail Image alt text (required)')}
           fullWidth
-          variant="outlined"
+          variant="standard"
         />
         <Typography component="p" variant="body2" my={vertical_spacing_sm}>
           {t(
@@ -168,7 +168,7 @@ const Details = ({
           control={control}
           name="description"
           placeholder={t('Description (required)')}
-          variant="outlined"
+          variant="standard"
           multiline
           rows={8}
           fullWidth
@@ -354,7 +354,7 @@ const Tags = ({ control }: any) => {
           control={control}
           name="contributor"
           fullWidth
-          variant="outlined"
+          variant="standard"
           placeholder={t('e.g. Editor -> Editor Name')}
         />
         <Button variant="text">{t('+ add more')}</Button>
