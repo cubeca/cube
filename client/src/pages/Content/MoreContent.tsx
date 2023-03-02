@@ -12,14 +12,14 @@ const MoreContent = () => {
 
   return (
     <Stack pb="2rem">
-      <Typography component="h4" pb="1rem" sx={{ fontWeight: 'bold' }}>
-        {t('More Content')}
+      <Typography component="h4" variant="h4" pb="1rem" sx={{ color: '#95F5CB' }}>
+        {t('More Content Like This')}
       </Typography>
       {!isLoading ? (
         <ContentList content={content.slice(0, 3)} />
       ) : (
-        <Stack direction="row" spacing={4}>
-          <ContentLoader size={2} />
+        <Stack direction="column" spacing={2}>
+          <ContentLoader size={1} />
         </Stack>
       )}
     </Stack>

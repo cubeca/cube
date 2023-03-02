@@ -25,8 +25,6 @@ const ContentCard: FC<ContentCardProps> = ({
           <Link to={url}>
             <Box
               sx={{
-                display: 'flex',
-                width: '200px',
                 backgroundImage: `url('${image}')`,
                 backgroundRepeat: 'no-repeat',
                 backgroundSize: 'cover'
@@ -40,7 +38,7 @@ const ContentCard: FC<ContentCardProps> = ({
             </Box>
           </Link>
         </Box>
-        <Stack direction="row" alignItems="flex-start">
+        <Stack direction="row" alignItems="flex-start" sx={{pb:'10%'}}>
           {icon && <img src={icon} alt="" style={{ padding: '10px' }} />}
           <Stack direction="column">
             {creator && (

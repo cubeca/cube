@@ -27,15 +27,6 @@ export declare const ContentFilesApiAxiosParamCreator: (configuration?: Configur
      * @throws {RequiredError}
      */
     addContent: (addContent: AddContent, options?: AxiosRequestConfig) => Promise<RequestArgs>;
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    contentUploadUrl: (uploadLength: string, uploadMetadata?: string, options?: AxiosRequestConfig) => Promise<RequestArgs>;
 };
 /**
  * ContentFilesApi - functional programming interface
@@ -50,15 +41,6 @@ export declare const ContentFilesApiFp: (configuration?: Configuration) => {
      * @throws {RequiredError}
      */
     addContent(addContent: AddContent, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AddContentResponse>>;
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>>;
 };
 /**
  * ContentFilesApi - factory interface
@@ -73,15 +55,6 @@ export declare const ContentFilesApiFactory: (configuration?: Configuration, bas
      * @throws {RequiredError}
      */
     addContent(addContent: AddContent, options?: any): AxiosPromise<AddContentResponse>;
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: any): AxiosPromise<void>;
 };
 /**
  * ContentFilesApi - interface
@@ -98,16 +71,6 @@ export interface ContentFilesApiInterface {
      * @memberof ContentFilesApiInterface
      */
     addContent(addContent: AddContent, options?: AxiosRequestConfig): AxiosPromise<AddContentResponse>;
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ContentFilesApiInterface
-     */
-    contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: AxiosRequestConfig): AxiosPromise<void>;
 }
 /**
  * ContentFilesApi - object-oriented interface
@@ -125,14 +88,4 @@ export declare class ContentFilesApi extends BaseAPI implements ContentFilesApiI
      * @memberof ContentFilesApi
      */
     addContent(addContent: AddContent, options?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<AddContentResponse, any>>;
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ContentFilesApi
-     */
-    contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<void, any>>;
 }

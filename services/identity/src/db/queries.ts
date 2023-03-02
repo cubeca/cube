@@ -26,7 +26,7 @@ export const insertIdentity = (
 };
 
 export const updateEmail = (id: string, email: string) => {
-  const text = `UPDATE users SET email = $1 WHERE id = $2;`;
+  const text = `UPDATE users SET email = $1, has_verified_email = false WHERE id = $2;`;
   const values = [email, id];
 
   return db.query(text, values);
@@ -53,10 +53,7 @@ export const selectUserByID = (id: string) => {
   return db.query(text, values);
 };
 
-export const updateEmailVerification = (
-  id: string,
-  hasBeenVerified: boolean
-) => {
+export const updateEmailVerification = (id: string, hasBeenVerified: boolean) => {
   const text = `UPDATE users SET has_verified_email = $1 where id = $2;`;
   const values = [`${hasBeenVerified}`, id];
 

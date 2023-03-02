@@ -114,6 +114,9 @@ const AuthApiAxiosParamCreator = function (configuration) {
             const localVarRequestOptions = Object.assign(Object.assign({ method: 'POST' }, baseOptions), options);
             const localVarHeaderParameter = {};
             const localVarQueryParameter = {};
+            // authentication jwt_logged_in required
+            // http bearer authentication required
+            yield (0, common_1.setBearerAuthToObject)(localVarHeaderParameter, configuration);
             localVarHeaderParameter['Content-Type'] = 'application/json';
             (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -144,6 +147,9 @@ const AuthApiAxiosParamCreator = function (configuration) {
             const localVarRequestOptions = Object.assign(Object.assign({ method: 'PUT' }, baseOptions), options);
             const localVarHeaderParameter = {};
             const localVarQueryParameter = {};
+            // authentication jwt_logged_in required
+            // http bearer authentication required
+            yield (0, common_1.setBearerAuthToObject)(localVarHeaderParameter, configuration);
             localVarHeaderParameter['Content-Type'] = 'application/json';
             (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -174,6 +180,9 @@ const AuthApiAxiosParamCreator = function (configuration) {
             const localVarRequestOptions = Object.assign(Object.assign({ method: 'PUT' }, baseOptions), options);
             const localVarHeaderParameter = {};
             const localVarQueryParameter = {};
+            // authentication jwt_logged_in required
+            // http bearer authentication required
+            yield (0, common_1.setBearerAuthToObject)(localVarHeaderParameter, configuration);
             localVarHeaderParameter['Content-Type'] = 'application/json';
             (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
@@ -204,6 +213,9 @@ const AuthApiAxiosParamCreator = function (configuration) {
             const localVarRequestOptions = Object.assign(Object.assign({ method: 'POST' }, baseOptions), options);
             const localVarHeaderParameter = {};
             const localVarQueryParameter = {};
+            // authentication jwt_logged_in required
+            // http bearer authentication required
+            yield (0, common_1.setBearerAuthToObject)(localVarHeaderParameter, configuration);
             localVarHeaderParameter['Content-Type'] = 'application/json';
             (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};

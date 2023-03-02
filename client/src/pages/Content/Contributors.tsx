@@ -2,7 +2,9 @@ import { Stack, Typography, Link as MuiLink } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { Contributor } from 'types/content';
+// import useMediaQuery from '@mui/material';
 
+// const matches = useMediaQuery('(min-width:600px)');
 const Contributors: FC<{ contributors: Contributor[] }> = ({
   contributors
 }) => {
@@ -18,17 +20,11 @@ const Contributors: FC<{ contributors: Contributor[] }> = ({
               width="50"
             />
             <Stack pt="5px">
-              
-            {contributor.Artist && (
-                <Typography>
-                  Artist
-                </Typography>
-              )}
-              <Typography component="p" sx={{ fontWeight: 'bold' }}>
+              <Typography component="p" variant="h4" sx={{ color: '#D9FFEE' }}>
                 {contributor.link ? (
                   <Link
                     to={contributor.link}
-                    style={{ color: 'white', textDecoration: 'none' }}
+                    style={{ color: '#D9FFEE', textDecoration: 'none' }}
                   >
                     {contributor.name}
                   </Link>

@@ -1,4 +1,4 @@
-import { blobToBase64, upload } from './helpers';
+import { blobToBase64, uploadViaTus } from './helpers';
 import { AddContent, contentApi, contentFilesApi } from './httpClient';
 
 export type CategoryType =
@@ -69,7 +69,7 @@ export const addContent = async ({
       };
 
   // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
-  if (mediaFile) upload(mediaFile);
+  if (mediaFile) uploadViaTus(mediaFile, {}, {});
 
   const addContentApi = await contentFilesApi.addContent({
     ...payload,

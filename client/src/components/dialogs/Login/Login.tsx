@@ -4,11 +4,12 @@ import Dialog from 'components/Dialog';
 import { DialogProps } from 'components/Dialog/Dialog';
 import EmailInput from 'components/form/EmailInput';
 import PasswordInput from 'components/form/PasswordInput';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { login } from 'api/auth';
+import ErrorMessage from 'components/form/ErrorMessage';
 
 type LoginProps = Pick<DialogProps, 'open' | 'onClose'>;
 
@@ -16,18 +17,21 @@ const Login: FC<LoginProps> = ({ open, onClose }) => {
   const { t } = useTranslation('common');
   const { control, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
+  const [error, setError] = useState(false);
 
   const onSubmit = async (data: FieldValues) => {
     const { email, password } = data;
     try {
+      setError(false);
       const response = await login(email, password);
       // TODO: Update to a more secure method for storing token
       localStorage.setItem('TOKEN', response.data.jwt);
+
+      // TODO: Determine profile associated with user
       navigate('/profile/1');
       handleClose();
     } catch (e: any) {
-      console.log(e);
-      // TODO: Show error message
+      setError(true);
     }
   };
 
@@ -54,6 +58,9 @@ const Login: FC<LoginProps> = ({ open, onClose }) => {
             fullWidth
             helperText={t('Password required')}
           />
+          {error && (
+            <ErrorMessage>{t('Invalid username or password')}</ErrorMessage>
+          )}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)}>
               {t('Sign In')}

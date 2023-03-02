@@ -43,9 +43,9 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "NODE_ENV=development runtime-env-cra --config-name=./public/runtime-env.js && react-scripts start",
+    "start": "./scripts/create_dot_env_if_missing.sh && NODE_ENV=development npx runtime-env-cra --config-name=./public/runtime-env.js && npx react-scripts start",
     "build": "react-scripts build",
-    "serve:dev": "NODE_ENV=development npx runtime-env-cra --config-name=./build/runtime-env.js && npx serve --cors --config serve.json build",
+    "serve:dev": "./scripts/create_dot_env_if_missing.sh && NODE_ENV=development npx runtime-env-cra --config-name=./build/runtime-env.js && npx serve --cors --config serve.json build",
     "serve:prod": "NODE_ENV=production npx runtime-env-cra --config-name=./build/runtime-env.js && npx serve --cors --config serve.json build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

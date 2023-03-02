@@ -5,9 +5,13 @@ import {
   Configuration,
   ContentApiFp,
   ContentFilesApiFp,
-  ProfileApiFp
+  ProfileApiFp,
+  UploadApi
 } from '@cubeca/bff-client-oas-axios';
 import { AuthApiFp } from '@cubeca/bff-auth-client-oas-axios';
+
+// `tus-js-client` expects to talk to this endpoint directly instead of through our API client lib.
+export const UPLOAD_TUS_ENDPOINT = `${API_URL}/upload/video-tus-reservation`;
 
 // Call backend requests via generated client
 const configuration = new Configuration({
@@ -21,6 +25,7 @@ const authConfiguration = new Configuration({
 export const contentApi = ContentApiFp(configuration);
 export const contentFilesApi = ContentFilesApiFp(configuration);
 export const profileApi = ProfileApiFp(configuration);
+export const uploadApi = new UploadApi(configuration);
 export const authApi = AuthApiFp(authConfiguration);
 export type {
   AddContent,

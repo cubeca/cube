@@ -55,6 +55,10 @@ export const ContentFilesApiAxiosParamCreator = function (configuration?: Config
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication jwt_logged_in required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
 
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -63,48 +67,6 @@ export const ContentFilesApiAxiosParamCreator = function (configuration?: Config
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(addContent, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Get tus upload url from cloudflare.
-         * @summary Get tus upload url from cloudflare
-         * @param {string} uploadLength Upload length
-         * @param {string} [uploadMetadata] Upload Metadata
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentUploadUrl: async (uploadLength: string, uploadMetadata?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'uploadLength' is not null or undefined
-            assertParamExists('contentUploadUrl', 'uploadLength', uploadLength)
-            const localVarPath = `/content/get-upload-url`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (uploadLength != null) {
-                localVarHeaderParameter['upload-length'] = String(uploadLength);
-            }
-
-            if (uploadMetadata != null) {
-                localVarHeaderParameter['upload-metadata'] = String(uploadMetadata);
-            }
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -132,18 +94,6 @@ export const ContentFilesApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.addContent(addContent, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
-        /**
-         * Get tus upload url from cloudflare.
-         * @summary Get tus upload url from cloudflare
-         * @param {string} uploadLength Upload length
-         * @param {string} [uploadMetadata] Upload Metadata
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.contentUploadUrl(uploadLength, uploadMetadata, options);
-            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
-        },
     }
 };
 
@@ -164,17 +114,6 @@ export const ContentFilesApiFactory = function (configuration?: Configuration, b
         addContent(addContent: AddContent, options?: any): AxiosPromise<AddContentResponse> {
             return localVarFp.addContent(addContent, options).then((request) => request(axios, basePath));
         },
-        /**
-         * Get tus upload url from cloudflare.
-         * @summary Get tus upload url from cloudflare
-         * @param {string} uploadLength Upload length
-         * @param {string} [uploadMetadata] Upload Metadata
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: any): AxiosPromise<void> {
-            return localVarFp.contentUploadUrl(uploadLength, uploadMetadata, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -193,17 +132,6 @@ export interface ContentFilesApiInterface {
      * @memberof ContentFilesApiInterface
      */
     addContent(addContent: AddContent, options?: AxiosRequestConfig): AxiosPromise<AddContentResponse>;
-
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ContentFilesApiInterface
-     */
-    contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: AxiosRequestConfig): AxiosPromise<void>;
 
 }
 
@@ -224,18 +152,5 @@ export class ContentFilesApi extends BaseAPI implements ContentFilesApiInterface
      */
     public addContent(addContent: AddContent, options?: AxiosRequestConfig) {
         return ContentFilesApiFp(this.configuration).addContent(addContent, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Get tus upload url from cloudflare.
-     * @summary Get tus upload url from cloudflare
-     * @param {string} uploadLength Upload length
-     * @param {string} [uploadMetadata] Upload Metadata
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof ContentFilesApi
-     */
-    public contentUploadUrl(uploadLength: string, uploadMetadata?: string, options?: AxiosRequestConfig) {
-        return ContentFilesApiFp(this.configuration).contentUploadUrl(uploadLength, uploadMetadata, options).then((request) => request(this.axios, this.basePath));
     }
 }
