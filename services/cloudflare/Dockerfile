@@ -1,4 +1,4 @@
-FROM node:16.19.0-bullseye-slim AS builder
+FROM node:16.19.1-bullseye-slim AS builder
 
 ENV PORT=4551
 
@@ -24,7 +24,7 @@ RUN npm run gcp-build
 
 ################################################################################
 
-FROM node:16.19.0-bullseye-slim AS server
+FROM node:16.19.1-bullseye-slim AS server
 
 COPY --from=builder /work/build /work/build/
 COPY --from=builder /work/migrations /work/migrations/

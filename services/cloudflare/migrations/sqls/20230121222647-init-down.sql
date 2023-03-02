@@ -1,3 +1,2 @@
-DROP TABLE IF EXISTS file_upload_details;
--- -- TODO Re-enable this after figuring out if this extension has any cross-talk effects between separate microservices sharing one DB server instance (but not DBs!), which we will probably do in the beginning to save costs.
--- DROP EXTENSION IF EXISTS "uuid-ossp";
+DROP TABLE IF EXISTS files;
+DROP TYPE IF EXISTS file_storage_type;
