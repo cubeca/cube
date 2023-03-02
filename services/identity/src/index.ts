@@ -5,7 +5,9 @@ import * as jwt from 'jsonwebtoken';
 import { comparePassword, encryptString, decryptString, hashPassword } from './utils';
 import * as bodyParser from 'body-parser';
 import * as settings from './settings';
-import { allowIfAnyOf } from './auth';
+import { allowIfAnyOf, extractUser } from './auth';
+
+const PERMISSION_IDS_ALLOWED_ON_SIGNUP = ['active'];
 
 const app: Express = express();
 
@@ -28,7 +30,7 @@ const sendVerificationEmail = async (email: string, userId: string) => {
   console.log(`TODO implement me: Send verification email for ${userId} to ${email}`);
 }
 
-app.post('/auth/user', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
+app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
   const {
     name,
     email,
@@ -40,6 +42,10 @@ app.post('/auth/user', allowIfAnyOf('userAdmin'), async (req: Request, res: Resp
 
   if (!name || !email || !password) {
     return res.status(401).send('Invalid Request Body. name, email, and password must be provided.');
+  }
+
+  if (!extractUser(req).permissionIds.includes('userAdmin') && permissionIds.some((p: string) => !PERMISSION_IDS_ALLOWED_ON_SIGNUP.includes(p))) {
+    return res.status(403).send(`Invalid Request Body. Only with "userAdmin" JWT claim can the created user have permissionIds other than "${PERMISSION_IDS_ALLOWED_ON_SIGNUP.join('", "')}".`);
   }
 
   try {

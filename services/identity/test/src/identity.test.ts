@@ -36,7 +36,12 @@ const getAuthReqOpts = (...permissions:string[]) => {
 
 const getReqOptsWithJwt = (jwt:string) => ({ headers: { Authorization: `Bearer ${jwt}` }});
 
-const createUser = async ({ userPermissions = ['active'], createPermissions = ['userAdmin'] } = {}) => {
+export interface CreateUserOptions  {
+  userPermissions?: string[];
+  createPermissions?: string[] | null;
+}
+
+const createUser = async ({ userPermissions = ['active'], createPermissions = ['userAdmin'] }: CreateUserOptions = {}) => {
   const requestBody = {
     name: 'Real Name',
     email: getUniqueEmail(),
@@ -45,7 +50,8 @@ const createUser = async ({ userPermissions = ['active'], createPermissions = ['
     hasAcceptedNewsletter: false,
     hasAcceptedTerms: false,
   };
-  const { status, data } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(...createPermissions));
+  const authReqOpts = (null === createPermissions) ? undefined : getAuthReqOpts(...createPermissions);
+  const { status, data } = await identityApi.post('/auth/user', requestBody, authReqOpts);
   return { status, data, requestBody };
 };
 
@@ -87,6 +93,27 @@ test('can not create user without correct permission', async () => {
   expect(status).toEqual(403);
 });
 
+test('signs up as "active" user', async () => {
+  const { status, data, requestBody } = await createUser({ userPermissions: ['active'], createPermissions: null });
+  expect(status).toEqual(201);
+  expect(data).toEqual(expect.objectContaining({
+    id: expect.stringMatching(UUID_REGEXP),
+  }));
+});
+
+test('can not sign up as user with excessive permissions', async () => {
+  const { status, data, requestBody } = await createUser({ userPermissions: ['active', 'excessive'], createPermissions: null });
+  expect(status).toEqual(403);
+});
+
+test('"userAdmin" creates user with excessive permissions', async () => {
+  const { status, data, requestBody } = await createUser({ userPermissions: ['active', 'excessive'], createPermissions: ['userAdmin'] });
+  expect(status).toEqual(201);
+  expect(data).toEqual(expect.objectContaining({
+    id: expect.stringMatching(UUID_REGEXP),
+  }));
+});
+
 test('logs in, but only once', async () => {
   const { status:statusCreate, data:dataCreate, requestBody:requestBodyCreate } = await createUser();
   expect(statusCreate).toEqual(201);
@@ -116,6 +143,33 @@ test('logs in, but only once', async () => {
   // Can *NOT* log in a second time
   const { status:statusRepeatLogin, data:dataRepeatLogin } = await identityApi.post('/auth/login', requestBodyLogin, getReqOptsWithJwt(dataLogin.jwt));
   expect(statusRepeatLogin).toEqual(403);
+});
+
+test('logs in without "anonymous" JWT', async () => {
+  const { status:statusCreate, data:dataCreate, requestBody:requestBodyCreate } = await createUser();
+  expect(statusCreate).toEqual(201);
+  expect(dataCreate).toEqual(expect.objectContaining({
+    id: expect.stringMatching(UUID_REGEXP),
+  }));
+
+  const requestBodyLogin = {
+    username: requestBodyCreate.email,
+    password: requestBodyCreate.password,
+  };
+  const { status:statusLogin, data:dataLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  expect(statusLogin).toEqual(200);
+  expect(dataLogin).toEqual(expect.objectContaining({
+    jwt: expect.any(String),
+  }));
+
+  const jwtPayload = await jsonwebtoken.verify(dataLogin.jwt, settings.JWT_TOKEN_SECRET);
+
+  expect(jwtPayload).toEqual(expect.objectContaining({
+    iss: 'CUBE',
+    sub: dataCreate.id,
+    aud: requestBodyCreate.permissionIds,
+    iat: expect.any(Number),
+  }));
 });
 
 test('updates email and logs in with new email', async () => {
