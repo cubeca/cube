@@ -1,25 +1,21 @@
 import { anonymousJWT } from 'api/auth';
-import { JWT_AUTH_TOKEN_KEY, JWT_ANON_TOKEN_KEY } from 'constants/storageKeys';
+import { JWT_AUTH_TOKEN_KEY } from 'constants/storageKeys';
 
-export const getAuthToken = () => {
-  return localStorage.getItem(JWT_AUTH_TOKEN_KEY) || '';
-};
-
-// TODO: Update to a more secure method for storing token
-export const setAuthToken = (jwtToken: string) => {
-  localStorage.setItem(JWT_AUTH_TOKEN_KEY, jwtToken);
-};
-
-export const getAnonToken = async () => {
-  let jwt = localStorage.getItem(JWT_ANON_TOKEN_KEY);
+export const getAuthToken = async ():Promise<string> => {
+  let jwt = localStorage.getItem(JWT_AUTH_TOKEN_KEY);
   if (!jwt) {
     jwt = await anonymousJWT();
-    setAnonToken(jwt || '');
+    setAuthToken(jwt || '');
   }
   return jwt;
 };
 
-// TODO: Update to a more secure method for storing token
-export const setAnonToken = (jwtToken: string) => {
-  localStorage.setItem(JWT_ANON_TOKEN_KEY, jwtToken);
+// TODO: Update to a more secure method for storing tokens
+export const setAuthToken = (jwtToken: string) => {
+  localStorage.setItem(JWT_AUTH_TOKEN_KEY, jwtToken);
+};
+
+export const getAuthTokenPayload = async ():Promise<Record<string, unknown>> => {
+  const tokenParts = (await getAuthToken()).split('.');
+  return tokenParts[1] ? JSON.parse(atob(tokenParts[1])) : {};
 };

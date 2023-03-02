@@ -2,17 +2,12 @@ import { ProfileAPIResponse } from 'types/profile';
 import { PROFILE_API_PATH } from './constants';
 import httpClient, { profileApi } from './httpClient';
 import { blobToBase64 } from './helpers';
-import { getAuthToken } from 'utils/authToken';
+import { getAuthToken } from '../utils/authToken';
 
 export type { ProfileMainSchema as Profile } from './httpClient';
 
 export const getProfile = async (id: string) => {
-  const profileDetailsApi = await profileApi.profileDetails(id, {
-    headers: {
-      authorization: `BEARER ${getAuthToken()}`
-    }
-  });
-  return await profileDetailsApi();
+  return await profileApi.profileDetails(id);
 };
 
 export const updateProfileSection = async (
@@ -20,36 +15,24 @@ export const updateProfileSection = async (
   name: string,
   description: string
 ) => {
-  const profileSectionApi = await profileApi.profileSectionUpdate(
+  return await profileApi.profileSectionUpdate(
     id,
     {
       name,
       description
-    },
-    {
-      headers: {
-        authorization: `BEARER ${getAuthToken()}`
-      }
     }
   );
-  return await profileSectionApi();
 };
 
 export const updateProfileLogo = async (id: string, file: File) => {
   const fileContents = (await blobToBase64(file)) as string;
-  const updateProfileLogoApi = await profileApi.profileLogoUpdate(
+  return await profileApi.profileLogoUpdate(
     id,
     {
       name: file.name,
       file_contents_base64: fileContents
-    },
-    {
-      headers: {
-        authorization: `BEARER ${getAuthToken()}`
-      }
     }
   );
-  return updateProfileLogoApi();
 };
 
 export const updateProfileHero = async (id: string, file: File) => {
@@ -62,7 +45,7 @@ export const updateProfileHero = async (id: string, file: File) => {
     },
     {
       headers: {
-        authorization: `BEARER ${getAuthToken()}`
+        authorization: `Bearer ${await getAuthToken()}`
       }
     }
   );
@@ -78,7 +61,7 @@ export const updateProfileAudioDescription = async (id: string, file: File) => {
     },
     {
       headers: {
-        authorization: `BEARER ${getAuthToken()}`
+        authorization: `Bearer ${await getAuthToken()}`
       }
     }
   );

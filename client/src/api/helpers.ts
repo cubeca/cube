@@ -2,6 +2,7 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import { PaginationQueryKeys, ContentQueryKeys } from './enums';
 import { Upload, HttpRequest, HttpResponse } from 'tus-js-client';
 import { UPLOAD_TUS_ENDPOINT, uploadApi } from './httpClient';
+import { getAuthToken } from '../utils/authToken';
 
 type QueryKeys = typeof ContentQueryKeys;
 
@@ -51,13 +52,16 @@ const defaultProgressHandler: ProgressHandler = (bytesUploaded: number, bytesTot
     console.log(`${bytesUploaded}/${bytesTotal} = ${percentage}%`);
 }
 
-export const uploadViaTus = async (file: File, headers: any, meta: any, progressHandler: ProgressHandler = defaultProgressHandler):Promise<string | undefined> => {
+export const uploadViaTus = async (file: File, meta: any, progressHandler: ProgressHandler = defaultProgressHandler):Promise<string | undefined> => {
+  const authToken = await getAuthToken();
   return await new Promise((resolve, reject) => {
     let fileId: string | undefined = undefined;
 
     const options = {
       endpoint: UPLOAD_TUS_ENDPOINT,
-      headers,
+      headers: {
+        Authorization: `Bearer ${authToken}`
+      },
       retryDelays: [0, 3000, 5000, 10000, 20000],
       metadata: {
         fileName: file.name,
