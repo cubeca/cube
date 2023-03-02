@@ -29,8 +29,13 @@ const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
         <Typography component="p">{t('Drop the files here...')}</Typography>
       ) : (
         <>
-          <Typography component="p">{text}</Typography>
-          <Button>{t('Choose a file')}</Button> {t('or drag it here')}
+          <Typography component="h6" variant="h6">
+            {text}
+          </Typography>
+          <Typography component="p" variant="body2">
+            <styled.UploadButton>{t('Choose a file')}</styled.UploadButton>{' '}
+            {t('or drag it here')}
+          </Typography>
         </>
       )}
     </styled.UploadBox>
