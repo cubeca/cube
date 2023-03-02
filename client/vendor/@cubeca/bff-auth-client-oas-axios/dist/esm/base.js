@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 import globalAxios from 'axios';
-export const BASE_PATH = "http://localhost:8080/bff/auth/v1".replace(/\/+$/, "");
+export const BASE_PATH = "https://bff-auth-dev.cubecommons.ca".replace(/\/+$/, "");
 /**
  *
  * @export
