@@ -105,7 +105,7 @@ test('uploads video via TUS', async () => {
 
 }, TEST_TIMEOUT_UPLOAD);
 
-test('gets S3 presigned URL', async () => {
+test('uploads non-video via S3 presigned URL', async () => {
   // See https://file-examples.com/
   // See /services/cloudflare/test/scripts/download_example_files.sh
   const filePath = `${__dirname}/../example-files/file_example_MP3_700KB.mp3`;
