@@ -11,10 +11,9 @@ ifneq (,$(wildcard ./.env))
 endif
 
 DOCKER ?= docker
-DOCKER_COMPOSE ?= docker-compose
 
 export PROJECT_NAME ?= cube_identity
-PROJECT_DOCKER_COMPOSE = $(DOCKER_COMPOSE) --project-name $(PROJECT_NAME) --file ./docker-compose.yaml --project-directory . $(DOCKER_ENV_FILE_PARAM)
+PROJECT_DOCKER_COMPOSE = $(DOCKER) compose --project-name $(PROJECT_NAME) --file ./docker-compose.yaml --project-directory . $(DOCKER_ENV_FILE_PARAM)
 
 LOCAL_DOCKER_IMAGE ?= cubeca/identity:latest
 
@@ -29,25 +28,47 @@ export POSTGRES_PASSWORD ?= postgres
 
 .PHONY: up
 up:
-	$(PROJECT_DOCKER_COMPOSE) up -d --force-recreate
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+
+.PHONY: up-prod
+up-prod:
+	MICROSERVICE_DOCKERFILE=Dockerfile $(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+
+.PHONY: test
+test:
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) --profile test up --detach --force-recreate
 
 .PHONY: down
 down:
-	$(PROJECT_DOCKER_COMPOSE) down
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) --profile test down
 
 .PHONY: clean
 clean:
-	-$(PROJECT_DOCKER_COMPOSE) rm
-	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db
-	-$(DOCKER) image rm $(PROJECT_NAME)_microservice
+	-MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) --profile test rm
+	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db $(PROJECT_NAME)_testrunner
+	-$(DOCKER) image rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_testrunner
 
 .PHONY: logs
 logs:
-	$(PROJECT_DOCKER_COMPOSE) logs -f
+	$(PROJECT_DOCKER_COMPOSE) logs --follow
 
 .PHONY: login
 login:
+	$(DOCKER) exec -ti $(PROJECT_NAME)_testrunner bash
+
+.PHONY: login_ms
+login_ms:
 	$(DOCKER) exec -ti $(PROJECT_NAME)_microservice bash
+
+# This "power-cycles" the Docker Compose setup.
+# A.k.a. "have you turned it off and on again?"
+# See https://en.wikipedia.org/wiki/SIGHUP
+.PHONY: hup
+hup:
+	$(MAKE) down
+	$(MAKE) clean
+	$(MAKE) test
+	$(MAKE) login_ms
 
 .PHONY: docker_build
 docker_build:

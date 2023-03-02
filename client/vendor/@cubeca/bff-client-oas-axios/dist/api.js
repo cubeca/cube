@@ -29,5 +29,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./apis/content-api"), exports);
 __exportStar(require("./apis/content-files-api"), exports);
+__exportStar(require("./apis/files-api"), exports);
 __exportStar(require("./apis/profile-api"), exports);
+__exportStar(require("./apis/upload-api"), exports);
 __exportStar(require("./apis/user-api"), exports);

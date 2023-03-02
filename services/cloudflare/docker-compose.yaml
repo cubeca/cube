@@ -1,22 +1,26 @@
-version: "3.9"
+version: '3.9'
 
 services:
   cube_cloudflare_microservice:
     container_name: ${PROJECT_NAME}_microservice
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ${MICROSERVICE_DOCKERFILE}
     image: ${PROJECT_NAME}_microservice
     depends_on:
       - postgres
     networks:
+      - public_api
       - db
     environment:
       PROJECT_NAME: $PROJECT_NAME
 
       PORT: $PORT
       JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
-      ENCRYPT_SECRET: $ENCRYPT_SECRET
+
+      CLOUDFLARE_ACCOUNT_ID: $CLOUDFLARE_ACCOUNT_ID
+      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
+      CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN: $CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN
 
       PGHOST: postgres
       PGPORT: '5432'
@@ -36,7 +40,6 @@ services:
     ports:
       # Serve the microservice on the host
       - '$PORT:$PORT'
-
 
   postgres:
     container_name: ${PROJECT_NAME}_db
@@ -61,9 +64,54 @@ services:
     networks:
       - db
 
+  cube_cloudflare_testrunner:
+    profiles:
+      - test
+    container_name: ${PROJECT_NAME}_testrunner
+    build:
+      context: .
+      dockerfile: test/Dockerfile
+    image: ${PROJECT_NAME}_testrunner
+    depends_on:
+      - cube_cloudflare_microservice
+    networks:
+      - public_api
+
+      # So that we can empty the DB before running the tests.
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      # This must be the same as the service name here in the docker compose file.
+      MICROSERVICE: cube_cloudflare_microservice
+      PORT: $PORT
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      CLOUDFLARE_ACCOUNT_ID: $CLOUDFLARE_ACCOUNT_ID
+      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
+      CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN: $CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN
+    volumes:
+      - ./.env.example:/work/.env.example
+      - ./${ENV_FILE}:/work/.env
+      - ./test/example-files:/work/example-files/
+      - ./test/src:/work/src/
+      - ./test/scripts:/work/scripts/
+      - ./test/jest.config.js:/work/jest.config.js
+      - ./test/package-lock.json:/work/package-lock.json
+      - ./test/package.json:/work/package.json
+      - ./test/tsconfig.json:/work/tsconfig.json
 
 volumes:
   pgdata:
 
 networks:
+  public_api:
   db:
