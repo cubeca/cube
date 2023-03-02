@@ -28,10 +28,10 @@ const Video = () => {
           <MediaPlayer url={content?.url || ''} width="100%" />
         )}
         <Stack sx={{mt: '2rem', padding: '2rem'}}>
-        <Typography component="h1" variant="body1">
+        <Typography component="h1" variant="h1" sx={{ color: '#95F5CB' }}>
                 {content?.title}
               </Typography>
-              <Typography component="p" variant="body2">
+              <Typography component="p" variant="body2" sx={{ color: '#D9FFEE'}}>
                 {content?.createdDate}
               </Typography>
               <Stack
@@ -41,7 +41,7 @@ const Video = () => {
                   borderRadius: theme.shape.borderRadius
                 }}
               >
-                <Typography component="p">{content?.description}</Typography>
+                <Typography component="p" variant="body1" sx={{ color: '#D9FFEE'}}>{content?.description}</Typography>
                 <MediaPlayer url={content?.descriptionUrl || ''} isAudio />
               </Stack>
               </Stack>
@@ -55,20 +55,20 @@ const Video = () => {
               <Contributors contributors={content?.contributors ?? []} />
               <Divider sx={{ margin: '2rem 0' }} light />
               <Stack>
-                <Typography component="h4" sx={{ fontWeight: 'body1' }}>
+                <Typography component="h4" variant="h4" sx={{ color: '#95F5CB' }}>
                   {t('Credits')}
                 </Typography>
-                <Typography component="p" sx={{ fontWeight: 'bold' }}>
+                <Typography component="p" variant="h5" sx={{ color: '#D9FFEE' }}>
                   {content?.credits}
                 </Typography>
               </Stack>
               <Divider sx={{ margin: '2rem 0' }} light />
               {content && content.tags.length > 0 && (
                 <Stack py="1rem">
-                  <Typography component="p">
-                    {t('Content Search Tags')}
+                  <Typography component="h4" variant="h4">
+                    {t('Tags')}
                   </Typography>
-                  <Box sx={{ display: 'flex' }}>
+                  <Box sx={{ display: 'flex'}}>
                     {content.tags.map((tag: string) => (
                       <Chip
                         key={tag}
