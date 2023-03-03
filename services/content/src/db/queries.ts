@@ -35,7 +35,7 @@ export const insertContent = async (data: ContentData, profileId:string) => {
   data.profileId = profileId;
 
   const sql = `
-    INSERT INTO files (
+    INSERT INTO content (
       data
     )
     VALUES (
