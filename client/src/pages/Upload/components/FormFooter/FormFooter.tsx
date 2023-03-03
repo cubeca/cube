@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
 import * as s from './FormFooter.styled';
+import Lottie from 'lottie-react';
+import LoadingAnimation from 'assets/animations/loading-circle.json';
 
 const FormFooter = ({ isLoading, handleSubmit, onSubmit }: any) => {
   const { t } = useTranslation();
@@ -13,6 +15,12 @@ const FormFooter = ({ isLoading, handleSubmit, onSubmit }: any) => {
       <Grid container>
         <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
           <s.Messages>
+            <s.WaitMessage component="p" variant="body2">
+              <Lottie animationData={LoadingAnimation} loop={true} />
+              {t(
+                '"Please wait while “Video Title” finishes uploading in the background before submitting'
+              )}
+            </s.WaitMessage>
             <s.SuccessMessage component="p" variant="body2">
               {t('"Video Title" is ready to submit!')}
             </s.SuccessMessage>

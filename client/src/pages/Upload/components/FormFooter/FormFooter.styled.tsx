@@ -1,7 +1,7 @@
 import { styled } from 'theme/utils';
 import { Box } from '@mui/system';
-import { alpha } from '@mui/material/styles';
 import { Typography } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 
 export const FormFooter = styled(Box)`
   padding: ${({ theme }) => theme.spacing(2)};
@@ -13,6 +13,8 @@ export const Messages = styled(Box)`
   padding: 1rem 0;
   text-align: center;
 `;
+
+export const WaitMessage = styled(Typography)``;
 
 export const SuccessMessage = styled(Typography)`
   &::before {
