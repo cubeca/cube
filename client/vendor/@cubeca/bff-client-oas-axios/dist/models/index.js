@@ -15,7 +15,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./add-content"), exports);
-__exportStar(require("./add-content-cover-image-file"), exports);
 __exportStar(require("./add-content-response"), exports);
 __exportStar(require("./add-content-response-data"), exports);
 __exportStar(require("./content-details"), exports);

@@ -14,7 +14,6 @@ common.ts
 configuration.ts
 git_push.sh
 index.ts
-models/add-content-cover-image-file.ts
 models/add-content-response-data.ts
 models/add-content-response.ts
 models/add-content.ts
