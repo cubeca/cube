@@ -53,8 +53,8 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     return res.status(400).send(`Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
   }
 
-  const reserveDurationSeconds = Number(allocVidTime);
-  const urlValidDurationSeconds = Number(validFor);
+  const reserveDurationSeconds = Math.ceil(Number(allocVidTime));
+  const urlValidDurationSeconds = Math.ceil(Number(validFor));
 
   try {
     const { id:userId } = extractUser(req);
