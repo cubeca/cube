@@ -1,5 +1,4 @@
 export * from './add-content';
-export * from './add-content-cover-image-file';
 export * from './add-content-response';
 export * from './add-content-response-data';
 export * from './content-details';

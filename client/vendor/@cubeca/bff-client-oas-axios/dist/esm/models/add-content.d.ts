@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AddContentCoverImageFile } from './add-content-cover-image-file';
 /**
  * Adds Content
  * @export
@@ -48,16 +47,16 @@ export interface AddContent {
     'description': string;
     /**
      *
-     * @type {AddContentCoverImageFile}
+     * @type {string}
      * @memberof AddContent
      */
-    'coverImageFile': AddContentCoverImageFile;
+    'coverImageFileId': string;
     /**
      *
-     * @type {AddContentCoverImageFile}
+     * @type {string}
      * @memberof AddContent
      */
-    'mediaFile': AddContentCoverImageFile;
+    'mediaFileId': string;
     /**
      *
      * @type {string}
