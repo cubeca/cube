@@ -61,18 +61,25 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
 
     const options = {
       endpoint: UPLOAD_TUS_ENDPOINT,
-      headers: {
-        Authorization: `Bearer ${authToken}`
-      },
+      // headers: {
+      //   Authorization: `Bearer ${authToken}`
+      // },
       retryDelays: [0, 3000, 5000, 10000, 20000],
       metadata: {
         fileName: file.name,
         mimeType: file.type,
 
         // TODO remove this hack (tries to reserve 1 minute per 1 MB filesize)
-        allocVidTime: 60 * (file.size / 1000000),
+        allocVidTime: Math.ceil(60 * (file.size / 1000000)),
 
         ...meta
+      },
+      onBeforeRequest(req: HttpRequest) {
+        // Browsers can't send `Authorization` headers to https://upload.videodelivery.net/
+        // because of CORS. So we have to send it only for the initial endpoint.
+        if (req.getURL() === UPLOAD_TUS_ENDPOINT) {
+          req.setHeader('Authorization', `Bearer ${authToken}`);
+        }
       },
       onAfterResponse(req: HttpRequest, res: HttpResponse) {
         if (res.getStatus() === 200 && req.getURL() === UPLOAD_TUS_ENDPOINT) {
