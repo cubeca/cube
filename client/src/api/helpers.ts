@@ -68,6 +68,10 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
       metadata: {
         fileName: file.name,
         mimeType: file.type,
+
+        // TODO remove this hack (tries to reserve 1 minute per 1 MB filesize)
+        allocVidTime: 60 * (file.size / 1000000),
+
         ...meta
       },
       onAfterResponse(req: HttpRequest, res: HttpResponse) {
