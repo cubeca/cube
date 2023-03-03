@@ -5,6 +5,5 @@ import Profile from './Profile';
 import Content from './Content';
 import Upload from './Upload';
 import Login from './Login';
-import Signup from './Signup';
 
-export { About, Home, NotFound, Profile, Content, Upload, Login, Signup };
+export { About, Home, NotFound, Profile, Content, Upload, Login };

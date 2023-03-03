@@ -1,11 +1,21 @@
+import { getAnonToken, setAuthToken } from 'utils/auth';
 import { authApi } from './httpClient';
 
 export const login = async (email: string, password: string) => {
-  const api = await authApi.login({
-    username: email,
-    password
-  });
-  return await api();
+  const anonToken = await getAnonToken();
+  const api = await authApi.login(
+    {
+      username: email,
+      password
+    },
+    {
+      headers: {
+        authorization: `Bearer ${anonToken}`
+      }
+    }
+  );
+  const response = await api();
+  setAuthToken(response.data.jwt);
 };
 
 export const anonymousJWT = async () => {
