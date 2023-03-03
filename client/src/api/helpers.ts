@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import { PaginationQueryKeys, ContentQueryKeys } from './enums';
 import { Upload, HttpRequest, HttpResponse } from 'tus-js-client';
@@ -48,8 +50,8 @@ export const blobToBase64 = (file: File) =>
 export type ProgressHandler = (bytesUploaded: number, bytesTotal: number) => void;
 
 const defaultProgressHandler: ProgressHandler = (bytesUploaded: number, bytesTotal: number) => {
-    const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-    console.log(`${bytesUploaded}/${bytesTotal} = ${percentage}%`);
+  const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+  console.log(`uploadViaTus ${bytesUploaded}/${bytesTotal} = ${percentage}%`);
 }
 
 export const uploadViaTus = async (file: File, meta: any, progressHandler: ProgressHandler = defaultProgressHandler):Promise<string | undefined> => {
@@ -86,7 +88,7 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
     const upload = new Upload(file, options);
 
     // Check if there are any previous uploads to continue.
-    upload.findPreviousUploads().then(function (previousUploads) {
+    upload.findPreviousUploads().then(function (previousUploads:any) {
       // Found previous uploads so we select the first one. 
       if (previousUploads.length) {
         upload.resumeFromPreviousUpload(previousUploads[0]);
@@ -96,4 +98,44 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
       upload.start();
     })
   });
+};
+
+
+export const uploadS3 = async (file: File, profileId: string): Promise<string | undefined> => {
+  const fileName = file.name;
+  const mimeType = file.type;
+  const fileSizeBytes = file.size;
+
+  const { fileId, presignedUrl } = await uploadApi.uploadFilesViaPresignedUrl({
+    profileId,
+    upload: {
+      fileName,
+      fileSizeBytes,
+      mimeType,
+      urlValidDurationSeconds: 5 * 60
+    }
+  });
+
+  const r2PutOptions = {
+    timeout: 10 * 60 * 1000,
+
+    // Do not throw errors for non-2xx responses, that makes handling them easier.
+    validateStatus: null,
+
+    headers: {
+      'Content-Type': mimeType,
+      'Content-Length': fileSizeBytes,
+    },
+
+    onUploadProgress: (progressEvent:any) => {
+      console.log(`profile ${profileId} uploadS3 progress for ${fileName}`);
+      console.dir(progressEvent);
+    }
+  };
+
+  // Do *NOT* wait, intentionally.
+  // TODO Improve async error handling and progress reporting. 
+  axios.put(presignedUrl, file, r2PutOptions);
+
+  return fileId;
 };
