@@ -13,9 +13,6 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import { AddContentCoverImageFile } from './add-content-cover-image-file';
 
 /**
  * Adds Content
@@ -55,16 +52,16 @@ export interface AddContent {
     'description': string;
     /**
      * 
-     * @type {AddContentCoverImageFile}
+     * @type {string}
      * @memberof AddContent
      */
-    'coverImageFile': AddContentCoverImageFile;
+    'coverImageFileId': string;
     /**
      * 
-     * @type {AddContentCoverImageFile}
+     * @type {string}
      * @memberof AddContent
      */
-    'mediaFile': AddContentCoverImageFile;
+    'mediaFileId': string;
     /**
      * 
      * @type {string}

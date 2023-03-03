@@ -1,4 +1,4 @@
-import { blobToBase64, uploadViaTus } from './helpers';
+import { uploadViaTus, uploadS3 } from './helpers';
 import { AddContent, contentApi, contentFilesApi } from './httpClient';
 
 export type CategoryType =
@@ -24,7 +24,7 @@ export const getContent = async (
   nation?: NationType,
   creator?: string
 ) => {
-  const listApi = await contentApi.contentList(
+  return await contentApi.contentList(
     1,
     10,
     category,
@@ -32,12 +32,10 @@ export const getContent = async (
     nation,
     creator
   );
-  return await listApi();
 };
 
 export const getContentDetails = async (id: string) => {
-  const detailsApi = await contentApi.contentDetails(id);
-  return await detailsApi();
+  return await contentApi.contentDetails(id);
 };
 
 export const addContent = async ({
@@ -45,36 +43,28 @@ export const addContent = async ({
   coverImageFile,
   mediaFile
 }: {
-  payload: Omit<AddContent, 'coverImageFile' | 'mediaFile'>;
+  payload: Omit<AddContent, 'coverImageFileId' | 'mediaFileId'>;
   coverImageFile?: File;
   mediaFile?: File;
 }) => {
-  const coverImagePayload = coverImageFile
-    ? {
-        name: coverImageFile.name,
-        file_contents_base64: (await blobToBase64(coverImageFile)) as string
-      }
-    : {
-        name: '',
-        file_contents_base64: ''
-      };
-  const mediaFilePayload = mediaFile
-    ? {
-        name: mediaFile.name,
-        file_contents_base64: (await blobToBase64(mediaFile)) as string
-      }
-    : {
-        name: '',
-        file_contents_base64: ''
-      };
 
+  let coverImageFileId: string | undefined = undefined;
+  let mediaFileId: string | undefined = undefined;
   // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
-  if (mediaFile) uploadViaTus(mediaFile, {}, {});
 
-  const addContentApi = await contentFilesApi.addContent({
-    ...payload,
-    coverImageFile: coverImagePayload,
-    mediaFile: mediaFilePayload
-  });
-  return await addContentApi();
+  if (coverImageFile) {
+    coverImageFileId = await uploadS3(coverImageFile, payload.profileId);
+  }
+
+  if (mediaFile) {
+    mediaFileId = await uploadViaTus(mediaFile, { profileId: payload.profileId });
+  }
+
+  return await contentFilesApi.addContent(
+    {
+      ...payload,
+      coverImageFileId: String(coverImageFileId),
+      mediaFileId: String(mediaFileId)
+    }
+  );
 };

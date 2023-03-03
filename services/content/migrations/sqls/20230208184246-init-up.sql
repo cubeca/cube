@@ -1,15 +1,15 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TABLE content (
-    id uuid DEFAULT uuid_generate_v4 (),
-    profile_id uuid NOT NULL,
-    -- name VARCHAR NOT NULL,
-    -- email VARCHAR NOT NULL UNIQUE,
-    -- password VARCHAR NOT NULL,
-    -- permission_ids VARCHAR ARRAY,
-    -- is_active BOOLEAN DEFAULT true,
-    -- has_verified_email BOOLEAN DEFAULT false,
-    -- has_accepted_terms BOOLEAN DEFAULT false,
-    -- has_accepted_newsletter BOOLEAN DEFAULT false,
-    PRIMARY KEY (id)
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+
+    -- An automated `updated_at` would need a trigger, which would need `CREATE
+    -- LANGUAGE plpgsql;`, etc.
+    -- See https://stackoverflow.com/questions/1035980/update-timestamp-when-row-is-updated-in-postgresql
+    -- For now, not automated at SQL level.
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+
+    data JSONB NOT NULL DEFAULT '{}'::JSONB
 );
+
+CREATE INDEX content_by_profile_id ON content USING HASH (((data->'profileId')::TEXT));

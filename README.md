@@ -64,6 +64,12 @@ npm run start
 
 The service will now be running on [http://localhost:8081](http://localhost:8081)
 
+NOTE: A test user is created in the migration with the following credentials:
+
+username: firstuser@cubecommons.ca
+password: abc123456789***
+
+
 ## 3. Start the Mock API Server
 
 ```
