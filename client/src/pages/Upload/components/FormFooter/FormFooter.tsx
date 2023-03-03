@@ -15,15 +15,22 @@ const FormFooter = ({ isLoading, handleSubmit, onSubmit }: any) => {
       <Grid container>
         <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
           <s.Messages>
-            <s.WaitMessage component="p" variant="body2">
-              <Lottie animationData={LoadingAnimation} loop={true} />
-              {t(
-                '"Please wait while “Video Title” finishes uploading in the background before submitting'
-              )}
-            </s.WaitMessage>
-            <s.SuccessMessage component="p" variant="body2">
-              {t('"Video Title" is ready to submit!')}
-            </s.SuccessMessage>
+            {isLoading ? (
+              <s.WaitMessage component="p" variant="body2">
+                <Lottie
+                  className="icon-loading"
+                  animationData={LoadingAnimation}
+                  loop={true}
+                />
+                {t(
+                  '"Please wait while “Video Title” finishes uploading before submitting'
+                )}
+              </s.WaitMessage>
+            ) : (
+              <s.SuccessMessage component="p" variant="body2">
+                {t('"Video Title" is ready to submit!')}
+              </s.SuccessMessage>
+            )}
           </s.Messages>
 
           <s.Actions>

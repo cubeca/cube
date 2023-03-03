@@ -14,7 +14,15 @@ export const Messages = styled(Box)`
   text-align: center;
 `;
 
-export const WaitMessage = styled(Typography)``;
+export const WaitMessage = styled(Typography)`
+  .icon-loading {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+`;
 
 export const SuccessMessage = styled(Typography)`
   &::before {
