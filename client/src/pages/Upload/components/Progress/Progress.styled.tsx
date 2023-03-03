@@ -14,10 +14,12 @@ export const ProgressList = styled('ul')`
 
 export const ProgressItem = styled('li')`
   padding: 0;
-  margin: ${(props) => props.theme.spacing(2)};
+  margin: ${(props) => props.theme.spacing(3)}
+    ${(props) => props.theme.spacing(2)} ${(props) => props.theme.spacing(2)};
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    margin: ${(props) => props.theme.spacing(3)};
+    margin: ${(props) => props.theme.spacing(5)}
+      ${(props) => props.theme.spacing(4)} ${(props) => props.theme.spacing(3)};
   }
 
   button {
