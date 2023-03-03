@@ -1,5 +1,6 @@
 import { Settings } from '@mui/icons-material';
 import { createTheme, responsiveFontSizes } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 
 const DEFAULT_BORDER_RADIUS = 5;
 const DEFAULT_FONT_SIZE = 16;
@@ -127,6 +128,13 @@ const getTheme = (mode?: 'dark' | 'light') =>
             root: {
               textTransform: 'none',
               padding: '1rem 2rem'
+            }
+          }
+        },
+        MuiIconButton: {
+          styleOverrides: {
+            sizeMedium: {
+              color: alpha(THEME_COLORS.primary.light, 0.5)
             }
           }
         },

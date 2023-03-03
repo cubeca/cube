@@ -175,26 +175,13 @@ const Details = ({
       </Box>
 
       <Box my={theme.spacing(5)}>
-        <Button
-          onClick={() => {}}
-          variant="text"
-          endIcon={
-            <Box
-              border="solid"
-              borderRadius="5px"
-              display="inline-block"
-              lineHeight="0"
-            >
-              <FileUploadIcon />
-            </Box>
-          }
-        >
-          {t('Upload an audio file describing the information above')}
-        </Button>
+        <UploadInput
+          text={t('Audio description (required)')}
+          onDrop={handleVTTFilesUpload}
+          maxFiles={1}
+        />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-          {t(
-            'Using your phone or computer record a quick 1-2min description that includes not only the information in the text but a description of where the video is shot, and some of the key visuals in the video.'
-          )}
+          {t('Upload an audio file describing the information above')}
         </Typography>
       </Box>
 

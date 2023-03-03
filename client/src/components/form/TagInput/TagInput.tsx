@@ -4,6 +4,7 @@ import { FC, HTMLInputTypeAttribute } from 'react';
 import { Controller } from 'react-hook-form';
 import FormControl from '../FormControl';
 import { InputProps } from '../types';
+import { alpha } from '@mui/material/styles';
 
 interface TagInputProps extends InputProps {
   type?: HTMLInputTypeAttribute;
@@ -68,7 +69,9 @@ const TextInput: FC<TagInputProps> = ({
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <LabelIcon></LabelIcon>
+                    <LabelIcon
+                      style={{ fill: alpha('#D9FFEE', 0.5) }}
+                    ></LabelIcon>
                   </InputAdornment>
                 )
               }}
