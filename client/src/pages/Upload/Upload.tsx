@@ -25,6 +25,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Breadcrumb from './components/Breadcrumb';
 import Progress from './components/Progress';
+import Footer from './components/Footer';
 
 const Screens = ({
   control,
@@ -435,27 +436,6 @@ const Tags = ({ control }: any) => {
           )}
         </Typography>
       </Box>
-    </Box>
-  );
-};
-
-const Footer = ({ isLoading, handleSubmit, onSubmit }: any) => {
-  const { t } = useTranslation();
-  const theme = useTheme();
-
-  return (
-    <Box className={'upload__footer'} my={theme.spacing(5)}>
-      <Grid container>
-        <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            fullWidth={false}
-            disabled={isLoading}
-          >
-            {t('Submit')}
-          </Button>
-        </Grid>
-      </Grid>
     </Box>
   );
 };
