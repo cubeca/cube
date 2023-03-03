@@ -25,7 +25,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Breadcrumb from './components/Breadcrumb';
 import Progress from './components/Progress';
-import Footer from './components/Footer';
+import FormFooter from './components/FormFooter';
 
 const Screens = ({
   control,
@@ -509,7 +509,7 @@ const Upload = () => {
         expiryValue={expiryValue}
         onExpriryValueChange={setExpiryValue}
       />
-      <Footer
+      <FormFooter
         isLoading={isLoading}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
