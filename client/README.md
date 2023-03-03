@@ -25,7 +25,6 @@ The Docker image starts really slow because it is still running the React dev se
 - `REACT_APP_API_URL`: The URL of the API instance you want the frontend to use
 - `PORT`: The port to serve the frontend from, defaults to 3000
 
-
 ---
 
 FTR [React README](./README-React.md)
