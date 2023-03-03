@@ -1,12 +1,7 @@
-import {
-  IconButton,
-  InputAdornment,
-  TextField as MuiTextField
-} from '@mui/material';
+import { InputAdornment, TextField as MuiTextField } from '@mui/material';
 import LabelIcon from '@mui/icons-material/Label';
 import { FC, HTMLInputTypeAttribute } from 'react';
 import { Controller } from 'react-hook-form';
-
 import FormControl from '../FormControl';
 import { InputProps } from '../types';
 

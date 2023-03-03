@@ -243,9 +243,7 @@ const Details = ({
             <TextField
               // control={control}
               // name="expiry"
-              // placeholder={t('Expiry Date')}
-              // fullWidth
-              // variant="outlined"
+              fullWidth
               {...params}
             />
           )}
@@ -361,24 +359,90 @@ const Tags = ({ control }: any) => {
             'Credit any individuals who contribute to this content, including artists, editors etc. Add as many contributors as needed, using “Add more”. Only one name per field.'
           )}
         </Typography>
-        <TextInput
-          control={control}
-          name="contributor"
-          fullWidth
-          placeholder={t('e.g. Editor -> Editor Name')}
-        />
-        <Button variant="text">{t('+ add more')}</Button>
+
+        <Grid container columnSpacing={2} alignItems="center">
+          <Grid xs={3}>
+            <Typography component="h6" variant="h6" mt={theme.spacing(1)}>
+              Artist:
+            </Typography>
+          </Grid>
+          <Grid xs={9}>
+            <TextInput
+              control={control}
+              name="artist"
+              fullWidth
+              placeholder={t('Add only one contributor name here')}
+            />
+          </Grid>
+          <Grid xs={3}>
+            <Typography component="h6" variant="h6" mt={theme.spacing(1)}>
+              Editor:
+            </Typography>
+          </Grid>
+          <Grid xs={9}>
+            <TextInput
+              control={control}
+              name="editor"
+              fullWidth
+              placeholder={t('Add only one contributor name here')}
+            />
+          </Grid>
+          <Grid xs={3}>
+            <Typography component="h6" variant="h6" mt={theme.spacing(1)}>
+              Camera Operator:
+            </Typography>
+          </Grid>
+          <Grid xs={9}>
+            <TextInput
+              control={control}
+              name="camera"
+              fullWidth
+              placeholder={t('Add only one contributor name here')}
+            />
+          </Grid>
+          <Grid xs={3}>
+            <Typography component="h6" variant="h6" mt={theme.spacing(1)}>
+              Sound Technician:
+            </Typography>
+          </Grid>
+          <Grid xs={9}>
+            <TextInput
+              control={control}
+              name="sound"
+              fullWidth
+              placeholder={t('Add only one contributor name here')}
+            />
+          </Grid>
+          <Grid xs={3}>
+            <TextInput
+              control={control}
+              name=""
+              fullWidth
+              placeholder={t('Role')}
+            />
+          </Grid>
+          <Grid xs={9}>
+            <TextInput
+              control={control}
+              name="sound"
+              fullWidth
+              placeholder={t('Add only one contributor name here')}
+            />
+          </Grid>
+        </Grid>
+        <Box display="flex" justifyContent="flex-end">
+          <Button variant="outlined">{t('+ add more')}</Button>
+        </Box>
       </Box>
 
       <Box my={theme.spacing(5)}>
-        <ChipInput
+        <TagInput
           control={control}
           name="collaborators"
           fullWidth
-          // chips={collaborators || []}
-          chips={[]}
+          placeholder={t('Collaborators')}
         />
-        <Typography component="p" variant="body2">
+        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Did you work with another organization? Include them in the credits. Separate collaborators by comma.'
           )}
