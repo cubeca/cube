@@ -13,9 +13,9 @@ const FormFooter = ({ isLoading, handleSubmit, onSubmit }: any) => {
       <Grid container>
         <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
           <s.Messages>
-            <Typography component="p" variant="body2">
+            <s.SuccessMessage component="p" variant="body2">
               {t('"Video Title" is ready to submit!')}
-            </Typography>
+            </s.SuccessMessage>
           </s.Messages>
 
           <s.Actions>
