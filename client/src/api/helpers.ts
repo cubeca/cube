@@ -61,9 +61,6 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
 
     const options = {
       endpoint: UPLOAD_TUS_ENDPOINT,
-      // headers: {
-      //   Authorization: `Bearer ${authToken}`
-      // },
       retryDelays: [0, 3000, 5000, 10000, 20000],
       metadata: {
         fileName: file.name,
@@ -84,6 +81,7 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
       onAfterResponse(req: HttpRequest, res: HttpResponse) {
         if (res.getStatus() === 200 && req.getURL() === UPLOAD_TUS_ENDPOINT) {
           fileId = res.getHeader("CUBE-File-Id");
+          console.log(`got fileId from TUS endpoint: "${fileId}".`);
           resolve(fileId); // Resolve early, so we can get on with creating content.
         }
       },
