@@ -71,7 +71,7 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
         ...meta
       },
       onAfterResponse(req: HttpRequest, res: HttpResponse) {
-        if (req.getURL() === UPLOAD_TUS_ENDPOINT) {
+        if (res.getStatus() === 200 && req.getURL() === UPLOAD_TUS_ENDPOINT) {
           fileId = res.getHeader("CUBE-File-Id");
           resolve(fileId); // Resolve early, so we can get on with creating content.
         }
@@ -106,7 +106,7 @@ export const uploadS3 = async (file: File, profileId: string): Promise<string | 
   const mimeType = file.type;
   const fileSizeBytes = file.size;
 
-  const { fileId, presignedUrl } = await uploadApi.uploadFilesViaPresignedUrl({
+  const { data: { fileId, presignedUrl } } = await uploadApi.uploadFilesViaPresignedUrl({
     profileId,
     upload: {
       fileName,

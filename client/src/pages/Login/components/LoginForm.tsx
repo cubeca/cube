@@ -7,6 +7,7 @@ import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { login } from 'api/auth';
+import { setAuthToken } from 'utils/authToken';
 import { useState } from 'react';
 import Button from 'components/Button';
 
@@ -20,9 +21,9 @@ export const LoginForm = () => {
     const { email, password } = data;
     try {
       setError(false);
-      const response = await login(email, password);
+      const jwt = await login(email, password);
       // TODO: Update to a more secure method for storing token
-      localStorage.setItem('TOKEN', response.data.jwt);
+      setAuthToken(jwt);
 
       // TODO: Determine profile associated with user
       navigate('/profile/1');

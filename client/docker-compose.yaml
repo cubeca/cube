@@ -26,6 +26,7 @@ services:
       - ./tsconfig.json:/work/tsconfig.json
       - ./serve.json:/work/serve.json
       - ./public:/work/public/
+      - ./scripts:/work/scripts/
       - ./src:/work/src/
       - ./vendor:/work/vendor/
     ports:

@@ -63,8 +63,8 @@ export const addContent = async ({
   return await contentFilesApi.addContent(
     {
       ...payload,
-      coverImageFileId,
-      mediaFileId
+      coverImageFileId: String(coverImageFileId),
+      mediaFileId: String(mediaFileId)
     }
   );
 };
