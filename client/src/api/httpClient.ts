@@ -15,14 +15,14 @@ export type {
 } from '@cubeca/bff-client-oas-axios';
 
 import { API_URL, AUTH_SERVICE_URL } from './constants';
-import { getAuthToken } from '../utils/authToken';
+import { getAuthToken } from '../utils/auth';
 
 // `tus-js-client` expects to talk to this endpoint directly instead of going through our API client lib.
 export const UPLOAD_TUS_ENDPOINT = `${API_URL}/upload/video-tus-reservation`;
 
 const authConfiguration = new Configuration({
   basePath: AUTH_SERVICE_URL,
-  accessToken: getAuthToken
+  accessToken: async () => String(await getAuthToken())
 });
 
 export const authApi = new AuthApi(authConfiguration);
@@ -30,7 +30,7 @@ export const authApi = new AuthApi(authConfiguration);
 // Call backend requests via generated client
 const configuration = new Configuration({
   basePath: API_URL,
-  accessToken: getAuthToken
+  accessToken: async () => String(await getAuthToken())
 });
 
 export const contentApi = new ContentApi(configuration);

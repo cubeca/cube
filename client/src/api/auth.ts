@@ -1,4 +1,4 @@
-import { setAuthToken } from '../utils/authToken';
+import { setAuthToken } from '../utils/auth';
 import { authApi } from './httpClient';
 
 export const anonymousJWT = async () => {

@@ -4,7 +4,7 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from './constants';
 import { PaginationQueryKeys, ContentQueryKeys } from './enums';
 import { Upload, HttpRequest, HttpResponse } from 'tus-js-client';
 import { UPLOAD_TUS_ENDPOINT, uploadApi } from './httpClient';
-import { getAuthToken } from '../utils/authToken';
+import { getAuthToken } from '../utils/auth';
 
 type QueryKeys = typeof ContentQueryKeys;
 

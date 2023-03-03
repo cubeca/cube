@@ -2,7 +2,7 @@ import { ProfileAPIResponse } from 'types/profile';
 import { PROFILE_API_PATH } from './constants';
 import httpClient, { profileApi } from './httpClient';
 import { blobToBase64 } from './helpers';
-import { getAuthToken } from '../utils/authToken';
+import { getAuthToken } from '../utils/auth';
 
 export type { ProfileMainSchema as Profile } from './httpClient';
 
