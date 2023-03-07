@@ -23,17 +23,18 @@ const VirtualExperiencesPanel = () => {
             {t('Want to build an exhibition in VR ?')}
           </Typography>
           <Typography component="p" color="#28343C" textAlign={{xs: 'center', sm: 'center', md: 'left'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}} marginBottom="1.25rem">
-            {t('Cube Commons own a plat in the popular, artworld of Cryptovoxels. This virtual neighbourhood of artist-run and institutional spaces already has a built in community. It is also free to access by your patrons, and easily accesses as there is no login requires. ')}
+            {t('CubeCommons owns a plot in the virtual world of Voxels. This VR neighbourhood of artist-run and institutional spaces has a built in community. It is free and easy to access with no login required. ')}
           </Typography>
-          <MediaPlayer
+          {/* <MediaPlayer
             url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
             isAudio
-          />
+          /> */}
           <Box pt="2rem">
-            <Button>
-              {t('Join US', { ns: 'common' })}
-            </Button>
+            <a href="https://www.voxels.com/"><Button>
+              {t('Visit Voxels')}
+            </Button></a>
           </Box>
+  <Typography>Drop down Instruction on how to use Voxels - arrow keys etc</Typography>
         </Stack>
       }
     />

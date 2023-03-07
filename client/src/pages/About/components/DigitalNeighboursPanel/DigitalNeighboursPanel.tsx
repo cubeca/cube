@@ -42,7 +42,7 @@ const DigitalNeighboursPanel = () => {
       <Typography component="h2" variant="h2">
         {t('Digital Neighbours')}
       </Typography>
-      <Typography component="p" textAlign="center">{t('digitalNeighboursText')}</Typography>
+      <Typography component="p" textAlign="center" p="0vw 10vw 5vw 10vw" >{t('digitalNeighboursText')}</Typography>
       <Stack
         direction="row"
         justifyContent="space-between"

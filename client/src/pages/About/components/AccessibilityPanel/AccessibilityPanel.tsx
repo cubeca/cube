@@ -16,20 +16,15 @@ const AccessibilityPanel = () => {
               {t('accessibility')}
             </Typography>
             <Trans i18nKey="accessibilityText">
-              <Typography component="p" sx={{ padding: '2rem', textAlign: 'center'}}>
-                Cube advocates for accessibility standards from which further
-                efforts can be made and developed as technology improves. We aim
-                to be a tool that supports the accessibility of online arts and
-                cultural content, and to be a point of connection to Canadian
-                organizations like <Link href="#">Deaf Spectrum</Link> and
-                <Link href="#">OAFAC</Link>.
+            <Typography component="p" sx={{ padding: '2rem', textAlign: 'center'}}>
+            CubeCommons advocates for accessibility standards that can be improved upon as technology develops. We aim to be a tool that supports the accessibility of online arts and cultural content, and to be a point of connection to Canadian organizations like ...
               </Typography>
             </Trans>
-            <MediaPlayer
+            {/* <MediaPlayer
           url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
           isAudio
           width="90%"
-        />
+        /> */}
           </Box>
    
       <Stack direction="row" justifyContent="center" spacing={15} pt="2vw">
@@ -44,7 +39,7 @@ const AccessibilityPanel = () => {
         </Stack>
         <Stack alignItems="center">
           <ClosedCaptionIcon sx={{ paddingBottom: '0.5rem' }} />
-          {t('Close Captioning')}
+          {t('Closed Captioning')}
         </Stack>
         <Stack alignItems="center">
           <HearingIcon sx={{ paddingBottom: '0.5rem' }} />
