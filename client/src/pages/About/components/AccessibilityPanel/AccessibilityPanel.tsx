@@ -1,10 +1,9 @@
 import { Box, Link, Stack, Typography } from '@mui/material';
 import MediaPlayer from 'components/MediaPlayer';
 import { Trans, useTranslation } from 'react-i18next';
-import SignLanguageIcon from '@mui/icons-material/SignLanguage';
-import SubtitlesIcon from '@mui/icons-material/Subtitles';
-import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
-import HearingIcon from '@mui/icons-material/Hearing';
+import Sign from 'assets/icons/signlanguage.svg';
+import TexttoSpeech from 'assets/icons/text-to-speech.svg';
+import CC from 'assets/icons/closed-captioning.svg';
 
 const AccessibilityPanel = () => {
   const { t } = useTranslation('about');
@@ -17,7 +16,7 @@ const AccessibilityPanel = () => {
             </Typography>
             <Trans i18nKey="accessibilityText">
             <Typography component="p" sx={{ padding: '2rem', textAlign: 'center'}}>
-            CubeCommons advocates for accessibility standards that can be improved upon as technology develops. We aim to be a tool that supports the accessibility of online arts and cultural content, and to be a point of connection to Canadian organizations like ...
+            {t('accessibilityText')}
               </Typography>
             </Trans>
             {/* <MediaPlayer
@@ -28,22 +27,18 @@ const AccessibilityPanel = () => {
           </Box>
    
       <Stack direction="row" justifyContent="center" spacing={15} pt="2vw">
-       
+     
         <Stack alignItems="center">
-          <SignLanguageIcon sx={{ paddingBottom: '0.5rem' }} />
-          {t('Sign Language')}
+        <img src={Sign} alt="Sign Language symbol"/>
+        <Typography>{t('Sign Language')}</Typography>
+        </Stack> 
+        <Stack alignItems="center">
+        <img src={TexttoSpeech} alt="Sign Language symbol"/>
+        <Typography>{t('Text to Speech')}</Typography>
         </Stack>
         <Stack alignItems="center">
-          <SubtitlesIcon sx={{ paddingBottom: '0.5rem' }} />
-          {t('Subtitles')}
-        </Stack>
-        <Stack alignItems="center">
-          <ClosedCaptionIcon sx={{ paddingBottom: '0.5rem' }} />
-          {t('Closed Captioning')}
-        </Stack>
-        <Stack alignItems="center">
-          <HearingIcon sx={{ paddingBottom: '0.5rem' }} />
-          {t('Audio Transcripts')}
+        <img src={CC} alt="Sign Language symbol"/>
+        <Typography>{t('Closed Captioning')}</Typography>
         </Stack>
       </Stack>
     </Box>

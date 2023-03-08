@@ -12,6 +12,7 @@ const Footer = () => (
     justifyContent="space-between"
     alignItems="center"
     p="5rem 2rem 5rem 2rem"
+    sx={{backgroundColor: 'rgba(87, 131, 139, 0.15)'}}
   >
     <Box sx={{width: '40%'}}>
       <p>Sign Up For Updates</p>

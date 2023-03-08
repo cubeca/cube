@@ -10,8 +10,12 @@ const getNavItems = (t: TFunction<'translation', undefined>) => [
     path: '/home'
   },
   {
-    text: t('Virtual Reality'),
+    text: t('Home'),
     path: '/about'
+  },
+  {
+    text: t('VR'),
+    path: '/about#vr'
   },
   {
     text: t('Become a Creator'),
