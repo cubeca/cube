@@ -2,17 +2,58 @@
 include .env.example
 export
 DOCKER_ENV_FILE_PARAM = --env-file .env.example
-ENV_FILE = .env.example
+export ENV_FILE = .env.example
 ifneq (,$(wildcard ./.env))
 	include .env
 	export
 	DOCKER_ENV_FILE_PARAM = --env-file .env.example --env-file .env
-	ENV_FILE = .env
+	export ENV_FILE = .env
 endif
 
 DOCKER ?= docker
 
+export PROJECT_NAME ?= cube_frontend
+PROJECT_DOCKER_COMPOSE = $(DOCKER) compose --project-name $(PROJECT_NAME) --file ./docker-compose.yaml --project-directory . $(DOCKER_ENV_FILE_PARAM)
+
 LOCAL_DOCKER_IMAGE ?= cubeca/frontend:latest
+
+export PORT ?= 3000
+
+.PHONY: up
+up:
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+
+.PHONY: up-prod
+up-prod:
+	MICROSERVICE_DOCKERFILE=Dockerfile $(PROJECT_DOCKER_COMPOSE) up --detach --force-recreate
+
+.PHONY: down
+down:
+	MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) down
+
+.PHONY: clean
+clean:
+	-MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) rm
+	-$(DOCKER) container rm $(PROJECT_NAME)_frontend
+	-$(DOCKER) image rm $(PROJECT_NAME)_frontend
+
+.PHONY: logs
+logs:
+	$(PROJECT_DOCKER_COMPOSE) logs --follow
+
+.PHONY: login
+login:
+	$(DOCKER) exec -ti $(PROJECT_NAME)_frontend bash
+
+# This "power-cycles" the Docker Compose setup.
+# A.k.a. "have you turned it off and on again?"
+# See https://en.wikipedia.org/wiki/SIGHUP
+.PHONY: hup
+hup:
+	$(MAKE) down
+	$(MAKE) clean
+	$(MAKE) up
+	$(MAKE) login
 
 NPMRC_FILEPATH ?= $(HOME)/.npmrc
 

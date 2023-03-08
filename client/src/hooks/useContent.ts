@@ -42,7 +42,7 @@ const useContent = (list = 'videos', category?: string) => {
   } = useMutation(addContent);
 
   const handleAddContent = (
-    payload: Omit<AddContent, 'coverImageFile' | 'mediaFile'>,
+    payload: Omit<AddContent, 'coverImageFileId' | 'mediaFileId'>,
     coverImageFile: File,
     mediaFile: File
   ) =>

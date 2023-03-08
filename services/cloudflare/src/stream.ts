@@ -33,7 +33,9 @@ export const getTusUploadUrl = async (fileId: string, fileSizeBytes: number, res
         })
     };
 
-    const { headers } = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
+    const { status, statusText, headers, data } = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
+    console.log('response from Cloudflare TUS endpoint');
+    console.dir({ status, statusText, headers, data }, { depth: null, color: false});
 
     const tusUploadUrl = headers['location'];
     const cloudflareStreamUid = headers['stream-media-id'];

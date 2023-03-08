@@ -19,9 +19,7 @@ const Login = () => {
     const { email, password } = data;
     try {
       setError(false);
-      const response = await login(email, password);
-      // TODO: Update to a more secure method for storing token
-      localStorage.setItem('TOKEN', response.data.jwt);
+      await login(email, password);
 
       // TODO: Determine profile associated with user
       navigate('/profile/1');

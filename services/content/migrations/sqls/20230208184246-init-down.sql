@@ -1,3 +1,2 @@
+DROP INDEX IF EXISTS content_by_profile_id;
 DROP TABLE IF EXISTS content;
--- -- TODO Re-enable this after figuring out if this extension has any cross-talk effects between separate microservices sharing one DB server instance (but not DBs!), which we will probably do in the beginning to save costs.
--- DROP EXTENSION IF EXISTS "uuid-ossp";

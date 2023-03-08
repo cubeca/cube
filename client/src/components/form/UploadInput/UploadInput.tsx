@@ -3,7 +3,7 @@ import Button from 'components/Button';
 import { FC, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useTranslation } from 'react-i18next';
-import * as styled from './UploadInput.styled';
+import * as s from './UploadInput.styled';
 
 interface UploadInputProps {
   text: string;
@@ -23,7 +23,7 @@ const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
   });
 
   return (
-    <styled.UploadBox {...getRootProps()}>
+    <s.UploadBox {...getRootProps()}>
       <input {...getInputProps()} />
       {isDragActive ? (
         <Typography component="p">{t('Drop the files here...')}</Typography>
@@ -33,12 +33,12 @@ const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
             {text}
           </Typography>
           <Typography component="p" variant="body2">
-            <styled.UploadButton>{t('Choose a file')}</styled.UploadButton>{' '}
+            <s.UploadButton>{t('Choose a file')}</s.UploadButton>{' '}
             {t('or drag it here')}
           </Typography>
         </>
       )}
-    </styled.UploadBox>
+    </s.UploadBox>
   );
 };
 

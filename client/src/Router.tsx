@@ -1,13 +1,4 @@
-import {
-  Home,
-  About,
-  NotFound,
-  Profile,
-  Content,
-  Upload,
-  Login,
-  Signup
-} from 'pages';
+import { Home, About, NotFound, Profile, Content, Upload, Login } from 'pages';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
 

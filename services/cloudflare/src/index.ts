@@ -26,10 +26,12 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   } = req.headers;
 
   if (!tusUploadLength) {
+    console.log(400, `Invalid Request. 'Upload-Length' header required`);
     return res.status(400).send(`Invalid Request. 'Upload-Length' header required`);
   }
 
   if (!tusUploadMetadata) {
+    console.log(400, `Invalid Request. 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'Upload-Metadata' header required`);
   }
 
@@ -39,7 +41,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     fileName,
     // mimeType,
     profileId,
-    allocVidTime,
+    allocVidTime = 60 * 60,
     validFor = 30 * 60
   } = meta;
 
@@ -47,11 +49,12 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   // return res.status(500).send('Error retrieving content upload url');
 
   if (!allocVidTime) {
+    console.log(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
   }
 
-  const reserveDurationSeconds = Number(allocVidTime);
-  const urlValidDurationSeconds = Number(validFor);
+  const reserveDurationSeconds = Math.ceil(Number(allocVidTime));
+  const urlValidDurationSeconds = Math.ceil(Number(validFor));
 
   try {
     const { id:userId } = extractUser(req);
