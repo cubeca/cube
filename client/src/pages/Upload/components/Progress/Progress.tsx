@@ -9,7 +9,7 @@ const Progress = ({ screens, screenIndex, onScreenIndexChange }: any) => {
       <ProgressItem
         screenIndex={i}
         onScreenIndexChange={onScreenIndexChange}
-        active={screenIndex == i}
+        isActive={screenIndex == i}
         label={label}
       />
     );
@@ -26,28 +26,20 @@ const ProgressItem = ({
   screenIndex,
   onScreenIndexChange,
   label,
-  active
+  isActive
 }: any): any => {
-  if (active) {
-    return (
-      <s.ProgressItem active>
-        <ProgressItemButton
-          screenIndex={screenIndex}
-          onScreenIndexChange={onScreenIndexChange}
-          label={label}
-        />
-      </s.ProgressItem>
-    );
+  const Button = (
+    <ProgressItemButton
+      screenIndex={screenIndex}
+      onScreenIndexChange={onScreenIndexChange}
+      label={label}
+    />
+  );
+
+  if (isActive) {
+    return <s.ProgressItem active>{Button}</s.ProgressItem>;
   } else {
-    return (
-      <s.ProgressItem>
-        <ProgressItemButton
-          screenIndex={screenIndex}
-          onScreenIndexChange={onScreenIndexChange}
-          label={label}
-        />
-      </s.ProgressItem>
-    );
+    return <s.ProgressItem>{Button}</s.ProgressItem>;
   }
 };
 

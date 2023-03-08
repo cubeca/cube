@@ -6,9 +6,47 @@ import * as s from './FormFooter.styled';
 import Lottie from 'lottie-react';
 import LoadingAnimation from 'assets/animations/loading-circle.json';
 
-const FormFooter = ({ isLoading, handleSubmit, onSubmit }: any) => {
+const FormFooter = ({
+  isLoading,
+  screenIndex,
+  lastScreen,
+  onScreenIndexChange,
+  handleSubmit,
+  onSubmit
+}: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const BackButton =
+    screenIndex > 0 ? (
+      <Button
+        onClick={(e) => onScreenIndexChange(--screenIndex)}
+        variant="outlined"
+        fullWidth={false}
+      >
+        {t('Back')}
+      </Button>
+    ) : (
+      false
+    );
+
+  const nextButton =
+    screenIndex < lastScreen ? (
+      <Button
+        onClick={(e) => onScreenIndexChange(++screenIndex)}
+        variant="outlined"
+        fullWidth={false}
+      >
+        {t('Next')}
+      </Button>
+    ) : (
+      <Button
+        onClick={handleSubmit(onSubmit)}
+        fullWidth={false}
+        disabled={isLoading}
+      >
+        {t('Submit')}
+      </Button>
+    );
 
   return (
     <s.FormFooter className={'upload__footer'} my={theme.spacing(5)}>
@@ -22,29 +60,18 @@ const FormFooter = ({ isLoading, handleSubmit, onSubmit }: any) => {
                   animationData={LoadingAnimation}
                   loop={true}
                 />
-                {t(
-                  '"Please wait while “Video Title” finishes uploading before submitting'
-                )}
+                {t('"Please wait for your media to finish uploading.')}
               </s.WaitMessage>
             ) : (
               <s.SuccessMessage component="p" variant="body2">
-                {t('"Video Title" is ready to submit!')}
+                {t('Your upload is ready to submit!')}
               </s.SuccessMessage>
             )}
           </s.Messages>
 
           <s.Actions>
-            <Button variant="outlined" fullWidth={false}>
-              {t('Back')}
-            </Button>
-
-            <Button
-              onClick={handleSubmit(onSubmit)}
-              fullWidth={false}
-              disabled={isLoading}
-            >
-              {t('Submit')}
-            </Button>
+            {BackButton}
+            {nextButton}
           </s.Actions>
         </Grid>
       </Grid>
