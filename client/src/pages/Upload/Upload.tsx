@@ -1,6 +1,7 @@
 import {
   Box,
   MenuItem,
+  FormControlLabel,
   Stack,
   TextField,
   Typography,
@@ -21,14 +22,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ContentTypes } from 'types/enums';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-const Breadcrumb = () => {
-  return <Box className={'upload__breadcrumb'}></Box>;
-};
-
-const Progress = () => {
-  return <Box className={'upload__progress'}></Box>;
-};
+import Breadcrumb from './components/Breadcrumb';
+import Progress from './components/Progress';
 
 const Screens = ({
   control,
@@ -225,13 +220,18 @@ const Details = ({
       </Box>
 
       <Box my={vertical_spacing_lg}>
-        <Typography component="h3" variant="h3">
-          {t('Audience')}
-        </Typography>
-        <Typography component="h5" variant="h5">
-          {t('Is this video made for kids? (required)')}
-        </Typography>
-        <Typography component="p">
+        <Select
+          label={t('Is this video made for kids? (required)')}
+          name="audience"
+          control={control}
+          fullWidth={false}
+          defaultValue=""
+        >
+          <MenuItem value="yeskids">{t('Yes, it’s made for kids')}</MenuItem>
+          <MenuItem value="nokids">{t('No, it’s not made for kids')}</MenuItem>
+        </Select>
+
+        <Typography component="p" variant="body2">
           {t(
             'Regardless of your location, you’re legally required to comply with the Children’s Online Privacy Protection Act (COPPA) and/or other laws. You’re required to tell us whether your videos are made for kids. What’s content made for kids?'
           )}
