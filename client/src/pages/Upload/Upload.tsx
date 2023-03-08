@@ -94,7 +94,6 @@ const Upload = () => {
     }
   ];
 
-  const lastScreen = SCREENS.length - 1;
   const activeScreenView = SCREENS[screenIndex].view;
 
   if (isSuccess) {
@@ -115,9 +114,9 @@ const Upload = () => {
       />
       <Screens screen={activeScreenView} />
       <FormFooter
-        isLoading={isLoading}
+        isLoading={true}
+        screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
-        lastScreen={lastScreen}
         onScreenIndexChange={setScreenIndex}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}

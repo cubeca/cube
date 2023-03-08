@@ -8,14 +8,17 @@ import LoadingAnimation from 'assets/animations/loading-circle.json';
 
 const FormFooter = ({
   isLoading,
+  screens,
   screenIndex,
-  lastScreen,
   onScreenIndexChange,
   handleSubmit,
   onSubmit
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const lastScreen = screens.length - 1;
+
   const BackButton =
     screenIndex > 0 ? (
       <Button
@@ -30,15 +33,7 @@ const FormFooter = ({
     );
 
   const nextButton =
-    screenIndex < lastScreen ? (
-      <Button
-        onClick={(e) => onScreenIndexChange(++screenIndex)}
-        variant="outlined"
-        fullWidth={false}
-      >
-        {t('Next')}
-      </Button>
-    ) : (
+    screenIndex == lastScreen ? (
       <Button
         onClick={handleSubmit(onSubmit)}
         fullWidth={false}
@@ -46,29 +41,54 @@ const FormFooter = ({
       >
         {t('Submit')}
       </Button>
+    ) : (
+      <Button
+        onClick={(e) => onScreenIndexChange(++screenIndex)}
+        fullWidth={false}
+      >
+        {t('Next Step: ' + screens[screenIndex + 1])}
+      </Button>
     );
+
+  const WaitMessage =
+    screenIndex == lastScreen ? (
+      <s.WaitMessage component="p" variant="body2">
+        <Lottie
+          className="icon-loading"
+          animationData={LoadingAnimation}
+          loop={true}
+        />
+        {t('Please wait for your media to finish uploading.')}
+      </s.WaitMessage>
+    ) : (
+      <s.WaitMessage component="p" variant="body2">
+        <Lottie
+          className="icon-loading"
+          animationData={LoadingAnimation}
+          loop={true}
+        />
+        {t(
+          'Proceed to the next step while your media finishes uploading in the background.'
+        )}
+      </s.WaitMessage>
+    );
+
+  const SuccessMessage =
+    screenIndex == lastScreen ? (
+      <s.SuccessMessage component="p" variant="body2">
+        {t('Your upload is ready to submit!')}
+      </s.SuccessMessage>
+    ) : (
+      false
+    );
+
+  const Message = isLoading ? WaitMessage : SuccessMessage;
 
   return (
     <s.FormFooter className={'upload__footer'} my={theme.spacing(5)}>
       <Grid container>
         <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
-          <s.Messages>
-            {isLoading ? (
-              <s.WaitMessage component="p" variant="body2">
-                <Lottie
-                  className="icon-loading"
-                  animationData={LoadingAnimation}
-                  loop={true}
-                />
-                {t('"Please wait for your media to finish uploading.')}
-              </s.WaitMessage>
-            ) : (
-              <s.SuccessMessage component="p" variant="body2">
-                {t('Your upload is ready to submit!')}
-              </s.SuccessMessage>
-            )}
-          </s.Messages>
-
+          <s.Messages>{Message}</s.Messages>
           <s.Actions>
             {BackButton}
             {nextButton}
