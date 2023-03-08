@@ -114,7 +114,7 @@ const Upload = () => {
       />
       <Screens screen={activeScreenView} />
       <FormFooter
-        isLoading={true}
+        isLoading={isLoading}
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
         onScreenIndexChange={setScreenIndex}
