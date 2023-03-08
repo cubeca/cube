@@ -6,11 +6,11 @@ import * as s from './NavPanel.styled';
 
 const getNavItems = (t: TFunction<'translation', undefined>) => [
   {
-    text: t('Search Content'),
+    text: t('Search'),
     path: '/home'
   },
   {
-    text: t('VR Space'),
+    text: t('Virtual Reality'),
     path: '/about'
   },
   {

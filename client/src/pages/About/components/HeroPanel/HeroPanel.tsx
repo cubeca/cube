@@ -26,12 +26,11 @@ const HeroPanel = () => {
         >
           <Grid item xs={12} sm={12} md={6} m="5rem">
           <Typography component="h1" variant="h1">
-                {t('What is this?')}
+                {t('What is CubeCommons?')}
               </Typography>
               <Typography component="p" variant="body1" mr="5rem">
-                One platform for discovering all
-                the video + audio content, digital publications and workbooklets being produced by artists and arts organizations on artistic and cultural practices happening accorss Turtle Island - Canada.
-                Search by name or medium, create playlists for students + friends or play a track while you are creating.
+                CubeCommons is a platform for discovering the video + audio content, digital publications and workbooklets being produced by artists and arts organizations about the artistic and cultural practices happening accorss Turtle Island - Canada.
+                Search by name or medium, create playlists for students + friends, or play a track while you are creating.
               </Typography>
               <Button>Start Watching</Button>
           </Grid>
@@ -44,7 +43,7 @@ const HeroPanel = () => {
               overflow="hidden"
               playing
               playIcon={<Box sx={{ padding: "0vw 5vw 2vw 5vw" }}><Typography component="h1" variant="h1" color="#28343C">
-                {t('Creator?')}</Typography><Typography component="p" variant="body1" fontWeight="500" color="#28343C">Learn how to become a creator and use the platform</Typography><Button>Play</Button></Box>}
+                {t('Creator?')}</Typography><Typography component="p" variant="body1" fontWeight="500" color="#28343C">Learn how to become a creator and use CubeCommons</Typography><Button>Play</Button></Box>}
               light={HeroRight}
             />
           </Grid>
