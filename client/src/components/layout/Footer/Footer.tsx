@@ -12,10 +12,11 @@ const Footer = () => (
     justifyContent="space-between"
     alignItems="center"
     p="5rem 2rem 5rem 2rem"
+    sx={{backgroundColor: 'rgba(87, 131, 139, 0.15)'}}
   >
     <Box sx={{width: '40%'}}>
       <p>Sign Up For Updates</p>
-      <p>This will mean NFT releases as well as the odd newsletter about new content</p>
+      <p>Our emails are few and far between with occasional content teasers and NFT releases.</p>
       <CubeLogo />
     </Box>
     

@@ -14,16 +14,13 @@ import * as db from './index';
 
 export const getContentById = async (contentId: string) => {
   const sql = `SELECT * FROM content WHERE id = $1`;
-  const values = [contentId];
-  const dbResult = await db.query(sql, values);
-  return (dbResult.rows.length === 0) ? null : dbResult.rows[0];
+  return await db.querySingle(sql, contentId);
 };
 
 export const listContentByProfileId = async (profileId: string) => {
   // This should use index `content_by_profile_id`
   const sql = `SELECT * FROM content WHERE (data->'profileId')::TEXT = $1`;
-  const values = [profileId];
-  const dbResult = await db.query(sql, values);
+  const dbResult = await db.query(sql, profileId);
   return dbResult.rows;
 };
 
@@ -44,7 +41,5 @@ export const insertContent = async (data: ContentData, profileId:string) => {
     RETURNING *
   `;
 
-  const values = [JSON.stringify(data)];
-
-  return (await db.query(sql, values)).rows[0];
+  return await db.querySingle(sql, JSON.stringify(data));
 };

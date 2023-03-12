@@ -10,7 +10,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 interface EditSectionProps {
-  profile: Profile;
+  profile: any;
   setIsEditing: (isEditing: boolean) => void;
 }
 
@@ -68,7 +68,7 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
             id="profileName"
             name="profileName"
             control={control}
-            defaultValue={profile.name}
+            defaultValue={profile.organization}
             variant="standard"
             sx={{ fontSize: '2rem' }}
           />

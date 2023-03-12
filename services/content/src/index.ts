@@ -14,10 +14,11 @@ app.use(express.json());
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const newContent: ContentData = req.body as ContentData;
   const dbResult = await db.insertContent(newContent, newContent.profileId);
-  res.json({
-    "data": {
-      "id": dbResult.id
-    }
+  res.status(201).json({
+    id: dbResult.id,
+    createdAt: dbResult.created_at,
+    updatedAt: dbResult.updated_at,
+    ...dbResult.data
   });
 });
 
@@ -59,7 +60,7 @@ app.get('/content', async (req: Request, res: Response) => {
 });
 
 app.get('/content/:contentId', async (req: Request, res: Response) => {
-  const { contentId } = req.query;
+  const { contentId } = req.params;
 
   res.json({
     "data": {

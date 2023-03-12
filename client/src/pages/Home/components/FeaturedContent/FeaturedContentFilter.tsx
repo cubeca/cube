@@ -24,9 +24,8 @@ const FeaturedContent = () => {
         fullWidth
         sx={{ fontSize: '2rem'}}
       />
-      <Typography component="span">{t('Select')}</Typography>
       <Select
-        label={t('Media Type')}
+        label={t('Select Type')}
         onChange={(value: string | number) =>
           setFilter(ContentQueryKeys.Type, value as string)
         }

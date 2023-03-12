@@ -42,7 +42,7 @@ const Profile = () => {
           display: 'flex',
           justifyContent: 'left',
           alignItems: 'center',
-          backgroundImage: `url('${profile!.heroUrl}')`,
+          // backgroundImage: `url('${profile!.heroUrl}')`,
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover'
@@ -88,7 +88,7 @@ const Profile = () => {
             <Stack direction="row" spacing={6} alignItems="center">
               <a
                 href="https://www.figma.com/file/ZtLeDmMQsNydIvouptZYEq/CubeCommons-v2?node-id=0%3A1&t=UA1wfJoEZOHuqfOR-0"
-                about="tap to see all {ContentQueryKeys.Category}"
+                title="tap to see all {ContentQueryKeys.Category}"
               >
                 <Typography
                   component="h4"

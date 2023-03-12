@@ -23,7 +23,6 @@ COPY test/tsconfig.json /work/tsconfig.json
 # See https://docs.docker.com/engine/reference/builder/#copy
 # > If <src> is a directory, the entire contents of the directory are copied, including filesystem metadata.
 # > NOTE: The directory itself is not copied, just its contents.
-COPY test/example-files /work/example-files/
 COPY test/scripts /work/scripts/
 COPY test/src /work/src/
 
