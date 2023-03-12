@@ -13,11 +13,16 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000
 });
 
-export const query = async (text: string, params?: string[]) => {
-  // inspect({text, params});
+export const query = async (sql: string, ...params: any[]) => {
+  // inspect({sql, params});
   const start = Date.now();
-  const res = await pool.query(text, params || []);
-  const duration = Date.now() - start;
-  console.log('executed query', { text, duration, rows: res.rowCount });
+  const res = await pool.query(sql, params);
+  const durationMs = Date.now() - start;
+  console.log('executed query', { sql, params, durationMs, rows: { processed: res.rowCount, returned: res.rows.length } });
   return res;
+};
+
+export const querySingle = async (sql: string, ...params: any[]) => {
+  const dbResult = await query(sql, ...params);
+  return (dbResult.rows.length === 0) ? null : dbResult.rows[0];
 };

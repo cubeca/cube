@@ -69,6 +69,11 @@ hup:
 	$(MAKE) test
 	$(MAKE) login_ms
 
+.PHONY: bye
+bye:
+	$(MAKE) down
+	$(MAKE) clean
+
 .PHONY: docker_build
 docker_build:
 	$(DOCKER) buildx build \
