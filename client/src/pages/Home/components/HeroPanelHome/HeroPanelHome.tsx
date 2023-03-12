@@ -2,8 +2,8 @@ import { Grid, Box, Stack, Typography } from '@mui/material';
 import { Trans, useTranslation } from 'react-i18next';
 import HeroHome from 'assets/images/hero-home-page.jpeg';
 import HeroRight from 'assets/images/home-video-cover.jpeg';
-import Play from 'assets/icons/play-circle-green.svg';
-import PlaySymbol from 'assets/icons/play-symbol-green.svg'
+import Play from 'assets/icons/play-circle.svg';
+import PlaySymbol from 'assets/icons/play-symbol.svg'
 
 import Button from 'components/Button';
 import ReactPlayer from 'react-player';
@@ -37,7 +37,7 @@ const HeroPanelHome = () => {
           </Grid>
           <Grid item xs={12} sm={12} md={4}>
            <Box sx={{background: '#D9FFEE', height: 'fit-content', p:'2rem'}}>
-            <Typography component="h2" variant="h3" sx={{color: '#2F4048'}}>How It Works</Typography>
+            <Typography component="h2" variant="h3" sx={{color: '#2F4048'}}>How To Use CubeCommons</Typography>
             <Typography component="p" variant="body1" sx={{color: '#2F4048'}}>Learn how to use this site and start discovering content</Typography>
            </Box>
                 <ReactPlayer

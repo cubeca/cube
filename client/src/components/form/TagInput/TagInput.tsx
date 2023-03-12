@@ -1,11 +1,12 @@
-import { TextField as MuiTextField } from '@mui/material';
+import { InputAdornment, TextField as MuiTextField } from '@mui/material';
+import LabelIcon from '@mui/icons-material/Label';
 import { FC, HTMLInputTypeAttribute } from 'react';
 import { Controller } from 'react-hook-form';
-
 import FormControl from '../FormControl';
 import { InputProps } from '../types';
+import { alpha } from '@mui/material/styles';
 
-interface TextInputProps extends InputProps {
+interface TagInputProps extends InputProps {
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
   variant?: 'standard' | 'outlined';
@@ -17,7 +18,7 @@ const defaultRules = {
   required: true
 };
 
-const TextInput: FC<TextInputProps> = ({
+const TextInput: FC<TagInputProps> = ({
   label,
   name,
   control,
@@ -65,6 +66,15 @@ const TextInput: FC<TextInputProps> = ({
               fullWidth={fullWidth}
               multiline={multiline}
               rows={rows}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <LabelIcon
+                      style={{ fill: alpha('#D9FFEE', 0.5) }}
+                    ></LabelIcon>
+                  </InputAdornment>
+                )
+              }}
               {...field}
             />
           </FormControl>

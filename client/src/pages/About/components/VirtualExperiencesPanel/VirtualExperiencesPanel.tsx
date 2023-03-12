@@ -20,53 +20,25 @@ const VirtualExperiencesPanel = () => {
           sx={{backgroundColor: '#95f5cb', padding:'5vw', justifyContent: {xs: 'center', sm: 'center', md: 'left'}}}
         >
           <Typography component="h2" variant="h2" color="#28343C" textAlign={{xs: 'center', sm: 'center', md: 'left'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}}>
-            {t('Want to build an exhibition in VR ?')}
+            {t('virtualExperiences')}
           </Typography>
           <Typography component="p" color="#28343C" textAlign={{xs: 'center', sm: 'center', md: 'left'}} padding={{xs: '1.5rem', sm: '2rem', md: '1rem'}} marginBottom="1.25rem">
-            {t('Cube Commons own a plat in the popular, artworld of Cryptovoxels. This virtual neighbourhood of artist-run and institutional spaces already has a built in community. It is also free to access by your patrons, and easily accesses as there is no login requires. ')}
+            {t('virtualExperiencesText')}
           </Typography>
-          <MediaPlayer
+          {/* <MediaPlayer
             url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
             isAudio
-          />
+          /> */}
           <Box pt="2rem">
-            <Button>
-              {t('Join US', { ns: 'common' })}
-            </Button>
+            <a href="https://www.voxels.com/"><Button>
+              {t('Visit Voxels')}
+            </Button></a>
           </Box>
+  <Typography>Drop down Instruction on how to use Voxels - arrow keys etc</Typography>
         </Stack>
       }
     />
   );
 };
-//   const { t } = useTranslation('about');
-//   return (
-//     <AboutPanel
-//       textContent={
-//         <Box pr="5rem">
-//           <Typography component="h2" variant="h2">
-//             {t('virtualExperiences')}
-//           </Typography>
-//           <Typography component="p" sx={{ padding: '1.5rem 0' }}>
-//             {t('virtualExperiencesText')}
-//           </Typography>
-//           <MediaPlayer
-//             url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
-//             isAudio
-//           />
-//           <Box py="2rem">
-//             <Button>{t('Enquire about event')}</Button>
-//           </Box>
-//         </Box>
-//       }
-//       imageContent={
-//         <Box sx={{ display: 'flex', justifyContent: 'right' }}>
-//           <img src={VirtualExperiencesHero} alt="" />
-//         </Box>
-//       }
-//       isReversed
-//     />
-//   );
-// };
 
 export default VirtualExperiencesPanel;
