@@ -1,5 +1,5 @@
 import { setAuthToken } from '../utils/auth';
-import { authApi } from './httpClient';
+import { authApi } from '.';
 
 export const anonymousJWT = async () => {
   const {
@@ -12,59 +12,52 @@ export const anonymousJWT = async () => {
 
 export const login = async (email: string, password: string) => {
   const {
-    data: { jwt }
-  } = await authApi.login(
-    {
-      username: email,
-      password
-    }
-  );
+    data: { jwt, profileId }
+  } = await authApi.login({
+    username: email,
+    password
+  });
   setAuthToken(jwt);
-  return jwt;
+  return profileId;
 };
 
-export const updateEmail = async (userId: string, email: string) => {
-  return await authApi.updateEmail(
-    {
-      uuid: userId,
-      email
-    }
-  );
-};
+export const updateEmail = async (userId: string, email: string) =>
+  await authApi.updateEmail({
+    uuid: userId,
+    email
+  });
 
-export const updatePassword = async (userId: string, password: string) => {
-  return await authApi.updatePassword(
-    {
-      uuid: userId,
-      password
-    }
-  );
-};
+export const updatePassword = async (userId: string, password: string) =>
+  await authApi.updatePassword({
+    uuid: userId,
+    password
+  });
 
-export const forgotPassword = async (email: string) => {
-  return await authApi.forgotPassword(email);
-};
+export const forgotPassword = async (email: string) =>
+  await authApi.forgotPassword(email);
 
-export const verifyEmail = async (userId: string) => {
-  return await authApi.verifyEmail(userId);
-};
+export const verifyEmail = async (userId: string) =>
+  await authApi.verifyEmail(userId);
 
 export const signup = async (
   name: string,
+  organization: string,
+  website: string,
+  tag: string,
   email: string,
   password: string,
   permissionIds: string[],
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean
-) => {
-  return await authApi.user(
-    {
-      name,
-      email,
-      password,
-      permissionIds,
-      hasAcceptedTerms,
-      hasAcceptedNewsletter
-    }
-  );
-};
+) =>
+  await authApi.user({
+    name,
+    organization,
+    website,
+    tag,
+    email,
+    password,
+    permissionIds,
+    hasAcceptedTerms,
+    hasAcceptedNewsletter
+  });

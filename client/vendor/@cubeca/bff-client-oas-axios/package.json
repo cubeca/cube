@@ -1,11 +1,11 @@
 {
   "name": "@cubeca/bff-client-oas-axios",
-  "version": "0.3.0",
+  "version": "0.0.1-SNAPSHOT.202303122252",
   "description": "OpenAPI client for @cubeca/bff-client-oas-axios",
   "author": "OpenAPI-Generator Contributors",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cubeca/api-specs.git"
+    "url": "https://github.com/GIT_USER_ID/GIT_REPO_ID.git"
   },
   "keywords": [
     "axios",

@@ -1,6 +1,6 @@
 -- user password is: abc123456789***
 INSERT INTO
-  users(name, email, password, permission_ids, has_accepted_terms, has_accepted_newsletter)
+  users(name, email, profileId, password, permission_ids, has_accepted_terms, has_accepted_newsletter)
 VALUES (
   'First User',
   'firstuser@cubecommons.ca',

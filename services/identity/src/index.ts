@@ -6,6 +6,7 @@ import { comparePassword, encryptString, decryptString, hashPassword } from './u
 import * as bodyParser from 'body-parser';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
+import { createDefaultProfile } from './profile';
 
 const PERMISSION_IDS_ALLOWED_ON_SIGNUP = ['active'];
 
@@ -28,34 +29,63 @@ const sendVerificationEmail = async (email: string, userId: string) => {
 
   // TODO implement me
   console.log(`TODO implement me: Send verification email for ${userId} to ${email}`);
-}
+};
 
-app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
+app.post('/auth/user', async (req: Request, res: Response) => {
   const {
     name,
     email,
+    organization,
+    website,
+    tag,
     password,
     permissionIds = [],
     hasAcceptedNewsletter = false,
     hasAcceptedTerms = false
   } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(401).send('Invalid Request Body. name, email, and password must be provided.');
+  if (!name || !email || !password || !organization || !website || !tag) {
+    return res
+      .status(401)
+      .send('Invalid Request Body: name, email, organization, website, tag, and password must be provided.');
   }
 
-  if (!extractUser(req).permissionIds.includes('userAdmin') && permissionIds.some((p: string) => !PERMISSION_IDS_ALLOWED_ON_SIGNUP.includes(p))) {
-    return res.status(403).send(`Invalid Request Body. Only with "userAdmin" JWT claim can the created user have permissionIds other than "${PERMISSION_IDS_ALLOWED_ON_SIGNUP.join('", "')}".`);
-  }
+  // if (
+  //   !extractUser(req).permissionIds.includes('userAdmin') &&
+  //   permissionIds.some((p: string) => !PERMISSION_IDS_ALLOWED_ON_SIGNUP.includes(p))
+  // ) {
+  //   return res
+  //     .status(403)
+  //     .send(
+  //       `Invalid Request Body. Only with "userAdmin" JWT claim can the created user have permissionIds other than "${PERMISSION_IDS_ALLOWED_ON_SIGNUP.join(
+  //         '", "'
+  //       )}".`
+  //     );
+  // }
 
   try {
     const hashedPassword = await hashPassword(password);
     const encryptedPassword = encryptString(hashedPassword);
 
-    const r = await db.insertIdentity(name, email, encryptedPassword, permissionIds, hasAcceptedNewsletter, hasAcceptedTerms);
+    const profileId = await createDefaultProfile(organization, website, tag);
+
+    if (!profileId) {
+      return res.status(400).send('Error creating profile for user. Organization name, website or tag already exists');
+    }
+
+    const r = await db.insertIdentity(
+      name,
+      email,
+      profileId,
+      encryptedPassword,
+      permissionIds,
+      hasAcceptedNewsletter,
+      hasAcceptedTerms
+    );
 
     if (r.rows.length !== 1) {
       // TODO TBD Is this an impossible case?
+      // If this fails we would also have to delete the profile that was created for this identity
       return res.status(500).send('Error creating identity');
     }
 
@@ -72,7 +102,7 @@ app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Reque
   }
 });
 
-app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+app.post('/auth/login', async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -99,7 +129,7 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
         },
         settings.JWT_TOKEN_SECRET
       );
-      res.json({ jwt: token });
+      res.json({ jwt: token, profileId: user.profile_id });
     } else {
       res.status(403).send('Invalid username or password.');
     }

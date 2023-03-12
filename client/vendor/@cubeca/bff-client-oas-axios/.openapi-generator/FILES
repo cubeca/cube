@@ -28,11 +28,12 @@ models/files-details-response-player-info-one-of.ts
 models/files-details-response-player-info-one-of1.ts
 models/files-details-response-player-info.ts
 models/files-details-response.ts
+models/get-file-upload-url-response-data.ts
+models/get-file-upload-url-response.ts
 models/index.ts
 models/list-of-collaborators-data.ts
 models/list-of-collaborators.ts
 models/list-of-content.ts
-models/profile-content-per-category.ts
 models/profile-details.ts
 models/profile-main-schema.ts
 models/s3-presigned-urlrequest-upload.ts

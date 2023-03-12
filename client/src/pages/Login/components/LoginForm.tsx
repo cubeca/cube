@@ -20,10 +20,10 @@ export const LoginForm = () => {
     const { email, password } = data;
     try {
       setError(false);
-      await login(email, password);
+      const profileId = await login(email, password);
 
       // TODO: Determine profile associated with user
-      navigate('/profile/1');
+      navigate(`/profile/${profileId}`);
     } catch (e: any) {
       setError(true);
     }

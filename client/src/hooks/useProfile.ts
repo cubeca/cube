@@ -14,7 +14,7 @@ const useProfile = () => {
   return {
     isLoading,
     isError,
-    data: data?.data.data
+    data: data?.data
   };
 };
 

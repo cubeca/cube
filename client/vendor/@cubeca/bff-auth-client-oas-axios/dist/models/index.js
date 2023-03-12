@@ -18,6 +18,7 @@ __exportStar(require("./anonymous-jwtrequest"), exports);
 __exportStar(require("./create-user-request"), exports);
 __exportStar(require("./error-response"), exports);
 __exportStar(require("./jwtresponse"), exports);
+__exportStar(require("./jwtresponse1"), exports);
 __exportStar(require("./update-email-request"), exports);
 __exportStar(require("./update-password-request"), exports);
 __exportStar(require("./username-and-password-jwtrequest"), exports);

@@ -18,11 +18,24 @@ export const SignupForm = () => {
   const [error, setError] = useState(false);
 
   const onSubmit = async (data: FieldValues) => {
-    const { firstName, lastName, email, password, promotions, terms } = data;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      promotions,
+      terms,
+      organization,
+      website,
+      tag
+    } = data;
     try {
       setError(false);
       await signup(
         `${firstName} ${lastName}`,
+        organization,
+        website,
+        tag,
         email,
         password,
         [],
@@ -54,13 +67,38 @@ export const SignupForm = () => {
           <TextInput
             control={control}
             name="lastName"
-            label={t('Last name required')}
+            label={t('Last name')}
             fullWidth
             helperText={t('Last name required')}
             variant="outlined"
           />
         </Stack>
         <Stack spacing={2}>
+          <TextInput
+            control={control}
+            name="organization"
+            label={t('Organization name')}
+            fullWidth
+            helperText={t('Organization name required')}
+            variant="outlined"
+          />
+          <TextInput
+            control={control}
+            name="website"
+            label={t('Website')}
+            fullWidth
+            helperText={t('Website required')}
+            variant="outlined"
+          />
+          <TextInput
+            control={control}
+            name="tag"
+            label={t('Organization Tag')}
+            fullWidth
+            helperText={t('Tag required')}
+            variant="outlined"
+            placeholder="@OrgName"
+          />
           <EmailInput
             control={control}
             name="email"

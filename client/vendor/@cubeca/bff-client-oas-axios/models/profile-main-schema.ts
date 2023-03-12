@@ -13,9 +13,6 @@
  */
 
 
-// May contain unused imports in some cases
-// @ts-ignore
-import { ProfileContentPerCategory } from './profile-content-per-category';
 
 /**
  * Profile main schema
@@ -34,7 +31,7 @@ export interface ProfileMainSchema {
      * @type {string}
      * @memberof ProfileMainSchema
      */
-    'name': string;
+    'organization': string;
     /**
      * 
      * @type {string}
@@ -59,11 +56,5 @@ export interface ProfileMainSchema {
      * @memberof ProfileMainSchema
      */
     'descriptionUrl': string;
-    /**
-     * 
-     * @type {Array<ProfileContentPerCategory>}
-     * @memberof ProfileMainSchema
-     */
-    'videos': Array<ProfileContentPerCategory>;
 }
 
