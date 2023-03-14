@@ -5,4 +5,4 @@ set -o nounset -o pipefail -o errexit
 
 psql \
 postgresql://${PGUSER}:${PGPASSWORD}@${PGHOST}:${PGPORT}/${PGDATABASE} \
---command="TRUNCATE files;"
+--command="TRUNCATE content;"

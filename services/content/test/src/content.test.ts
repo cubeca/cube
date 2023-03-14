@@ -1,17 +1,9 @@
-import * as fs from 'node:fs';
-import { readFile } from 'node:fs/promises';
-import * as path from 'node:path';
-import { setTimeout } from 'node:timers/promises';
-import { createHash } from 'node:crypto';
 
 import axios from 'axios';
-import type { ResponseType } from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
-import mime from 'mime';
 
 import * as settings from './settings';
 import { inspect, inspectAxiosResponse, inspectAxiosError } from './utils';
-import { uploadViaTus } from './tus';
 
 const API_URL = `http://${settings.MICROSERVICE}:${settings.PORT}`;
 
@@ -20,9 +12,7 @@ const TIMESTAMP_REGEXP = /^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}
 
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
-const TEST_TIMEOUT_UPLOAD = 5 * 60 * 1000;
-
-const cloudflareApi = axios.create({
+const contentApi = axios.create({
   baseURL: API_URL,
   timeout: 60 * 1000,
 
@@ -45,180 +35,130 @@ const getAuthReqOpts = (...permissions: string[]) => {
 
 const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer ${jwt}` } });
 
-test('uploads video via TUS', async () => {
-
-  // First, we have a long-running TUS upload.
-  // Then we are waiting for a real video to get encoded over at Cloudflare.
-  // Both things will take some real wall clock time.
-  jest.useRealTimers();
-
-  const meta = {
-    profileId: NIL_UUID,
-    allocVidTime: 31,
-    validFor: 5 * 60
-  };
-
-  // See https://file-examples.com/
-  // See /services/cloudflare/test/scripts/download_example_files.sh
-  const filePath = `${__dirname}/../example-files/file_example_WEBM_480_900KB.webm`;
-
-  const fileId = await uploadViaTus(`${API_URL}/upload/video-tus-reservation`, getAuthReqOpts('contentEditor').headers, filePath, meta);
-
-  let detailStatus, detailData: any = {};
-  for (let i = 0; i < 20; i++) {
-    ({ status: detailStatus, data: detailData } = await cloudflareApi.get(
-      `/files/${fileId}`,
-      getAuthReqOpts('anonymous')
-    ));
-
-    if (200 === detailStatus) {
-      break;
-    }
-
-    if (409 === detailStatus) {
-      await setTimeout(5 * 1000, 'Wait a moment!');
-    } else {
-      expect(detailStatus).toEqual(200);
-      break;
-    }
-  }
-
-  expect(detailStatus).toEqual(200);
-
-  expect(detailData).toEqual(
-    expect.objectContaining({
-      id: expect.stringMatching(UUID_REGEXP),
-      createdAt: expect.stringMatching(TIMESTAMP_REGEXP),
-      updatedAt: expect.stringMatching(TIMESTAMP_REGEXP),
-      storageType: expect.stringMatching(/^cloudflareStream$/),
-      playerInfo: expect.anything()
-    })
-  );
-
-  expect(detailData?.playerInfo).toEqual(
-    expect.objectContaining({
-        hlsUrl: expect.any(String),
-        dashUrl: expect.any(String),
-        videoIdOrSignedUrl: expect.any(String),
-    })
-  );
-
-}, TEST_TIMEOUT_UPLOAD);
-
-test('uploads non-video via S3 presigned URL', async () => {
-  // See https://file-examples.com/
-  // See /services/cloudflare/test/scripts/download_example_files.sh
-  const filePath = `${__dirname}/../example-files/file_example_MP3_700KB.mp3`;
-  const fileLength = 764176; // TODO read file size from disk
-  const fileName = path.basename(filePath);
-  const mimeType = mime.getType(filePath) || 'application/octet-stream'
-
+test('creates content piece', async () => {
   const requestBody = {
-    profileId: NIL_UUID,
-    upload: {
-      fileName,
-      fileSizeBytes: fileLength,
-      mimeType,
-      urlValidDurationSeconds: 5 * 60
-    }
+    "profileId": "4863f84d-7ca5-4a00-bd80-b0c87e005711",
+    "title": "Ash Test",
+    "mediaFileId": "360cfe42-0db2-47d1-926b-9e627a22dd5c",
+    "description": "This is a test by Ashlee of one of her Youtube videos",
+    "tags": [
+      "exercises, art, rest, BC "
+    ],
+    "type": "video",
+    "contributors": [
+      null
+    ],
+    "collaborators": [
+      "moa"
+    ],
+    "coverImageFileId": "e0821a87-caef-472f-affd-a657692850ab",
+    "coverImageText": "Woman laying on table"
   };
 
-  const r2SignResponse = await cloudflareApi.post(
-    '/upload/s3-presigned-url',
+  const createContentResponse = await contentApi.post(
+    '/content',
     requestBody,
     getAuthReqOpts('contentEditor')
   );
-  const { status: r2SignStatus, data: r2SignData } = r2SignResponse;
-  if (201 !== r2SignStatus) {
-    inspectAxiosResponse(r2SignResponse);
+  const { status: createContentStatus, data: createContentData } = createContentResponse;
+  if (201 !== createContentStatus) {
+    inspectAxiosResponse(createContentResponse);
   }
 
-  expect(r2SignStatus).toEqual(201);
+  expect(createContentStatus).toEqual(201);
 
-  expect(r2SignData).toEqual(
-    expect.objectContaining({
-      fileId: expect.stringMatching(UUID_REGEXP),
-      presignedUrl: expect.any(String)
-    })
-  );
-
-  const fileId = r2SignData.fileId;
-
-  const r2PutOptions = {
-    timeout: 10 * 1000,
-
-    // Do not throw errors for non-2xx responses, that makes handling them easier.
-    validateStatus: null,
-
-    headers: {
-      'Content-Type': mimeType,
-      'Content-Length': fileLength,
-    }
-  };
-
-  const fileStream = fs.createReadStream(filePath);
-
-  const r2UploadResponse = await axios.put(r2SignData.presignedUrl, fileStream, r2PutOptions);
-
-  // inspect({
-  //   status: r2UploadResponse.status,
-  //   statusText: r2UploadResponse.statusText,
-  //   headers: r2UploadResponse.headers,
-  //   data: r2UploadResponse.data,
-  // });
-
-  expect(r2UploadResponse.status).toEqual(200);
-
-  const detailResponse = await cloudflareApi.get(
-    `/files/${fileId}`,
-    getAuthReqOpts('anonymous')
-  );
-
-  expect(detailResponse.status).toEqual(200);
-
-  expect(detailResponse.data).toEqual(
+  expect(createContentData).toMatchObject(
     expect.objectContaining({
       id: expect.stringMatching(UUID_REGEXP),
       createdAt: expect.stringMatching(TIMESTAMP_REGEXP),
       updatedAt: expect.stringMatching(TIMESTAMP_REGEXP),
-      storageType: expect.stringMatching(/^cloudflareR2$/),
-      playerInfo: expect.anything()
+      ...requestBody
     })
   );
+});
 
-  expect(detailResponse.data?.playerInfo).toEqual(
-    expect.objectContaining({
-      mimeType: expect.stringMatching(mimeType),
-      fileType: expect.any(String),
-      publicUrl: expect.any(String),
-    })
-  );
+test('lists mock content pieces', async () => {
 
-  const r2DownloadOptions = {
-    timeout: 60 * 1000,
+  const response = await contentApi.get('/content');
+  const { status, data } = response;
+  if (200 !== status) {
+    inspectAxiosResponse(response);
+  }
 
-    // Do not throw errors for non-2xx responses, that makes handling them easier.
-    validateStatus: null,
-    responseType: 'arraybuffer' as ResponseType
-  };
+  expect(status).toEqual(200);
 
-  const r2DownloadResponse = await axios.get(detailResponse.data?.playerInfo?.publicUrl, r2DownloadOptions);
+  expect(data).toMatchObject({
+    data: expect.arrayContaining([
+      {
+        "id": "1",
+        "title": "Title 1",
+        "creator": "Creator 1",
+        "url": "/content/1",
+        "thumbnailUrl": "images/video_thumbnail.jpg",
+        "iconUrl": "images/creator_icon.png",
+        "category": "video",
+        "type": "video"
+      },
+      {
+        "id": "2",
+        "title": "Title 2",
+        "creator": "Creator 2",
+        "url": "/content/2",
+        "thumbnailUrl": "images/video_thumbnail.jpg",
+        "iconUrl": "images/creator_icon.png",
+        "category": "video",
+        "type": "video"
+      }
+    ])
+  });
+});
 
-  expect(r2DownloadResponse.status).toEqual(200);
+test('gets mocked content piece details', async () => {
 
-  // inspect({
-  //   status: r2DownloadResponse.status,
-  //   statusText: r2DownloadResponse.statusText,
-  //   headers: r2DownloadResponse.headers,
-  //   'typeof data': typeof r2DownloadResponse.data,
-  // });
+  const contentId = '7110767b-8d14-45bc-8ff1-9286fa06aae1';
+  const response = await contentApi.get(`/content/${contentId}`);
+  const { status, data } = response;
+  if (200 !== status) {
+    inspectAxiosResponse(response);
+  }
 
-  const r2DownloadHash = createHash('sha256');
-  r2DownloadHash.update(r2DownloadResponse.data);
+  expect(status).toEqual(200);
 
-  const localFileHash = createHash('sha256');
-  localFileHash.update(await readFile(filePath));
-
-  expect(r2DownloadHash.digest('hex')).toEqual(localFileHash.digest('hex'));
-
-}, TEST_TIMEOUT_UPLOAD);
+  expect(data).toMatchObject({
+    "data": {
+      "id": contentId,
+      "url": "/video.mp4",
+      "title": `Video ${contentId}`,
+      "createdDate": "07/01/2022",
+      "updatedDate": "07/01/2022",
+      "description": "Description of content Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dolor sem faucibus auctor quam pretium massa nulla cursus. Vel, a nisl ipsum, nisl. Mauris.",
+      "descriptionUrl": "/description.mp3",
+      "credits": "Dawn Powell, Camera Operator, Alissa Cat, Public Programs Magnus Ten, Editor",
+      "contributors": [
+        {
+          "id": "1",
+          "link": "/profile/1",
+          "name": "Museum Of Anthropology",
+          "socialUrl": "https: //www.twitter.com",
+          "socialHandle": "@Moa",
+          "logoUrl": "/images/moa.svg"
+        },
+        {
+          "id": "2",
+          "name": "Museum of Vancouver",
+          "socialUrl": "https: //www.twitter.com",
+          "socialHandle": "@Mov",
+          "logoUrl": ""
+        },
+        {
+          "id": "3",
+          "name": "Dana Claxton"
+        }
+      ],
+      "tags": [
+        "tag 1",
+        "tag 2"
+      ]
+    }
+  });
+});
