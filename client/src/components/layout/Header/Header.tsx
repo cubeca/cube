@@ -1,19 +1,12 @@
-import { ReactComponent as CubeLogo } from 'assets/icons/cube.svg';
-import NavPanel from './components/NavPanel';
-
+import PrimaryNav from './components/PrimaryNav';
+import AuxiliaryNav from './components/AuxiliaryNav';
 import * as s from './Header.styled';
 
 const Header = () => (
-  <s.Header
-    component="header"
-    direction="row"
-    justifyContent="space-between"
-    alignItems="center"
-    position="relative"
-    width="100%"
-  >
-    <CubeLogo />
-    <NavPanel />
+  <s.Header component="header" direction="row">
+    <s.HomeLink to="/about" />
+    <PrimaryNav />
+    <AuxiliaryNav />
   </s.Header>
 );
 
