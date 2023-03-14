@@ -145,6 +145,13 @@ const getTheme = (mode?: 'dark' | 'light') =>
       },
 
       components: {
+        MuiCssBaseline: {
+          styleOverrides: () => ({
+            body: {
+              margin: '0'
+            },
+          }),
+        },
         MuiButton: {
           variants: [
             {
