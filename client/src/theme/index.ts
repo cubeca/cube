@@ -83,7 +83,8 @@ const getTheme = (mode?: 'dark' | 'light') =>
           fontWeight: 600
         },
         body1: {
-          fontSize: '1.125rem'
+          fontSize: '1.125rem',
+          marginBottom: '32px',
         },
         body2: {
           fontSize: '1rem'
@@ -124,6 +125,16 @@ const getTheme = (mode?: 'dark' | 'light') =>
         info: {
           main: '#75b9f7'
         }
+      },
+
+      breakpoints: {
+        values: {
+          xs: 0,
+          sm: 600,
+          md: 1000,
+          lg: 1400,
+          xl: 1800,
+        },
       },
 
       components: {

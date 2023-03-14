@@ -1,58 +1,49 @@
-import { Grid } from '@mui/material';
-import { FC, ReactNode } from 'react';
-import CreatorsHero from 'assets/images/creators.jpg';
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import { Parallax } from 'react-scroll-parallax';
+import Grid from '@mui/system/Unstable_Grid';
+import * as s from './ThumbnailGrid.styled';
 
-// function Movement() {
-// const {ref}=useParallax<ThumbnailGrid>({speed: 10});
-// return <div ref={ref/>}
-// };
+const ThumbnailGrid = ({ thumbs, alignment }: any) => {
+  const nodes: any[] = [];
 
-
-// const TranslateY=()=> (
-//     <Parallax translateY={[-20, 10]}>
-//        <Box sx={{ flexGrow: 1 }}>
-
-// useParallax({
-//     translateY: [-100, 100],
-//   }); 
-
-
-function ThumbnailGrid() {
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <React.Fragment>
-        <Grid container spacing={0}>
-          <Grid container item spacing={0} rowSpacing="0">
-            <Grid item xs={6}>
-
-            </Grid>
-            <Grid item xs={6}>
-              <img src={CreatorsHero} alt="" width="100%" height="100%" />
-            </Grid>
-            <Grid item xs={6}>
-              <img src={CreatorsHero} alt="" width="100%" height="100%" />
-            </Grid>
-            <Grid item xs={6}>
-              <img src={CreatorsHero} alt="" width="100%" height="100%" />
-            </Grid>
-            <Grid item xs={6}>
-              <img src={CreatorsHero} alt="" width="100%" height="100%" />
-            </Grid>
-            <Grid container item spacing={0} rowSpacing="0" display={{ xs: 'none', md: 'visible' }}>
-              <Grid item xs={6}>
-                <img src={CreatorsHero} alt="" width="100%" height="100%" />
-              </Grid>
-            </Grid>
-
+  thumbs.forEach((obj: any) => {
+    switch (obj.type) {
+      case 'transparent':
+        nodes.push(
+          <Grid xs={4} md={6}>
+            <s.ThumbTransparent></s.ThumbTransparent>
           </Grid>
+        );
+        break;
+      case 'dark':
+        nodes.push(
+          <Grid xs={4} md={6}>
+            <s.ThumbDark></s.ThumbDark>
+          </Grid>
+        );
+        break;
+      case 'light':
+        nodes.push(
+          <Grid xs={4} md={6}>
+            <s.ThumbLight></s.ThumbLight>
+          </Grid>
+        );
+        break;
+      case 'img':
+        nodes.push(
+          <Grid xs={4} md={6}>
+            <s.ThumbImg>
+              <img src={obj.src} alt="thumbnail" />
+            </s.ThumbImg>
+          </Grid>
+        );
+        break;
+    }
+  });
 
-        </Grid>
-      </React.Fragment>
-    </Box>
+  return (
+    <s.ThumbnailGridWrapper alignment={alignment}>
+      <Grid container>{nodes}</Grid>
+    </s.ThumbnailGridWrapper>
   );
-}
+};
 
 export default ThumbnailGrid;
