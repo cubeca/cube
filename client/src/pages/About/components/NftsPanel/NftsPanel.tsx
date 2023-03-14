@@ -1,12 +1,12 @@
 import { Box, Stack, Typography } from '@mui/material';
 import MediaPlayer from 'components/MediaPlayer';
 import { Trans, useTranslation } from 'react-i18next';
-import AboutPanelRight from '../../../../components/AboutPanelRight/index';
+import AboutPanel from '../../../../components/AboutPanel/index';
 
 const NftsPanel = () => {
   const { t } = useTranslation('about');
   return (
-    <AboutPanelRight
+    <AboutPanel
       textContent={
         <Box px="10rem">
           <Trans i18nKey="nftsText">

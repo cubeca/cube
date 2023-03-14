@@ -25,6 +25,13 @@ const THEME_COLORS = {
     paper: '#2f4048'
   }
 };
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    reversed: true;
+  }
+}
+
 //*// primary dark and primary light are used by folks primary light and dark Settings. But I would like to set background color default here as well. Lance what do you think?//
 
 const getTheme = (mode?: 'dark' | 'light') =>
@@ -139,6 +146,18 @@ const getTheme = (mode?: 'dark' | 'light') =>
 
       components: {
         MuiButton: {
+          variants: [
+            {
+              props: { variant: 'reversed' },
+              style: {
+                color: THEME_COLORS.primary.main,
+                backgroundColor: THEME_COLORS.background.default,
+                '&:hover': {
+                  backgroundColor: THEME_COLORS.background.paper,
+               },
+              },
+            },
+          ],
           styleOverrides: {
             root: {
               textTransform: 'none',

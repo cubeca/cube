@@ -1,6 +1,5 @@
-import { Grid } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import { FC, ReactNode } from 'react';
-
 interface AboutPanelProps {
   textContent: ReactNode;
   imageContent?: ReactNode;
@@ -8,7 +7,7 @@ interface AboutPanelProps {
   className?: string;
 }
 
-const AboutPanelRight: FC<AboutPanelProps> = ({
+const AboutPanel: FC<AboutPanelProps> = ({
   textContent,
   imageContent,
   className,
@@ -16,21 +15,17 @@ const AboutPanelRight: FC<AboutPanelProps> = ({
 }) => (
   <Grid
     container
-    spacing={0}
-    columnGap="none"
     className={className}
-    direction={isReversed ? 'row-reverse' : 'row'}
-    xs={12} md={12}
     flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
-    order={{xs: 'reverse'}}
+    direction={isReversed ? 'row-reverse' : 'row'}
   >
-    <Grid item xs={12} md={6} justifyContent={{xs: 'center'}}>
-      {textContent}
-    </Grid>
-    <Grid item xs={12} md={6}>
+    <Grid xs={12} md={6}>
       {imageContent}
+    </Grid>
+    <Grid xs={12} md={6}>
+      {textContent}
     </Grid>
   </Grid>
 );
 
-export default AboutPanelRight;
+export default AboutPanel;
