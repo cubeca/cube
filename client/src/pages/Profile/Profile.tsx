@@ -5,7 +5,7 @@ import useProfile from 'hooks/useProfile';
 import { useState } from 'react';
 import ViewSection from './View/ViewSection';
 import EditSection from './Edit/EditSection';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'components/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import CategorizedContent from '../Home/components/CategorizedContent/index';
@@ -22,8 +22,10 @@ const Profile = () => {
   const [editSection, setEditSection] = useState(false);
   const navigate = useNavigate();
 
+  console.log(profile);
+
   const handleNewMedia = () => {
-    navigate(`/profile/${profile!.id}/upload`);
+    //navigate(`/profile/${profile!.id}/upload`);
   };
 
   const onEditCoverPhoto = () => {};
@@ -40,7 +42,7 @@ const Profile = () => {
           display: 'flex',
           justifyContent: 'left',
           alignItems: 'center',
-          backgroundImage: `url('${profile!.heroUrl}')`,
+          // backgroundImage: `url('${profile!.heroUrl}')`,
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover'

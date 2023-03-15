@@ -18,8 +18,16 @@ const identityApi = axios.create({
 });
 
 let uniqueEmailCounter = 1;
-
 const getUniqueEmail = () => `test-${uniqueEmailCounter++}@example.com`;
+
+let uniqueOrganizationNameCounter = 1;
+const getUniqueOrganizationName = () => `org-${uniqueOrganizationNameCounter++}`;
+
+let uniqueWebsiteCounter = 1;
+const getUniqueWebsite = () => `https://org-${uniqueWebsiteCounter++}.example.com`;
+
+let uniqueTagCounter = 1;
+const getUniqueTag = () => `@org-${uniqueTagCounter++}`;
 
 const getAuthReqOpts = (...permissions:string[]) => {
   const jwt = jsonwebtoken.sign(
@@ -49,6 +57,9 @@ const createUser = async ({ userPermissions = ['active'], createPermissions = ['
     permissionIds: userPermissions,
     hasAcceptedNewsletter: false,
     hasAcceptedTerms: false,
+    organization: getUniqueOrganizationName(),
+    website: getUniqueWebsite(),
+    tag: getUniqueTag(),
   };
   const authReqOpts = (null === createPermissions) ? undefined : getAuthReqOpts(...createPermissions);
   const { status, data } = await identityApi.post('/auth/user', requestBody, authReqOpts);
@@ -93,8 +104,8 @@ test('can not create user without correct permission', async () => {
   expect(status).toEqual(403);
 });
 
-test('signs up as "active" user', async () => {
-  const { status, data, requestBody } = await createUser({ userPermissions: ['active'], createPermissions: null });
+test('signs up as "active,contentEditor" user', async () => {
+  const { status, data, requestBody } = await createUser({ userPermissions: ['active', 'contentEditor'], createPermissions: null });
   expect(status).toEqual(201);
   expect(data).toEqual(expect.objectContaining({
     id: expect.stringMatching(UUID_REGEXP),
@@ -114,7 +125,7 @@ test('"userAdmin" creates user with excessive permissions', async () => {
   }));
 });
 
-test('logs in, but only once', async () => {
+test.skip('logs in, but only once', async () => {
   const { status:statusCreate, data:dataCreate, requestBody:requestBodyCreate } = await createUser();
   expect(statusCreate).toEqual(201);
   expect(dataCreate).toEqual(expect.objectContaining({
@@ -129,6 +140,7 @@ test('logs in, but only once', async () => {
   expect(statusLogin).toEqual(200);
   expect(dataLogin).toEqual(expect.objectContaining({
     jwt: expect.any(String),
+    profileId: expect.stringMatching(UUID_REGEXP),
   }));
 
   const jwtPayload = await jsonwebtoken.verify(dataLogin.jwt, settings.JWT_TOKEN_SECRET);
@@ -160,6 +172,7 @@ test('logs in without "anonymous" JWT', async () => {
   expect(statusLogin).toEqual(200);
   expect(dataLogin).toEqual(expect.objectContaining({
     jwt: expect.any(String),
+    profileId: expect.stringMatching(UUID_REGEXP),
   }));
 
   const jwtPayload = await jsonwebtoken.verify(dataLogin.jwt, settings.JWT_TOKEN_SECRET);

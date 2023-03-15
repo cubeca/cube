@@ -3,6 +3,7 @@ import * as db from './index';
 export const insertIdentity = (
   name: string,
   email: string,
+  profileId: string,
   password: string,
   permissionIds: string[],
   hasAcceptedTerms: boolean,
@@ -10,12 +11,13 @@ export const insertIdentity = (
 ) => {
   const text = `
     INSERT INTO
-      users(name, email, password, permission_ids, has_accepted_terms, has_accepted_newsletter)
-      VALUES($1, $2, $3, $4, $5, $6)
+      users(name, email, profile_id, password, permission_ids, has_accepted_terms, has_accepted_newsletter)
+      VALUES($1, $2, $3, $4, $5, $6, $7)
       RETURNING *`;
   const values = [
     name,
     email,
+    profileId,
     password,
     `{${permissionIds.join(',')}}`,
     `${hasAcceptedTerms}`,

@@ -1,0 +1,109 @@
+version: '3.9'
+
+services:
+  cube_profile_microservice:
+    container_name: ${PROJECT_NAME}_microservice
+    build:
+      context: .
+      dockerfile: ${MICROSERVICE_DOCKERFILE}
+    image: ${PROJECT_NAME}_microservice
+    depends_on:
+      - postgres
+    networks:
+      - public_api
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      PORT: $PORT
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+    volumes:
+      - ./.env.example:/work/.env.example
+      - ./${ENV_FILE}:/work/.env
+      - ./migrations:/work/migrations/
+      - ./src:/work/src/
+      - ./database.json:/work/database.json
+      - ./package-lock.json:/work/package-lock.json
+      - ./package.json:/work/package.json
+      - ./tsconfig.json:/work/tsconfig.json
+    ports:
+      # Serve the microservice on the host
+      - '$PORT:$PORT'
+
+  postgres:
+    container_name: ${PROJECT_NAME}_db
+    image: postgres:15.1-alpine3.17
+    # healthcheck:
+    #   test: [ "CMD", "pg_isready", "-q", "-d", "$POSTGRES_DB", "-U", "auth" ]
+    #   timeout: 45s
+    #   interval: 10s
+    #   retries: 10
+    restart: always
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+    networks:
+      - db
+
+  cube_profile_testrunner:
+    profiles:
+      - test
+    container_name: ${PROJECT_NAME}_testrunner
+    build:
+      context: .
+      dockerfile: test/Dockerfile
+    image: ${PROJECT_NAME}_testrunner
+    depends_on:
+      - cube_profile_microservice
+    networks:
+      - public_api
+
+      # So that we can empty the DB before running the tests.
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      # This must be the same as the service name here in the docker compose file.
+      MICROSERVICE: cube_profile_microservice
+      PORT: $PORT
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+      ENCRYPT_SECRET: $ENCRYPT_SECRET
+    volumes:
+      - ./.env.example:/work/.env.example
+      - ./${ENV_FILE}:/work/.env
+      - ./test/src:/work/src/
+      - ./test/scripts:/work/scripts/
+      - ./test/jest.config.js:/work/jest.config.js
+      - ./test/package-lock.json:/work/package-lock.json
+      - ./test/package.json:/work/package.json
+      - ./test/tsconfig.json:/work/tsconfig.json
+
+volumes:
+  pgdata:
+
+networks:
+  public_api:
+  db:

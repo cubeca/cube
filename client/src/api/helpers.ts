@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from './constants';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from './settings';
 import { PaginationQueryKeys, ContentQueryKeys } from './enums';
 import { Upload, HttpRequest, HttpResponse } from 'tus-js-client';
-import { UPLOAD_TUS_ENDPOINT, uploadApi } from './httpClient';
+import { UPLOAD_TUS_ENDPOINT, uploadApi } from '.';
 import { getAuthToken } from '../utils/auth';
 
 type QueryKeys = typeof ContentQueryKeys;
@@ -46,15 +46,24 @@ export const blobToBase64 = (file: File) =>
     reader.onerror = (error) => reject(error);
   });
 
+export type ProgressHandler = (
+  bytesUploaded: number,
+  bytesTotal: number
+) => void;
 
-export type ProgressHandler = (bytesUploaded: number, bytesTotal: number) => void;
-
-const defaultProgressHandler: ProgressHandler = (bytesUploaded: number, bytesTotal: number) => {
+const defaultProgressHandler: ProgressHandler = (
+  bytesUploaded: number,
+  bytesTotal: number
+) => {
   const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
   console.log(`uploadViaTus ${bytesUploaded}/${bytesTotal} = ${percentage}%`);
-}
+};
 
-export const uploadViaTus = async (file: File, meta: any, progressHandler: ProgressHandler = defaultProgressHandler):Promise<string | undefined> => {
+export const uploadViaTus = async (
+  file: File,
+  meta: any,
+  progressHandler: ProgressHandler = defaultProgressHandler
+): Promise<string | undefined> => {
   const authToken = await getAuthToken();
   return await new Promise((resolve, reject) => {
     let fileId: string | undefined = undefined;
@@ -80,7 +89,7 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
       },
       onAfterResponse(req: HttpRequest, res: HttpResponse) {
         if (res.getStatus() === 200 && req.getURL() === UPLOAD_TUS_ENDPOINT) {
-          fileId = res.getHeader("CUBE-File-Id");
+          fileId = res.getHeader('CUBE-File-Id');
           console.log(`got fileId from TUS endpoint: "${fileId}".`);
           resolve(fileId); // Resolve early, so we can get on with creating content.
         }
@@ -91,31 +100,35 @@ export const uploadViaTus = async (file: File, meta: any, progressHandler: Progr
       onProgress: progressHandler,
       onSuccess() {
         resolve(fileId);
-      },
-    }
+      }
+    };
 
     const upload = new Upload(file, options);
 
     // Check if there are any previous uploads to continue.
-    upload.findPreviousUploads().then(function (previousUploads:any) {
-      // Found previous uploads so we select the first one. 
+    upload.findPreviousUploads().then(function (previousUploads: any) {
+      // Found previous uploads so we select the first one.
       if (previousUploads.length) {
         upload.resumeFromPreviousUpload(previousUploads[0]);
       }
 
       // Start the upload
       upload.start();
-    })
+    });
   });
 };
 
-
-export const uploadS3 = async (file: File, profileId: string): Promise<string | undefined> => {
+export const uploadS3 = async (
+  file: File,
+  profileId: string
+): Promise<string | undefined> => {
   const fileName = file.name;
   const mimeType = file.type;
   const fileSizeBytes = file.size;
 
-  const { data: { fileId, presignedUrl } } = await uploadApi.uploadFilesViaPresignedUrl({
+  const {
+    data: { fileId, presignedUrl }
+  } = await uploadApi.uploadFilesViaPresignedUrl({
     profileId,
     upload: {
       fileName,
@@ -133,17 +146,17 @@ export const uploadS3 = async (file: File, profileId: string): Promise<string | 
 
     headers: {
       'Content-Type': mimeType,
-      'Content-Length': fileSizeBytes,
+      'Content-Length': fileSizeBytes
     },
 
-    onUploadProgress: (progressEvent:any) => {
+    onUploadProgress: (progressEvent: any) => {
       console.log(`profile ${profileId} uploadS3 progress for ${fileName}`);
       console.dir(progressEvent);
     }
   };
 
   // Do *NOT* wait, intentionally.
-  // TODO Improve async error handling and progress reporting. 
+  // TODO Improve async error handling and progress reporting.
   axios.put(presignedUrl, file, r2PutOptions);
 
   return fileId;

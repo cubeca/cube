@@ -11,7 +11,7 @@ const PasswordInput: FC<TextInputProps> = (props) => {
     <TextInput
       type="password"
       rules={{
-        minLength: { value: 15, message: t('Minimum password length is 15') },
+        minLength: { value: 8, message: t('Minimum password length is 8') },
         maxLength: { value: 72, message: t('Maximum password length is 72') },
         ...props.rules!
       }}

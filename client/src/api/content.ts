@@ -1,5 +1,5 @@
 import { uploadViaTus, uploadS3 } from './helpers';
-import { AddContent, contentApi, contentFilesApi } from './httpClient';
+import { AddContent, contentApi, contentFilesApi } from '.';
 
 export type CategoryType =
   | 'all'
@@ -16,7 +16,7 @@ export type ContentType = 'video' | 'audio' | 'pdf';
 
 export type NationType = 'CA';
 
-export type { AddContent } from './httpClient';
+export type { AddContent } from '.';
 
 export const getContent = async (
   category?: CategoryType,
@@ -24,14 +24,7 @@ export const getContent = async (
   nation?: NationType,
   creator?: string
 ) => {
-  return await contentApi.contentList(
-    1,
-    10,
-    category,
-    type,
-    nation,
-    creator
-  );
+  return await contentApi.contentList(1, 10, category, type, nation, creator);
 };
 
 export const getContentDetails = async (id: string) => {
@@ -47,7 +40,6 @@ export const addContent = async ({
   coverImageFile?: File;
   mediaFile?: File;
 }) => {
-
   let coverImageFileId: string | undefined = undefined;
   let mediaFileId: string | undefined = undefined;
   // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
@@ -57,14 +49,14 @@ export const addContent = async ({
   }
 
   if (mediaFile) {
-    mediaFileId = await uploadViaTus(mediaFile, { profileId: payload.profileId });
+    mediaFileId = await uploadViaTus(mediaFile, {
+      profileId: payload.profileId
+    });
   }
 
-  return await contentFilesApi.addContent(
-    {
-      ...payload,
-      coverImageFileId: String(coverImageFileId),
-      mediaFileId: String(mediaFileId)
-    }
-  );
+  return await contentFilesApi.addContent({
+    ...payload,
+    coverImageFileId: String(coverImageFileId),
+    mediaFileId: String(mediaFileId)
+  });
 };

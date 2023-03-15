@@ -10,6 +10,10 @@ ifneq (,$(wildcard ./.env))
 	ENV_FILE = .env
 endif
 
+ifneq (,$(wildcard ../profile/.env))
+	export PROFILE_MOCK_ENV_FILE = .env
+endif
+
 DOCKER ?= docker
 
 export PROJECT_NAME ?= cube_identity
@@ -21,6 +25,8 @@ export PORT ?= 3000
 
 export JWT_TOKEN_SECRET ?= secret
 export ENCRYPT_SECRET ?= encrypt_secret
+
+export PROFILE_SERVICE_URL ?= http://localhost:4052
 
 export POSTGRES_DB ?= $(PROJECT_NAME)
 export POSTGRES_USER ?= postgres
@@ -45,8 +51,8 @@ down:
 .PHONY: clean
 clean:
 	-MICROSERVICE_DOCKERFILE=editable.dockerfile $(PROJECT_DOCKER_COMPOSE) --profile test rm
-	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db $(PROJECT_NAME)_testrunner
-	-$(DOCKER) image rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_testrunner
+	-$(DOCKER) container rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_db $(PROJECT_NAME)_testrunner $(PROJECT_NAME)_profile_mock
+	-$(DOCKER) image rm $(PROJECT_NAME)_microservice $(PROJECT_NAME)_testrunner $(PROJECT_NAME)_profile_mock
 
 .PHONY: logs
 logs:
@@ -65,10 +71,14 @@ login_ms:
 # See https://en.wikipedia.org/wiki/SIGHUP
 .PHONY: hup
 hup:
-	$(MAKE) down
-	$(MAKE) clean
+	$(MAKE) bye
 	$(MAKE) test
 	$(MAKE) login_ms
+
+.PHONY: bye
+bye:
+	$(MAKE) down
+	$(MAKE) clean
 
 .PHONY: docker_build
 docker_build:

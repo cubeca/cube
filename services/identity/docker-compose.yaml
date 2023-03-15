@@ -9,6 +9,7 @@ services:
     image: ${PROJECT_NAME}_microservice
     depends_on:
       - postgres
+      - cube_profile_mock_microservice
     networks:
       - public_api
       - db
@@ -18,6 +19,8 @@ services:
       PORT: $PORT
       JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
       ENCRYPT_SECRET: $ENCRYPT_SECRET
+
+      PROFILE_SERVICE_URL: http://cube_profile_mock_microservice:${PORT}
 
       PGHOST: postgres
       PGPORT: '5432'
@@ -38,6 +41,44 @@ services:
       # Serve the microservice on the host
       - '$PORT:$PORT'
 
+  cube_profile_mock_microservice:
+    container_name: ${PROJECT_NAME}_profile_mock
+    build:
+      context: ../profile/
+      dockerfile: ../profile/Dockerfile
+    image: ${PROJECT_NAME}_profile_mock
+    depends_on:
+      - postgres
+    networks:
+      - public_api
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      PORT: $PORT
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      # For setting up multiple DBs in the same PostgreSQL Docker container, see
+      # https://github.com/docker-library/docs/blob/master/postgres/README.md#initialization-scripts
+      # TODO Keep those DBs separate?
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+    volumes:
+      - ../profile/.env.example:/work/.env.example
+      - ../profile/${PROFILE_MOCK_ENV_FILE}:/work/.env
+      - ../profile/migrations:/work/migrations/
+      - ../profile/src:/work/src/
+      - ../profile/database.json:/work/database.json
+      - ../profile/package-lock.json:/work/package-lock.json
+      - ../profile/package.json:/work/package.json
+      - ../profile/tsconfig.json:/work/tsconfig.json
+
+  # For setting up multiple DBs in the same PostgreSQL Docker container, see
+  # https://github.com/docker-library/docs/blob/master/postgres/README.md#initialization-scripts
   postgres:
     container_name: ${PROJECT_NAME}_db
     image: postgres:15.1-alpine3.17

@@ -15,7 +15,6 @@ export * from './files-details-response-player-info-one-of1';
 export * from './list-of-collaborators';
 export * from './list-of-collaborators-data';
 export * from './list-of-content';
-export * from './profile-content-per-category';
 export * from './profile-details';
 export * from './profile-main-schema';
 export * from './s3-presigned-urlrequest';

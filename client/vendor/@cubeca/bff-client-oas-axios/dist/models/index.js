@@ -31,7 +31,6 @@ __exportStar(require("./files-details-response-player-info-one-of1"), exports);
 __exportStar(require("./list-of-collaborators"), exports);
 __exportStar(require("./list-of-collaborators-data"), exports);
 __exportStar(require("./list-of-content"), exports);
-__exportStar(require("./profile-content-per-category"), exports);
 __exportStar(require("./profile-details"), exports);
 __exportStar(require("./profile-main-schema"), exports);
 __exportStar(require("./s3-presigned-urlrequest"), exports);

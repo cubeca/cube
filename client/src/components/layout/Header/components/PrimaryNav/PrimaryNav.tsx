@@ -14,7 +14,7 @@ const getNavItems = (t: TFunction<'translation', undefined>) => [
   },
   {
     text: t('Become a Creator'),
-    path: '/join'
+    path: '/signup'
   }
 ];
 
