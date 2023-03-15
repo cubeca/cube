@@ -30,7 +30,7 @@ import { ErrorResponse } from '../models';
 // @ts-ignore
 import { JWTResponse } from '../models';
 // @ts-ignore
-import { JWTResponse1 } from '../models';
+import { LoginResponse } from '../models';
 // @ts-ignore
 import { UpdateEmailRequest } from '../models';
 // @ts-ignore
@@ -348,7 +348,7 @@ export const AuthApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<JWTResponse1>> {
+        async login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.login(usernameAndPasswordJWTRequest, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -433,7 +433,7 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: any): AxiosPromise<JWTResponse1> {
+        login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: any): AxiosPromise<LoginResponse> {
             return localVarFp.login(usernameAndPasswordJWTRequest, options).then((request) => request(axios, basePath));
         },
         /**
@@ -513,7 +513,7 @@ export interface AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
-    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): AxiosPromise<JWTResponse1>;
+    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): AxiosPromise<LoginResponse>;
 
     /**
      * Update user email.

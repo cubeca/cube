@@ -1,4 +1,4 @@
-## @cubeca/bff-client-oas-axios@0.0.1-SNAPSHOT.202303122252
+## @cubeca/bff-client-oas-axios@0.0.1-SNAPSHOT.202303150500
 
 This generator creates TypeScript/JavaScript client that utilizes [axios](https://github.com/axios/axios). The generated Node module can be used in the following environments:
 
@@ -36,7 +36,7 @@ navigate to the folder of your consuming project and run one of the following co
 _published:_
 
 ```
-npm install @cubeca/bff-client-oas-axios@0.0.1-SNAPSHOT.202303122252 --save
+npm install @cubeca/bff-client-oas-axios@0.0.1-SNAPSHOT.202303150500 --save
 ```
 
 _unPublished (not recommended):_

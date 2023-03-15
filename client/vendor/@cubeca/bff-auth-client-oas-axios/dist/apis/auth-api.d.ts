@@ -15,7 +15,7 @@ import { RequestArgs, BaseAPI } from '../base';
 import { AnonymousJWTRequest } from '../models';
 import { CreateUserRequest } from '../models';
 import { JWTResponse } from '../models';
-import { JWTResponse1 } from '../models';
+import { LoginResponse } from '../models';
 import { UpdateEmailRequest } from '../models';
 import { UpdatePasswordRequest } from '../models';
 import { UsernameAndPasswordJWTRequest } from '../models';
@@ -109,7 +109,7 @@ export declare const AuthApiFp: (configuration?: Configuration) => {
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<JWTResponse1>>;
+    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LoginResponse>>;
     /**
      * Update user email.
      * @summary Update user email.
@@ -171,7 +171,7 @@ export declare const AuthApiFactory: (configuration?: Configuration, basePath?: 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: any): AxiosPromise<JWTResponse1>;
+    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: any): AxiosPromise<LoginResponse>;
     /**
      * Update user email.
      * @summary Update user email.
@@ -237,7 +237,7 @@ export interface AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApiInterface
      */
-    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): AxiosPromise<JWTResponse1>;
+    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): AxiosPromise<LoginResponse>;
     /**
      * Update user email.
      * @summary Update user email.
@@ -308,7 +308,7 @@ export declare class AuthApi extends BaseAPI implements AuthApiInterface {
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<JWTResponse1, any>>;
+    login(usernameAndPasswordJWTRequest: UsernameAndPasswordJWTRequest, options?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<LoginResponse, any>>;
     /**
      * Update user email.
      * @summary Update user email.

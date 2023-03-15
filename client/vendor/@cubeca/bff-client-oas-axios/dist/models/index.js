@@ -28,8 +28,6 @@ __exportStar(require("./files-details-response"), exports);
 __exportStar(require("./files-details-response-player-info"), exports);
 __exportStar(require("./files-details-response-player-info-one-of"), exports);
 __exportStar(require("./files-details-response-player-info-one-of1"), exports);
-__exportStar(require("./get-file-upload-url-response"), exports);
-__exportStar(require("./get-file-upload-url-response-data"), exports);
 __exportStar(require("./list-of-collaborators"), exports);
 __exportStar(require("./list-of-collaborators-data"), exports);
 __exportStar(require("./list-of-content"), exports);

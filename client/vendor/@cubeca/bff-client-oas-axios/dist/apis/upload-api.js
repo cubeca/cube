@@ -36,34 +36,6 @@ const base_1 = require("../base");
 const UploadApiAxiosParamCreator = function (configuration) {
     return {
         /**
-         * Get upload url from S3 for cloudflare R2.
-         * @summary Get upload url from S3 for cloudflare R2
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentFileUploadUrl: (options = {}) => __awaiter(this, void 0, void 0, function* () {
-            const localVarPath = `/upload/get-file-url`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, common_1.DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions = Object.assign(Object.assign({ method: 'GET' }, baseOptions), options);
-            const localVarHeaderParameter = {};
-            const localVarQueryParameter = {};
-            // authentication jwt_logged_in required
-            // http bearer authentication required
-            yield (0, common_1.setBearerAuthToObject)(localVarHeaderParameter, configuration);
-            (0, common_1.setSearchParams)(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = Object.assign(Object.assign(Object.assign({}, localVarHeaderParameter), headersFromBaseOptions), options.headers);
-            return {
-                url: (0, common_1.toPathString)(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        }),
-        /**
          * Get S3 / R2 presigned url from Cloudflare
          * @summary Get S3 / R2 presigned url from Cloudflare
          * @param {S3PresignedURLRequest} s3PresignedURLRequest Add content
@@ -145,18 +117,6 @@ const UploadApiFp = function (configuration) {
     const localVarAxiosParamCreator = (0, exports.UploadApiAxiosParamCreator)(configuration);
     return {
         /**
-         * Get upload url from S3 for cloudflare R2.
-         * @summary Get upload url from S3 for cloudflare R2
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentFileUploadUrl(options) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const localVarAxiosArgs = yield localVarAxiosParamCreator.contentFileUploadUrl(options);
-                return (0, common_1.createRequestFunction)(localVarAxiosArgs, axios_1.default, base_1.BASE_PATH, configuration);
-            });
-        },
-        /**
          * Get S3 / R2 presigned url from Cloudflare
          * @summary Get S3 / R2 presigned url from Cloudflare
          * @param {S3PresignedURLRequest} s3PresignedURLRequest Add content
@@ -194,15 +154,6 @@ const UploadApiFactory = function (configuration, basePath, axios) {
     const localVarFp = (0, exports.UploadApiFp)(configuration);
     return {
         /**
-         * Get upload url from S3 for cloudflare R2.
-         * @summary Get upload url from S3 for cloudflare R2
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        contentFileUploadUrl(options) {
-            return localVarFp.contentFileUploadUrl(options).then((request) => request(axios, basePath));
-        },
-        /**
          * Get S3 / R2 presigned url from Cloudflare
          * @summary Get S3 / R2 presigned url from Cloudflare
          * @param {S3PresignedURLRequest} s3PresignedURLRequest Add content
@@ -233,16 +184,6 @@ exports.UploadApiFactory = UploadApiFactory;
  * @extends {BaseAPI}
  */
 class UploadApi extends base_1.BaseAPI {
-    /**
-     * Get upload url from S3 for cloudflare R2.
-     * @summary Get upload url from S3 for cloudflare R2
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UploadApi
-     */
-    contentFileUploadUrl(options) {
-        return (0, exports.UploadApiFp)(this.configuration).contentFileUploadUrl(options).then((request) => request(this.axios, this.basePath));
-    }
     /**
      * Get S3 / R2 presigned url from Cloudflare
      * @summary Get S3 / R2 presigned url from Cloudflare

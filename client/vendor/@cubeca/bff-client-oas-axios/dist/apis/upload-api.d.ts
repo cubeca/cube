@@ -12,7 +12,6 @@
 import type { Configuration } from '../configuration';
 import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { RequestArgs, BaseAPI } from '../base';
-import { GetFileUploadUrlResponse } from '../models';
 import { S3PresignedURLRequest } from '../models';
 import { S3PresignedURLResponse } from '../models';
 /**
@@ -20,13 +19,6 @@ import { S3PresignedURLResponse } from '../models';
  * @export
  */
 export declare const UploadApiAxiosParamCreator: (configuration?: Configuration) => {
-    /**
-     * Get upload url from S3 for cloudflare R2.
-     * @summary Get upload url from S3 for cloudflare R2
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    contentFileUploadUrl: (options?: AxiosRequestConfig) => Promise<RequestArgs>;
     /**
      * Get S3 / R2 presigned url from Cloudflare
      * @summary Get S3 / R2 presigned url from Cloudflare
@@ -51,13 +43,6 @@ export declare const UploadApiAxiosParamCreator: (configuration?: Configuration)
  */
 export declare const UploadApiFp: (configuration?: Configuration) => {
     /**
-     * Get upload url from S3 for cloudflare R2.
-     * @summary Get upload url from S3 for cloudflare R2
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    contentFileUploadUrl(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GetFileUploadUrlResponse>>;
-    /**
      * Get S3 / R2 presigned url from Cloudflare
      * @summary Get S3 / R2 presigned url from Cloudflare
      * @param {S3PresignedURLRequest} s3PresignedURLRequest Add content
@@ -80,13 +65,6 @@ export declare const UploadApiFp: (configuration?: Configuration) => {
  * @export
  */
 export declare const UploadApiFactory: (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) => {
-    /**
-     * Get upload url from S3 for cloudflare R2.
-     * @summary Get upload url from S3 for cloudflare R2
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    contentFileUploadUrl(options?: any): AxiosPromise<GetFileUploadUrlResponse>;
     /**
      * Get S3 / R2 presigned url from Cloudflare
      * @summary Get S3 / R2 presigned url from Cloudflare
@@ -111,14 +89,6 @@ export declare const UploadApiFactory: (configuration?: Configuration, basePath?
  * @interface UploadApi
  */
 export interface UploadApiInterface {
-    /**
-     * Get upload url from S3 for cloudflare R2.
-     * @summary Get upload url from S3 for cloudflare R2
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UploadApiInterface
-     */
-    contentFileUploadUrl(options?: AxiosRequestConfig): AxiosPromise<GetFileUploadUrlResponse>;
     /**
      * Get S3 / R2 presigned url from Cloudflare
      * @summary Get S3 / R2 presigned url from Cloudflare
@@ -146,14 +116,6 @@ export interface UploadApiInterface {
  * @extends {BaseAPI}
  */
 export declare class UploadApi extends BaseAPI implements UploadApiInterface {
-    /**
-     * Get upload url from S3 for cloudflare R2.
-     * @summary Get upload url from S3 for cloudflare R2
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof UploadApi
-     */
-    contentFileUploadUrl(options?: AxiosRequestConfig): Promise<import("axios").AxiosResponse<GetFileUploadUrlResponse, any>>;
     /**
      * Get S3 / R2 presigned url from Cloudflare
      * @summary Get S3 / R2 presigned url from Cloudflare
