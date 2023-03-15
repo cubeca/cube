@@ -4,16 +4,17 @@ RUN apt-get update \
     && \
     apt-get install -y \
     bash \
+    curl \
     make \
-    vim \
     postgresql-client-13 \
+    vim \
     && \
     apt clean
 
 # This is also used as default values for the environments variables.
 COPY .env.example /work/.env.example
 
-# This Dockerfile will be run in a Docker Context of the parent directory i.e. `/services/identity/`
+# This Dockerfile will be run in a Docker Context of the parent directory i.e. `/services/profile/`
 COPY test/jest.config.js /work/jest.config.js
 COPY test/package.json /work/package.json
 COPY test/package-lock.json /work/package-lock.json

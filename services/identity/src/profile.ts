@@ -20,13 +20,15 @@ const profileApi = axios.create({
 
 export const createDefaultProfile = async (organization: string, website: string, tag: string) => {
   try {
-    const response = await profileApi.post(`/profile`, {
+    const { status, statusText, headers, data } = await profileApi.post(`/profiles`, {
       organization,
       website,
       tag
     });
 
-    return response.data.id;
+    // console.dir({ status, statusText, headers, data }, {depth:null});
+
+    return data.id;
   } catch (e: any) {
     console.log(e);
     throw e;

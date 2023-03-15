@@ -3,19 +3,22 @@ import cors from 'cors';
 import * as db from './db/queries';
 import * as jwt from 'jsonwebtoken';
 import { comparePassword, encryptString, decryptString, hashPassword } from './utils';
-import * as bodyParser from 'body-parser';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { createDefaultProfile } from './profile';
 
-const PERMISSION_IDS_ALLOWED_ON_SIGNUP = ['active'];
+const PERMISSION_IDS_ALLOWED_ON_SIGNUP = [
+  'active',
+
+  // TODO Remove after MVP presentation on 2023-03-17
+  'contentEditor',
+];
 
 const app: Express = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 const sendVerificationEmail = async (email: string, userId: string) => {
   const token = jwt.sign(
@@ -31,7 +34,7 @@ const sendVerificationEmail = async (email: string, userId: string) => {
   console.log(`TODO implement me: Send verification email for ${userId} to ${email}`);
 };
 
-app.post('/auth/user', async (req: Request, res: Response) => {
+app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
   const {
     name,
     email,
@@ -50,18 +53,18 @@ app.post('/auth/user', async (req: Request, res: Response) => {
       .send('Invalid Request Body: name, email, organization, website, tag, and password must be provided.');
   }
 
-  // if (
-  //   !extractUser(req).permissionIds.includes('userAdmin') &&
-  //   permissionIds.some((p: string) => !PERMISSION_IDS_ALLOWED_ON_SIGNUP.includes(p))
-  // ) {
-  //   return res
-  //     .status(403)
-  //     .send(
-  //       `Invalid Request Body. Only with "userAdmin" JWT claim can the created user have permissionIds other than "${PERMISSION_IDS_ALLOWED_ON_SIGNUP.join(
-  //         '", "'
-  //       )}".`
-  //     );
-  // }
+  if (
+    !extractUser(req).permissionIds.includes('userAdmin') &&
+    permissionIds.some((p: string) => !PERMISSION_IDS_ALLOWED_ON_SIGNUP.includes(p))
+  ) {
+    return res
+      .status(403)
+      .send(
+        `Invalid Request Body. Only with "userAdmin" JWT claim can the created user have permissionIds other than "${PERMISSION_IDS_ALLOWED_ON_SIGNUP.join(
+          '", "'
+        )}".`
+      );
+  }
 
   try {
     const hashedPassword = await hashPassword(password);

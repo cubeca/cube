@@ -1,19 +1,14 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as db from './db/queries';
-import * as jwt from 'jsonwebtoken';
-import * as bodyParser from 'body-parser';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-
-const PERMISSION_IDS_ALLOWED_ON_SIGNUP = ['active'];
 
 const app: Express = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.post('/profiles', async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
@@ -21,19 +16,6 @@ app.post('/profiles', async (req: Request, res: Response) => {
   if (!organization || !website || !tag) {
     return res.status(401).send('Invalid Request Body: organization, website, and tag must be provided.');
   }
-
-  // if (
-  //   !extractUser(req).permissionIds.includes('userAdmin') &&
-  //   permissionIds.some((p: string) => !PERMISSION_IDS_ALLOWED_ON_SIGNUP.includes(p))
-  // ) {
-  //   return res
-  //     .status(403)
-  //     .send(
-  //       `Invalid Request Body. Only with "userAdmin" JWT claim can the created user have permissionIds other than "${PERMISSION_IDS_ALLOWED_ON_SIGNUP.join(
-  //         '", "'
-  //       )}".`
-  //     );
-  // }
 
   try {
     const r = await db.insertProfile(organization, website, tag);

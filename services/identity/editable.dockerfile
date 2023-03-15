@@ -4,9 +4,10 @@ RUN apt-get update \
     && \
     apt-get install -y \
     bash \
+    curl \
     make \
-    vim \
     postgresql-client-13 \
+    vim \
     && \
     apt clean
 

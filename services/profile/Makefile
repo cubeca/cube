@@ -12,15 +12,14 @@ endif
 
 DOCKER ?= docker
 
-export PROJECT_NAME ?= cube_identity
+export PROJECT_NAME ?= cube_profile
 PROJECT_DOCKER_COMPOSE = $(DOCKER) compose --project-name $(PROJECT_NAME) --file ./docker-compose.yaml --project-directory . $(DOCKER_ENV_FILE_PARAM)
 
-LOCAL_DOCKER_IMAGE ?= cubeca/identity:latest
+LOCAL_DOCKER_IMAGE ?= cubeca/profile:latest
 
 export PORT ?= 3000
 
 export JWT_TOKEN_SECRET ?= secret
-export ENCRYPT_SECRET ?= encrypt_secret
 
 export POSTGRES_DB ?= $(PROJECT_NAME)
 export POSTGRES_USER ?= postgres
@@ -65,10 +64,14 @@ login_ms:
 # See https://en.wikipedia.org/wiki/SIGHUP
 .PHONY: hup
 hup:
-	$(MAKE) down
-	$(MAKE) clean
+	$(MAKE) bye
 	$(MAKE) test
 	$(MAKE) login_ms
+
+.PHONY: bye
+bye:
+	$(MAKE) down
+	$(MAKE) clean
 
 .PHONY: docker_build
 docker_build:

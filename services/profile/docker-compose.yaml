@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  cube_identity_microservice:
+  cube_profile_microservice:
     container_name: ${PROJECT_NAME}_microservice
     build:
       context: .
@@ -17,7 +17,6 @@ services:
 
       PORT: $PORT
       JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
-      ENCRYPT_SECRET: $ENCRYPT_SECRET
 
       PGHOST: postgres
       PGPORT: '5432'
@@ -61,7 +60,7 @@ services:
     networks:
       - db
 
-  cube_identity_testrunner:
+  cube_profile_testrunner:
     profiles:
       - test
     container_name: ${PROJECT_NAME}_testrunner
@@ -70,7 +69,7 @@ services:
       dockerfile: test/Dockerfile
     image: ${PROJECT_NAME}_testrunner
     depends_on:
-      - cube_identity_microservice
+      - cube_profile_microservice
     networks:
       - public_api
 
@@ -80,7 +79,7 @@ services:
       PROJECT_NAME: $PROJECT_NAME
 
       # This must be the same as the service name here in the docker compose file.
-      MICROSERVICE: cube_identity_microservice
+      MICROSERVICE: cube_profile_microservice
       PORT: $PORT
 
       PGHOST: postgres
