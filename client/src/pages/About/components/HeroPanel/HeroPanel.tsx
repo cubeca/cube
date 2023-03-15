@@ -1,61 +1,61 @@
-import { Grid, Box, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import { Trans, useTranslation } from 'react-i18next';
-import HeroLeft from 'assets/images/cubedao-hero-left.png';
-import HeroRight from 'assets/images/cubedao-hero-right.png';
+import HeroCTABg from 'assets/images/about-hero-cta-bg.png';
 import PlaySymbol from 'assets/icons/play-symbol.svg';
 import Play from 'assets/icons/play-circle.svg';
-
-import Button from 'components/Button';
 import ReactPlayer from 'react-player';
-import { flexbox } from '@mui/system';
+import * as s from './HeroPanel.styled';
 
 const HeroPanel = () => {
   const { t } = useTranslation('about');
   return (
-    <Box sx={{ width: '100vw', height: '700px' }}>
-      <Box sx={{ width: '100vw', display: 'flex', justifyContent: 'left', alignItems: 'center', backgroundImage: `url('${HeroLeft}')`, backgroundPosition: 'center', paddingTop: '25vh' }}>
-      <Grid
-          container
-          spacing={0}
-          marginTop={'5vh'}
-          columnGap="none"
-          xs={12} md={12}
-          flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
-          justifyContent="flex-end"
-       
-          pb="60vh"
-        >
-          <Grid item xs={12} sm={12} md={5} height= "70vh">
-          <Typography component="h1" variant="h1">
-                {t('Start Watching')}
-              </Typography>
-              <Typography component="p" variant="body1" mr={{ xs: '0', sm: '0', md: '5rem' }}>
-              {t('heroText')}
-              </Typography>
-              <Box sx={{display: 'flex', justifyContent: 'left', width: '100%', p: '4rem'}}><a href="www.happy.com"><img src={Play} alt="play"/></a></Box>
-          </Grid>
-          <Grid item xs={12} sm={12} md={1}>
-            
-          </Grid>
-          <Grid item xs={12} sm={12} md={5}>
-           
-                <ReactPlayer
+    <s.Hero>
+      <s.HeroBg></s.HeroBg>
+
+      <s.HeroContent container>
+        <Grid xs={10} xsOffset={1} md={5}>
+          <s.HeroContentMain>
+            <Typography component="h1" variant="h1">
+              {t('Discover')}
+            </Typography>
+            <Typography component="p" variant="body1">
+              {t(
+                'CubeCommons aggregates the video, audio, digital publications and activity booklets by artists and arts organizations across northern Turtle Island (Canada)'
+              )}
+            </Typography>
+            <a className="play-button" href="www.happy.com">
+              <img src={Play} alt="play" />
+            </a>
+          </s.HeroContentMain>
+        </Grid>
+
+        <Grid xs={12} md={4} mdOffset={2}>
+          <s.HeroContentCTA>
+            <ReactPlayer
               url="https://vimeo.com/243556536"
               width="100%"
               height="100%"
               overflow="hidden"
               playing
-              playIcon={<Box sx={{ padding: "0vw 5vw 2vw 5vw" }}><Typography component="h1" variant="h1" color="#28343C">
-                {t('Creator?')}</Typography><Typography component="p" variant="body1" fontWeight="500" color="#28343C">Learn how to become a creator and use CubeCommons</Typography><Box sx={{display: 'flex', justifyContent: 'left', width: '100%', p: '4rem'}}><a href="www.happy.com"><img src={PlaySymbol} alt="play"/></a></Box></Box>}
-              light={HeroRight}
+              playIcon={
+                <s.HeroContentCTAPlay>
+                  <Typography component="h1" variant="h1">
+                    {t('Create')}
+                  </Typography>
+                  <Typography component="p" variant="body1">
+                    {t('Learn how to use CubeCommons and become a contributor')}
+                  </Typography>
+                  <img className="play-button" src={PlaySymbol} alt="play" />
+                </s.HeroContentCTAPlay>
+              }
+              light={HeroCTABg}
             />
-          </Grid>
-          </Grid>
-      </Box>
-    </Box>
+          </s.HeroContentCTA>
+        </Grid>
+      </s.HeroContent>
+    </s.Hero>
   );
 };
-
-
 
 export default HeroPanel;
