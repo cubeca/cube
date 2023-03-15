@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import * as settings from './settings';
+import { inspectAxiosResponse } from './inspect';
 
 const profileApi = axios.create({
   baseURL: settings.PROFILE_SERVICE_URL,
@@ -20,15 +21,16 @@ const profileApi = axios.create({
 
 export const createDefaultProfile = async (organization: string, website: string, tag: string) => {
   try {
-    const { status, statusText, headers, data } = await profileApi.post(`/profiles`, {
+    const createProfileResponse = await profileApi.post(`/profiles`, {
       organization,
       website,
       tag
     });
 
-    console.dir({ msg:"POST /profiles", status, statusText, headers, data }, {depth:null});
+    inspectAxiosResponse(createProfileResponse);
+    // console.dir({ msg:"POST /profiles", status, statusText, headers, data }, {depth:null});
 
-    return data.id;
+    return createProfileResponse.data.id;
   } catch (e: any) {
     console.log(e);
     throw e;
