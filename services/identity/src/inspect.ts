@@ -18,6 +18,7 @@ export const inspectAxiosResponse = (response:AxiosResponse) => {
   const summary:any = {
     request: {
       method: response.config.method,
+      baseURL: response.config.baseURL,
       url: response.config.url,
       queryParams: response.config.params,
       headers: response.config.headers,
