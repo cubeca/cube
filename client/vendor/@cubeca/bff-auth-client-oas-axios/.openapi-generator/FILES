@@ -14,6 +14,7 @@ models/create-user-request.ts
 models/error-response.ts
 models/index.ts
 models/jwtresponse.ts
+models/login-response.ts
 models/update-email-request.ts
 models/update-password-request.ts
 models/username-and-password-jwtrequest.ts

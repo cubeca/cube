@@ -9,7 +9,6 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ProfileContentPerCategory } from './profile-content-per-category';
 /**
  * Profile main schema
  * @export
@@ -27,7 +26,7 @@ export interface ProfileMainSchema {
      * @type {string}
      * @memberof ProfileMainSchema
      */
-    'name': string;
+    'organization': string;
     /**
      *
      * @type {string}
@@ -52,10 +51,4 @@ export interface ProfileMainSchema {
      * @memberof ProfileMainSchema
      */
     'descriptionUrl': string;
-    /**
-     *
-     * @type {Array<ProfileContentPerCategory>}
-     * @memberof ProfileMainSchema
-     */
-    'videos': Array<ProfileContentPerCategory>;
 }

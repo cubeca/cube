@@ -32,7 +32,6 @@ models/index.ts
 models/list-of-collaborators-data.ts
 models/list-of-collaborators.ts
 models/list-of-content.ts
-models/profile-content-per-category.ts
 models/profile-details.ts
 models/profile-main-schema.ts
 models/s3-presigned-urlrequest-upload.ts

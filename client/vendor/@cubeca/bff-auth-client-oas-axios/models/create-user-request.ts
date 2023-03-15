@@ -27,6 +27,24 @@ export interface CreateUserRequest {
      */
     'name': string;
     /**
+     * The name entered by the user.
+     * @type {string}
+     * @memberof CreateUserRequest
+     */
+    'organization'?: string;
+    /**
+     * The name entered by the user.
+     * @type {string}
+     * @memberof CreateUserRequest
+     */
+    'website'?: string;
+    /**
+     * The name entered by the user.
+     * @type {string}
+     * @memberof CreateUserRequest
+     */
+    'tag'?: string;
+    /**
      * The email entered by the user.
      * @type {string}
      * @memberof CreateUserRequest
