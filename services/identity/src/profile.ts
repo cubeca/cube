@@ -26,7 +26,7 @@ export const createDefaultProfile = async (organization: string, website: string
       tag
     });
 
-    // console.dir({ status, statusText, headers, data }, {depth:null});
+    console.dir({ msg:"POST /profiles", status, statusText, headers, data }, {depth:null});
 
     return data.id;
   } catch (e: any) {
