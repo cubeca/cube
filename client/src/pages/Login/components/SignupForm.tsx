@@ -5,7 +5,7 @@ import PasswordInput from 'components/form/PasswordInput';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { signup } from 'api/auth';
+import { signup, login } from 'api/auth';
 import { useState } from 'react';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
@@ -38,12 +38,20 @@ export const SignupForm = () => {
         tag,
         email,
         password,
-        [],
+        [
+          'active',
+
+          // TODO Remove after MVP presentation on 2023-03-17
+          'contentEditor'
+        ],
         !!promotions,
         terms
       );
 
-      navigate('/login');
+      const profileId = await login(email, password);
+      navigate(`/profile/${profileId}`);
+
+      // navigate('/login');
     } catch (e: any) {
       setError(true);
     }
