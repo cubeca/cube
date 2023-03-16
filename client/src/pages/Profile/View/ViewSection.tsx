@@ -47,7 +47,13 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
 
       <s.Body>
         <Typography component="p" variant="body2">
-          {profile.description}
+          {/* {profile.description} */}
+          You have successfully created your profile on CubeCommons! In the next
+          week we will send you an email update when your profile is confirmed
+          and you can start editing this profile description. You can already
+          start uploading content which will appear when your profile is
+          confirmed. All content players will be embeddable on your website
+          which we have linked to your username.
         </Typography>
       </s.Body>
     </s.ViewSection>
