@@ -36,4 +36,12 @@ export const UserHeroBg = styled(Box)`
   }
 `;
 
-export const UserContentHeader = styled(Stack)``;
+export const UserContentHeader = styled(Stack)`
+  padding-top: 60px;
+
+  h3 {
+    ${(props) => props.theme.breakpoints.up('md')} {
+      font-size: 2.5rem;
+    }
+  }
+`;

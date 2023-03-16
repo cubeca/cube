@@ -2,6 +2,7 @@ import { Box, Card, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ReactComponent as PlayButton } from 'assets/icons/play.svg';
+import * as s from './ContentCard.styled';
 
 export interface ContentCardProps {
   url: string;
@@ -19,38 +20,22 @@ const ContentCard: FC<ContentCardProps> = ({
   url
 }) => {
   return (
-    <Card>
-      <Stack>
-        <Box>
-          <Link to={url}>
-            <Box
-              sx={{
-                backgroundImage: `url('${image}')`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover'
-              }}
-              p="20px"
-              justifyContent="center"
-            >
-              <div style={{ display: 'inline-block' }}>
-                <PlayButton />
-              </div>
-            </Box>
-          </Link>
-        </Box>
-        <Stack direction="row" alignItems="flex-start" sx={{pb:'10%'}}>
-          {icon && <img src={icon} alt="" style={{ padding: '10px' }} />}
-          <Stack direction="column">
-            {creator && (
-              <Typography component="span" sx={{ fontWeight: 'bold' }} pt="7px">
-                {creator}
-              </Typography>
-            )}
-            <Typography component="span">{title}</Typography>
-          </Stack>
-        </Stack>
-      </Stack>
-    </Card>
+    <s.ContentCard>
+      <Link to={url}>
+        <s.Thumbnail
+          sx={{
+            backgroundImage: `url('${image}')`
+          }}
+        >
+          {icon && <img src={icon} alt="" />}
+        </s.Thumbnail>
+
+        <s.Data direction="row" alignItems="space-between">
+          <Typography component="span">{title}</Typography>
+          {creator && <Typography component="span">{creator}</Typography>}
+        </s.Data>
+      </Link>
+    </s.ContentCard>
   );
 };
 

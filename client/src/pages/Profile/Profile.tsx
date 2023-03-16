@@ -64,7 +64,7 @@ const Profile = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography component="h4" variant="h4">
+              <Typography component="h3" variant="h3">
                 {t('Your Content')}
               </Typography>
               <Button onClick={handleNewMedia} fullWidth={false}>
