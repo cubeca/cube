@@ -15,6 +15,7 @@ export const ViewSection = styled(Stack)`
 
 export const Header = styled(Box)`
   height: 360px;
+  flex: 0 0 360px;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
