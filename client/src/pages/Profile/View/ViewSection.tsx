@@ -25,7 +25,8 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
           </s.ImageInner>
           {isLoggedIn && (
             <s.EditWrapper>
-              <button onClick={onEdit}>
+              {/* <button onClick={onEdit}> */}
+              <button>
                 <EditIcon />
               </button>
             </s.EditWrapper>
@@ -37,9 +38,9 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             {profile!.organization}
           </a>
           <small>
-            <a href="/home" title={profile!.tag}>
-              {profile!.tag}
-            </a>
+            {/* <a href="/home" title={profile!.tag}> */}
+            {profile!.tag}
+            {/* </a> */}
           </small>
         </Typography>
       </s.Header>
