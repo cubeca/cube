@@ -11,13 +11,13 @@ const Footer = () => {
   const { t } = useTranslation('about');
 
   return (
-    <Stack
+    <s.Footer
       component="footer"
       direction="row"
       justifyContent="space-between"
       alignItems="center"
       p="60px 8.333333333333333%"
-      sx={{ backgroundColor: 'rgba(87, 131, 139, 0.15)' }}
+      sx={{ backgroundColor: '#2F4048' }}
     >
       <Box sx={{ width: '40%' }}>
         <Typography component="h4" variant="h4">
@@ -37,7 +37,7 @@ const Footer = () => {
         <NavPanel></NavPanel>
       </Box>
       <Social />
-    </Stack>
+    </s.Footer>
   );
 };
 

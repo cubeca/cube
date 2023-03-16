@@ -5,7 +5,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 const Router = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="/" element={<Navigate to="/about" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Login />} />
       <Route path="/home" element={<Home />} />
