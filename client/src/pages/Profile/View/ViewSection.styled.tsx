@@ -25,10 +25,12 @@ export const Header = styled(Box)`
     font-size: 14px;
     margin: 4px 0;
     font-weight: 600;
+    color: ${(props) => props.theme.palette.primary.main};
   }
 
   a {
-    color: ${(props) => props.theme.palette.primary.main};
+    color: inherit;
+    text-decoration: none;
   }
 `;
 
@@ -39,12 +41,14 @@ export const ImageWrapper = styled(Box)`
   margin-bottom: 16px;
 `;
 
-export const ImageInner = styled(Box)`
+export const ImageInner = styled('a')`
+  display: block;
   position: relative;
   width: 160px;
   height: 160px;
   border: 4px solid ${(props) => props.theme.palette.primary.dark};
   border-radius: 80px;
+  text-decoration: none;
   overflow: hidden;
 
   img {

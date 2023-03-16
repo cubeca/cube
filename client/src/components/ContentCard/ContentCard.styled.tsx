@@ -27,11 +27,12 @@ export const Data = styled(Stack)`
 
   span {
     font-size: 16px;
-    font-weight: 600;
-  }
 
-  span:not(::first-of-type) {
-    font-weight: 400;
-    padding-left: 20px;
+    &.title {
+      font-weight: 600;
+    }
+
+    &.creator {
+    }
   }
 `;

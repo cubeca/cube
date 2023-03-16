@@ -31,8 +31,14 @@ const ContentCard: FC<ContentCardProps> = ({
         </s.Thumbnail>
 
         <s.Data direction="row" alignItems="space-between">
-          <Typography component="span">{title}</Typography>
-          {creator && <Typography component="span">{creator}</Typography>}
+          <Typography component="span" className="title">
+            {title}
+          </Typography>
+          {creator && (
+            <Typography component="span" className="creator">
+              {creator}
+            </Typography>
+          )}
         </s.Data>
       </Link>
     </s.ContentCard>

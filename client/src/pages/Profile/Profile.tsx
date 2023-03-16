@@ -27,7 +27,10 @@ const Profile = () => {
   console.log(profile);
 
   const handleNewMedia = () => {
-    //navigate(`/profile/${profile!.id}/upload`);
+    if (profile) {
+      // navigate(`/profile/${profile!.id}/upload`);
+      navigate(`upload`);
+    }
   };
   // backgroundImage: `url('${profile!.heroUrl}')`,
 

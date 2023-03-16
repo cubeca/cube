@@ -1,7 +1,9 @@
 import { Box, Stack } from '@mui/material';
 import { styled } from 'theme/utils';
 
-export const UserContentWrapper = styled(Box)``;
+export const UserContentWrapper = styled(Box)`
+  margin-bottom: 60px;
+`;
 
 export const Filters = styled(Stack)`
   padding-top: 60px;

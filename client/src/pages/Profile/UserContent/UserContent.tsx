@@ -30,48 +30,54 @@ const UserContent = () => {
       id: 0,
       thumbnailUrl: FPOThumb1,
       title: 'Video Title',
-      creator: 'First Organization',
       url: 'https://www.example.com',
       iconUrl: video
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb2,
       title: 'Video Title',
       url: 'https://www.example.com',
       iconUrl: video
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb3,
       title: 'Video Title',
       url: 'https://www.example.com',
       iconUrl: video
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb4,
       title: 'Audio Title',
       url: 'https://www.example.com',
       iconUrl: audio
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb5,
       title: 'Audio Title',
       url: 'https://www.example.com',
       iconUrl: audio
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb6,
       title: 'Audio Title',
       url: 'https://www.example.com',
       iconUrl: audio
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb7,
+      title: 'Book Title',
+      url: 'https://www.example.com',
+      iconUrl: book
+    },
+    {
+      id: 0,
+      thumbnailUrl: FPOThumb8,
       title: 'Book Title',
       url: 'https://www.example.com',
       iconUrl: book
@@ -85,49 +91,42 @@ const UserContent = () => {
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      iconUrl: book
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb2,
       title: 'Publication Title',
       url: 'https://www.example.com',
       iconUrl: publication
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb3,
       title: 'Publication Title',
       url: 'https://www.example.com',
       iconUrl: publication
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb4,
       title: 'Publication Title',
       url: 'https://www.example.com',
       iconUrl: publication
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb5,
       title: 'Collaboration Title',
       url: 'https://www.example.com',
       iconUrl: collaboration
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb6,
       title: 'Collaboration Title',
       url: 'https://www.example.com',
       iconUrl: collaboration
     },
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
+      thumbnailUrl: FPOThumb7,
       title: 'Collaboration Title',
       url: 'https://www.example.com',
       iconUrl: collaboration

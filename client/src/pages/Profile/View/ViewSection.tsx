@@ -20,7 +20,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
-          <s.ImageInner>
+          <s.ImageInner href={profile.website} title={profile!.organization}>
             <img src={FPOProfileUrl} alt="profile thumbnail" />
           </s.ImageInner>
           {isLoggedIn && (
@@ -33,10 +33,12 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
         </s.ImageWrapper>
 
         <Typography component="h5" variant="h5">
-          {profile!.organization}
+          <a href={profile.website} title={profile!.organization}>
+            {profile!.organization}
+          </a>
           <small>
-            <a href="https://www.example.com/" title="visit MOA website">
-              @MOA
+            <a href="/home" title={profile!.tag}>
+              {profile!.tag}
             </a>
           </small>
         </Typography>
