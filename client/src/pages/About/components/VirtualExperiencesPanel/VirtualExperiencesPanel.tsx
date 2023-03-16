@@ -25,7 +25,7 @@ const VirtualExperiencesPanel = () => {
             <s.ExternalLinkButton to="https://www.voxels.com/">
               {t('Visit Voxels')}
             </s.ExternalLinkButton>
-            <s.ExternalLinkText to="https://www.voxels.com/">
+            <s.ExternalLinkText to="https://wiki.cryptovoxels.com/">
               {t('How to Use Voxels')}
             </s.ExternalLinkText>
           </s.LinkWrapper>
