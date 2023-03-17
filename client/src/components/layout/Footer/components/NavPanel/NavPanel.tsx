@@ -24,7 +24,7 @@ const NavPanel = () => {
         </MenuItem>
 
         <MenuItem sx={{ margin: '0 2rem' }}>
-          <s.NavLink to="/join">{t('Become a Creator')}</s.NavLink>
+          <s.NavLink to="/signup">{t('Become a Creator')}</s.NavLink>
         </MenuItem>
       
         <MenuItem sx={{ margin: '0 2rem' }}>
