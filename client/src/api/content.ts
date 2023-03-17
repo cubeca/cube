@@ -1,4 +1,4 @@
-import { uploadViaTus, uploadS3 } from './helpers';
+import { upload } from './upload';
 import { AddContent, contentApi, contentFilesApi } from '.';
 
 export type CategoryType =
@@ -45,13 +45,11 @@ export const addContent = async ({
   // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
 
   if (coverImageFile) {
-    coverImageFileId = await uploadS3(coverImageFile, payload.profileId);
+    coverImageFileId = await upload(coverImageFile, payload.profileId);
   }
 
   if (mediaFile) {
-    mediaFileId = await uploadViaTus(mediaFile, {
-      profileId: payload.profileId
-    });
+    mediaFileId = await upload(mediaFile, payload.profileId);
   }
 
   return await contentFilesApi.addContent({
