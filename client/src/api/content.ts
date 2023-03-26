@@ -34,14 +34,20 @@ export const getContentDetails = async (id: string) => {
 export const addContent = async ({
   payload,
   coverImageFile,
-  mediaFile
+  mediaFile,
+  subtitlesFile,
+  transcriptFile
 }: {
-  payload: Omit<AddContent, 'coverImageFileId' | 'mediaFileId'>;
+  payload: Omit<AddContent, 'coverImageFileId' | 'mediaFileId' | 'subtitlesFileId' | 'transcriptFileId'>;
   coverImageFile?: File;
   mediaFile?: File;
+  subtitlesFile?: File;
+  transcriptFile?: File;
 }) => {
   let coverImageFileId: string | undefined = undefined;
   let mediaFileId: string | undefined = undefined;
+  let subtitlesFileId: string | undefined = undefined;
+  let transcriptFileId: string | undefined = undefined;
   // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
 
   if (coverImageFile) {
@@ -52,9 +58,19 @@ export const addContent = async ({
     mediaFileId = await upload(mediaFile, payload.profileId);
   }
 
+  if (subtitlesFile) {
+    subtitlesFileId = await upload(subtitlesFile, payload.profileId);
+  }
+
+  if (transcriptFile) {
+    transcriptFileId = await upload(transcriptFile, payload.profileId);
+  }
+
   return await contentFilesApi.addContent({
     ...payload,
     coverImageFileId: String(coverImageFileId),
-    mediaFileId: String(mediaFileId)
+    mediaFileId: String(mediaFileId),
+    subtitlesFileId: String(subtitlesFileId),
+    transcriptFileId: String(transcriptFileId),
   });
 };

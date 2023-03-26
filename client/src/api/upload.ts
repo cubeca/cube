@@ -120,6 +120,7 @@ export const uploadS3 = async (
     },
 
     onUploadProgress: (progressEvent: any) => {
+      // see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/progress_event
       console.log(`profile ${profileId} uploadS3 progress for ${fileName}`);
       console.dir(progressEvent);
     }
