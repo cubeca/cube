@@ -12,8 +12,10 @@ services:
       NODE_ENV: ${NODE_ENV}
       GENERATE_SOURCEMAP: ${GENERATE_SOURCEMAP}
       PORT: ${PORT}
-      REACT_APP_API_URL: ${REACT_APP_API_URL}
+      REACT_APP_CLOUDFLARE_SERVICE_URL: ${REACT_APP_CLOUDFLARE_SERVICE_URL}
+      REACT_APP_CONTENT_SERVICE_URL: ${REACT_APP_CONTENT_SERVICE_URL}
       REACT_APP_AUTH_SERVICE_URL: ${REACT_APP_AUTH_SERVICE_URL}
+      REACT_APP_PROFILE_SERVICE_URL: ${REACT_APP_PROFILE_SERVICE_URL}
     volumes:
       - ./.env.example:/work/.env.example
       - ./${ENV_FILE}:/work/.env
@@ -28,7 +30,6 @@ services:
       - ./public:/work/public/
       - ./scripts:/work/scripts/
       - ./src:/work/src/
-      - ./vendor:/work/vendor/
     ports:
       # Serve the Frontend on the host
       - '${PORT}:${PORT}'

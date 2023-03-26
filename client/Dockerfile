@@ -1,4 +1,4 @@
-FROM node:16.19.0-bullseye-slim AS builder
+FROM node:16.19.1-bullseye-slim AS builder
 
 ENV GENERATE_SOURCEMAP=false
 
@@ -19,17 +19,16 @@ COPY tsconfig.json /work/tsconfig.json
 # > NOTE: The directory itself is not copied, just its contents.
 COPY public /work/public/
 COPY src /work/src/
-COPY vendor /work/vendor/
 
 WORKDIR /work/
 
-RUN --mount=type=secret,id=npmrc,required=true,target=/root/.npmrc npm install
+RUN npm install
 
 RUN npm run build
 
 ################################################################################
 
-FROM node:16.19.0-bullseye-slim AS server
+FROM node:16.19.1-bullseye-slim AS server
 
 ENV PORT=4550
 
