@@ -11,28 +11,28 @@ const Contributors: FC<{ contributors: Contributor[] }> = ({
   return (
     <>
       {contributors.map((contributor, i) => (
-        <Stack key={`${contributor.name}-${i}`} pb="1rem">
+        <Stack key={`${contributor?.name}-${i}`} pb="1rem">
           <Stack direction="row" alignItems="flex-start">
             <img
-              src={contributor.logoUrl}
+              src={contributor?.logoUrl || ''}
               alt=""
               style={{ paddingRight: '10px' }}
               width="50"
             />
             <Stack pt="5px">
               <Typography component="p" variant="h4" sx={{ color: '#D9FFEE' }}>
-                {contributor.link ? (
+                {contributor?.link ? (
                   <Link
-                    to={contributor.link}
+                    to={contributor?.link}
                     style={{ color: '#D9FFEE', textDecoration: 'none' }}
                   >
-                    {contributor.name}
+                    {contributor?.name}
                   </Link>
                 ) : (
-                  contributor.name
+                  contributor?.name
                 )}
               </Typography>
-              {contributor.socialUrl && (
+              {contributor?.socialUrl && (
                 <MuiLink href={contributor.socialUrl}>
                   {contributor.socialHandle}
                 </MuiLink>

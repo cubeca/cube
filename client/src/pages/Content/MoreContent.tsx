@@ -6,9 +6,9 @@ import { ContentLoader } from 'components/Loaders';
 
 const MoreContent = () => {
   const { t } = useTranslation();
-  const { data, isLoading } = useContent();
+  const { data, isLoading } = useContent({});
 
-  const content = data ?? [];
+  const content = (data as unknown as [])?.map((data: any) => ({ ...data.data })) ?? [];
 
   return (
     <Stack pb="2rem">

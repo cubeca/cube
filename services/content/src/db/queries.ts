@@ -19,7 +19,7 @@ export const getContentById = async (contentId: string) => {
 
 export const listContentByProfileId = async (profileId: string) => {
   // This should use index `content_by_profile_id`
-  const sql = `SELECT * FROM content WHERE (data->'profileId')::TEXT = $1`;
+  const sql = `SELECT * FROM content WHERE (data->>'profileId')::TEXT = $1`;
   const dbResult = await db.query(sql, profileId);
   return dbResult.rows;
 };

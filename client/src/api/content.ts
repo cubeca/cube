@@ -1,5 +1,5 @@
-import { upload } from './upload';
-import { AddContent, contentApi, contentFilesApi } from '.';
+import { upload } from './files';
+import { AddContent, contentApi } from '.';
 
 export type CategoryType =
   | 'all'
@@ -38,7 +38,10 @@ export const addContent = async ({
   subtitlesFile,
   transcriptFile
 }: {
-  payload: Omit<AddContent, 'coverImageFileId' | 'mediaFileId' | 'subtitlesFileId' | 'transcriptFileId'>;
+  payload: Omit<
+    AddContent,
+    'coverImageFileId' | 'mediaFileId' | 'subtitlesFileId' | 'transcriptFileId'
+  >;
   coverImageFile?: File;
   mediaFile?: File;
   subtitlesFile?: File;
@@ -58,19 +61,19 @@ export const addContent = async ({
     mediaFileId = await upload(mediaFile, payload.profileId);
   }
 
-  if (subtitlesFile) {
-    subtitlesFileId = await upload(subtitlesFile, payload.profileId);
-  }
-
   if (transcriptFile) {
     transcriptFileId = await upload(transcriptFile, payload.profileId);
   }
 
-  return await contentFilesApi.addContent({
+  if (subtitlesFile) {
+    subtitlesFileId = await upload(subtitlesFile, payload.profileId);
+  }
+
+  return await contentApi.addContent({
     ...payload,
     coverImageFileId: String(coverImageFileId),
     mediaFileId: String(mediaFileId),
     subtitlesFileId: String(subtitlesFileId),
-    transcriptFileId: String(transcriptFileId),
+    transcriptFileId: String(transcriptFileId)
   });
 };

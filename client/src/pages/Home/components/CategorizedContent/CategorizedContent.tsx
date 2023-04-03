@@ -13,10 +13,10 @@ const CategorizedContent = () => {
   const [selectedCategory, setSelectedCategory] = useState(
     ContentCategories.Video
   );
-  const { data, isLoading } = useContent(
-    ContentLists.Categorized,
-    selectedCategory
-  );
+  const { data, isLoading } = useContent({
+    listName: ContentLists.Categorized,
+    category: selectedCategory
+  });
 
   const content = data ?? [];
 
@@ -66,15 +66,16 @@ const CategorizedContent = () => {
       <Stack spacing={2} py="4rem">
         <Stack direction="row" spacing={6}>
           {!isLoading ? (
-            content.map((c: ContentListed) => (
-              <ContentCard
-                key={c.title}
-                image={c.thumbnailUrl}
-                title={c.title}
-                creator={c.creator}
-                url={c.url}
-                icon={c.iconUrl}
-              />
+            (content as unknown as []).map((c: ContentListed) => (
+              <div key={c.id}>Content</div>
+              // <ContentCard
+              //   key={c.title}
+              //   image={c.thumbnailUrl}
+              //   title={c.title}
+              //   creator={c.creator}
+              //   url={c.url}
+              //   icon={c.iconUrl}
+              // />
             ))
           ) : (
             <ContentLoader size={6} />

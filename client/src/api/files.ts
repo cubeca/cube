@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { Upload, HttpRequest, HttpResponse } from 'tus-js-client';
-import { UPLOAD_TUS_ENDPOINT, uploadApi } from '.';
+import { UPLOAD_TUS_ENDPOINT, filesApi } from '.';
 import { getAuthToken } from '../utils/auth';
 
 export const upload = async (
@@ -58,6 +58,7 @@ export const uploadViaTus = async (
         }
       },
       onAfterResponse(req: HttpRequest, res: HttpResponse) {
+        console.log(res.getStatus() && req.getURL())
         if (res.getStatus() === 200 && req.getURL() === UPLOAD_TUS_ENDPOINT) {
           fileId = res.getHeader('CUBE-File-Id');
           console.log(`got fileId from TUS endpoint: "${fileId}".`);
@@ -98,7 +99,7 @@ export const uploadS3 = async (
 
   const {
     data: { fileId, presignedUrl }
-  } = await uploadApi.uploadFilesViaPresignedUrl({
+  } = await filesApi.uploadFilesViaPresignedUrl({
     profileId,
     upload: {
       fileName,
@@ -131,4 +132,8 @@ export const uploadS3 = async (
   axios.put(presignedUrl, file, r2PutOptions);
 
   return fileId;
+};
+
+export const getFileDetails = async (fileId: string) => {
+  return await filesApi.fileDetails(fileId);
 };

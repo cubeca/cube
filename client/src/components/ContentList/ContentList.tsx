@@ -27,17 +27,17 @@ const ContentList: FC<ContentListProps> = ({
           {heading}
         </Typography>
       )}
-      <Stack direction='column'
-  spacing={{ xs: 3, sm: 3, md: 4 }}>
-        {content.map((c) => (
-          <ContentCard
-            key={c.id}
-            image={c.thumbnailUrl}
-            title={c.title}
-            creator={c.creator}
-            url={c.url}
-            icon={c.iconUrl}
-          />
+      <Stack direction="column" spacing={{ xs: 3, sm: 3, md: 4 }}>
+        {(content as unknown as []).map((c: any) => (
+          <div key={c.id}>Content</div>
+          // <ContentCard
+          //   key={c.id}
+          //   image={c.thumbnailUrl}
+          //   title={c.title}
+          //   creator={c.creator}
+          //   url={c.url}
+          //   icon={c.iconUrl}
+          // />
         ))}
       </Stack>
     </Stack>

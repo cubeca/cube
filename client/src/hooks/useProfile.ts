@@ -1,6 +1,7 @@
 import { getProfile } from 'api/profile';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+import { ProfileMainSchema } from '@cubeca/bff-client-oas-axios';
 
 const useProfile = () => {
   const { id } = useParams();
@@ -14,7 +15,7 @@ const useProfile = () => {
   return {
     isLoading,
     isError,
-    data: data?.data
+    data: data?.data as unknown as ProfileMainSchema
   };
 };
 

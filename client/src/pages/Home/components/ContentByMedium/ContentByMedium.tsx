@@ -7,24 +7,27 @@ import { ContentLists } from 'types/enums';
 import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 const ContentByMedium = () => {
-  const { data, isLoading } = useContent('featured', ContentLists.Featured);
+  const { data, isLoading } = useContent({
+    listName: 'featured',
+    category: ContentLists.Featured
+  });
 
   const content = data ?? [];
 
   return (
     <>
-     
       <Stack direction="row" spacing={6} py="4rem">
         {!isLoading ? (
-          content.map((c: ContentListed) => (
-            <ContentCard
-              key={c.id}
-              image={c.thumbnailUrl}
-              title={c.title}
-              creator={c.creator}
-              url={c.url}
-              icon={c.iconUrl}
-            />
+          (content as unknown as []).map((c: ContentListed) => (
+             <div key={c.id}>Content</div>
+            // <ContentCard
+            //   key={c.id}
+            //   image={c.thumbnailUrl}
+            //   title={c.title}
+            //   creator={c.creator}
+            //   url={c.url}
+            //   icon={c.iconUrl}
+            // />
           ))
         ) : (
           <ContentLoader size={6} />

@@ -21,12 +21,13 @@ const Upload = () => {
     isUploadLoading: isLoading,
     isUploadError: isError,
     isUploadSuccess: isSuccess
-  } = useContent();
+  } = useContent({});
 
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
+  const [transcriptFile, setTranscriptFile] = useState<File>();
+  const [subtitlesFile, setSubtitlesFile] = useState<File>();
   const [expiryValue, setExpiryValue] = useState<dateFns | null>(null);
-  const [VTTFiles, setVTTFiles] = useState<File[]>([]);
   const [screenIndex, setScreenIndex] = useState(0);
 
   // const { data: collaborators, isLoading: isCollaboratorsLoading } =
@@ -40,8 +41,12 @@ const Upload = () => {
     setMediaFile(files[0]);
   };
 
-  const handleVTTFilesUpload = (files: File[]) => {
-    setVTTFiles(files);
+  const handleTranscriptUpload = (files: File[]) => {
+    setTranscriptFile(files[0]);
+  };
+
+  const handleSubtitlesUpload = (files: File[]) => {
+    setSubtitlesFile(files[0]);
   };
 
   const onSubmit = (values: FieldValues) => {
@@ -58,7 +63,9 @@ const Upload = () => {
         tags: [values.tags]
       },
       coverImageFile!,
-      mediaFile!
+      mediaFile!,
+      transcriptFile!,
+      subtitlesFile!
     );
   };
 
@@ -78,7 +85,8 @@ const Upload = () => {
       view: (
         <Details
           control={control}
-          handleVTTFilesUpload={handleVTTFilesUpload}
+          handleTranscriptUpload={handleTranscriptUpload}
+          handleSubtitlesUpload={handleSubtitlesUpload}
           expiryValue={expiryValue}
           onExpriryValueChange={setExpiryValue}
         />
@@ -101,7 +109,7 @@ const Upload = () => {
   }
 
   if (isError) {
-    alert('Error');
+    console.log('Error Uploading');
   }
 
   return (

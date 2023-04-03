@@ -1,7 +1,7 @@
 import { Box, Stack, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
-import ContentList from 'components/ContentList/index';
+// import ContentList from 'components/ContentList/index';
 import useProfile from 'hooks/useProfile';
 import { useState } from 'react';
 import ViewSection from './View/ViewSection';
@@ -9,7 +9,6 @@ import EditSection from './Edit/EditSection';
 import { useNavigate, useParams } from 'react-router-dom';
 import Button from 'components/Button';
 import EditIcon from '@mui/icons-material/Edit';
-import CategorizedContent from '../Home/components/CategorizedContent/index';
 import UserContent from './UserContent';
 import ReactPlayer from 'react-player';
 import { Upload } from '@mui/icons-material';
@@ -23,8 +22,6 @@ const Profile = () => {
   const isLoggedIn = true;
   const [editSection, setEditSection] = useState(false);
   const navigate = useNavigate();
-
-  console.log(profile);
 
   const handleNewMedia = () => {
     if (profile) {
@@ -76,7 +73,7 @@ const Profile = () => {
             </s.UserContentHeader>
           )}
 
-          <UserContent />
+          <UserContent profileId={profile!.id} />
         </Grid>
       </Grid>
 

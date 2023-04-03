@@ -7,7 +7,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const Details = ({
   control,
-  handleVTTFilesUpload,
+  handleTranscriptUpload,
+  handleSubtitlesUpload,
   expiryValue,
   onExpriryValueChange
 }: any) => {
@@ -39,7 +40,7 @@ const Details = ({
       <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('Audio description (required)')}
-          onDrop={handleVTTFilesUpload}
+          onDrop={handleTranscriptUpload}
           maxFiles={1}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
@@ -50,7 +51,7 @@ const Details = ({
       <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('VTT file (required)')}
-          onDrop={handleVTTFilesUpload}
+          onDrop={handleSubtitlesUpload}
           maxFiles={1}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>

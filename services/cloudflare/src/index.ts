@@ -19,11 +19,7 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-
-  const {
-    'upload-length': tusUploadLength,
-    'upload-metadata': tusUploadMetadata,
-  } = req.headers;
+  const { 'upload-length': tusUploadLength, 'upload-metadata': tusUploadMetadata } = req.headers;
 
   if (!tusUploadLength) {
     console.log(400, `Invalid Request. 'Upload-Length' header required`);
@@ -57,14 +53,14 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const urlValidDurationSeconds = Math.ceil(Number(validFor));
 
   try {
-    const { id:userId } = extractUser(req);
+    const { id: userId } = extractUser(req);
 
     const dbFileStub = await db.insertVideoFileStub({
       profileId,
       upload: {
         userId,
         fileName,
-        fileSizeBytes:Number(tusUploadLength),
+        fileSizeBytes: Number(tusUploadLength),
         debug: {
           reserveDurationSeconds,
           urlValidDurationSeconds
@@ -74,7 +70,13 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 
     const fileId = dbFileStub.id;
 
-    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(fileId, Number(tusUploadLength), reserveDurationSeconds, urlValidDurationSeconds, userId);
+    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(
+      fileId,
+      Number(tusUploadLength),
+      reserveDurationSeconds,
+      urlValidDurationSeconds,
+      userId
+    );
 
     if (!tusUploadUrl || !cloudflareStreamUid) {
       return res.status(500).send('Error retrieving content upload url');
@@ -83,13 +85,13 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
 
     res.set({
-      "Access-Control-Expose-Headers": "Location,CUBE-File-Id",
-      "Access-Control-Allow-Headers": "*",
-      "Access-Control-Allow-Origin": "*",
-      "CUBE-File-Id": fileId,
-      Location: tusUploadUrl,
-    })
-    res.status(200).send("OK")
+      'Access-Control-Expose-Headers': 'Location,CUBE-File-Id',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Origin': '*',
+      'CUBE-File-Id': fileId,
+      Location: tusUploadUrl
+    });
+    res.status(200).send('OK');
   } catch (e: any) {
     console.error(e.message);
     inspect(e);
@@ -100,21 +102,15 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const {
     profileId,
-    upload: {
-      fileName,
-      fileSizeBytes,
-      mimeType,
-      urlValidDurationSeconds = 30 * 60
-    }
+    upload: { fileName, fileSizeBytes, mimeType, urlValidDurationSeconds = 30 * 60 }
   } = req.body;
-
 
   if (!fileName) {
     return res.status(400).send(`Invalid Request. 'upload.fileName' required`);
   }
 
   try {
-    const { id:userId } = extractUser(req);
+    const { id: userId } = extractUser(req);
 
     const dbFileStub = await db.insertS3FileStub({
       profileId,
@@ -142,7 +138,6 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     inspect(e);
     res.status(500).send('Error retrieving content upload url');
   }
-
 });
 
 export interface VideoPlayerInfo {
@@ -202,6 +197,8 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
       publicUrl
     };
   }
+
+  console.log(playerInfo);
 
   res.status(200).json({
     id: fileId,

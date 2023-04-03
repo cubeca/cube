@@ -2,7 +2,7 @@ import { Stack, Box, Grid } from '@mui/material';
 import CategorizedContent from './components/CategorizedContent';
 import FeaturedContent from './components/FeaturedContent';
 import HeroPanelHome from './components/HeroPanelHome';
-import ContentByMedium from '../Profile/ContentByMedium/index'
+import ContentByMedium from './components/ContentByMedium/index'
 import Footer from 'components/layout/Footer';
 
 const Home = () => {
