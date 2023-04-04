@@ -6,7 +6,7 @@ import cors from 'cors';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { inspect } from './utils';
-import { inspect } from './microservices';
+import { identityApi, profileApi, contentApi, cloudflareApi } from './microservices';
 
 inspect(Object.entries(spec.paths).map(([path, pathItem]) => [path, pathItem.operationId]));
 
@@ -16,7 +16,16 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => { });
-app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => { });
+
+app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => { 
+
+
+  const { status, statusText, headers, data } = await = cloudflareApi.post('/upload/s3-presigned-url', )
+  res.status(status).statusText(statusText)
+
+
+});
+
 app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => { });
 
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => { });

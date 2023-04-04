@@ -16,8 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@cubeca/bff-auth-client-oas-axios": "^0.5.2",
-    "@cubeca/bff-client-oas-axios": "^0.5.2",
     "axios": "^1.2.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",

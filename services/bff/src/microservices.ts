@@ -23,28 +23,34 @@ export const getUploadTusEndpoint = (
     return url.toString();
 };
 
-const identityConfiguration = new Configuration({
-    basePath: settings.IDENTITY_SERVICE_URL
+export const identityApi = axios.create({
+  baseURL: settings.IDENTITY_SERVICE_URL,
+  timeout: 60 * 1000,
+
+  // Do not throw errors for non-2xx responses, that makes testing easier.
+  validateStatus: null
 });
 
-export const identityApi = new AuthApi(identityConfiguration);
+export const profileApi = axios.create({
+  baseURL: settings.PROFILE_SERVICE_URL,
+  timeout: 60 * 1000,
 
-const profileConfiguration = new Configuration({
-    basePath: settings.PROFILE_SERVICE_URL
+  // Do not throw errors for non-2xx responses, that makes testing easier.
+  validateStatus: null
 });
 
-export const profileApi = new ProfileApi(profileConfiguration);
+export const contentApi = axios.create({
+  baseURL: settings.CONTENT_SERVICE_URL,
+  timeout: 60 * 1000,
 
-const contentConfiguration = new Configuration({
-    basePath: settings.CONTENT_SERVICE_URL
+  // Do not throw errors for non-2xx responses, that makes testing easier.
+  validateStatus: null
 });
 
-export const contentApi = new ContentApi(contentConfiguration);
-export const contentFilesApi = new ContentFilesApi(contentConfiguration);
+export const cloudflareApi = axios.create({
+  baseURL: settings.CLOUDFLARE_SERVICE_URL,
+  timeout: 60 * 1000,
 
-const uploadConfiguration = new Configuration({
-    basePath: settings.CLOUDFLARE_SERVICE_URL
+  // Do not throw errors for non-2xx responses, that makes testing easier.
+  validateStatus: null
 });
-
-export const uploadApi = new UploadApi(uploadConfiguration);
-export const filesApi = new FilesApi(uploadConfiguration);
