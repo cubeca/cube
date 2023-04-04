@@ -1,15 +1,15 @@
 import { TextField as MuiTextField } from '@mui/material';
 import { FC, HTMLInputTypeAttribute } from 'react';
 import { Controller } from 'react-hook-form';
-
 import FormControl from '../FormControl';
-import { InputProps } from '../types';
+import { InputProps as MuiInputProps } from '../types';
 
-interface TextInputProps extends InputProps {
+interface TextInputProps extends MuiInputProps {
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
   variant?: 'standard' | 'outlined';
   rows?: string | number;
+  InputProps?: any;
   multiline?: boolean;
 }
 
@@ -33,6 +33,7 @@ const TextInput: FC<TextInputProps> = ({
   sx,
   variant = 'outlined',
   rows,
+  InputProps,
   multiline
 }) => {
   return (
@@ -65,6 +66,7 @@ const TextInput: FC<TextInputProps> = ({
               fullWidth={fullWidth}
               multiline={multiline}
               rows={rows}
+              InputProps={InputProps}
               {...field}
             />
           </FormControl>
