@@ -21,7 +21,7 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers?.authorization;
   let token = authHeader && authHeader.split(' ')[1];
 
-  // For get requests without headers, f.e. links in confirmation emails.
+  // For requests without headers, f.e. links in confirmation emails, or the notorious UPLOAD_TUS_ENDPOINT.
   token ??= req.query?.authorization ? String(req.query?.authorization) : undefined;
 
   if (!token) return res.status(401).send('authorization header or query parameter missing or malformed');
