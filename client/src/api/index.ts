@@ -23,6 +23,15 @@ import { getAuthToken } from '../utils/auth';
 // `tus-js-client` expects to talk to this endpoint directly instead of going through our API client lib.
 export const UPLOAD_TUS_ENDPOINT = `${CLOUDFLARE_SERVICE_URL}/upload/video-tus-reservation`;
 
+export const getUploadTusEndpoint = async (
+  fileId: string
+): Promise<string> => {
+  const url = new URL(UPLOAD_TUS_ENDPOINT)
+  url.searchParams.set('fileId', fileId);
+  url.searchParams.set('authorization', await getAuthToken() || '');
+  return url.toString();
+};
+
 const authConfiguration = new Configuration({
   basePath: AUTH_SERVICE_URL,
   accessToken: async () => String(await getAuthToken())
