@@ -1,26 +1,14 @@
-import { AuthApi } from '@cubeca/bff-auth-client-oas-axios';
-import {
-    Configuration,
-    ContentApi,
-    ContentFilesApi,
-    ProfileApi,
-    UploadApi,
-    FilesApi
-} from '@cubeca/bff-client-oas-axios';
-
+import axios from 'axios';
 import * as settings from './settings';
 
 // `tus-js-client` expects to talk to this endpoint directly instead of going through our API client lib.
 export const UPLOAD_TUS_ENDPOINT = `${settings.CLOUDFLARE_SERVICE_URL}/upload/video-tus-reservation`;
 
-export const getUploadTusEndpoint = (
-    fileId: string,
-    authToken: string
-): Promise<string> => {
-    const url = new URL(UPLOAD_TUS_ENDPOINT)
-    url.searchParams.set('fileId', fileId);
-    url.searchParams.set('authorization', authToken);
-    return url.toString();
+export const getUploadTusEndpoint = (fileId: string, authToken: string): string => {
+  const url = new URL(UPLOAD_TUS_ENDPOINT);
+  url.searchParams.set('fileId', fileId);
+  url.searchParams.set('authorization', authToken);
+  return url.toString();
 };
 
 export const identityApi = axios.create({
