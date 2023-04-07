@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+import { Server } from 'http';
 
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
@@ -10,7 +11,9 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await cloudflareApi.post('/upload/video-tus-reservation', req.body, { headers: req.headers });
+  const { status, data } = await cloudflareApi.post('/upload/video-tus-reservation', req.body, {
+    headers: req.headers
+  });
   res.status(status).json(data);
 });
 
@@ -86,6 +89,12 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
-app.listen(settings.PORT, async () => {
+app.get('/', async (req: Request, res: Response) => {
+  res.status(200).json({});
+});
+
+const server: Server = app.listen(settings.PORT, async () => {
   console.log(`Listening on port ${settings.PORT}`);
 });
+
+export { app, server };
