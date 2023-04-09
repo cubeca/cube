@@ -1,0 +1,134 @@
+version: '3.9'
+
+services:
+  cube_bff_x_profile_microservice:
+    container_name: ${PROJECT_NAME}_microservice
+    build:
+      context: ../../profile
+      dockerfile: ./${MICROSERVICE_DOCKERFILE}
+    image: ${PROJECT_NAME}_microservice
+    depends_on:
+      - postgres
+    networks:
+      - internal_api
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      PORT: $PORT
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+    volumes:
+      - ../../profile/.env.example:/work/.env.example
+      - ${ENV_FILE}:/work/.env
+      - ../../profile/migrations:/work/migrations/
+      - ../../profile/src:/work/src/
+      - ../../profile/database.json:/work/database.json
+      - ../../profile/package-lock.json:/work/package-lock.json
+      - ../../profile/package.json:/work/package.json
+      - ../../profile/tsconfig.json:/work/tsconfig.json
+
+  cube_bff_x_profile_gateway:
+    container_name: ${PROJECT_NAME}_gateway
+    build:
+      context: ../
+      dockerfile: ./${GATEWAY_DOCKERFILE}
+    image: ${PROJECT_NAME}_gateway
+    depends_on:
+      - cube_bff_x_profile_microservice
+    networks:
+      - public_api
+      - internal_api
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      PORT: $GATEWAY_PORT
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      PROFILE_SERVICE_URL: http://cube_bff_x_profile_microservice:${PORT}
+
+      # These just get dummy values for this docker compose constellation.
+      CLOUDFLARE_SERVICE_URL: http://cube_bff_x_profile_microservice:${PORT}
+      CONTENT_SERVICE_URL: http://cube_bff_x_profile_microservice:${PORT}
+      IDENTITY_SERVICE_URL: http://cube_bff_x_profile_microservice:${PORT}
+
+    volumes:
+      - ../.env.example:/work/.env.example
+      - ${GATEWAY_ENV_FILE}:/work/.env
+      - ../src:/work/src/
+      - ../package-lock.json:/work/package-lock.json
+      - ../package.json:/work/package.json
+      - ../tsconfig.json:/work/tsconfig.json
+
+  postgres:
+    container_name: ${PROJECT_NAME}_db
+    image: postgres:15.1-alpine3.17
+    restart: always
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+    networks:
+      - db
+
+  cube_bff_x_profile_testrunner:
+    profiles:
+      - test
+    container_name: ${PROJECT_NAME}_testrunner
+    build:
+      context: ../../profile/
+      dockerfile: ./test/Dockerfile
+    image: ${PROJECT_NAME}_testrunner
+    depends_on:
+      - cube_bff_x_profile_gateway
+    networks:
+      - public_api
+
+      # So that we can empty the DB before running the tests.
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      # This must be the same as the service name here in the docker compose file.
+      MICROSERVICE: cube_bff_x_profile_gateway
+      PORT: $GATEWAY_PORT
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+    volumes:
+      - ../../profile/.env.example:/work/.env.example
+      - ${ENV_FILE}:/work/.env
+      - ../../profile/test/example-files:/work/example-files/
+      - ../../profile/test/src:/work/src/
+      - ../../profile/test/scripts:/work/scripts/
+      - ../../profile/test/jest.config.js:/work/jest.config.js
+      - ../../profile/test/package-lock.json:/work/package-lock.json
+      - ../../profile/test/package.json:/work/package.json
+      - ../../profile/test/tsconfig.json:/work/tsconfig.json
+
+volumes:
+  pgdata:
+
+networks:
+  public_api:
+  internal_api:
+  db:

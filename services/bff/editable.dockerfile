@@ -22,4 +22,4 @@ RUN npm install
 
 EXPOSE ${PORT}
 
-ENTRYPOINT ["/bin/bash", "-c", "echo 'Waiting for you to log into this container via `make login_ms`'; while true; do sleep 99999; done"]
+ENTRYPOINT ["/bin/bash", "-c", "echo 'Waiting for you to log into this container via `make login_gw`'; while true; do sleep 99999; done"]
