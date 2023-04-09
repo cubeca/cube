@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as settings from './settings';
 
+const NIL_UUID = '00000000-0000-0000-0000-000000000000';
+
 export interface CubeJwtPayload {
   sub: string;
   aud: string[];
@@ -24,19 +26,26 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   // For get requests without headers, f.e. links in confirmation emails.
   token ??= req.query?.authorization ? String(req.query?.authorization) : undefined;
 
-  if (!token) return res.status(401).send('authorization header or query parameter missing or malformed');
-
-  jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
-    if (isCubeJwtPayload(data)) {
-      req.user = {
-        id: data.sub,
-        permissions: data.aud
-      };
-      next();
-    } else {
-      res.sendStatus(403);
-    }
-  });
+  if (token) {
+    jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
+      if (isCubeJwtPayload(data)) {
+        req.user = {
+          id: data.sub,
+          permissions: data.aud
+        };
+        next();
+      } else {
+        res.sendStatus(403);
+      }
+    });
+  } else {
+    // TODO log that we didn't find a token, even though we expected one: 'authorization header or query parameter missing or malformed'
+    req.user = {
+      id: NIL_UUID,
+      permissions: ['anonymous']
+    };
+    next();
+  }
 };
 
 // This *generates* a (composed) middleware which will pass control to the next

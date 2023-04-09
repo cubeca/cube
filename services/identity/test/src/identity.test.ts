@@ -106,6 +106,9 @@ test('can not create user without correct permission', async () => {
 
 test('signs up as "active,contentEditor" user', async () => {
   const { status, data, requestBody } = await createUser({ userPermissions: ['active', 'contentEditor'], createPermissions: null });
+  if (201 != status) {
+    console.log(data)
+  }
   expect(status).toEqual(201);
   expect(data).toEqual(expect.objectContaining({
     id: expect.stringMatching(UUID_REGEXP),
@@ -114,6 +117,9 @@ test('signs up as "active,contentEditor" user', async () => {
 
 test('can not sign up as user with excessive permissions', async () => {
   const { status, data, requestBody } = await createUser({ userPermissions: ['active', 'excessive'], createPermissions: null });
+  if (403 != status) {
+    console.log(data)
+  }
   expect(status).toEqual(403);
 });
 

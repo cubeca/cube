@@ -91,7 +91,7 @@ describe('Profile API', () => {
     const response = await request(app).post('/profiles').send(profileData);
     expect(response.status).toBe(200);
     expect(response.body).toEqual(profileData.id);
-    expect(mockProfileApi.post).toHaveBeenCalledWith('profiles/', profileData);
+    expect(mockProfileApi.post).toHaveBeenCalledWith('profiles', profileData);
   });
 
   it('should get a profile by id', async () => {

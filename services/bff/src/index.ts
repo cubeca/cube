@@ -11,24 +11,33 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await cloudflareApi.post('/upload/video-tus-reservation', req.body, {
+  const { status, data, headers } = await cloudflareApi.post('upload/video-tus-reservation', req.body, {
+    params: req.query,
     headers: req.headers
   });
-  res.status(status).json(data);
+  res.status(status).set(headers).send(data);
 });
 
 app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await cloudflareApi.post('/upload/s3-presigned-url', req.body, { headers: req.headers });
+  const { status, data } = await cloudflareApi.post('upload/s3-presigned-url', req.body, { headers: req.headers });
+  res.status(status).json(data);
+});
+
+app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.get(`files/${req.params.fileId}`, { headers: req.headers });
   res.status(status).json(data);
 });
 
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await contentApi.post('content/', req.body, { headers: req.headers });
+  const { status, data } = await contentApi.post('content', req.body, { headers: req.headers });
   res.status(status).json(data);
 });
 
 app.get('/content', async (req: Request, res: Response) => {
-  const { status, data } = await contentApi.get('content/');
+  const { status, data } = await contentApi.get('content', {
+    params: req.query,
+    headers: req.headers
+  });
   res.status(status).json(data);
 });
 
@@ -80,7 +89,7 @@ app.get('/auth/forgot-password', async (req: Request, res: Response) => {
 });
 
 app.post('/profiles', async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.post('profiles/', req.body);
+  const { status, data } = await profileApi.post('profiles', req.body);
   res.status(status).json(data);
 });
 
