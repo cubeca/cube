@@ -11,9 +11,31 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data, headers } = await cloudflareApi.post('upload/video-tus-reservation', req.body, {
+
+  // Typically, we receive an empty request body for this endpoint,
+  // together with a (correct!) `content-length` header with value `0`.
+  //
+  // Our default `express.json()` middleware converts that into an empty JS object.
+  //
+  // When that happens, we can not forward the "content-length: 0" header anymore,
+  // because the serialization of that is not a string with length 0 anymore.
+  //
+  // TODO Find a way of *not* coercing an empty request body into an empty JS object.
+
+  const reqHeaders = { ...req.headers };
+  let reqBody = req.body;
+  if (reqHeaders['content-length'] == '0') {
+
+    // Let Axios set an appropriate `content-length` header.
+    delete reqHeaders['content-length'];
+
+    // Try to "reconstruct" the "original" empty request body.
+    reqBody = '';
+  }
+
+  const { status, data, headers } = await cloudflareApi.post('upload/video-tus-reservation', reqBody, {
     params: req.query,
-    headers: req.headers
+    headers: reqHeaders,
   });
   res.status(status).set(headers).send(data);
 });

@@ -34,7 +34,8 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
       };
       next();
     } else {
-      res.sendStatus(403);
+      console.log(403, `Cloudflare MS: Could not recognize JWT payload.`);
+      return res.status(403).send(`Cloudflare MS: Could not recognize JWT payload.`);
     }
   });
 };
@@ -49,7 +50,8 @@ export const allowIfAnyOf = (...allowList: string[]) => [
     if (req.user?.permissions.some(isOnAllowList)) {
       next();
     } else {
-      res.sendStatus(403);
+      console.log(403, `Cloudflare MS: Offered user permission not on allowList.`, { allowList, permissions: req.user?.permissions });
+      return res.status(403).send(`Cloudflare MS: Offered user permission not on allowList.`);
     }
   }
 ];

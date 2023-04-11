@@ -35,7 +35,8 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
         };
         next();
       } else {
-        res.sendStatus(403);
+        console.log(403, `BFF: Could not recognize JWT payload.`);
+        return res.status(403).send(`BFF: Could not recognize JWT payload.`);
       }
     });
   } else {
@@ -58,7 +59,8 @@ export const allowIfAnyOf = (...allowList: string[]) => [
     if (req.user?.permissions.some(isOnAllowList)) {
       next();
     } else {
-      res.sendStatus(403);
+      console.log(403, `BFF: Offered user permission not on allowList.`, { allowList, permissions: req.user?.permissions });
+      return res.status(403).send(`BFF: Offered user permission not on allowList.`);
     }
   }
 ];

@@ -1,4 +1,4 @@
-FROM node:16.19.1-bullseye-slim AS builder
+FROM node:16.20.0-bullseye-slim AS builder
 
 ENV GENERATE_SOURCEMAP=false
 
@@ -28,7 +28,7 @@ RUN npm run build
 
 ################################################################################
 
-FROM node:16.19.1-bullseye-slim AS server
+FROM node:16.20.0-bullseye-slim AS server
 
 ENV PORT=4550
 

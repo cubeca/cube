@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "start": "npx ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "local_dev_docker_compose": "npm start",
     "test": "jest",
     "build": "npx tsc -p .",
     "serve": "node build/index.js",
