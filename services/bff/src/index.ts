@@ -10,6 +10,18 @@ const app: Express = express();
 app.use(cors());
 app.use(express.json());
 
+const getHeadersToForward = (req: Request) => {
+  const headersToForward = { ...req.headers };
+
+  // Let Axios set an appropriate `host` header.
+  delete headersToForward['host'];
+
+  // Let Axios set an appropriate `content-length` header.
+  delete headersToForward['content-length'];
+
+  return headersToForward;
+}
+
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
 
   // Typically, we receive an empty request body for this endpoint,
@@ -20,45 +32,48 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   // When that happens, we can not forward the "content-length: 0" header anymore,
   // because the serialization of that is not a string with length 0 anymore.
   //
-  // TODO Find a way of *not* coercing an empty request body into an empty JS object.
+  // TODO Find out how to stop Express from coercing an empty request body into an empty JS object.
 
-  const reqHeaders = { ...req.headers };
-  let reqBody = req.body;
-  if (reqHeaders['content-length'] == '0') {
-
-    // Let Axios set an appropriate `content-length` header.
-    delete reqHeaders['content-length'];
-
-    // Try to "reconstruct" the "original" empty request body.
-    reqBody = '';
+  const isEmpty = (x:any) => {
+    return (
+      ('undefined' === typeof x)
+      ||
+      (null === x)
+      ||
+      (0 === Object.keys(x).length)
+    )
   }
+
+  const reqBody = isEmpty(req.body) ? '' : req.body;
 
   const { status, data, headers } = await cloudflareApi.post('upload/video-tus-reservation', reqBody, {
     params: req.query,
-    headers: reqHeaders,
+    headers: getHeadersToForward(req),
   });
   res.status(status).set(headers).send(data);
 });
 
 app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await cloudflareApi.post('upload/s3-presigned-url', req.body, { headers: req.headers });
+  const { status, data } = await cloudflareApi.post('upload/s3-presigned-url', req.body, { headers: getHeadersToForward(req) });
   res.status(status).json(data);
 });
 
 app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { status, data } = await contentApi.get(`files/${req.params.fileId}`, { headers: req.headers });
+  const reqHeaders = { ...req.headers };
+  delete reqHeaders['host'];
+  const { status, data } = await contentApi.get(`files/${req.params.fileId}`, { headers: getHeadersToForward(req) });
   res.status(status).json(data);
 });
 
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await contentApi.post('content', req.body, { headers: req.headers });
+  const { status, data } = await contentApi.post('content', req.body, { headers: getHeadersToForward(req) });
   res.status(status).json(data);
 });
 
 app.get('/content', async (req: Request, res: Response) => {
   const { status, data } = await contentApi.get('content', {
     params: req.query,
-    headers: req.headers
+    headers: getHeadersToForward(req)
   });
   res.status(status).json(data);
 });
@@ -69,7 +84,7 @@ app.get('/content/:contentId', async (req: Request, res: Response) => {
 });
 
 app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.post('auth/user', req.body, { headers: req.headers });
+  const { status, data } = await identityApi.post('auth/user', req.body, { headers: getHeadersToForward(req) });
   res.status(status).json(data);
 });
 
@@ -84,19 +99,19 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
 });
 
 app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.put('auth/email', req.body, { headers: req.headers });
+  const { status, data } = await identityApi.put('auth/email', req.body, { headers: getHeadersToForward(req) });
   res.status(status).json(data);
 });
 
 app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.put('auth/password', req.body, { headers: req.headers });
+  const { status, data } = await identityApi.put('auth/password', req.body, { headers: getHeadersToForward(req) });
   res.status(status).json(data);
 });
 
 app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.get('auth/verify', {
     params: req.query,
-    headers: req.headers
+    headers: getHeadersToForward(req)
   });
 
   res.status(status).json(data);
