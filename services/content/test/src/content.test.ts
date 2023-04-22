@@ -35,24 +35,27 @@ const getAuthReqOpts = (...permissions: string[]) => {
 
 const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer ${jwt}` } });
 
-test('creates content piece', async () => {
+test('creates, retrieves and lists content piece', async () => {
+  const profileId = "4863f84d-7ca5-4a00-bd80-b0c87e005711";
   const requestBody = {
-    "profileId": "4863f84d-7ca5-4a00-bd80-b0c87e005711",
+    profileId,
     "title": "Ash Test",
     "mediaFileId": "360cfe42-0db2-47d1-926b-9e627a22dd5c",
     "description": "This is a test by Ashlee of one of her Youtube videos",
     "tags": [
-      "exercises, art, rest, BC "
+      "exercises", "art", "rest", "BC", "still a string?"
     ],
     "type": "video",
     "contributors": [
-      null
+      "still a string?"
     ],
     "collaborators": [
-      "moa"
+      "still a string?"
     ],
     "coverImageFileId": "e0821a87-caef-472f-affd-a657692850ab",
-    "coverImageText": "Woman laying on table"
+    "subtitlesFileId": "213961d0-6804-4b4a-8164-961b7208b8c0",
+    "transcriptFileId": "5e090213-b892-478a-901b-5f0317937fc6",
+    "coverImageText": "Someone laying on table"
   };
 
   const createContentResponse = await contentApi.post(
@@ -75,90 +78,51 @@ test('creates content piece', async () => {
       ...requestBody
     })
   );
-});
 
-test('lists mock content pieces', async () => {
-
-  const response = await contentApi.get('/content');
-  const { status, data } = response;
-  if (200 !== status) {
-    inspectAxiosResponse(response);
+  const contentId = createContentData.id;
+  const retrieveContentResponse = await contentApi.get(`/content/${contentId}`);
+  const { status: retrieveContentStatus, data: retrieveContentData } = retrieveContentResponse;
+  if (200 !== retrieveContentStatus) {
+    inspectAxiosResponse(retrieveContentResponse);
   }
 
-  expect(status).toEqual(200);
+  expect(retrieveContentStatus).toEqual(200);
 
-  expect(data).toMatchObject({
-    data: expect.arrayContaining([
+  expect(retrieveContentData).toMatchObject(
+    expect.objectContaining({
+      id: contentId,
+      createdAt: createContentData.createdAt,
+      updatedAt: createContentData.updatedAt,
+      ...requestBody
+    })
+  );
+
+  const listContentResponse = await contentApi.get('/content', {
+    params: {
+      offset: 0,
+      limit: 10,
+      profileId,
+    },
+  });
+  const { status: listContentStatus, data: listContentData } = listContentResponse;
+  if (200 !== listContentStatus) {
+    inspectAxiosResponse(listContentResponse);
+  }
+
+  expect(listContentStatus).toEqual(200);
+
+  expect(listContentData).toMatchObject(expect.objectContaining({
+    meta: {
+      offset: 0,
+      limit: 10,
+    },
+    data: [
       {
-        "id": "1",
-        "title": "Title 1",
-        "creator": "Creator 1",
-        "url": "/content/1",
-        "thumbnailUrl": "images/video_thumbnail.jpg",
-        "iconUrl": "images/creator_icon.png",
-        "category": "video",
-        "type": "video"
-      },
-      {
-        "id": "2",
-        "title": "Title 2",
-        "creator": "Creator 2",
-        "url": "/content/2",
-        "thumbnailUrl": "images/video_thumbnail.jpg",
-        "iconUrl": "images/creator_icon.png",
-        "category": "video",
-        "type": "video"
+        id: contentId,
+        createdAt: createContentData.createdAt,
+        updatedAt: createContentData.updatedAt,
+        ...requestBody
       }
-    ])
-  });
-});
-
-test('gets mocked content piece details', async () => {
-
-  const contentId = '7110767b-8d14-45bc-8ff1-9286fa06aae1';
-  const response = await contentApi.get(`/content/${contentId}`);
-  const { status, data } = response;
-  if (200 !== status) {
-    inspectAxiosResponse(response);
-  }
-
-  expect(status).toEqual(200);
-
-  expect(data).toMatchObject({
-    "data": {
-      "id": contentId,
-      "url": "/video.mp4",
-      "title": `Video ${contentId}`,
-      "createdDate": "07/01/2022",
-      "updatedDate": "07/01/2022",
-      "description": "Description of content Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dolor sem faucibus auctor quam pretium massa nulla cursus. Vel, a nisl ipsum, nisl. Mauris.",
-      "descriptionUrl": "/description.mp3",
-      "credits": "Dawn Powell, Camera Operator, Alissa Cat, Public Programs Magnus Ten, Editor",
-      "contributors": [
-        {
-          "id": "1",
-          "link": "/profile/1",
-          "name": "Museum Of Anthropology",
-          "socialUrl": "https: //www.twitter.com",
-          "socialHandle": "@Moa",
-          "logoUrl": "/images/moa.svg"
-        },
-        {
-          "id": "2",
-          "name": "Museum of Vancouver",
-          "socialUrl": "https: //www.twitter.com",
-          "socialHandle": "@Mov",
-          "logoUrl": ""
-        },
-        {
-          "id": "3",
-          "name": "Dana Claxton"
-        }
-      ],
-      "tags": [
-        "tag 1",
-        "tag 2"
-      ]
-    }
-  });
+    ]
+  }));
 });

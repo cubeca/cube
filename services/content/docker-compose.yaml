@@ -93,7 +93,6 @@ services:
     volumes:
       - ./.env.example:/work/.env.example
       - ./${ENV_FILE}:/work/.env
-      - ./test/example-files:/work/example-files/
       - ./test/src:/work/src/
       - ./test/scripts:/work/scripts/
       - ./test/jest.config.js:/work/jest.config.js
