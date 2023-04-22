@@ -32,7 +32,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   // When that happens, we can not forward the "content-length: 0" header anymore,
   // because the re-serialization of that is not a string with length 0 anymore.
 
-  const { status, data, headers } = await cloudflareApi.post('upload/video-tus-reservation', reqBody, {
+  const { status, data, headers } = await cloudflareApi.post('upload/video-tus-reservation', '', {
     params: req.query,
     headers: filterHeadersToForward(req, 'upload-length', 'upload-metadata', 'authorization'),
   });
