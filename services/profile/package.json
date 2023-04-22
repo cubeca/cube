@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "start": "npx ts-node-dev --respawn --pretty --transpile-only src/index.ts",
+    "local_dev_docker_compose": "npm run migrate:up && npm start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "gcp-build": "npx tsc -p .",
     "serve": "npm run migrate:up && node build/index.js",
