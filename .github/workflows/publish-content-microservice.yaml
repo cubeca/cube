@@ -4,6 +4,8 @@ run-name: Publish content microservice @ ${{ github.sha }}
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'services/content/**'
 

@@ -4,6 +4,8 @@ run-name: Publish BFF gateway @ ${{ github.sha }}
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'services/bff/**'
 

@@ -4,6 +4,8 @@ run-name: Publish Frontend @ ${{ github.sha }}
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'client/**'
 

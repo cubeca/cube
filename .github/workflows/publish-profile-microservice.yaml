@@ -4,6 +4,8 @@ run-name: Publish profile microservice @ ${{ github.sha }}
 
 on:
   push:
+    branches:
+      - main
     paths:
       - 'services/profile/**'
 
