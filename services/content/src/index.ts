@@ -25,11 +25,11 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 });
 
 app.get('/content', async (req: Request, res: Response) => {
-  const offset = parseInt(req.query.offset, 10);
-  const limit = parseInt(req.query.limit, 10);
+  const offset = parseInt(req.query.offset as string, 10);
+  const limit = parseInt(req.query.limit as string, 10);
   const profileId = req.query.profileId;
 
-  const dbResult = await db.listContentByProfileId(offset, limit, profileId);
+  const dbResult = await db.listContentByProfileId(offset, limit, profileId as string);
 
   res.status(200).json({
     "meta": {
