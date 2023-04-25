@@ -1,5 +1,5 @@
 import { upload } from './upload';
-import { AddContent, contentApi, contentFilesApi } from '.';
+import { AddContent, contentApi } from '.';
 
 export type CategoryType =
   | 'all'
@@ -38,39 +38,39 @@ export const addContent = async ({
   subtitlesFile,
   transcriptFile
 }: {
-  payload: Omit<AddContent, 'coverImageFileId' | 'mediaFileId' | 'subtitlesFileId' | 'transcriptFileId'>;
+  payload: AddContent;
   coverImageFile?: File;
   mediaFile?: File;
   subtitlesFile?: File;
   transcriptFile?: File;
 }) => {
-  let coverImageFileId: string | undefined = undefined;
-  let mediaFileId: string | undefined = undefined;
-  let subtitlesFileId: string | undefined = undefined;
-  let transcriptFileId: string | undefined = undefined;
-  // TODO upload non-video files // if (coverImageFile) upload(coverImageFile);
-
   if (coverImageFile) {
-    coverImageFileId = await upload(coverImageFile, payload.profileId);
+    const fileId = await upload(coverImageFile, payload.profileId);
+    if (fileId) {
+      payload.coverImageFileId = fileId;
+    }
   }
 
   if (mediaFile) {
-    mediaFileId = await upload(mediaFile, payload.profileId);
+    const fileId = await upload(mediaFile, payload.profileId);
+    if (fileId) {
+      payload.mediaFileId = fileId;
+    }
   }
 
   if (subtitlesFile) {
-    subtitlesFileId = await upload(subtitlesFile, payload.profileId);
+    const fileId = await upload(subtitlesFile, payload.profileId);
+    if (fileId) {
+      payload.subtitlesFileId = fileId;
+    }
   }
 
   if (transcriptFile) {
-    transcriptFileId = await upload(transcriptFile, payload.profileId);
+    const fileId = await upload(transcriptFile, payload.profileId);
+    if (fileId) {
+      payload.transcriptFileId = fileId;
+    }
   }
 
-  return await contentFilesApi.addContent({
-    ...payload,
-    coverImageFileId: String(coverImageFileId),
-    mediaFileId: String(mediaFileId),
-    subtitlesFileId: String(subtitlesFileId),
-    transcriptFileId: String(transcriptFileId),
-  });
+  return await contentApi.addContent(payload);
 };

@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as settings from './settings';
 
+const NIL_UUID = '00000000-0000-0000-0000-000000000000';
+
 export interface CubeJwtPayload {
   sub: string;
   aud: string[];
@@ -24,20 +26,29 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
   // For requests without headers, f.e. links in confirmation emails, or the notorious UPLOAD_TUS_ENDPOINT.
   token ??= req.query?.authorization ? String(req.query?.authorization) : undefined;
 
-  if (!token) return res.status(401).send('authorization header or query parameter missing or malformed');
+  if (token) {
+    jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
+      if (isCubeJwtPayload(data)) {
+        req.user = {
+          id: data.sub,
+          permissions: data.aud
+        };
+        next();
+      } else {
+        console.log(403, `Cloudflare MS: Could not recognize JWT payload.`);
+        return res.status(403).send(`Cloudflare MS: Could not recognize JWT payload.`);
+      }
+    });
+  } else {
+    // return res.status(401).send('authorization header or query parameter missing or malformed');
+    // TODO log that we didn't find a token, even though we expected one: 'authorization header or query parameter missing or malformed'
+    req.user = {
+      id: NIL_UUID,
+      permissions: ['anonymous']
+    };
+    next();
+  }
 
-  jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
-    if (isCubeJwtPayload(data)) {
-      req.user = {
-        id: data.sub,
-        permissions: data.aud
-      };
-      next();
-    } else {
-      console.log(403, `Cloudflare MS: Could not recognize JWT payload.`);
-      return res.status(403).send(`Cloudflare MS: Could not recognize JWT payload.`);
-    }
-  });
 };
 
 // This *generates* a (composed) middleware which will pass control to the next

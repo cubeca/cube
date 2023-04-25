@@ -197,7 +197,7 @@ app.post('/profiles', async (req: Request, res: Response) => {
 const getFiles = async (fileIds: string[]) => {
   const files: { [k: string]: any } = {};
   const errors: any[] = [];
-  for (const fileId of fileIds) {
+  for (const fileId of fileIds.filter((x:any) => !!x)) {
     const { status, data } = await cloudflareApi.get(`files/${fileId}`);
     if (200 == status) {
       files[fileId] = data;
@@ -258,38 +258,37 @@ const transformContentListForProfile = async (profile:any, contentList:any[]) =>
     }
     contentByCategory[content.category].push(content);
   }
-  return Object.entries(contentByCategory).map((category, content) => ({ category, content }));
+
+  return Object.entries(contentByCategory).map(([category, content]) => ({ category, content }));
 }
 
 app.get('/profiles/:id', async (req: Request, res: Response) => {
   const profileId = req.params.id;
-  const { status, data: profileDetail } = await profileApi.get('profiles/' + profileId);
+  const { status, data: profile } = await profileApi.get('profiles/' + profileId);
   if (200 != status) {
-    return res.status(status).json(profileDetail);
+    return res.status(status).json(profile);
   }
 
-  const profile = profileDetail.data;
-
-  const { files, errors: fileErrors } = await getFiles([profile.heroFileId, profile.logoFileId, profile.descriptionAudioFileId]);
+  const { files, errors: fileErrors } = await getFiles([profile?.heroFileId, profile?.logoFileId, profile?.descriptionAudioFileId]);
   if (fileErrors.length) {
     console.log({ profile, fileErrors });
     // TODO prevent internal details from leaking through the error messages 
     // return res.status(500).json(fileErrors);
   }
 
-  if (files[profile.heroFileId]) {
+  if (files[profile?.heroFileId]) {
     profile.heroUrl = files[profile.heroFileId].playerInfo.publicUrl;
   }
-  if (files[profile.logoFileId]) {
+  if (files[profile?.logoFileId]) {
     profile.logoUrl = files[profile.logoFileId].playerInfo.publicUrl;
   }
-  if (files[profile.descriptionAudioFileId]) {
+  if (files[profile?.descriptionAudioFileId]) {
     profile.descriptionAudioUrl = files[profile.descriptionAudioFileId].playerInfo.publicUrl;
   }
 
   const { status: contentStatus, data: content } = await contentApi.get('content', {
     params: {
-      profileId: profile.id,
+      profileId,
 
       // TODO proper pagination on the profile page
       offset: 0,
@@ -300,7 +299,7 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
     return res.status(contentStatus).json(content);
   }
 
-  profile.content = transformContentListForProfile(profile, content.data);
+  profile.content = await transformContentListForProfile(profile, content.data);
 
   res.status(200).json({ data: profile });
 });
