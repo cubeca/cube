@@ -121,7 +121,7 @@ services:
       - ./services/cloudflare/package.json:/work/package.json
       - ./services/cloudflare/tsconfig.json:/work/tsconfig.json
     # ports:
-    #   Serve the cloudflare microservice on the host
+    #   # Serve the cloudflare microservice on the host
     #   - '${CLOUDFLARE_PORT}:${CLOUDFLARE_PORT}'
 
 
@@ -156,6 +156,9 @@ services:
       - ./services/content/package-lock.json:/work/package-lock.json
       - ./services/content/package.json:/work/package.json
       - ./services/content/tsconfig.json:/work/tsconfig.json
+    # ports:
+    #   # Serve the content microservice on the host
+    #   - '${CONTENT_PORT}:${CONTENT_PORT}'
 
 
   identity:
@@ -200,6 +203,9 @@ services:
       - ./services/identity/package-lock.json:/work/package-lock.json
       - ./services/identity/package.json:/work/package.json
       - ./services/identity/tsconfig.json:/work/tsconfig.json
+    # ports:
+    #   # Serve the identity microservice on the host
+    #   - '${IDENTITY_PORT}:${IDENTITY_PORT}'
 
 
   profile:
@@ -233,6 +239,9 @@ services:
       - ./services/profile/package-lock.json:/work/package-lock.json
       - ./services/profile/package.json:/work/package.json
       - ./services/profile/tsconfig.json:/work/tsconfig.json
+    # ports:
+    #   # Serve the profile microservice on the host
+    #   - '${PROFILE_PORT}:${PROFILE_PORT}'
 
 
   # For setting up multiple DBs in the same PostgreSQL Docker container, see
@@ -264,6 +273,9 @@ services:
           nocopy: true
     networks:
       - db
+    ports:
+      # Serve the DB on the host
+      - '5432:5432'
 
 
 volumes:

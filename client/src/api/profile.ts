@@ -3,8 +3,9 @@ import { PROFILE_API_PATH } from './settings';
 import { profileApi } from '.';
 import { blobToBase64 } from './helpers';
 import { getAuthToken } from '../utils/auth';
+import { upload } from './upload';
 
-export type { ProfileMainSchema as Profile } from '.';
+export type { BFFDataForProfilePageData as Profile } from '.';
 
 export const getProfile = async (id: string) => {
   return await profileApi.profileDetails(id);
@@ -12,51 +13,32 @@ export const getProfile = async (id: string) => {
 
 export const updateProfileSection = async (
   id: string,
-  name: string,
+  organization: string,
   description: string
 ) => {
-  return await profileApi.profileSectionUpdate(id, {
-    name,
+  return await profileApi.updateProfile(id, {
+    organization,
     description
   });
 };
 
 export const updateProfileLogo = async (id: string, file: File) => {
-  const fileContents = (await blobToBase64(file)) as string;
-  return await profileApi.profileLogoUpdate(id, {
-    name: file.name,
-    file_contents_base64: fileContents
+  const logoFileId = await upload(file, id);
+  return await profileApi.updateProfile(id, {
+    logoFileId
   });
 };
 
 export const updateProfileHero = async (id: string, file: File) => {
-  const fileContents = await blobToBase64(file);
-  // return httpClient.post<ProfileAPIResponse>(
-  //   `${PROFILE_API_PATH}/${id}/update-hero`,
-  //   {
-  //     name: file.name,
-  //     file_contents_base64: fileContents
-  //   },
-  //   {
-  //     headers: {
-  //       authorization: `Bearer ${await getAuthToken()}`
-  //     }
-  //   }
-  // );
+  const heroFileId = await upload(file, id);
+  return await profileApi.updateProfile(id, {
+    heroFileId
+  });
 };
 
 export const updateProfileAudioDescription = async (id: string, file: File) => {
-  const fileContents = await blobToBase64(file);
-  // return httpClient.post<ProfileAPIResponse>(
-  //   `${PROFILE_API_PATH}/${id}/update-audio-description`,
-  //   {
-  //     name: file.name,
-  //     file_contents_base64: fileContents
-  //   },
-  //   {
-  //     headers: {
-  //       authorization: `Bearer ${await getAuthToken()}`
-  //     }
-  //   }
-  // );
+  const descriptionAudioFileId = await upload(file, id);
+  return await profileApi.updateProfile(id, {
+    descriptionAudioFileId
+  });
 };

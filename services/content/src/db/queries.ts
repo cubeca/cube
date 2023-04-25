@@ -17,10 +17,19 @@ export const getContentById = async (contentId: string) => {
   return await db.querySingle(sql, contentId);
 };
 
-export const listContentByProfileId = async (profileId: string) => {
+export const listContentByProfileId = async (offset: number, limit: number, profileId: string) => {
   // This should use index `content_by_profile_id`
-  const sql = `SELECT * FROM content WHERE (data->'profileId')::TEXT = $1`;
-  const dbResult = await db.query(sql, profileId);
+  const sql = `
+    SELECT
+      *
+    FROM content
+    WHERE
+      (data->>'profileId')::TEXT = $1
+    ORDER BY updated_at DESC
+    LIMIT $2
+    OFFSET $3
+  `;
+  const dbResult = await db.query(sql, profileId, limit, offset);
   return dbResult.rows;
 };
 

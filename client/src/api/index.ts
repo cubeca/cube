@@ -1,15 +1,14 @@
-import { AuthApi } from '@cubeca/bff-auth-client-oas-axios';
 import {
   Configuration,
+  AuthApi,
   ContentApi,
-  ContentFilesApi,
   ProfileApi,
   UploadApi,
   FilesApi
 } from '@cubeca/bff-client-oas-axios';
 export type {
   AddContent,
-  ProfileMainSchema
+  BFFDataForProfilePageData
 } from '@cubeca/bff-client-oas-axios';
 
 import {
@@ -52,7 +51,6 @@ const contentConfiguration = new Configuration({
 });
 
 export const contentApi = new ContentApi(contentConfiguration);
-export const contentFilesApi = new ContentFilesApi(contentConfiguration);
 
 const uploadConfiguration = new Configuration({
   basePath: CLOUDFLARE_SERVICE_URL,
