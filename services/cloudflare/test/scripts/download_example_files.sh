@@ -17,6 +17,6 @@ while read example_file_url; do
     curl $example_file_url > $filepath
   fi
 done <<EOF
-https://file-examples.com/storage/fe43a59c1d63fdf2d99c5d2/2020/03/file_example_WEBM_480_900KB.webm
+https://file-examples.com/storage/fe21053bab6446bba9a0947/2017/04/file_example_MP4_480_1_5MG.mp4
 https://file-examples.com/storage/fe43a59c1d63fdf2d99c5d2/2017/11/file_example_MP3_700KB.mp3
 EOF
