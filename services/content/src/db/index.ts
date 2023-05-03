@@ -1,6 +1,5 @@
 import { Pool } from 'pg';
 import * as settings from '../settings';
-import { inspect } from '../utils';
 
 const pool = new Pool({
   host: settings.PGHOST,
@@ -14,7 +13,6 @@ const pool = new Pool({
 });
 
 export const query = async (sql: string, ...params: any[]) => {
-  // inspect({sql, params});
   const start = Date.now();
   const res = await pool.query(sql, params);
   const durationMs = Date.now() - start;

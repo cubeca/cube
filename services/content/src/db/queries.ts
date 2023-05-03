@@ -37,7 +37,7 @@ export interface ContentData {
   profileId: string;
 }
 
-export const insertContent = async (data: ContentData, profileId:string) => {
+export const insertContent = async (data: ContentData, profileId: string) => {
   data.profileId = profileId;
 
   const sql = `
@@ -51,4 +51,30 @@ export const insertContent = async (data: ContentData, profileId:string) => {
   `;
 
   return await db.querySingle(sql, JSON.stringify(data));
+};
+
+export const updateContent = async (data: ContentData, contentId: string) => {
+  const sql = `
+    UPDATE
+      content
+    SET 
+      data = $1
+    WHERE
+      id = $2
+    RETURNING *
+  `;
+
+  return await db.querySingle(sql, JSON.stringify(data), contentId);
+};
+
+export const deleteContent = async (contentId: string) => {
+  const sql = `
+    DELETE FROM
+      content
+    WHERE
+      id = $1
+    RETURNING *
+  `;
+
+  return await db.querySingle(sql, contentId);
 };
