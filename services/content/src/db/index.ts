@@ -13,10 +13,7 @@ const pool = new Pool({
 });
 
 export const query = async (sql: string, ...params: any[]) => {
-  const start = Date.now();
   const res = await pool.query(sql, params);
-  const durationMs = Date.now() - start;
-  console.log('executed query', { sql, params, durationMs, rows: { processed: res.rowCount, returned: res.rows.length } });
   return res;
 };
 

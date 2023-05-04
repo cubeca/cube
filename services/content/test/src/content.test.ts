@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
-import * as settings from '../../src/settings';
+import * as settings from './settings';
 
 const API_URL = `http://${settings.MICROSERVICE}:${settings.PORT}`;
 const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -194,7 +194,7 @@ describe('content test suite', () => {
 
 afterAll( async () => {
   for (const contentId in contentIdList) {
-    const deleteContentResponse = await contentApi.delete(`/content/${contentIdList[contentId]}`);
+    const deleteContentResponse = await contentApi.delete(`/content/${contentIdList[contentId]}`, getAuthReqOpts('contentEditor'));
     expect(deleteContentResponse.status).toEqual(200);
   }
 });
