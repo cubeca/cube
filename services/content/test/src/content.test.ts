@@ -35,12 +35,12 @@ describe('content test suite', () => {
   test('sanity test service up', async () => {
     const resp = await contentApi.get('/');
     expect(resp.status).toEqual(200);
-  }, 10000);
+  });
 
   test('creates a content piece', async () => {
     const requestBody = {
       profileId: '4863f84d-7ca5-4a00-bd80-b0c87e005711',
-      title: 'Content Test',
+      title: 'Create Content Test',
       mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd5c',
       description: 'This is a test',
       tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
@@ -66,7 +66,7 @@ describe('content test suite', () => {
       })
     );
 
-    contentIdList.push(createContentData.id)
+    contentIdList.push(createContentData.id);
   });
 
   test('create and retrieve a content piece', async () => {
@@ -119,7 +119,8 @@ describe('content test suite', () => {
       expect.objectContaining({
         meta: {
           offset: 0,
-          limit: 10
+          limit: 10,
+          filters: {}
         },
         data: [
           {
@@ -132,7 +133,7 @@ describe('content test suite', () => {
       })
     );
 
-    contentIdList.push(createContentData.id)
+    contentIdList.push(createContentData.id);
   });
 
   test('create, update and retrieve a content piece', async () => {
@@ -171,7 +172,11 @@ describe('content test suite', () => {
       coverImageText: 'Someone saying something'
     };
 
-    const updateContentResponse = await contentApi.post(`/content/${contentId}`, updateRequestBody, getAuthReqOpts('contentEditor'));
+    const updateContentResponse = await contentApi.post(
+      `/content/${contentId}`,
+      updateRequestBody,
+      getAuthReqOpts('contentEditor')
+    );
     const { status: updateContentStatus } = updateContentResponse;
     expect(updateContentStatus).toEqual(201);
 
@@ -190,11 +195,48 @@ describe('content test suite', () => {
 
     contentIdList.push(retrieveContentData.id);
   });
+
+  test('retrieve content by search filters', async () => {
+    const profileId = '4863f84d-7ca5-4a00-bd80-b0c87e005713';
+    const filters = { type: 'video', description: 'this is', tags: ['art', 'rest'] };
+    const encodedFilters = encodeURIComponent(JSON.stringify(filters));
+
+    const getContentResponse = await contentApi.get(
+      `/content/?profileId=${profileId}&limit=5&filters=${encodedFilters}`
+    );
+    const { status: getContentStatus, data: getContentData } = getContentResponse;
+
+    expect(getContentStatus).toEqual(200);
+    expect(getContentData.data[0]).toHaveProperty('profileId');
+    expect(getContentData.data[0]).toHaveProperty('type', 'video');
+    expect(getContentData.data[0]).toHaveProperty('description', 'This is a test');
+    expect(getContentData.data[0]).toHaveProperty('tags', ['exercises', 'art', 'rest', 'BC', 'still a string?']);
+  });
+
+  test('retrieve content by search simple filter', async () => {
+    const profileId = '4863f84d-7ca5-4a00-bd80-b0c87e005713';
+    const filters = { type: 'video' };
+    const encodedFilters = encodeURIComponent(JSON.stringify(filters));
+
+    const getContentResponse = await contentApi.get(
+      `/content/?profileId=${profileId}&filters=${encodedFilters}`
+    );
+    const { status: getContentStatus, data: getContentData } = getContentResponse;
+
+    expect(getContentStatus).toEqual(200);
+    expect(getContentData.data[0]).toHaveProperty('profileId');
+    expect(getContentData.data[0]).toHaveProperty('type', 'video');
+    expect(getContentData.data[0]).toHaveProperty('description', 'This is a test');
+    expect(getContentData.data[0]).toHaveProperty('tags', ['exercises', 'art', 'rest', 'BC', 'still a string?']);
+  });
 });
 
-afterAll( async () => {
+afterAll(async () => {
   for (const contentId in contentIdList) {
-    const deleteContentResponse = await contentApi.delete(`/content/${contentIdList[contentId]}`, getAuthReqOpts('contentEditor'));
+    const deleteContentResponse = await contentApi.delete(
+      `/content/${contentIdList[contentId]}`,
+      getAuthReqOpts('contentEditor')
+    );
     expect(deleteContentResponse.status).toEqual(200);
   }
 });

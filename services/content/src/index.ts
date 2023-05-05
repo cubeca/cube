@@ -25,19 +25,22 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
   res.status(201).json(getApiResultFromDbRow(dbResult));
 });
 
-// API endpoint for listing content by profile id
+// API endpoint for listing content by profile id with ability to filter by
+// data points such as type or tags
 app.get('/content', async (req: Request, res: Response) => {
-  // Parsing offset and limit from query parameters
-  const offset = parseInt(req.query.offset as string, 10);
-  const limit = parseInt(req.query.limit as string, 10);
+  const offset = parseInt(req.query.offset as string, 10) || 0;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = req.query.profileId;
-  const dbResult = await db.listContentByProfileId(offset, limit, profileId as string);
+  const filters = JSON.parse(req.query.filters as string ?? '{}');
+
+  const dbResult = await db.listContentByProfileId(offset, limit, profileId as string, filters);
 
   // Returning paginated content data
   res.status(200).json({
     meta: {
       offset,
-      limit
+      limit,
+      filters,
     },
     data: dbResult.map(getApiResultFromDbRow)
   });
