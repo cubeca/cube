@@ -20,9 +20,8 @@ env:
   GCP_DOCKER_IMAGE: northamerica-northeast2-docker.pkg.dev/cubecommons-dev/cube-docker-images/content:${{ github.sha }}
   GCP_RUN_APPNAME: content
   GCP_RUN_REGION: northamerica-northeast2
-  # # TODO try using {{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-  # GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
-  # GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+  GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
+  GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
 
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 
@@ -51,8 +50,8 @@ jobs:
       - name: Authenticate with GCP
         uses: google-github-actions/auth@v1
         with:
-          workload_identity_provider: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
-          service_account: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
 
       - name: Set up GCP Cloud SDK
         uses: google-github-actions/setup-gcloud@v1

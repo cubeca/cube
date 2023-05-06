@@ -1,0 +1,25 @@
+name: Publish BFF gateway PROD
+
+run-name: Publish BFF gateway PROD @ ${{ github.sha }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'services/bff/**'
+
+      # This helps with debugging GHAs:
+      - '.github/workflows/publish-bff-gateway-prod.yaml'
+      - '.github/workflows/publish-reusable.yaml'
+
+jobs:
+  publish-service:
+    uses: ./.github/workflows/publish-reusable.yaml
+    with:
+      CODE_BASE_DIR: services/bff
+      GCP_PROJECT: cubecommons-prod
+      GCP_REGION: northamerica-northeast2
+      GCP_RUN_APPNAME: bff
+      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
+      GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
