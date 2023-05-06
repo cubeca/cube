@@ -1,6 +1,6 @@
-name: Publish ${{ inputs.GCP_RUN_APPNAME }} on ${{ inputs.GCP_PROJECT }} @ ${{ github.sha }}
+name: Publish ${{ github.workflow }} @ ${{ github.sha }}
 
-run-name: Publish ${{ inputs.GCP_RUN_APPNAME }} on ${{ inputs.GCP_PROJECT }} @ ${{ github.sha }}
+run-name: Publish ${{ github.workflow }} @ ${{ github.sha }}
 
 on:
   workflow_call:
