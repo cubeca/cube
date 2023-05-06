@@ -1,6 +1,6 @@
-name: Publish ${{ github.workflow }} @ ${{ github.sha }}
+name: Publish Service
 
-run-name: Publish ${{ github.workflow }} @ ${{ github.sha }}
+run-name: Publish Service
 
 on:
   workflow_call:
@@ -27,6 +27,7 @@ on:
         type: string
 
 env:
+  # Translate all `inputs.*` into env vars, so that they can also be used inside Makefiles and shell scripts
   GITHUB_SHA: ${{ github.sha }}
   LOCAL_DOCKER_IMAGE: cubeca/${{ inputs.GCP_RUN_APPNAME }}:latest
   CODE_BASE_DIR: ${{ inputs.CODE_BASE_DIR }}
@@ -41,9 +42,9 @@ env:
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 
 jobs:
-  publish_package:
+  publish_service:
     runs-on: ubuntu-22.04
-    name: Publish BFF gateway
+    name: Publish Service
 
     # Add "id-token" with the intended permissions.
     # See https://github.com/google-github-actions/auth#usage
@@ -80,7 +81,7 @@ jobs:
 
       - name: Run make docker_build
         run: |
-          make --directory=${{ inputs.CODE_BASE_DIR }} docker_build
+          make --directory=$CODE_BASE_DIR docker_build
 
       - name: Run docker tag and push
         run: |
