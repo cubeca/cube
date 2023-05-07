@@ -122,7 +122,7 @@ jobs:
             --platform=managed \
             --region=$GCP_RUN_REGION \
             --image=$GCP_DOCKER_IMAGE \
-            --ingress=all \
+            --ingress=internal-and-cloud-load-balancing \
             --allow-unauthenticated \
             --timeout=300 \
             $GCP_RUN_OPTION_MIN_INSTANCES \
@@ -134,9 +134,3 @@ jobs:
             $GCP_RUN_OPTION_ENV \
             $GCP_RUN_OPTION_SECRETS \
             $GCP_RUN_APPNAME
-
-
-
-
-
-
