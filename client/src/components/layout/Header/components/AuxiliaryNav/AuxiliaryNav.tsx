@@ -10,7 +10,6 @@ const AuxiliaryNav = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    console.log('handling logout');
     removeAuthToken();
     navigate('/');
   };
