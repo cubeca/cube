@@ -62,6 +62,9 @@ env:
   GCP_SERVICE_ACCOUNT: ${{ inputs.GCP_SERVICE_ACCOUNT }}
 
   GCP_RUN_OPTION_MIN_INSTANCES: ${{ inputs.GCP_RUN_OPTION_MIN_INSTANCES }}
+  GCP_RUN_OPTION_DB: ${{ inputs.GCP_RUN_OPTION_DB }}
+  GCP_RUN_OPTION_ENV: ${{ inputs.GCP_RUN_OPTION_ENV }}
+  GCP_RUN_OPTION_SECRETS: ${{ inputs.GCP_RUN_OPTION_SECRETS }}
 
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 
