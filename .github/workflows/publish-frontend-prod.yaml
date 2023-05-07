@@ -23,3 +23,5 @@ jobs:
       GCP_RUN_APPNAME: frontend
       GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
       GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
+
+      GCP_RUN_OPTION_ENV: --set-env-vars=REACT_APP_API_URL=https://bff.cubecommons.ca,REACT_APP_AUTH_SERVICE_URL=https://bff.cubecommons.ca,NODE_ENV=production,GENERATE_SOURCEMAP=false,REACT_APP_CLOUDFLARE_SERVICE_URL=https://bff.cubecommons.ca,REACT_APP_CONTENT_SERVICE_URL=https://bff.cubecommons.ca,REACT_APP_PROFILE_SERVICE_URL=https://bff.cubecommons.ca,API_URL=https://bff.cubecommons.ca

@@ -23,3 +23,7 @@ jobs:
       GCP_RUN_APPNAME: profile
       GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
       GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
+
+      GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-prod:northamerica-northeast2:prod
+      GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-prod:northamerica-northeast2:prod,PGDATABASE=cube_profile,PGUSER=postgres
+      GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,PGPASSWORD=prod-db-password:latest

@@ -23,3 +23,5 @@ jobs:
       GCP_RUN_APPNAME: frontend
       GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
       GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+
+      GCP_RUN_OPTION_ENV: --set-env-vars=
