@@ -42,7 +42,7 @@ on:
         required: false
         type: string
       GCP_RUN_OPTION_SECRETS:
-        default: '--set-secrets=ENVVAR1=SECRET1_ID:latest,ENVVAR2=SECRET2_ID:latest'
+        # default: '--set-secrets=ENVVAR1=SECRET1_ID:latest,ENVVAR2=SECRET2_ID:latest'
         default: '--clear-secrets'
         required: false
         type: string
