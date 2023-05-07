@@ -24,5 +24,6 @@ export const setAuthToken = (token: string) => {
 };
 
 export const removeAuthToken = () => {
+  console.log('removingAuthToken');
   localStorage.removeItem(AUTH_TOKEN);
 };
