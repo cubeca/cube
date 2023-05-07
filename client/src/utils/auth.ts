@@ -1,7 +1,6 @@
 import { anonymousJWT } from 'api/auth';
 
 const AUTH_TOKEN = 'AUTH_TOKEN';
-const ANON_TOKEN = 'ANON_TOKEN';
 
 export const getAuthToken = async (): Promise<string | null> => {
   let jwt = localStorage.getItem(AUTH_TOKEN);
@@ -12,7 +11,9 @@ export const getAuthToken = async (): Promise<string | null> => {
   return jwt;
 };
 
-export const getAuthTokenPayload = async (): Promise<Record<string, unknown>> => {
+export const getAuthTokenPayload = async (): Promise<
+  Record<string, unknown>
+> => {
   const tokenParts = String(await getAuthToken()).split('.');
   return tokenParts[1] ? JSON.parse(atob(tokenParts[1])) : {};
 };
@@ -23,21 +24,14 @@ export const setAuthToken = (token: string) => {
 };
 
 export const removeAuthToken = () => {
+  console.log('removing token');
   localStorage.removeItem(AUTH_TOKEN);
 };
 
-// DEPRECATED
-export const getAnonToken = async () => {
-  const token = localStorage.getItem(ANON_TOKEN);
-  if (!token) {
-    const jwt = await anonymousJWT();
-    setAnonToken(jwt);
-    return jwt;
+export const isAuthed = async () => {
+  const payload = await getAuthTokenPayload();
+  if (!(payload.aud as Array<string>).includes('anonymous')) {
+    return true;
   }
-  return token;
-};
-
-// DEPRECATED
-export const setAnonToken = (token: string) => {
-  localStorage.setItem(ANON_TOKEN, token);
+  return false;
 };
