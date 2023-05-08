@@ -5,7 +5,7 @@ run-name: Publish Frontend PROD @ ${{ github.sha }}
 on:
   push:
     branches:
-      - main
+      - deploy-production
     paths:
       - 'client/**'
 

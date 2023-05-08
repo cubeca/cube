@@ -5,7 +5,7 @@ run-name: Publish identity microservice PROD @ ${{ github.sha }}
 on:
   push:
     branches:
-      - main
+      - deploy-production
     paths:
       - 'services/identity/**'
 

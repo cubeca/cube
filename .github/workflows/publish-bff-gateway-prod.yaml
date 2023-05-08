@@ -5,7 +5,7 @@ run-name: Publish BFF gateway PROD @ ${{ github.sha }}
 on:
   push:
     branches:
-      - main
+      - deploy-production
     paths:
       - 'services/bff/**'
 
