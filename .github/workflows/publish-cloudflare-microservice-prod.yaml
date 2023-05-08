@@ -5,7 +5,7 @@ run-name: Publish cloudflare microservice PROD @ ${{ github.sha }}
 on:
   push:
     branches:
-      - main
+      - deploy-production
     paths:
       - 'services/cloudflare/**'
 
