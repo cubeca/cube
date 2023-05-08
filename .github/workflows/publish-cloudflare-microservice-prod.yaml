@@ -1,0 +1,29 @@
+name: Publish cloudflare microservice PROD
+
+run-name: Publish cloudflare microservice PROD @ ${{ github.sha }}
+
+on:
+  push:
+    branches:
+      - deploy-production
+    paths:
+      - 'services/cloudflare/**'
+
+      # This helps with debugging GHAs:
+      - '.github/workflows/publish-cloudflare-microservice-prod.yaml'
+      - '.github/workflows/publish-reusable.yaml'
+
+jobs:
+  publish-service:
+    uses: ./.github/workflows/publish-reusable.yaml
+    with:
+      CODE_BASE_DIR: services/cloudflare
+      GCP_PROJECT: cubecommons-prod
+      GCP_REGION: northamerica-northeast2
+      GCP_RUN_APPNAME: cloudflare
+      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
+      GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
+
+      GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-prod:northamerica-northeast2:prod
+      GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-prod:northamerica-northeast2:prod,PGDATABASE=cube_cloudflare,PGUSER=postgres,CLOUDFLARE_ACCOUNT_ID=812b8374abe5aa28e1ff4b96f82e1340,CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=customer-ayah89x7bps0l5b8.cloudflarestream.com,CLOUDFLARE_R2_BUCKET_NAME=cubecommons-prod,CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL=https://files.cubecommons.ca
+      GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,CLOUDFLARE_R2_ACCESS_KEY_ID=prod-cloudflare-r2-access-key-id:latest,CLOUDFLARE_API_TOKEN=prod-cloudflare-api-token:latest,CLOUDFLARE_R2_SECRET_ACCESS_KEY=prod-cloudflare-r2-secret-access-key:latest,PGPASSWORD=prod-db-password:latest
