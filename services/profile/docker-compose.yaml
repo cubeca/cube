@@ -40,11 +40,6 @@ services:
   postgres:
     container_name: ${PROJECT_NAME}_db
     image: postgres:15.1-alpine3.17
-    # healthcheck:
-    #   test: [ "CMD", "pg_isready", "-q", "-d", "$POSTGRES_DB", "-U", "auth" ]
-    #   timeout: 45s
-    #   interval: 10s
-    #   retries: 10
     restart: always
     environment:
       POSTGRES_USER: $POSTGRES_USER
@@ -95,11 +90,10 @@ services:
       - ./.env.example:/work/.env.example
       - ./${ENV_FILE}:/work/.env
       - ./test/src:/work/src/
-      - ./test/scripts:/work/scripts/
-      - ./test/jest.config.js:/work/jest.config.js
-      - ./test/package-lock.json:/work/package-lock.json
-      - ./test/package.json:/work/package.json
-      - ./test/tsconfig.json:/work/tsconfig.json
+      - ./jest.config.js:/work/jest.config.js
+      - ./package-lock.json:/work/package-lock.json
+      - ./package.json:/work/package.json
+      - ./tsconfig.json:/work/tsconfig.json
 
 volumes:
   pgdata:
