@@ -10,7 +10,7 @@ import jsonwebtoken from 'jsonwebtoken';
 import mime from 'mime';
 
 import * as settings from './settings';
-import { inspect, inspectAxiosResponse, inspectAxiosError } from './utils';
+import { inspect, inspectAxiosResponse, inspectAxiosError, makeUUID } from './utils';
 import { uploadViaTus } from './tus';
 
 const API_URL = `http://${settings.MICROSERVICE}:${settings.PORT}`;
@@ -30,8 +30,8 @@ const cloudflareApi = axios.create({
   validateStatus: null
 });
 
-const getAuthReqOpts = (...permissions: string[]) => {
-  const jwt = jsonwebtoken.sign(
+const makeJwt = (...permissions: string[]) => {
+  return jsonwebtoken.sign(
     {
       iss: 'CUBE',
       sub: NIL_UUID,
@@ -39,8 +39,10 @@ const getAuthReqOpts = (...permissions: string[]) => {
     },
     settings.JWT_TOKEN_SECRET
   );
+};
 
-  return getReqOptsWithJwt(jwt);
+const getAuthReqOpts = (...permissions: string[]) => {
+  return getReqOptsWithJwt(makeJwt(...permissions));
 };
 
 const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer ${jwt}` } });
@@ -62,7 +64,13 @@ test('uploads video via TUS', async () => {
   // See /services/cloudflare/test/scripts/download_example_files.sh
   const filePath = `${__dirname}/../example-files/file_example_WEBM_480_900KB.webm`;
 
-  const fileId = await uploadViaTus(`${API_URL}/upload/video-tus-reservation`, getAuthReqOpts('contentEditor').headers, filePath, meta);
+  const fileId = makeUUID();
+
+  const uploadTusEndpoint = new URL(`${API_URL}/upload/video-tus-reservation`);
+  uploadTusEndpoint.searchParams.set('fileId', fileId);
+  uploadTusEndpoint.searchParams.set('authorization', makeJwt('contentEditor'));
+
+  await uploadViaTus(uploadTusEndpoint.toString(), filePath, meta);
 
   let detailStatus, detailData: any = {};
   for (let i = 0; i < 20; i++) {
@@ -87,7 +95,8 @@ test('uploads video via TUS', async () => {
 
   expect(detailData).toEqual(
     expect.objectContaining({
-      id: expect.stringMatching(UUID_REGEXP),
+      // id: expect.stringMatching(UUID_REGEXP),
+      id: fileId,
       createdAt: expect.stringMatching(TIMESTAMP_REGEXP),
       updatedAt: expect.stringMatching(TIMESTAMP_REGEXP),
       storageType: expect.stringMatching(/^cloudflareStream$/),
@@ -158,7 +167,15 @@ test('uploads non-video via S3 presigned URL', async () => {
 
   const fileStream = fs.createReadStream(filePath);
 
-  const r2UploadResponse = await axios.put(r2SignData.presignedUrl, fileStream, r2PutOptions);
+  console.log('before R2 upload', r2SignData.presignedUrl)
+  let r2UploadResponse;
+  try {
+    r2UploadResponse = await axios.put(r2SignData.presignedUrl, fileStream, r2PutOptions);
+  } catch (err: any) {
+    inspectAxiosError(err);
+    throw err;
+  }
+  console.log('after R2 upload', r2SignData.presignedUrl)
 
   // inspect({
   //   status: r2UploadResponse.status,
@@ -167,7 +184,7 @@ test('uploads non-video via S3 presigned URL', async () => {
   //   data: r2UploadResponse.data,
   // });
 
-  expect(r2UploadResponse.status).toEqual(200);
+  expect(r2UploadResponse?.status).toEqual(200);
 
   const detailResponse = await cloudflareApi.get(
     `/files/${fileId}`,
@@ -202,7 +219,16 @@ test('uploads non-video via S3 presigned URL', async () => {
     responseType: 'arraybuffer' as ResponseType
   };
 
-  const r2DownloadResponse = await axios.get(detailResponse.data?.playerInfo?.publicUrl, r2DownloadOptions);
+  let r2DownloadResponse;
+
+  console.log('before R2 download', detailResponse.data?.playerInfo?.publicUrl);
+  try {
+    r2DownloadResponse = await axios.get(detailResponse.data?.playerInfo?.publicUrl, r2DownloadOptions);
+  } catch (err: any) {
+    inspectAxiosError(err);
+    throw err;
+  }
+  console.log('after R2 download', detailResponse.data?.playerInfo?.publicUrl);
 
   expect(r2DownloadResponse.status).toEqual(200);
 

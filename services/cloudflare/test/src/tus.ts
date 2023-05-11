@@ -15,33 +15,25 @@ const defaultProgressHandler: ProgressHandler = (bytesUploaded: number, bytesTot
     console.log(`${bytesUploaded}/${bytesTotal} = ${percentage}%`);
 }
 
-export const uploadViaTus = async (endpoint: string, headers: any, filePath: string, meta: any, progressHandler: ProgressHandler = defaultProgressHandler) => {
+export const uploadViaTus = async (endpoint: string, filePath: string, meta: any, progressHandler: ProgressHandler = defaultProgressHandler) => {
     return await new Promise((resolve, reject) => {
         const file = fs.createReadStream(filePath);
         const fileName = path.basename(filePath);
         const mimeType = mime.getType(filePath) || 'application/octet-stream';
 
-        let fileId: string | undefined = undefined;
-
         const options = {
             endpoint,
-            headers,
             metadata: {
                 fileName,
                 mimeType,
                 ...meta
-            },
-            onAfterResponse(req: HttpRequest, res: HttpResponse) {
-                if (req.getURL() === endpoint) {
-                    fileId = res.getHeader("CUBE-File-Id");
-                }
             },
             onError(error: any) {
                 reject(error);
             },
             onProgress: progressHandler,
             onSuccess() {
-                resolve(fileId);
+                resolve(undefined);
             },
         }
 

@@ -20,6 +20,13 @@ app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
 
+  const fileId = req.query.fileId as string;
+
+  if (!fileId) {
+    console.log(400, `Invalid Request. 'fileId' query parameter required`);
+    return res.status(400).send(`Invalid Request. 'fileId' query parameter required`);
+  }
+
   const {
     'upload-length': tusUploadLength,
     'upload-metadata': tusUploadMetadata,
@@ -59,20 +66,25 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   try {
     const { id:userId } = extractUser(req);
 
-    const dbFileStub = await db.insertVideoFileStub({
-      profileId,
-      upload: {
-        userId,
-        fileName,
-        fileSizeBytes:Number(tusUploadLength),
-        debug: {
-          reserveDurationSeconds,
-          urlValidDurationSeconds
+    const dbFileStub = await db.insertVideoFileStubWithForcedFileId(
+      fileId,
+      {
+        profileId,
+        upload: {
+          userId,
+          fileName,
+          fileSizeBytes: Number(tusUploadLength),
+          debug: {
+            reserveDurationSeconds,
+            urlValidDurationSeconds
+          }
         }
       }
-    });
+    );
 
-    const fileId = dbFileStub.id;
+    if (fileId != dbFileStub.id) {
+      return res.status(500).send('Error creating the DB entry for this file');
+    }
 
     const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(fileId, Number(tusUploadLength), reserveDurationSeconds, urlValidDurationSeconds, userId);
 
@@ -83,10 +95,9 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
 
     res.set({
-      "Access-Control-Expose-Headers": "Location,CUBE-File-Id",
+      "Access-Control-Expose-Headers": "Location",
       "Access-Control-Allow-Headers": "*",
       "Access-Control-Allow-Origin": "*",
-      "CUBE-File-Id": fileId,
       Location: tusUploadUrl,
     })
     res.status(200).send("OK")

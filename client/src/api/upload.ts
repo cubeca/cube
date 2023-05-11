@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-import { Upload, HttpRequest, HttpResponse } from 'tus-js-client';
-import { UPLOAD_TUS_ENDPOINT, uploadApi } from '.';
-import { getAuthToken } from '../utils/auth';
+import { Upload } from 'tus-js-client';
+import { uploadApi, getUploadTusEndpoint } from '.';
+import { makeUUID } from './helpers';
 
 export const upload = async (
   file: File,
@@ -10,7 +10,18 @@ export const upload = async (
 ): Promise<string | undefined> => {
   const mimeType = file.type;
   if (mimeType.startsWith('video')) {
-    return await uploadViaTus(file, { profileId });
+
+    // This is just a hack until the Files & Upload APIs get refactored,
+    // to allow creating a file stub with ID in a separate API call before triggering TUS.
+    // TODO Replace with API call to create file stub.
+    const fileId = makeUUID();
+
+    const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
+
+    // Do NOT "await" on purpose, since the fileId is already known.
+    uploadViaTus(file, uploadTusEndpoint, { profileId });
+
+    return fileId;
   } else {
     return await uploadS3(file, profileId);
   }
@@ -31,15 +42,13 @@ const defaultProgressHandler: ProgressHandler = (
 
 export const uploadViaTus = async (
   file: File,
+  uploadTusEndpoint: string,
   meta: any,
   progressHandler: ProgressHandler = defaultProgressHandler
-): Promise<string | undefined> => {
-  const authToken = await getAuthToken();
+): Promise<undefined> => {
   return await new Promise((resolve, reject) => {
-    let fileId: string | undefined = undefined;
-
     const options = {
-      endpoint: UPLOAD_TUS_ENDPOINT,
+      endpoint: uploadTusEndpoint,
       retryDelays: [0, 3000, 5000, 10000, 20000],
       metadata: {
         fileName: file.name,
@@ -50,26 +59,12 @@ export const uploadViaTus = async (
 
         ...meta
       },
-      onBeforeRequest(req: HttpRequest) {
-        // Browsers can't send `Authorization` headers to https://upload.videodelivery.net/
-        // because of CORS. So we have to send it only for the initial endpoint.
-        if (req.getURL() === UPLOAD_TUS_ENDPOINT) {
-          req.setHeader('Authorization', `Bearer ${authToken}`);
-        }
-      },
-      onAfterResponse(req: HttpRequest, res: HttpResponse) {
-        if (res.getStatus() === 200 && req.getURL() === UPLOAD_TUS_ENDPOINT) {
-          fileId = res.getHeader('CUBE-File-Id');
-          console.log(`got fileId from TUS endpoint: "${fileId}".`);
-          resolve(fileId); // Resolve early, so we can get on with creating content.
-        }
-      },
       onError(error: any) {
         reject(error);
       },
       onProgress: progressHandler,
       onSuccess() {
-        resolve(fileId);
+        resolve(undefined);
       }
     };
 

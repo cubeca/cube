@@ -76,13 +76,35 @@ export const insertVideoFileStub = async (data: VideoFileData) => {
       data
     )
     VALUES (
+      'cloudflareStream',
+      $1
+    )
+    RETURNING *
+  `;
+
+  const values = [JSON.stringify(data)];
+
+  return (await db.query(sql, values)).rows[0];
+};
+
+export const insertVideoFileStubWithForcedFileId = async (fileId: string, data: VideoFileData) => {
+  data.status = FileStatus.Stub;
+
+  const sql = `
+    INSERT INTO files (
+      id,
+      storage_type,
+      data
+    )
+    VALUES (
       $1,
+      'cloudflareStream',
       $2
     )
     RETURNING *
   `;
 
-  const values = ['cloudflareStream', JSON.stringify(data)];
+  const values = [fileId, JSON.stringify(data)];
 
   return (await db.query(sql, values)).rows[0];
 };
