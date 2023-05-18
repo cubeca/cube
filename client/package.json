@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@cubeca/bff-auth-client-oas-axios": "^0.5.2",
-    "@cubeca/bff-client-oas-axios": "^0.5.2",
+    "@cubeca/bff-client-oas-axios": "0.7.1",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@fontsource/inter": "^4.5.15",
@@ -45,6 +44,7 @@
   },
   "scripts": {
     "start": "./scripts/create_dot_env_if_missing.sh && NODE_ENV=development npx runtime-env-cra --config-name=./public/runtime-env.js && npx react-scripts start",
+    "local_dev_docker_compose": "npm start",
     "build": "react-scripts build",
     "serve:dev": "./scripts/create_dot_env_if_missing.sh && NODE_ENV=development npx runtime-env-cra --config-name=./build/runtime-env.js && npx serve --cors --config serve.json build",
     "serve:prod": "NODE_ENV=production npx runtime-env-cra --config-name=./build/runtime-env.js && npx serve --cors --config serve.json build",

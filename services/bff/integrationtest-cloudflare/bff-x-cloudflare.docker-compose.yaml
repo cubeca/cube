@@ -1,0 +1,142 @@
+version: '3.9'
+
+services:
+  cube_bff_x_cloudflare_microservice:
+    container_name: ${PROJECT_NAME}_microservice
+    build:
+      context: ../../cloudflare
+      dockerfile: ./${MICROSERVICE_DOCKERFILE}
+    image: ${PROJECT_NAME}_microservice
+    depends_on:
+      - postgres
+    networks:
+      - internal_api
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      PORT: $PORT
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      CLOUDFLARE_ACCOUNT_ID: $CLOUDFLARE_ACCOUNT_ID
+      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
+      CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN: $CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+    volumes:
+      - ../../cloudflare/.env.example:/work/.env.example
+      - ${ENV_FILE}:/work/.env
+      - ../../cloudflare/migrations:/work/migrations/
+      - ../../cloudflare/src:/work/src/
+      - ../../cloudflare/database.json:/work/database.json
+      - ../../cloudflare/package-lock.json:/work/package-lock.json
+      - ../../cloudflare/package.json:/work/package.json
+      - ../../cloudflare/tsconfig.json:/work/tsconfig.json
+
+  cube_bff_x_cloudflare_gateway:
+    container_name: ${PROJECT_NAME}_gateway
+    build:
+      context: ../
+      dockerfile: ./${GATEWAY_DOCKERFILE}
+    image: ${PROJECT_NAME}_gateway
+    depends_on:
+      - cube_bff_x_cloudflare_microservice
+    networks:
+      - public_api
+      - internal_api
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      PORT: $GATEWAY_PORT
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      CLOUDFLARE_SERVICE_URL: http://cube_bff_x_cloudflare_microservice:${PORT}
+
+      # These just get dummy values for this docker compose constellation.
+      CONTENT_SERVICE_URL: http://cube_bff_x_cloudflare_microservice:${PORT}
+      IDENTITY_SERVICE_URL: http://cube_bff_x_cloudflare_microservice:${PORT}
+      PROFILE_SERVICE_URL: http://cube_bff_x_cloudflare_microservice:${PORT}
+
+    volumes:
+      - ../.env.example:/work/.env.example
+      - ${GATEWAY_ENV_FILE}:/work/.env
+      - ../src:/work/src/
+      - ../package-lock.json:/work/package-lock.json
+      - ../package.json:/work/package.json
+      - ../tsconfig.json:/work/tsconfig.json
+
+  postgres:
+    container_name: ${PROJECT_NAME}_db
+    image: postgres:15.1-alpine3.17
+    restart: always
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - type: volume
+        source: pgdata
+        target: /var/lib/postgresql/data
+        volume:
+          nocopy: true
+    networks:
+      - db
+
+  cube_bff_x_cloudflare_testrunner:
+    profiles:
+      - test
+    container_name: ${PROJECT_NAME}_testrunner
+    build:
+      context: ../../cloudflare/
+      dockerfile: ./test/Dockerfile
+    image: ${PROJECT_NAME}_testrunner
+    depends_on:
+      - cube_bff_x_cloudflare_gateway
+    networks:
+      - public_api
+
+      # So that we can empty the DB before running the tests.
+      - db
+    environment:
+      PROJECT_NAME: $PROJECT_NAME
+
+      # This must be the same as the service name here in the docker compose file.
+      MICROSERVICE: cube_bff_x_cloudflare_gateway
+      PORT: $GATEWAY_PORT
+
+      PGHOST: postgres
+      PGPORT: '5432'
+
+      PGUSER: $POSTGRES_USER
+      PGPASSWORD: $POSTGRES_PASSWORD
+      PGDATABASE: $POSTGRES_DB
+
+      JWT_TOKEN_SECRET: $JWT_TOKEN_SECRET
+
+      CLOUDFLARE_ACCOUNT_ID: $CLOUDFLARE_ACCOUNT_ID
+      CLOUDFLARE_API_TOKEN: $CLOUDFLARE_API_TOKEN
+      CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN: $CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN
+    volumes:
+      - ../../cloudflare/.env.example:/work/.env.example
+      - ${ENV_FILE}:/work/.env
+      - ../../cloudflare/test/example-files:/work/example-files/
+      - ../../cloudflare/test/src:/work/src/
+      - ../../cloudflare/test/scripts:/work/scripts/
+      - ../../cloudflare/test/jest.config.js:/work/jest.config.js
+      - ../../cloudflare/test/package-lock.json:/work/package-lock.json
+      - ../../cloudflare/test/package.json:/work/package.json
+      - ../../cloudflare/test/tsconfig.json:/work/tsconfig.json
+
+volumes:
+  pgdata:
+
+networks:
+  public_api:
+  internal_api:
+  db:
