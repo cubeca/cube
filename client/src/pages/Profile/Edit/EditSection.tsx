@@ -17,21 +17,28 @@ interface EditSectionProps {
 const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
-  const { updateSection, updateLogo, updateAudioDescription } =
-    useEditProfile();
-  const [logoUrl, setLogoUrl] = useState(profile.logoUrl);
+  const { updateSection, updateLogo, updateAudioDescription, updateHero } =
+    useEditProfile(profile.id);
+  const [logoUrl] = useState(profile.logoUrl);
+  const [heroUrl] = useState(profile.heroUrl);
   const [editLogo, setEditLogo] = useState(false);
+  const [editHero, setEditHero] = useState(false);
   const [editAudio, setEditAudio] = useState(false);
 
   const onSubmitSection = (data: FieldValues) => {
-    const { profileName, profileDescription } = data;
-    updateSection(profile.id, profileName, profileDescription);
+    const { profileDescription } = data;
+    updateSection(profile.id, profileDescription);
     setIsEditing(false);
   };
 
   const onChangeLogo = (e: any) => {
     const file = e.target.files[0];
     updateLogo(profile.id, file);
+  };
+
+  const onChangeHero = (e: any) => {
+    const file = e.target.files[0];
+    updateHero(profile.id, file);
   };
 
   const onChangeAudioDescription = (e: any) => {
@@ -57,6 +64,22 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
           </Box>
         )}
       </Box>
+      <Box>
+        <Button
+          onClick={() => {
+            setEditHero(!editHero);
+          }}
+          variant="text"
+          startIcon={<EditIcon />}
+        >
+          {editHero ? t('Cancel') : t('Edit Hero')}
+        </Button>
+        {editHero && (
+          <Box component="span" pl="1rem">
+            <input type="file" id="hero" onChange={onChangeHero} />
+          </Box>
+        )}
+      </Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center">
           {logoUrl && (
@@ -64,14 +87,13 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
               <img src={logoUrl} alt="" />
             </Box>
           )}
-          <TextInput
-            id="profileName"
-            name="profileName"
-            control={control}
-            defaultValue={profile.organization}
-            variant="standard"
-            sx={{ fontSize: '2rem' }}
-          />
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          {heroUrl && (
+            <Box component="span" pr="1rem">
+              <img src={heroUrl} alt="" />
+            </Box>
+          )}
         </Stack>
         <Box>
           <Button onClick={handleSubmit(onSubmitSection)}>{t('Done')}</Button>

@@ -33,8 +33,6 @@ const Profile = () => {
   };
   // backgroundImage: `url('${profile!.heroUrl}')`,
 
-  const onEditCoverPhoto = () => {};
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -43,7 +41,10 @@ const Profile = () => {
     <Box>
       <s.UserProfile>
         {editSection ? (
-          <EditSection profile={profile!} setIsEditing={setEditSection} />
+          <EditSection
+            profile={profile!}
+            setIsEditing={setEditSection}
+          />
         ) : (
           <ViewSection
             profile={profile!}
