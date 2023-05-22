@@ -16,15 +16,14 @@ import { Upload } from '@mui/icons-material';
 import Footer from 'components/layout/Footer';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 import * as s from './Profile.styled';
+import useAuth from 'hooks/useAuth';
 
 const Profile = () => {
   const { t } = useTranslation();
   const { data: profile, isLoading } = useProfile();
-  const isLoggedIn = true;
+  const { isLoggedIn } = useAuth();
   const [editSection, setEditSection] = useState(false);
   const navigate = useNavigate();
-
-  console.log(profile);
 
   const handleNewMedia = () => {
     if (profile) {

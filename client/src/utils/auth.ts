@@ -24,6 +24,13 @@ export const setAuthToken = (token: string) => {
 };
 
 export const removeAuthToken = () => {
-  console.log('removingAuthToken');
   localStorage.removeItem(AUTH_TOKEN);
+};
+
+export const isAuthed = async () => {
+  const payload = await getAuthTokenPayload();
+  if (!(payload.aud as Array<string>).includes('anonymous')) {
+    return true;
+  }
+  return false;
 };
