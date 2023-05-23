@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { removeAuthToken } from '../../../../../utils/auth';
 
 import * as s from './AuxiliaryNav.styled';
+import useAuth from 'hooks/useAuth';
 
 const AuxiliaryNav = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const handleLogout = () => {
     removeAuthToken();
@@ -23,9 +25,11 @@ const AuxiliaryNav = () => {
       <s.AuxButton variant="outlined" onClick={handleLogin}>
         {t('Login')}
       </s.AuxButton>
-      <s.AuxButton variant="outlined" onClick={handleLogout}>
-        {t('Logout')}
-      </s.AuxButton>
+      {isLoggedIn && (
+        <s.AuxButton variant="outlined" onClick={handleLogout}>
+          {t('Logout')}
+        </s.AuxButton>
+      )}
     </Stack>
   );
 };
