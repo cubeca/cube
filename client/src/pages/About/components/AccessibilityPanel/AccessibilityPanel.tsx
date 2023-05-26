@@ -38,7 +38,6 @@ const AccessibilityPanel = () => {
         {/* <MediaPlayer
           url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
           isAudio
-          width="90%"
         /> */}
       </Box>
 
