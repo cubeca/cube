@@ -7,7 +7,8 @@ export const VideoWrapper = styled(Box)`
   padding-top: 56.25%;
 
   & > div,
-  video {
+  video, 
+  iframe {
     position: absolute;
     top: 0;
     left: 0;

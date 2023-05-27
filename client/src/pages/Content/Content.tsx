@@ -8,6 +8,8 @@ import {
 } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
+import YouTubePlayer from 'components/YouTubePlayer';
+import { getIDfromURL } from 'utils/youtubeUtils';
 import { useTranslation } from 'react-i18next';
 import useContentDetails from 'hooks/useContentDetails';
 import MoreContent from './MoreContent';
@@ -21,17 +23,24 @@ const Video = () => {
   const theme = useTheme();
   const { data: content, isLoading } = useContentDetails();
   const formattedCreatedDate = content ? new Date(content.createdDate).toLocaleDateString('en-us', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+  const youtubeID = getIDfromURL(content?.url || '');
 
   return (
     <Box>
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
-          
+        
           <s.VideoWrapper>
             {isLoading ? (
               <MediaPlayerLoader type="video" />
             ) : (
-              <MediaPlayer url={content?.url || ''} />
+
+              (youtubeID != '') ? (
+                <YouTubePlayer id={youtubeID} />
+              ) : (
+                <MediaPlayer url={content?.url || ''} />
+              )
+
             )}
           </s.VideoWrapper>
 

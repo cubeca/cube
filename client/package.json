@@ -35,6 +35,7 @@
     "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
     "react-scroll-parallax": "^3.3.2",
+    "react-youtube": "^10.1.0",
     "runtime-env-cra": "^0.2.4",
     "serve": "^14.2.0",
     "tus-js-client": "^3.0.1",
