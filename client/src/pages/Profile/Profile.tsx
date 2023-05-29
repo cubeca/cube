@@ -41,10 +41,7 @@ const Profile = () => {
     <Box>
       <s.UserProfile>
         {editSection ? (
-          <EditSection
-            profile={profile!}
-            setIsEditing={setEditSection}
-          />
+          <EditSection profile={profile!} setIsEditing={setEditSection} />
         ) : (
           <ViewSection
             profile={profile!}
@@ -55,7 +52,7 @@ const Profile = () => {
       </s.UserProfile>
 
       <s.UserHeroBg>
-        <img src={profileHeroUrl} alt="user profile hero" />
+        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
       </s.UserHeroBg>
 
       <Grid container>

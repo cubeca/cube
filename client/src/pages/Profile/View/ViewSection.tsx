@@ -16,12 +16,16 @@ interface ViewSectionProps {
 
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
   const { t } = useTranslation();
+  console.log(profile);
   return (
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
           <s.ImageInner href={profile.website} title={profile!.organization}>
-            <img src={FPOProfileUrl} alt="profile thumbnail" />
+            <img
+              src={profile.logourl || FPOProfileUrl}
+              alt="profile thumbnail"
+            />
           </s.ImageInner>
           {isLoggedIn && (
             <s.EditWrapper>
