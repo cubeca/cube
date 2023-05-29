@@ -33,8 +33,6 @@ const Profile = () => {
   };
   // backgroundImage: `url('${profile!.heroUrl}')`,
 
-  const onEditCoverPhoto = () => {};
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -54,7 +52,7 @@ const Profile = () => {
       </s.UserProfile>
 
       <s.UserHeroBg>
-        <img src={profileHeroUrl} alt="user profile hero" />
+        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
       </s.UserHeroBg>
 
       <Grid container>

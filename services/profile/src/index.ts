@@ -36,26 +36,30 @@ app.post('/profiles', allowIfAnyOf('userAdmin'), async (req: Request, res: Respo
 });
 
 // Route for updating an existing profile by its ID
-app.post('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
+// TODO: Add back in Auth
+app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
+  console.log('QUERY', req.query);
+  console.log('BODY', req.body);
+
   // Ensure at least one field is provided for update
-  if (!(req.query.heroUrl || req.query.logoUrl || req.query.desc || req.query.descUrl)) {
+  if (!(req.body.heroFileId || req.body.logoFileId || req.body.description || req.body.descriptionUrl)) {
     return res.status(500).json('You must supply at least one field to update!');
   }
 
   // Store the values for each field to be updated
   const args = [
-    req.query.heroUrl as string,
-    req.query.logoUrl as string,
-    req.query.desc as string,
-    req.query.descUrl as string
+    req.body.heroFileId as string,
+    req.body.logoFileId as string,
+    req.body.description as string,
+    req.body.descriptionUrl as string
   ];
 
   // Update the profile and return the updated profile
   try {
     const dbResult = await db.updateProfile(profileId, ...args);
-    res.status(201).json(dbResult);
+    res.status(200).json(dbResult);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -90,7 +94,7 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
 // Route for deleting a profile by its ID
 app.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
   const r = await db.deleteProfile(req.params.profileId);
-  res.status(200).json({...r});
+  res.status(200).json({ ...r });
 });
 
 // Route for checking if the service is running
