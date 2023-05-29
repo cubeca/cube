@@ -4,10 +4,9 @@ import ReactPlayer from 'react-player';
 interface MediaPlayerProps {
   url: string;
   isAudio?: boolean;
-  width?: string;
 }
 
-const MediaPlayer: FC<MediaPlayerProps> = ({ url, isAudio, width = '50%' }) => {
+const MediaPlayer: FC<MediaPlayerProps> = ({ url, isAudio }) => {
   return (
     <ReactPlayer
       url={url}
@@ -18,8 +17,8 @@ const MediaPlayer: FC<MediaPlayerProps> = ({ url, isAudio, width = '50%' }) => {
         }
       }}
       controls
-      width={width}
-      height={isAudio ? '40px' : '70vh'}
+      width={'100%'}
+      height={isAudio ? '40px' : 'auto'}
     />
   );
 };
