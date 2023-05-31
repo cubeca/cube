@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Profile } from 'api/profile';
 import EditIcon from '@mui/icons-material/Edit';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
-import * as s from './ViewSection.styled';
+import * as s from '../Profile.styled';
 
 interface ViewSectionProps {
   isLoggedIn: boolean;
@@ -15,8 +15,6 @@ interface ViewSectionProps {
 }
 
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
-  const { t } = useTranslation();
-  console.log(profile);
   return (
     <s.ViewSection>
       <s.Header>
