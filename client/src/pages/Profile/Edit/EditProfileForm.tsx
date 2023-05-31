@@ -1,34 +1,34 @@
-import { Box, Link, Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
-import { FC, useState } from 'react';
+import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Profile } from 'api/profile';
 import useEditProfile from './useEditProfile';
 import EditIcon from '@mui/icons-material/Edit';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import * as s from '../Profile.styled';
+import FPOProfileUrl from 'assets/images/profile-user-image.png';
+import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 
-interface EditSectionProps {
+interface EditProfileFormProps {
   profile: any;
-  setIsEditing: (isEditing: boolean) => void;
+  onSave: () => void;
 }
 
-const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
+const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
   const { updateSection, updateLogo, updateAudioDescription, updateHero } =
     useEditProfile(profile.id);
   const [logoUrl] = useState(profile.logoUrl);
   const [heroUrl] = useState(profile.heroUrl);
-  const [editLogo, setEditLogo] = useState(false);
-  const [editHero, setEditHero] = useState(false);
   const [editAudio, setEditAudio] = useState(false);
 
   const onSubmitSection = (data: FieldValues) => {
     const { profileDescription } = data;
     updateSection(profile.id, profileDescription);
-    setIsEditing(false);
+    onSave();
   };
 
   const onChangeLogo = (e: any) => {
@@ -46,59 +46,57 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
     updateAudioDescription(profile.id, file);
   };
 
+  const logoIdUpload = 'logo-upload';
+  const heroIdUpload = 'hero-upload';
+
   return (
     <Stack direction="column">
-      <Box>
-        <Button
-          onClick={() => {
-            setEditLogo(!editLogo);
-          }}
-          variant="text"
-          startIcon={<EditIcon />}
-        >
-          {editLogo ? t('Cancel') : t('Edit Logo')}
-        </Button>
-        {editLogo && (
-          <Box component="span" pl="1rem">
-            <input type="file" id="logo" onChange={onChangeLogo} />
-          </Box>
-        )}
-      </Box>
-      <Box>
-        <Button
-          onClick={() => {
-            setEditHero(!editHero);
-          }}
-          variant="text"
-          startIcon={<EditIcon />}
-        >
-          {editHero ? t('Cancel') : t('Edit Hero')}
-        </Button>
-        {editHero && (
-          <Box component="span" pl="1rem">
-            <input type="file" id="hero" onChange={onChangeHero} />
-          </Box>
-        )}
-      </Box>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Stack direction="row" alignItems="center">
-          {logoUrl && (
-            <Box component="span" pr="1rem">
-              <img src={logoUrl} alt="" />
-            </Box>
-          )}
-        </Stack>
-        <Stack direction="row" alignItems="center">
-          {heroUrl && (
-            <Box component="span" pr="1rem">
-              <img src={heroUrl} alt="" />
-            </Box>
-          )}
-        </Stack>
-        <Box>
-          <Button onClick={handleSubmit(onSubmitSection)}>{t('Done')}</Button>
-        </Box>
-      </Stack>
+      <s.ImageWrapper>
+        <s.ImageInner>
+          <img src={profile.logourl || FPOProfileUrl} alt="profile thumbnail" />
+        </s.ImageInner>
+        <s.EditWrapper>
+          <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
+            <EditIcon />
+            <input
+              type="file"
+              id={logoIdUpload}
+              onChange={onChangeLogo}
+              style={{ display: 'none' }}
+            />
+          </label>
+        </s.EditWrapper>
+      </s.ImageWrapper>
+      <s.EditProfileHeroBg>
+        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
+      </s.EditProfileHeroBg>
+      <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
+        <EditIcon />
+        <input
+          type="file"
+          id={heroIdUpload}
+          onChange={onChangeHero}
+          style={{ display: 'none' }}
+        />
+      </label>
+      <TextInput
+        defaultValue={profile.organization}
+        name="organization"
+        id="organization"
+        control={control}
+        fullWidth
+        variant="outlined"
+        label={t('Organization Name')}
+      />
+      <TextInput
+        defaultValue={profile.website}
+        name="website"
+        id="website"
+        control={control}
+        fullWidth
+        variant="outlined"
+        label={t('Organization URL')}
+      />
       <TextInput
         defaultValue={profile.description}
         name="profileDescription"
@@ -107,8 +105,10 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
         multiline
         rows={4}
         fullWidth
-        variant="standard"
+        variant="outlined"
+        label={t('Description')}
       />
+
       <Button
         onClick={() => {
           setEditAudio(!editAudio);
@@ -140,8 +140,13 @@ const EditSection: FC<EditSectionProps> = ({ profile, setIsEditing }) => {
           />
         </Box>
       )}
+      <Box>
+        <Button onClick={handleSubmit(onSubmitSection)}>
+          {t('Update Profile')}
+        </Button>
+      </Box>
     </Stack>
   );
 };
 
-export default EditSection;
+export default EditProfileForm;
