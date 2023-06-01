@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Profile } from 'api/profile';
 import EditIcon from '@mui/icons-material/Edit';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
-import * as s from './ViewSection.styled';
+import * as s from '../Profile.styled';
 
 interface ViewSectionProps {
   isLoggedIn: boolean;
@@ -15,18 +15,19 @@ interface ViewSectionProps {
 }
 
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
-  const { t } = useTranslation();
   return (
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
           <s.ImageInner href={profile.website} title={profile!.organization}>
-            <img src={FPOProfileUrl} alt="profile thumbnail" />
+            <img
+              src={profile.logourl || FPOProfileUrl}
+              alt="profile thumbnail"
+            />
           </s.ImageInner>
           {isLoggedIn && (
             <s.EditWrapper>
-              {/* <button onClick={onEdit}> */}
-              <button>
+              <button onClick={onEdit} style={{ cursor: 'pointer' }}>
                 <EditIcon />
               </button>
             </s.EditWrapper>
@@ -47,13 +48,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
 
       <s.Body>
         <Typography component="p" variant="body2">
-          {/* {profile.description} */}
-          You have successfully created your profile on CubeCommons! In the next
-          week we will send you an email update when your profile is confirmed
-          and you can start editing this profile description. You can already
-          start uploading content which will appear when your profile is
-          confirmed. All content players will be embeddable on your website
-          which we have linked to your username.
+          {profile.description}
         </Typography>
       </s.Body>
     </s.ViewSection>

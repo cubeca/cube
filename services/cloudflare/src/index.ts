@@ -19,7 +19,6 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-
   const fileId = req.query.fileId as string;
 
   if (!fileId) {
@@ -27,10 +26,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     return res.status(400).send(`Invalid Request. 'fileId' query parameter required`);
   }
 
-  const {
-    'upload-length': tusUploadLength,
-    'upload-metadata': tusUploadMetadata,
-  } = req.headers;
+  const { 'upload-length': tusUploadLength, 'upload-metadata': tusUploadMetadata } = req.headers;
 
   if (!tusUploadLength) {
     console.log(400, `Invalid Request. 'Upload-Length' header required`);
@@ -64,29 +60,32 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const urlValidDurationSeconds = Math.ceil(Number(validFor));
 
   try {
-    const { id:userId } = extractUser(req);
+    const { id: userId } = extractUser(req);
 
-    const dbFileStub = await db.insertVideoFileStubWithForcedFileId(
-      fileId,
-      {
-        profileId,
-        upload: {
-          userId,
-          fileName,
-          fileSizeBytes: Number(tusUploadLength),
-          debug: {
-            reserveDurationSeconds,
-            urlValidDurationSeconds
-          }
+    const dbFileStub = await db.insertVideoFileStubWithForcedFileId(fileId, {
+      profileId,
+      upload: {
+        userId,
+        fileName,
+        fileSizeBytes: Number(tusUploadLength),
+        debug: {
+          reserveDurationSeconds,
+          urlValidDurationSeconds
         }
       }
-    );
+    });
 
     if (fileId != dbFileStub.id) {
       return res.status(500).send('Error creating the DB entry for this file');
     }
 
-    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(fileId, Number(tusUploadLength), reserveDurationSeconds, urlValidDurationSeconds, userId);
+    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(
+      fileId,
+      Number(tusUploadLength),
+      reserveDurationSeconds,
+      urlValidDurationSeconds,
+      userId
+    );
 
     if (!tusUploadUrl || !cloudflareStreamUid) {
       return res.status(500).send('Error retrieving content upload url');
@@ -95,12 +94,12 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
 
     res.set({
-      "Access-Control-Expose-Headers": "Location",
-      "Access-Control-Allow-Headers": "*",
-      "Access-Control-Allow-Origin": "*",
-      Location: tusUploadUrl,
-    })
-    res.status(200).send("OK")
+      'Access-Control-Expose-Headers': 'Location',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Origin': '*',
+      Location: tusUploadUrl
+    });
+    res.status(200).send('OK');
   } catch (e: any) {
     console.error(e.message);
     inspect(e);
@@ -111,21 +110,15 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const {
     profileId,
-    upload: {
-      fileName,
-      fileSizeBytes,
-      mimeType,
-      urlValidDurationSeconds = 30 * 60
-    }
+    upload: { fileName, fileSizeBytes, mimeType, urlValidDurationSeconds = 30 * 60 }
   } = req.body;
-
 
   if (!fileName) {
     return res.status(400).send(`Invalid Request. 'upload.fileName' required`);
   }
 
   try {
-    const { id:userId } = extractUser(req);
+    const { id: userId } = extractUser(req);
 
     const dbFileStub = await db.insertS3FileStub({
       profileId,
@@ -153,7 +146,6 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     inspect(e);
     res.status(500).send('Error retrieving content upload url');
   }
-
 });
 
 export interface VideoPlayerInfo {
@@ -171,8 +163,8 @@ export interface NonVideoPlayerInfo {
   fileType: string;
   publicUrl: string;
 }
-
-app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+// allowIfAnyOf('anonymous', 'active'),
+app.get('/files/:fileId', async (req: Request, res: Response) => {
   const { fileId } = req.params;
   if (!UUID_REGEXP.test(fileId)) {
     return res.status(400).send(`Invalid 'fileId' path parameter, must be in UUID format.`);
