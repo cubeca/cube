@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
+import * as s from './Dialog.styled';
 
 export interface DialogProps {
   id: string;
@@ -20,30 +21,24 @@ export interface DialogProps {
 const Dialog: FC<DialogProps> = ({ open, onClose, children, id, title }) => {
   const { t } = useTranslation();
   return (
-    <MuiDialog onClose={onClose} aria-labelledby={id} open={open}>
-      <DialogTitle sx={{ m: 0, p: 2 }} id={id}>
+    <s.Wrapper onClose={onClose} aria-labelledby={id} open={open}>
+      <s.Title id={id}>
         <Typography component="h2" variant="h4">
           {title}
         </Typography>
         {onClose ? (
-          <IconButton
+          <s.Close
             aria-label={t('close')}
             onClick={onClose}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
           >
             <CloseIcon />
-          </IconButton>
+          </s.Close>
         ) : null}
-      </DialogTitle>
-      <Box p="2rem" minWidth="540px">
+      </s.Title>
+      <s.Body>
         {children}
-      </Box>
-    </MuiDialog>
+      </s.Body>
+    </s.Wrapper>
   );
 };
 

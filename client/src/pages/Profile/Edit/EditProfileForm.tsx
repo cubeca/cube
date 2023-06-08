@@ -1,13 +1,13 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
-import TextInput from 'components/form/TextInput';
 import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import useEditProfile from './useEditProfile';
-import EditIcon from '@mui/icons-material/Edit';
+import CameraIcon from '@mui/icons-material/LocalSee';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import * as s from '../Profile.styled';
+import * as s from './EditProfileForm.styled';
+import * as sTextInput from 'components/form/TextInput/TextInput.styled';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 
@@ -51,56 +51,66 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
 
   return (
     <Stack direction="column">
-      <s.ImageWrapper>
-        <s.ImageInner>
-          <img src={profile.logourl || FPOProfileUrl} alt="profile thumbnail" />
-        </s.ImageInner>
-        <s.EditWrapper>
-          <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
-            <EditIcon />
+
+      <s.EditProfileImagesWrapper>
+        <s.EditProfileHeroBg>
+          <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
+          <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
+            <CameraIcon />
+            <Typography>Upload</Typography>
             <input
               type="file"
-              id={logoIdUpload}
-              onChange={onChangeLogo}
+              id={heroIdUpload}
+              onChange={onChangeHero}
               style={{ display: 'none' }}
             />
           </label>
-        </s.EditWrapper>
-      </s.ImageWrapper>
-      <s.EditProfileHeroBg>
-        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
-      </s.EditProfileHeroBg>
-      <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
-        <EditIcon />
-        <input
-          type="file"
-          id={heroIdUpload}
-          onChange={onChangeHero}
-          style={{ display: 'none' }}
-        />
-      </label>
-      <TextInput
+        </s.EditProfileHeroBg>
+        <s.ImageWrapper>
+          <s.ImageInner>
+            <img src={profile.logourl || FPOProfileUrl} alt="profile thumbnail" />
+          </s.ImageInner>
+          <s.EditWrapper>
+            <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
+              <CameraIcon />
+              <Typography>Upload</Typography>
+              <input
+                type="file"
+                id={logoIdUpload}
+                onChange={onChangeLogo}
+                style={{ display: 'none' }}
+              />
+            </label>
+          </s.EditWrapper>
+        </s.ImageWrapper>
+      </s.EditProfileImagesWrapper>
+      
+      
+      <sTextInput.DarkTextInput
         defaultValue={profile.organization}
         name="organization"
         id="organization"
+        sx={{ color:  '#28343C' }}
         control={control}
         fullWidth
         variant="outlined"
         label={t('Organization Name')}
       />
-      <TextInput
+      <sTextInput.DarkTextInput
         defaultValue={profile.website}
         name="website"
         id="website"
+        sx={{ color:  '#28343C' }}
         control={control}
         fullWidth
         variant="outlined"
         label={t('Organization URL')}
       />
-      <TextInput
+      <sTextInput.DarkTextInput
         defaultValue={profile.description}
         name="profileDescription"
         id="profileDescription"
+        sx={{ color:  '#28343C' }}
         control={control}
         multiline
         rows={4}
