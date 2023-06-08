@@ -3,6 +3,7 @@ import { FC, HTMLInputTypeAttribute } from 'react';
 import { Controller } from 'react-hook-form';
 import FormControl from '../FormControl';
 import { InputProps as MuiInputProps } from '../types';
+import * as s from './TextInput.styled';
 
 interface TextInputProps extends MuiInputProps {
   type?: HTMLInputTypeAttribute;
@@ -37,6 +38,7 @@ const TextInput: FC<TextInputProps> = ({
   multiline
 }) => {
   return (
+    
     <Controller
       name={name}
       control={control}
@@ -60,7 +62,7 @@ const TextInput: FC<TextInputProps> = ({
               sx={sx}
               placeholder={placeholder}
               variant={variant}
-              size="medium"
+              size="small"
               type={type}
               error={!!error}
               fullWidth={fullWidth}

@@ -5,6 +5,7 @@ export const EditProfileImagesWrapper = styled(Stack)`
   position: relative;
   margin-left: -30px;
   margin-right: -30px;
+  margin-bottom: 30px;
 `;
 
 export const EditProfileHeroBg = styled(Box)`

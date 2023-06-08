@@ -51,10 +51,12 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
 
   return (
     <Stack direction="column">
-
       <s.EditProfileImagesWrapper>
         <s.EditProfileHeroBg>
-          <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
+          <img
+            src={profile.herourl || profileHeroUrl}
+            alt="user profile hero"
+          />
           <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
             <CameraIcon />
             <Typography>Upload</Typography>
@@ -68,7 +70,10 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         </s.EditProfileHeroBg>
         <s.ImageWrapper>
           <s.ImageInner>
-            <img src={profile.logourl || FPOProfileUrl} alt="profile thumbnail" />
+            <img
+              src={profile.logourl || FPOProfileUrl}
+              alt="profile thumbnail"
+            />
           </s.ImageInner>
           <s.EditWrapper>
             <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
@@ -84,13 +89,11 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           </s.EditWrapper>
         </s.ImageWrapper>
       </s.EditProfileImagesWrapper>
-      
-      
+
       <sTextInput.DarkTextInput
         defaultValue={profile.organization}
         name="organization"
         id="organization"
-        sx={{ color:  '#28343C' }}
         control={control}
         fullWidth
         variant="outlined"
@@ -100,7 +103,6 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         defaultValue={profile.website}
         name="website"
         id="website"
-        sx={{ color:  '#28343C' }}
         control={control}
         fullWidth
         variant="outlined"
@@ -110,7 +112,6 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         defaultValue={profile.description}
         name="profileDescription"
         id="profileDescription"
-        sx={{ color:  '#28343C' }}
         control={control}
         multiline
         rows={4}
@@ -150,11 +151,14 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           />
         </Box>
       )}
-      <Box>
-        <Button onClick={handleSubmit(onSubmitSection)}>
+      <Stack
+        direction="row"
+        justifyContent="right"
+      >
+        <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
           {t('Update Profile')}
         </Button>
-      </Box>
+      </Stack>
     </Stack>
   );
 };
