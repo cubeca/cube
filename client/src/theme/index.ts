@@ -91,7 +91,7 @@ const getTheme = (mode?: 'dark' | 'light') =>
         },
         body1: {
           fontSize: '1.125rem',
-          marginBottom: '32px',
+          marginBottom: '32px'
         },
         body2: {
           fontSize: '1rem'
@@ -140,8 +140,8 @@ const getTheme = (mode?: 'dark' | 'light') =>
           sm: 600,
           md: 1000,
           lg: 1400,
-          xl: 1800,
-        },
+          xl: 1800
+        }
       },
 
       components: {
@@ -149,8 +149,8 @@ const getTheme = (mode?: 'dark' | 'light') =>
           styleOverrides: () => ({
             body: {
               margin: '0'
-            },
-          }),
+            }
+          })
         },
         MuiButton: {
           variants: [
@@ -160,10 +160,10 @@ const getTheme = (mode?: 'dark' | 'light') =>
                 color: THEME_COLORS.primary.main,
                 backgroundColor: THEME_COLORS.background.default,
                 '&:hover': {
-                  backgroundColor: THEME_COLORS.background.paper,
-               },
-              },
-            },
+                  backgroundColor: THEME_COLORS.background.paper
+                }
+              }
+            }
           ],
           styleOverrides: {
             root: {
@@ -179,6 +179,13 @@ const getTheme = (mode?: 'dark' | 'light') =>
             }
           }
         },
+        MuiMenu: {
+          styleOverrides: {
+            paper: {
+              backgroundColor: 'blue'
+            }
+          }
+        }
       }
     })
   );
