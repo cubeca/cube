@@ -10,6 +10,7 @@ import * as s from './EditProfileForm.styled';
 import * as sTextInput from 'components/form/TextInput/TextInput.styled';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
+import UploadInput from 'components/form/UploadInput';
 
 interface EditProfileFormProps {
   profile: any;
@@ -119,8 +120,9 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         variant="outlined"
         label={t('Description')}
       />
-
-      <Button
+      
+      {/*       
+      <Button color='secondary'
         onClick={() => {
           setEditAudio(!editAudio);
         }}
@@ -143,6 +145,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           : t('Upload an audio file describing the information above')}
       </Button>
       {editAudio && (
+
         <Box textAlign="center" pt="0.5rem">
           <input
             type="file"
@@ -150,7 +153,20 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
             onChange={onChangeAudioDescription}
           />
         </Box>
-      )}
+        
+      )} 
+      
+      // @jonathan - this is was the old way, and below is what we have on the uploads page. Needs testing. 
+      
+      */}
+
+      <UploadInput
+      text={t('Audio file describing the information above')}
+      onDrop={onChangeAudioDescription}
+      maxFiles={1}
+      style={'dark'}
+      />
+
       <Stack
         direction="row"
         justifyContent="right"
