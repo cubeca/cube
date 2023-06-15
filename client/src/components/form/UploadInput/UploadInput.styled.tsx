@@ -37,8 +37,4 @@ export const UploadBox = styled(Box)`
 export const UploadButton = styled('span')`
   text-decoration: underline;
   cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.palette.primary.main};
-  }
 `;
