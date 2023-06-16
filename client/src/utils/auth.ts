@@ -1,6 +1,7 @@
 import { anonymousJWT } from 'api/auth';
 
 const AUTH_TOKEN = 'AUTH_TOKEN';
+const PROFILE_ID = 'PROFILE_ID';
 
 export const getAuthToken = async (): Promise<string | null> => {
   let jwt = localStorage.getItem(AUTH_TOKEN);
@@ -23,8 +24,17 @@ export const setAuthToken = (token: string) => {
   localStorage.setItem(AUTH_TOKEN, token);
 };
 
+export const setProfileId = (id: string) => {
+  localStorage.setItem(PROFILE_ID, id);
+};
+
+export const getProfileId = () => {
+  return localStorage.getItem(PROFILE_ID);
+};
+
 export const removeAuthToken = () => {
   localStorage.removeItem(AUTH_TOKEN);
+  localStorage.removeItem(PROFILE_ID);
 };
 
 export const isAuthed = async () => {
