@@ -2,7 +2,7 @@ import { Menu } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ProfileMenuItem from './ProfileMenuItem';
-import { getProfileId, removeAuthToken } from 'utils/auth';
+import { removeAuthToken } from 'utils/auth';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import useProfile from 'hooks/useProfile';
