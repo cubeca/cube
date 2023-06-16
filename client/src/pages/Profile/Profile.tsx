@@ -29,7 +29,7 @@ const Profile = () => {
   // backgroundImage: `url('${profile!.heroUrl}')`,
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    // return <div>Loading...</div>;
   }
 
   return (
