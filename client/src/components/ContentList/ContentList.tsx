@@ -23,13 +23,13 @@ const ContentList: FC<ContentListProps> = ({
   return (
     <Stack>
       {heading && (
-        <Typography pb="2rem" pt="1.5rem">
+        <Typography component="h5" variant="h5" pb="2rem">
           {heading}
         </Typography>
       )}
-      <Stack direction='column'
-  spacing={{ xs: 3, sm: 3, md: 4 }}>
+      <Stack direction='column'>
         {content.map((c) => (
+          
           <ContentCard
             key={c.id}
             image={c.thumbnailUrl}
@@ -38,6 +38,7 @@ const ContentList: FC<ContentListProps> = ({
             url={c.url}
             icon={c.iconUrl}
           />
+
         ))}
       </Stack>
     </Stack>

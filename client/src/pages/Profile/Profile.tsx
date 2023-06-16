@@ -1,30 +1,24 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
-import ContentList from 'components/ContentList/index';
 import useProfile from 'hooks/useProfile';
 import { useState } from 'react';
 import ViewSection from './View/ViewSection';
-import EditSection from './Edit/EditSection';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from 'components/Button';
-import EditIcon from '@mui/icons-material/Edit';
-import CategorizedContent from '../Home/components/CategorizedContent/index';
 import UserContent from './UserContent';
-import ReactPlayer from 'react-player';
-import { Upload } from '@mui/icons-material';
 import Footer from 'components/layout/Footer';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 import * as s from './Profile.styled';
+import useAuth from 'hooks/useAuth';
+import EditDialog from './Edit/EditDialog';
 
 const Profile = () => {
   const { t } = useTranslation();
   const { data: profile, isLoading } = useProfile();
-  const isLoggedIn = true;
-  const [editSection, setEditSection] = useState(false);
+  const { isLoggedIn } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-
-  console.log(profile);
 
   const handleNewMedia = () => {
     if (profile) {
@@ -34,28 +28,22 @@ const Profile = () => {
   };
   // backgroundImage: `url('${profile!.heroUrl}')`,
 
-  const onEditCoverPhoto = () => {};
-
   if (isLoading) {
-    return <div>Loading...</div>;
+    // return <div>Loading...</div>;
   }
 
   return (
     <Box>
       <s.UserProfile>
-        {editSection ? (
-          <EditSection profile={profile!} setIsEditing={setEditSection} />
-        ) : (
-          <ViewSection
-            profile={profile!}
-            isLoggedIn={isLoggedIn}
-            onEdit={() => setEditSection(true)}
-          />
-        )}
+        <ViewSection
+          profile={profile!}
+          isLoggedIn={isLoggedIn}
+          onEdit={() => setIsOpen(true)}
+        />
       </s.UserProfile>
 
       <s.UserHeroBg>
-        <img src={profileHeroUrl} alt="user profile hero" />
+        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
       </s.UserHeroBg>
 
       <Grid container>
@@ -79,6 +67,11 @@ const Profile = () => {
           <UserContent />
         </Grid>
       </Grid>
+      <EditDialog
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        profile={profile!}
+      />
 
       <Footer />
     </Box>

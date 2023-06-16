@@ -1,4 +1,4 @@
-import { setAuthToken } from '../utils/auth';
+import { setAuthToken, setProfileId } from '../utils/auth';
 import { authApi } from '.';
 
 export const anonymousJWT = async () => {
@@ -18,6 +18,7 @@ export const login = async (email: string, password: string) => {
     password
   });
   setAuthToken(jwt);
+  setProfileId(profileId);
   return profileId;
 };
 
