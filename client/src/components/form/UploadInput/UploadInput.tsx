@@ -9,9 +9,10 @@ interface UploadInputProps {
   text: string;
   onDrop: (files: File[]) => void;
   maxFiles?: number;
+  style?: string;
 }
 
-const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
+const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles, style }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const handleDrop = useCallback((files: File[]) => {
@@ -23,7 +24,7 @@ const UploadInput: FC<UploadInputProps> = ({ text, onDrop, maxFiles }) => {
   });
 
   return (
-    <s.UploadBox {...getRootProps()}>
+    <s.UploadBox className={style} {...getRootProps()}>
       <input {...getInputProps()} />
       {isDragActive ? (
         <Typography component="p">{t('Drop the files here...')}</Typography>

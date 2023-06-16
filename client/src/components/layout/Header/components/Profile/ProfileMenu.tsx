@@ -5,6 +5,7 @@ import ProfileMenuItem from './ProfileMenuItem';
 import { getProfileId, removeAuthToken } from 'utils/auth';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import useProfile from 'hooks/useProfile';
 
 interface ProfileMenuProps {
   open: boolean;
@@ -16,7 +17,7 @@ interface ProfileMenuProps {
 const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const profileId = getProfileId();
+  const { data: profile } = useProfile();
 
   const handleLogout = () => {
     removeAuthToken();
@@ -39,7 +40,7 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
       }}
     >
       <ProfileMenuItem
-        onClick={() => handleMenuClick(`/profile/${profileId}`)}
+        onClick={() => handleMenuClick(`/profile/${profile.profileId}`)}
         text={t('My Profile')}
         icon={<AccountBoxIcon />}
       />

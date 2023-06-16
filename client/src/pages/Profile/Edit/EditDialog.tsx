@@ -16,7 +16,7 @@ const EditDialog = ({ isOpen, onClose, profile }: EditDialogProps) => {
       open={isOpen}
       onClose={onClose}
       id="edit-profile-dialog"
-      title={t('Edit Profile')}
+      title=''
     >
       <EditProfileForm profile={profile} onSave={onClose} />
     </Dialog>
