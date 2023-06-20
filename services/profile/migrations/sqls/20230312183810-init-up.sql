@@ -9,5 +9,6 @@ CREATE TABLE profiles (
     logoUrl VARCHAR DEFAULT '',
     description VARCHAR DEFAULT '',
     descriptionUrl VARCHAR DEFAULT '',
+    budget VARCHAR DEFAULT '',
     PRIMARY KEY (id)
 );
