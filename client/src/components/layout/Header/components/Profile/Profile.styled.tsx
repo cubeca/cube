@@ -5,7 +5,7 @@ export const ImageWrapper = styled(Box)`
   position: relative;
   width: 32px;
   height: 32px;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
 `;
 
 export const ImageInner = styled('div')`

@@ -33,10 +33,13 @@ const AuxiliaryNav = () => {
 
   return (
     <Stack component="nav" direction="row" alignItems="center" spacing={2}>
-      <s.AuxButton variant="outlined" onClick={handleLogin}>
-        {t('Login')}
-      </s.AuxButton>
-      {isLoggedIn && <Profile />}
+      {isLoggedIn ? (
+        <Profile />
+      ) : (
+        <s.AuxButton variant="outlined" onClick={handleLogin}>
+          {t('Login')}
+        </s.AuxButton>
+      )}
       <Button
         onClick={handleMenuOpen}
         aria-controls={open ? menuId : undefined}
