@@ -11,8 +11,8 @@ interface ProfileMenuItemProps {
 }
 
 const ProfileMenuItem = ({ onClick, icon, text }: ProfileMenuItemProps) => (
-  <MuiMenuItem onClick={onClick}>
-    <ListItemIcon>{icon}</ListItemIcon>
+  <MuiMenuItem onClick={onClick} sx={{ marginBottom: 1, paddingX: '20px' }}>
+    <ListItemIcon sx={{ paddingRight: '10px' }}>{icon}</ListItemIcon>
     <Typography component="div" sx={{ margin: 0 }}>
       {text}
     </Typography>
