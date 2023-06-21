@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Menu,
-  MenuList,
-  Paper,
-  Typography
-} from '@mui/material';
+import { Button, Divider, Menu, MenuList, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +14,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ArticleIcon from '@mui/icons-material/Article';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GroupsIcon from '@mui/icons-material/Groups';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface MainMenuProps {
   open: boolean;
@@ -55,7 +48,9 @@ const MainMenu = ({
         'aria-labelledby': id
       }}
     >
-      <Button onClick={onClose}>X</Button>
+      <Button onClick={onClose}>
+        <CloseIcon fontSize="small" />
+      </Button>
       <MenuList sx={{ padding: '4px 4px' }}>
         <MenuItem
           onClick={() => handleMenuClick('/search')}
@@ -79,30 +74,34 @@ const MainMenu = ({
         />
       </MenuList>
       <Divider />
-      <Typography component="h3" px="16px" pt="20px">
+      <Typography
+        component="h3"
+        px="16px"
+        pt="20px"
+        fontWeight="bold"
+        m={0}
+        mb={1}
+      >
         Glossary of Icons
       </Typography>
-      <Typography component="h4" px="16px">
+      <Typography component="h4" px="16px" m={0} mt={2} mb={1} fontSize="8px">
         Accessibility
       </Typography>
       <MenuList>
         <MenuItem
           text={t('Text to Speech')}
           icon={<VoiceChatIcon fontSize="small" />}
-          onClick={() => {}}
         />
         <MenuItem
           text={t('Sign Language')}
           icon={<SignLanguageIcon fontSize="small" />}
-          onClick={() => {}}
         />
         <MenuItem
           text={t('Closed Captioning')}
           icon={<ClosedCaptionIcon fontSize="small" />}
-          onClick={() => {}}
         />
       </MenuList>
-      <Typography component="h4" px="16px">
+      <Typography component="h4" px="16px" m={0} mb={2}>
         Content Types
       </Typography>
       <MenuItem

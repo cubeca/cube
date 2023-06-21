@@ -34,6 +34,7 @@ const Profile = () => {
         aria-controls={open ? menuId : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
+        sx={{ padding: '10px 20px' }}
       >
         <Box display="flex" justifyContent="center" alignItems="center">
           <s.ImageWrapper>
