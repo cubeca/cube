@@ -36,24 +36,21 @@ app.post('/profiles', allowIfAnyOf('userAdmin'), async (req: Request, res: Respo
 });
 
 // Route for updating an existing profile by its ID
-// TODO: Add back in Auth
-app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
+app.patch('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
-  console.log('QUERY', req.query);
-  console.log('BODY', req.body);
-
   // Ensure at least one field is provided for update
-  if (!(req.body.heroFileId || req.body.logoFileId || req.body.description || req.body.descriptionUrl)) {
+  if (!(req.query.heroUrl || req.query.logoUrl || req.query.description || req.query.descriptionUrl || req.query.budget)) {
     return res.status(500).json('You must supply at least one field to update!');
   }
 
   // Store the values for each field to be updated
   const args = [
-    req.body.heroFileId as string,
-    req.body.logoFileId as string,
-    req.body.description as string,
-    req.body.descriptionUrl as string
+    req.query.heroUrl as string,
+    req.query.logoUrl as string,
+    req.query.description as string,
+    req.query.descriptionUrl as string,
+    req.query.budget as string
   ];
 
   // Update the profile and return the updated profile

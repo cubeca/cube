@@ -120,7 +120,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         variant="outlined"
         label={t('Description')}
       />
-      
+
       {/*       
       <Button color='secondary'
         onClick={() => {
@@ -161,16 +161,13 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
       */}
 
       <UploadInput
-      text={t('Audio file describing the information above')}
-      onDrop={onChangeAudioDescription}
-      maxFiles={1}
-      style={'dark'}
+        text={t('Audio file describing the information above')}
+        onDrop={onChangeAudioDescription}
+        maxFiles={1}
+        style={'dark'}
       />
 
-      <Stack
-        direction="row"
-        justifyContent="right"
-      >
+      <Stack direction="row" justifyContent="right">
         <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
           {t('Update Profile')}
         </Button>
