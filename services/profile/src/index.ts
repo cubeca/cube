@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Route for creating a new profile
-app.post('/profiles', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
+app.post('/profiles', async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
 
   // Check if required fields are provided in the request body
@@ -36,7 +36,7 @@ app.post('/profiles', allowIfAnyOf('userAdmin'), async (req: Request, res: Respo
 });
 
 // Route for updating an existing profile by its ID
-app.patch('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
+app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update

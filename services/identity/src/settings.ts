@@ -12,4 +12,4 @@ export const PGUSER: string = process.env.PGUSER || 'postgres';
 export const PGPASSWORD: string = process.env.PGPASSWORD || 'admin';
 export const PGDATABASE: string = process.env.PGDATABASE || 'cube_identity';
 
-export const PROFILE_SERVICE_URL: string = process.env.PROFILE_SERVICE_URL || 'http://localhost:4052';
+export const PROFILE_SERVICE_URL: string = process.env.PROFILE_SERVICE_URL || 'http://localhost:8083';
