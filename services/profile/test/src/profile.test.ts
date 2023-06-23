@@ -43,7 +43,7 @@ export interface CreateProfileOptions {
 }
 
 const profileIdList: string[] = [];
-const createProfile = async ({ createPermissions = ['userAdmin'] }: CreateProfileOptions = {}) => {
+const createProfile = async ({ createPermissions = [''] }: CreateProfileOptions = {}) => {
   const requestBody = {
     organization: getUniqueOrganizationName(),
     website: getUniqueWebsite(),

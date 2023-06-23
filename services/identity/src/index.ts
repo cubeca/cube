@@ -4,18 +4,10 @@ import * as db from './db/queries';
 import * as jwt from 'jsonwebtoken';
 import { comparePassword, encryptString, decryptString, hashPassword } from './utils';
 import * as settings from './settings';
-import { allowIfAnyOf, extractUser } from './auth';
+import { allowIfAnyOf } from './auth';
 import { createDefaultProfile } from './profile';
 
-const PERMISSION_IDS_ALLOWED_ON_SIGNUP = [
-  'active',
-
-  // TODO Remove after MVP presentation on 2023-03-17
-  'contentEditor',
-];
-
 const app: Express = express();
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,7 +26,7 @@ const sendVerificationEmail = async (email: string, userId: string) => {
   console.log(`TODO implement me: Send verification email for ${userId} to ${email}`);
 };
 
-app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
+app.post('/auth/user', async (req: Request, res: Response) => {
   const {
     name,
     email,
@@ -47,35 +39,23 @@ app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Reque
     hasAcceptedTerms = false
   } = req.body;
 
-  if (!name || !email || !password || !organization || !website || !tag) {
-    return res
-      .status(401)
-      .send('Invalid Request Body: name, email, organization, website, tag, and password must be provided.');
+  if (!name || !email || !password) {
+    return res.status(401).send('Invalid Request Body: name, email and password must be provided at minimum.');
   }
 
-  if (
-    !extractUser(req).permissionIds.includes('userAdmin') &&
-    permissionIds.some((p: string) => !PERMISSION_IDS_ALLOWED_ON_SIGNUP.includes(p))
-  ) {
-    return res
-      .status(403)
-      .send(
-        `Invalid Request Body. Only with "userAdmin" JWT claim can the created user have permissionIds other than "${PERMISSION_IDS_ALLOWED_ON_SIGNUP.join(
-          '", "'
-        )}".`
-      );
-  }
+  const hashedPassword = await hashPassword(password);
+  const encryptedPassword = encryptString(hashedPassword);
 
-  try {
-    const hashedPassword = await hashPassword(password);
-    const encryptedPassword = encryptString(hashedPassword);
-
-    const profileId = await createDefaultProfile(organization, website, tag);
+  let profileId = '';
+  if (organization || website || tag) {
+    profileId = await createDefaultProfile(organization, website, tag);
 
     if (!profileId) {
       return res.status(400).send('Error creating profile for user. Organization name, website or tag already exists');
     }
+  }
 
+  try {
     const r = await db.insertIdentity(
       name,
       email,
@@ -86,12 +66,6 @@ app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Reque
       hasAcceptedTerms
     );
 
-    if (r.rows.length !== 1) {
-      // TODO TBD Is this an impossible case?
-      // If this fails we would also have to delete the profile that was created for this identity
-      return res.status(500).send('Error creating identity');
-    }
-
     const user = r.rows[0];
     await sendVerificationEmail(email, user.id);
     res.status(201).json({ id: user.id });
@@ -99,7 +73,6 @@ app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Reque
     if (e.message.indexOf('duplicate key') !== -1) {
       res.status(400).send('Email already exists');
     } else {
-      console.log(e.message);
       res.status(500).send('Error creating identity');
     }
   }
@@ -120,7 +93,6 @@ app.post('/auth/login', async (req: Request, res: Response) => {
     }
 
     const user = r.rows[0];
-
     const decryptedPassword = decryptString(user.password);
 
     if (await comparePassword(password, decryptedPassword)) {
@@ -137,17 +109,11 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       res.status(403).send('Invalid username or password.');
     }
   } catch (e: any) {
-    console.log(e.message);
     res.status(500).send('Error occurred during authentication');
   }
 });
 
 app.post('/auth/anonymous', async (req: Request, res: Response) => {
-  // const { anonymous } = req.body;
-  //
-  // if (!anonymous && anonymous !== true) {
-  //   return res.status(401).send('Invalid Request Body provided for anonymous token.');
-  // }
   try {
     const token = jwt.sign(
       {
@@ -159,7 +125,6 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
     );
     res.json({ jwt: token });
   } catch (e: any) {
-    console.log(e.message);
     res.status(500).send('Error occurred during authentication');
   }
 });
@@ -190,6 +155,7 @@ app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Resp
   try {
     const hashedPassword = await hashPassword(password);
     const encryptedPassword = encryptString(hashedPassword);
+
     await db.updatePassword(uuid as string, encryptedPassword);
     res.send('OK');
   } catch (e: any) {
@@ -213,13 +179,13 @@ app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Re
       return res.status(401).send('Incorrect id provided');
     }
   } catch (e: any) {
-    console.log(e.message);
-    return res.status(500).send('Error occurred verifying email');
+    return res.status(500).send('Error occurred verifying email!');
   }
+
   res.send('OK');
 });
 
-app.get('/auth/forgot-password', async (req: Request, res: Response) => {
+app.get('/auth/forgot-password', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { email } = req.query;
 
   if (!email) {
@@ -228,6 +194,7 @@ app.get('/auth/forgot-password', async (req: Request, res: Response) => {
 
   try {
     const r = await db.selectUserByEmail(email as string);
+
     if (r.rows.length === 1) {
       console.log('triggering password reset email...');
     } else {
@@ -239,6 +206,10 @@ app.get('/auth/forgot-password', async (req: Request, res: Response) => {
 
   res.send('OK');
 });
+
+app.get('/', async (req: Request, res: Response) => {
+  return res.status(200).send('Service is running')
+})
 
 app.listen(settings.PORT, async () => {
   console.log(`Listening on port ${settings.PORT}`);
