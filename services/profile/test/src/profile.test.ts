@@ -124,8 +124,8 @@ describe('profile test suite', () => {
   test('creates a profile and tries to update with one attribute', async () => {
     const { data } = await createProfile();
     const { status: statusUpdate } = await profileApi.patch(
-      `/profiles/${data.id}?heroUrl=thisisanupdate`,
-      {},
+      `/profiles/${data.id}`,
+      { heroUrl: 'thisisanupdate' },
       getAuthReqOpts('userAdmin')
     );
     const getProfileResponse = await profileApi.get(`/profiles/${data.id}`, {});
@@ -140,8 +140,8 @@ describe('profile test suite', () => {
   test('creates a profile and tries to update with multiple attribute', async () => {
     const { data } = await createProfile();
     const { status: statusUpdate } = await profileApi.patch(
-      `/profiles/${data.id}?heroUrl=thisisanupdate&descriptionUrl=newurl&budget=1ETH`,
-      {},
+      `/profiles/${data.id}`,
+      { heroUrl: 'thisisanupdate', descriptionUrl: 'newurl', budget: '1ETH' },
       getAuthReqOpts('userAdmin')
     );
     const getProfileResponse = await profileApi.get(`/profiles/${data.id}`, {});
@@ -149,7 +149,7 @@ describe('profile test suite', () => {
     expect(statusUpdate).toEqual(200);
     expect(getProfileResponse.data.herourl).toEqual('thisisanupdate');
     expect(getProfileResponse.data.descriptionurl).toEqual('newurl');
-    expect(getProfileResponse.data.budget).toEqual('1ETH')
+    expect(getProfileResponse.data.budget).toEqual('1ETH');
   });
 });
 

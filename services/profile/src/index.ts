@@ -40,17 +40,17 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update
-  if (!(req.query.heroUrl || req.query.logoUrl || req.query.description || req.query.descriptionUrl || req.query.budget)) {
+  if (!(req.body.heroUrl || req.body.logoUrl || req.body.description || req.body.descriptionUrl || req.body.budget)) {
     return res.status(500).json('You must supply at least one field to update!');
   }
 
   // Store the values for each field to be updated
   const args = [
-    req.query.heroUrl as string,
-    req.query.logoUrl as string,
-    req.query.description as string,
-    req.query.descriptionUrl as string,
-    req.query.budget as string
+    req.body.heroUrl as string,
+    req.body.logoUrl as string,
+    req.body.description as string,
+    req.body.descriptionUrl as string,
+    req.body.budget as string
   ];
 
   // Update the profile and return the updated profile
