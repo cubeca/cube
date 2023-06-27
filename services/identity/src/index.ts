@@ -6,24 +6,53 @@ import { comparePassword, encryptString, decryptString, hashPassword } from './u
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { createDefaultProfile } from './profile';
+import Brevo from '@getbrevo/brevo';
+import UuidEncoder from 'uuid-encoder';
 
 const app: Express = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const sendVerificationEmail = async (email: string, userId: string) => {
+const sendVerificationEmail = async (name: string, email: string, uuid: string) => {
+  const encoder = new UuidEncoder('base36');
+  const encodedUuid = encoder.encode(uuid);
+
   const token = jwt.sign(
     {
       iss: 'CUBE',
-      sub: userId,
-      aud: ['unverified']
+      sub: encodedUuid,
+      aud: []
     },
     settings.JWT_TOKEN_SECRET
   );
 
-  // TODO implement me
-  console.log(`TODO implement me: Send verification email for ${userId} to ${email}`);
+  const defaultClient = Brevo.ApiClient.instance;
+  const apiKey = defaultClient.authentications['api-key'];
+  apiKey.apiKey = process.env.BREVO_API_KEY;
+
+  const apiInstance = new Brevo.TransactionalEmailsApi();
+  const sendSmtpEmail = new Brevo.SendSmtpEmail();
+  sendSmtpEmail.sender = {
+    name: 'CubeCommons Email Verification',
+    email: 'donotreply@cubecommons.ca'
+  };
+
+  sendSmtpEmail.to = [{ name: name, email: email }];
+  sendSmtpEmail.templateId = 2;
+  sendSmtpEmail.params = {
+    NAME: `${name}`,
+    EMAIL_VERIFICATION_URL: `${process.env.HOST}:${process.env.PORT}/auth/verify/${token}`
+  };
+
+  apiInstance.sendTransacEmail(sendSmtpEmail).then(
+    function (data) {
+      console.log('API called successfully. Returned data: ' + JSON.stringify(data));
+    },
+    function (error) {
+      throw error;
+    }
+  );
 };
 
 app.post('/auth/user', async (req: Request, res: Response) => {
@@ -34,45 +63,39 @@ app.post('/auth/user', async (req: Request, res: Response) => {
     website,
     tag,
     password,
-    permissionIds = [],
     hasAcceptedNewsletter = false,
     hasAcceptedTerms = false
   } = req.body;
-
   if (!name || !email || !password) {
     return res.status(401).send('Invalid Request Body: name, email and password must be provided at minimum.');
   }
-
   const hashedPassword = await hashPassword(password);
   const encryptedPassword = encryptString(hashedPassword);
 
   let profileId = '';
   if (organization || website || tag) {
     profileId = await createDefaultProfile(organization, website, tag);
-
     if (!profileId) {
       return res.status(400).send('Error creating profile for user. Organization name, website or tag already exists');
     }
   }
-
   try {
     const r = await db.insertIdentity(
       name,
       email,
       profileId,
       encryptedPassword,
-      permissionIds,
       hasAcceptedNewsletter,
       hasAcceptedTerms
     );
-
     const user = r.rows[0];
-    await sendVerificationEmail(email, user.id);
+    await sendVerificationEmail(name, email, user.id);
     res.status(201).json({ id: user.id });
   } catch (e: any) {
     if (e.message.indexOf('duplicate key') !== -1) {
       res.status(400).send('Email already exists');
     } else {
+      console.log(e);
       res.status(500).send('Error creating identity');
     }
   }
@@ -138,7 +161,8 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
 
   try {
     await db.updateEmail(uuid as string, email);
-    await sendVerificationEmail(email, uuid);
+    await db.updateActiveStatus(uuid as string, "false")
+    await sendVerificationEmail('', email, uuid);
     res.send('OK');
   } catch (e: any) {
     return res.status(500).send('Error updating email');
@@ -163,22 +187,30 @@ app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Resp
   }
 });
 
-app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Response) => {
-  const { uuid } = req.query;
+app.get('/auth/verify/:token', async (req: Request, res: Response) => {
+  const token = req.params.token as string;
 
-  if (!uuid) {
-    return res.status(401).send('Invalid Request Body. id is required.');
+  if (!token) {
+    return res.status(401).send('Invalid Request Body. token is required.');
   }
 
   try {
+    const decoded = jwt.verify(token, settings.JWT_TOKEN_SECRET);
+    const encodedUUID = decoded.sub;
+
+    const encoder = new UuidEncoder('base36');
+    const uuid = encoder.decode(encodedUUID);
+
     const r = await db.selectUserByID(uuid as string);
 
     if (r.rows.length === 1) {
       await db.updateEmailVerification(uuid as string, true);
+      await db.addPermissionIds(uuid as string, ['active'])
+      await db.updateActiveStatus(uuid as string, "true");
     } else {
       return res.status(401).send('Incorrect id provided');
     }
-  } catch (e: any) {
+  } catch (err) {
     return res.status(500).send('Error occurred verifying email!');
   }
 
@@ -208,8 +240,8 @@ app.get('/auth/forgot-password', allowIfAnyOf('active'), async (req: Request, re
 });
 
 app.get('/', async (req: Request, res: Response) => {
-  return res.status(200).send('Service is running')
-})
+  return res.status(200).send('Service is running');
+});
 
 app.listen(settings.PORT, async () => {
   console.log(`Listening on port ${settings.PORT}`);

@@ -5,21 +5,21 @@ export const insertIdentity = (
   email: string,
   profileId: string,
   password: string,
-  permissionIds: string[],
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean
 ) => {
   const text = `
     INSERT INTO
-      users(name, email, profile_id, password, permission_ids, has_accepted_terms, has_accepted_newsletter)
-      VALUES($1, $2, $3, $4, $5, $6, $7)
+      users(name, email, profile_id, password, permission_ids, is_active, has_accepted_terms, has_accepted_newsletter)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *`;
   const values = [
     name,
     email,
     profileId,
     password,
-    `{${permissionIds.join(',')}}`,
+    `{}`,
+    `false`,
     `${hasAcceptedTerms}`,
     `${hasAcceptedNewsletter}`
   ];
@@ -61,3 +61,17 @@ export const updateEmailVerification = (id: string, hasBeenVerified: boolean) =>
 
   return db.query(text, values);
 };
+
+export const addPermissionIds = (id: string, perms: string[]) => {
+  const text = `UPDATE users SET permission_ids = array_cat(permission_ids, $1) WHERE id = $2;`
+  const values = [`{${perms.join(',')}}`, id]
+
+  return db.query(text, values);
+} 
+
+export const updateActiveStatus = (id: string, status: string) => {
+  const text = `UPDATE users SET is_active = $1 where id = $2;`;
+  const values = [status, id];
+
+  return db.query(text, values);
+}
