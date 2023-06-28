@@ -8,7 +8,7 @@ import * as settings from './settings';
  * Send a verification email using the preconfigured Brevo template #2.
  */
 export const sendVerificationEmail = async (name: string, email: string, token: string) => {
-  if (!name || !email || !token) {
+  if (!email || !token) { //name isn't required as the Brevo template can have default values
     throw new Error('Invalid parameters');
   }
 
@@ -23,7 +23,7 @@ export const sendVerificationEmail = async (name: string, email: string, token: 
     email: 'donotreply@cubecommons.ca'
   };
 
-  sendSmtpEmail.to = [{ name: name, email: email }];
+  sendSmtpEmail.to = [{ name: (name? name : 'CubeCommons User'), email: email }];
   sendSmtpEmail.templateId = 2;
   sendSmtpEmail.params = {
     NAME: `${name}`,

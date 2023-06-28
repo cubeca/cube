@@ -101,10 +101,13 @@ app.post('/auth/login', async (req: Request, res: Response) => {
 
     const user = r.rows[0];
     const decryptedPassword = decryptString(user.password);
-
     const isValidPassword = await comparePassword(password, decryptedPassword);
     if (!isValidPassword) {
       return res.status(403).send('Invalid email or password.');
+    }
+
+    if(!user.is_active || !user.has_verified_email) {
+      return res.status(403).send('User isnt active or verified their email');
     }
 
     const token = jwt.sign(
@@ -116,7 +119,8 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       settings.JWT_TOKEN_SECRET,
       { expiresIn: '3d' }
     );
-    res.json({ jwt: token, profileId: user.profile_id });
+
+    res.json({ jwt: token, profileId: user.id });
   } catch (error: any) {
     console.error('Error occurred during authentication:', error);
     res.status(500).send('Error occurred during authentication');
@@ -166,8 +170,8 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
       }
 
       await db.updateEmail(uuid, email);
-      await db.updateActiveStatus(uuid, 'false');
-      await sendVerificationEmail('', email, uuid);
+      await db.updateEmailVerification(uuid, false);
+      await sendVerificationEmail('', email, token);
       res.send('OK');
     });
   } catch (error: any) {
@@ -235,11 +239,11 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       if (r.rows.length === 1) {
         await db.updateEmailVerification(uuid as string, true);
         await db.addPermissionIds(uuid as string, ['active']);
-        await db.updateActiveStatus(uuid as string, 'true');
+        await db.updateActiveStatus(uuid as string, true);
       } else {
         return res.status(401).send('Incorrect id provided');
       }
-      res.send('OK');
+      res.status(200).send('OK');
     });
   } catch (error: any) {
     console.error('Error occurred verifying email:', error);

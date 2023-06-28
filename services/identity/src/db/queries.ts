@@ -69,9 +69,9 @@ export const addPermissionIds = (id: string, perms: string[]) => {
   return db.query(text, values);
 } 
 
-export const updateActiveStatus = (id: string, status: string) => {
+export const updateActiveStatus = (id: string, status: boolean) => {
   const text = `UPDATE users SET is_active = $1 where id = $2;`;
-  const values = [status, id];
+  const values = [`${status}`, id];
 
   return db.query(text, values);
 }
