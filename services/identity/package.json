@@ -32,6 +32,7 @@
     "db-migrate-pg": "^1.2.2",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.8.0",
     "uuid-encoder": "^1.2.0"
