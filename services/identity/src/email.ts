@@ -89,7 +89,7 @@ export const sendPasswordResetEmail = async (email: string) => {
   const user = r.rows[0];
 
   const encoder = new UuidEncoder('base36');
-  const encodedUuid = encoder.encode(user.uuid);
+  const encodedUuid = encoder.encode(user.id);
 
   const token = jwt.sign(
     {

@@ -255,8 +255,8 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
  * Trigger password reset email to users who are locked out.
  */
 app.get('/auth/forgot-password', async (req: Request, res: Response) => {
-  const { email } = req.query;
-
+  const { email } = req.body;
+  console.log(email)
   if (!email) {
     return res.status(400).send('email is required.');
   }
@@ -264,7 +264,7 @@ app.get('/auth/forgot-password', async (req: Request, res: Response) => {
   try {
     const r = await db.selectUserByEmail(email as string);
     if (r.rows.length === 1) {
-      await sendPasswordResetEmail(r.rows[0].email);
+      await sendPasswordResetEmail(email);
     } else {
       return res.status(403).send('email does not exist');
     }
