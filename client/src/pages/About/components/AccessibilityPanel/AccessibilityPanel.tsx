@@ -23,18 +23,19 @@ const AccessibilityPanel = () => {
         <Typography component="h2" variant="h2" textAlign="center">
           {t('accessibility')}
         </Typography>
-        <Trans i18nKey="accessibilityText">
+        {/* <Trans i18nKey="accessibilityText"> */}
           <Typography
             component="p"
             sx={{
               textAlign: 'center',
               maxWidth: '720px',
-              margin: '0 auto'
+              margin: '0 auto',
+              alink: 'yellow'
             }}
           >
-            {t('accessibilityText')}
+            CubeCommons advocates for accessibility standards from which further efforts can be made and developed as technology improves. We aim to be a tool that supports the accessibility of online arts and cultural content, and to be a point of connection to Canadian organizations like <a href="https://deafspectrum.com/" target="_blank" rel="noopener noreferrer" style={{padding: 0}} className="css-1mo7lgz">Deaf Spectrum</a> and <a href="https://openaccessfoundation.org/" target="_blank" rel="noopener noreferrer" style={{padding: 0}} className="css-1mo7lgz">OAFAC</a>.
           </Typography>
-        </Trans>
+        {/* </Trans> */}
         {/* <MediaPlayer
           url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
           isAudio

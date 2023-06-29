@@ -77,7 +77,9 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           text={t('Thumbnail image (required)')}
           onDrop={handleCoverImageUpload}
           maxFiles={1}
-          onDragEnd
+          onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
