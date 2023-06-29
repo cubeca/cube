@@ -12,43 +12,43 @@ const DigitalNeighboursPanel = () => {
       title: t('Artengine'),
       description: t('artengineDescription'),
       cta: 'Check it out',
-      url: 'https://artengine.ca/hyperlib_proto/'
+      url: 'https://www.example.com'
     },
     {
-      title: t('Projet Collectif'),
-      description: t('Learn about Praxis a new platform for publishing and connecting shared knowledge production'),
+      title: t('CAG'),
+      description: t('cagDescription'),
       cta: 'Check it out',
-      url: 'https://praxis.encommun.io/'
+      url: 'https://www.example.com'
     },
     {
-      title: t('221A'),
-      description: t('Digital Strategy funded research on Blockchains & Cultural Padlocks'),
+      title: t('Centrea'),
+      description: t('centreaDescription'),
       cta: 'Check it out',
-      url: 'https://221a.ca/221a-launches-bacp-research-report/'
+      url: 'https://www.example.com'
     },
     {
-      title: t('Livepeer'),
-      description: t('An open video infrastructure protocol for designed to give developers the freedom to innovate and creators autonomy from platforms.'),
+      title: t('MOA'),
+      description: t('moaDescription'),
       cta: 'Check it out',
-      url: 'https://livepeer.org/'
+      url: 'https://www.example.com'
     },
     {
-      title: t('Mobil Art School'),
-      description: t('Try their Arpp App that helps artists create-collaborate-celebrate in the digital space'),
+      title: t('MOV'),
+      description: t('movDescription'),
       cta: 'Check it out',
-      url: 'https://apps.apple.com/ca/app/arpp/id1498008023'
+      url: 'https://www.example.com'
     },
     {
-      title: t('Missing Black Technofossils Here'),
-      description: t('Quentin VerCettys self-guided AR experience with PHI Foundation'),
+      title: t('ARPP APP'),
+      description: t('arppDescription'),
       cta: 'Check it out',
-      url: 'https://phi.ca/en/events/quentin-vercetty-self-guided-visit/'
+      url: 'https://www.example.com'
     },
     {
-      title: t('...'),
-      description: t('More Coming'),
-      cta: '',
-      url: ''
+      title: t('Trinity Square'),
+      description: t('trinitySquareDescription'),
+      cta: 'Check it out',
+      url: 'https://www.example.com'
     }
   ];
 
@@ -81,7 +81,7 @@ const DigitalNeighboursPanel = () => {
             <Typography component="p" variant="body2">
               {card.description}
             </Typography>
-            <s.ExternalLinkText target="_blank" to={card.url}>{card.cta}</s.ExternalLinkText>
+            <s.ExternalLinkText to={card.url}>{card.cta}</s.ExternalLinkText>
           </s.NeighbourCard>
         ))}
       </Grid>

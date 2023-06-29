@@ -40,11 +40,10 @@ const Tags = ({ control }: any) => {
               <li>Cultural Teaching</li>
               <li>Studio Visit</li>
               <li>Gathering</li>
-              <li>Book Reading</li>
-              <li>Subtitled</li>
+              <li>Book Launch</li>
+              <li>Subtitles</li>
               <li>Sign language</li>
               <li>Multilingual Subtitles</li>
-              <li>How-To</li>
             </Typography>
           </Grid>
           <Grid xs={12} md={4}>
@@ -52,15 +51,25 @@ const Tags = ({ control }: any) => {
               Language Tags
             </Typography>
             <Typography component="ul" variant="body2" my={theme.spacing(2)}>
-              <li>hən̓q̓əmin̓əm̓</li>
-              <li>Kwak̓wala</li>
-              <li>Sḵwx̱wú7mesh</li>
-              <li>Anishinaabemowin Ojibwe</li>
-              <li>普通话 Mandarin</li>
-              <li>ਗੁਰਮੁਖੀ Punjabi</li>
-              <li>જોડણી Gujarati</li>
+              <li>Tsleil-Waututh</li>
+              <li>kʷakʷəkʲəʔwakʷ</li>
+              <li>Sḵwx̱wúʔmesh</li>
+              <li>Anishinaabe</li>
               <li>French</li>
-              <li>English</li>
+              <li>Chinese</li>
+            </Typography>
+          </Grid>
+          <Grid xs={12} md={4}>
+            <Typography component="h6" variant="h6" my={theme.spacing(2)}>
+              Location Tags
+            </Typography>
+            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
+              <li>BC</li>
+              <li>Alberta</li>
+              <li>Québec</li>
+              <li>Regina</li>
+              <li>Manitoba</li>
+              <li>Toronto</li>
             </Typography>
           </Grid>
         </Grid>
