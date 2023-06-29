@@ -8,6 +8,9 @@ import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { createDefaultProfile } from './profile';
 import { sendVerificationEmail, sendPasswordChangeConfirmation, sendPasswordResetEmail } from './email';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import UuidEncoder from 'uuid-encoder';
 
 const app: Express = express();

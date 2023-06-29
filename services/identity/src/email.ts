@@ -1,5 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import Brevo from '@getbrevo/brevo';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import UuidEncoder from 'uuid-encoder';
+
 import * as db from './db/queries';
 import * as jwt from 'jsonwebtoken';
 import * as settings from './settings';
