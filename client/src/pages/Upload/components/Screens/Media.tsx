@@ -4,11 +4,19 @@ import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
 import { useTranslation } from 'react-i18next';
 import { ContentTypes } from 'types/enums';
+import {useState} from 'react';
 
 const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
-
+  const [isDragOver, setIsDragOver] = useState(false);
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+  const handleDragLeave = () => {
+    setIsDragOver(false);
+  };
   return (
     <Box className={'upload__media-screen'}>
       <Typography component="h2" variant="h2">
@@ -43,7 +51,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'What is the title of this work? This is the name that people will see when they search for and view your content. Keep this short, you will be able to provide a longer description on the next screen.'
+            'What is the title of this content? This is the name that people will see when they search for and view your content. Keep it short, your content will also be searchable by tags you add in minute'
           )}
         </Typography>
       </Box>
@@ -53,10 +61,13 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           text={t('Media file (required)')}
           onDrop={handleMediaUpload}
           maxFiles={1}
+          onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Upload your video. This is a shared network, to reduce energy and space consumption please upload files xxx, xxx or xxx, no more than xx mb. While your video uploads you can continue filling out the rest of this form. You will be able to submit your entry once the upload has finished.'
+            'Upload your audio, video or pdf content. This is a shared network, to reduce energy and space consumption please upload files xxx, xxx or xxx, no more than xx mb. While your video uploads you can click "Next" to complete required information for accessibility.'
           )}
         </Typography>
       </Box>
@@ -66,10 +77,11 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           text={t('Thumbnail image (required)')}
           onDrop={handleCoverImageUpload}
           maxFiles={1}
+          onDragEnd
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Upload a Thumbnail Image. Recommended image dimensions are xxx by xxx. File size should not exceed xxx kb.'
+            'Upload a Thumbnail Image. Image dimensions must be square. File size should not exceed xxx kb.'
           )}
         </Typography>
       </Box>
