@@ -256,7 +256,6 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
  */
 app.get('/auth/forgot-password', async (req: Request, res: Response) => {
   const { email } = req.body;
-  console.log(email)
   if (!email) {
     return res.status(400).send('email is required.');
   }
