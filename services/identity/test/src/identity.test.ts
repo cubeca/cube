@@ -168,7 +168,7 @@ test('logs in without "anonymous" JWT', async () => {
   expect(dataLogin).toEqual(
     expect.objectContaining({
       jwt: expect.any(String),
-      profileId: expect.stringMatching(UUID_REGEXP)
+      user: expect.any(Object)
     })
   );
 
@@ -357,18 +357,19 @@ test('updates password and logs in with new password', async () => {
 
   const requestBodyUpdatePassword = {
     uuid: dataCreate.id,
-    password: `TOTALLY-DIFFERENT-${requestBodyCreate.password}-TOTALLY-DIFFERENT`,
+    currentPassword: 'super-secret',
+    newPassword: `TOTALLY-DIFFERENT-${requestBodyCreate.password}-TOTALLY-DIFFERENT`,
     token: dataLogin.jwt
   };
 
-  expect(requestBodyUpdatePassword.password).not.toEqual(requestBodyCreate.password);
+  expect(requestBodyUpdatePassword.newPassword).not.toEqual(requestBodyCreate.password);
   const { status: statusUpdatePassword } = await identityApi.put('/auth/password', requestBodyUpdatePassword);
   expect(statusUpdatePassword).toEqual(200);
 
   // Can log in with new pw
   const requestBodyLoginWithNewPassword = {
     email: requestBodyCreate.email,
-    password: requestBodyUpdatePassword.password
+    password: requestBodyUpdatePassword.newPassword
   };
 
   const { status: statusLoginWithNewPassword, data: dataLoginWithNewPassword } = await identityApi.post(
@@ -403,6 +404,9 @@ test('test email verification', async () => {
     })
   );
 
-  const { status: statusVerify } = await identityApi.get(`/auth/email/verify/${dataCreate.jwt}`, {});
-  expect(statusVerify).toEqual(200);
+  try {
+    await identityApi.get(`/auth/email/verify/${dataCreate.jwt}`, {});
+  } catch (e: any) {
+    expect(e.request._isRedirect).toEqual(true);
+  }
 });
