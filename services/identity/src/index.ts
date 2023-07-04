@@ -109,7 +109,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       return res.status(403).send('Invalid email or password.');
     }
 
-    if(!user.is_active || !user.has_verified_email) {
+    if (!user.is_active || !user.has_verified_email) {
       return res.status(403).send('User isnt active or verified their email');
     }
 
@@ -123,7 +123,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       { expiresIn: '3d' }
     );
 
-    res.json({ jwt: token, profileId: user.id });
+    res.json({ jwt: token, user: user });
   } catch (error: any) {
     console.error('Error occurred during authentication:', error);
     res.status(500).send('Error occurred during authentication');
@@ -187,9 +187,9 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
  * Update password for a user.
  */
 app.put('/auth/password', async (req: Request, res: Response) => {
-  const { uuid, password, token } = req.body;
+  const { uuid, currentPassword, newPassword, token } = req.body;
 
-  if (!uuid || !password || !token) {
+  if (!uuid || !currentPassword || !newPassword || !token) {
     return res.status(401).send('Invalid Request Body. uuid, password, and token are required.');
   }
 
@@ -204,13 +204,26 @@ app.put('/auth/password', async (req: Request, res: Response) => {
         return res.status(401).send('Unauthorized to update password for this user.');
       }
 
-      // Proceed with password update
-      const hashedPassword = await hashPassword(password);
-      const encryptedPassword = encryptString(hashedPassword);
+      const r = await db.selectUserByID(uuid);
+      if (!r) {
+        return res.status(403).send('Invalid unable to verify users existing password.');
+      }
 
-      await db.updatePassword(uuid as string, encryptedPassword);
-      await sendPasswordChangeConfirmation(uuid as string);
-      res.send('OK');
+      const user = r.rows[0];
+      const decryptedPassword = decryptString(user.password);
+      const isValidPassword = await comparePassword(currentPassword, decryptedPassword);
+
+      // Proceed with password update
+      if (isValidPassword) {
+        const hashedPassword = await hashPassword(newPassword);
+        const encryptedPassword = encryptString(hashedPassword);
+
+        await db.updatePassword(uuid as string, encryptedPassword);
+        await sendPasswordChangeConfirmation(uuid as string);
+        res.send('OK');
+      } else {
+        return res.status(403).send('Unable to verify users existing password');
+      }
     });
   } catch (error: any) {
     console.error('Error updating password:', error);
@@ -246,7 +259,9 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       } else {
         return res.status(401).send('Incorrect id provided');
       }
-      res.status(200).send('OK');
+
+      const redirectUrl = `${process.env.HOST}/verify/?token=` + encodeURIComponent(token);
+      res.redirect(301, redirectUrl);
     });
   } catch (error: any) {
     console.error('Error occurred verifying email:', error);

@@ -33,7 +33,7 @@ export const sendVerificationEmail = async (name: string, email: string, token: 
   sendSmtpEmail.templateId = 2;
   sendSmtpEmail.params = {
     NAME: `${name}`,
-    EMAIL_VERIFICATION_URL: `${process.env.HOST}:${process.env.PORT}/auth/email/verify/${token}`
+    EMAIL_VERIFICATION_URL: `${process.env.HOST}/auth/email/verify/${token}`
   };
 
   try {
