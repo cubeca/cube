@@ -193,6 +193,17 @@ app.post('/profiles', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
+app.get('/profiles/:profileId', async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, req.body);
+  res.status(status).json(data);
+});
+
+app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.patch('profiles/' + req.params.profileId, req.body);
+  res.status(status).json(data);
+});
+
+
 // TODO Make this an API endpoint in the cloudflare service
 const getFiles = async (fileIds: string[]) => {
   const files: { [k: string]: any } = {};
