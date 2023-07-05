@@ -123,7 +123,18 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       { expiresIn: '3d' }
     );
 
-    res.json({ jwt: token, user: user });
+    const userReturnObj = {
+      uuid: user.id,
+      name: user.name,
+      email: user.email,
+      permission_ids: user.permission_ids,
+      is_active: user.is_active,
+      has_verified_email: user.has_verified_email,
+      has_accepted_terms: user.has_accepted_terms
+    }
+
+
+    res.json({ jwt: token, user: userReturnObj});
   } catch (error: any) {
     console.error('Error occurred during authentication:', error);
     res.status(500).send('Error occurred during authentication');
