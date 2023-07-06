@@ -180,8 +180,8 @@ app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Re
   res.status(status).json(data);
 });
 
-app.get('/auth/forgot-password', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.get('auth/forgot-password', {
+app.post('/auth/forgot-password', async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('auth/forgot-password', {
     params: req.query
   });
 

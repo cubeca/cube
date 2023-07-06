@@ -130,7 +130,9 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       permission_ids: user.permission_ids,
       is_active: user.is_active,
       has_verified_email: user.has_verified_email,
-      has_accepted_terms: user.has_accepted_terms
+      has_accepted_terms: user.has_accepted_terms,
+      profile_id: user.profile_id
+
     }
 
 
@@ -283,7 +285,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
 /**
  * Trigger password reset email to users who are locked out.
  */
-app.get('/auth/forgot-password', async (req: Request, res: Response) => {
+app.post('/auth/forgot-password', async (req: Request, res: Response) => {
   const { email } = req.body;
   if (!email) {
     return res.status(400).send('email is required.');
