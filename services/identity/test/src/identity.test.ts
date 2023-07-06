@@ -410,3 +410,20 @@ test('test email verification', async () => {
     expect(e.request._isRedirect).toEqual(true);
   }
 });
+
+test('test forgot password', async () => {
+  const { status: statusCreate, data: dataCreate, requestBody: requestBody } = await createRegularUser();
+  expect(statusCreate).toEqual(201);
+  expect(dataCreate).toEqual(
+    expect.objectContaining({
+      id: expect.stringMatching(UUID_REGEXP)
+    })
+  );
+
+  const requestBodyForgotPassword = {
+    email: requestBody.email,
+  };
+
+  const { status: statusForgotPassword } = await identityApi.post('/auth/forgot-password', requestBodyForgotPassword);
+  expect(statusForgotPassword).toEqual(200);
+});
