@@ -411,6 +411,26 @@ test('test email verification', async () => {
   }
 });
 
+test('test resent email verification', async () => {
+  const { status: statusCreate, data: dataCreate } = await createRegularUser();
+  expect(statusCreate).toEqual(201);
+  expect(dataCreate).toEqual(
+    expect.objectContaining({
+      id: expect.stringMatching(UUID_REGEXP)
+    })
+  );
+
+  const requestBodyResendEmail = {
+    token: dataCreate.jwt
+  };
+
+  const { status: statusResendEmail } = await identityApi.post(
+    `/auth/resend-email-verification/`,
+    requestBodyResendEmail
+  );
+  expect(statusResendEmail).toEqual(200);
+});
+
 test('test forgot password', async () => {
   const { status: statusCreate, data: dataCreate, requestBody: requestBody } = await createRegularUser();
   expect(statusCreate).toEqual(201);
@@ -421,7 +441,7 @@ test('test forgot password', async () => {
   );
 
   const requestBodyForgotPassword = {
-    email: requestBody.email,
+    email: requestBody.email
   };
 
   const { status: statusForgotPassword } = await identityApi.post('/auth/forgot-password', requestBodyForgotPassword);
