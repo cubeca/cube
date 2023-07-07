@@ -25,5 +25,5 @@ jobs:
       GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
 
       GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-dev:northamerica-northeast2:dev
-      GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-dev:northamerica-northeast2:dev,PGDATABASE=cube_identity,PGUSER=postgres,PROFILE_SERVICE_URL=https://profile-tjjg4pjowa-pd.a.run.app
+      GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-dev:northamerica-northeast2:dev,PGDATABASE=cube_identity,PGUSER=postgres,PROFILE_SERVICE_URL=https://profile-tjjg4pjowa-pd.a.run.app,HOST=https://www-dev.cubecommons.ca
       GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=dev-jwt-token-secret:latest,PGPASSWORD=dev-db-password:latest,ENCRYPT_SECRET=dev-identity-password-encryption-secret:latest
