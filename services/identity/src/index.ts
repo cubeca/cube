@@ -132,9 +132,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       has_verified_email: user.has_verified_email,
       has_accepted_terms: user.has_accepted_terms,
       profile_id: user.profile_id
-
     }
-
 
     res.json({ jwt: token, user: userReturnObj});
   } catch (error: any) {
