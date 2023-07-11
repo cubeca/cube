@@ -12,5 +12,6 @@ VALUES (
   '',
   '',
   'Description of the first organization',
+  '',
   ''
 );
