@@ -132,15 +132,9 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       has_verified_email: user.has_verified_email,
       has_accepted_terms: user.has_accepted_terms,
       profile_id: user.profile_id
-<<<<<<< HEAD
-    }
-
-    res.json({ jwt: token, user: userReturnObj});
-=======
     };
 
     res.json({ jwt: token, user: userReturnObj });
->>>>>>> main
   } catch (error: any) {
     console.error('Error occurred during authentication:', error);
     res.status(500).send('Error occurred during authentication');
