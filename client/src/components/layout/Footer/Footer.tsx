@@ -55,22 +55,26 @@ const Footer = () => {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
-    if (typeof localStorage.getItem('beta_message_seen') != "undefined") {
-      const key = localStorage.getItem("beta_message_seen") || '',
-        object = JSON.parse(key),
-        dateString = object.timestamp,
-        twentyfourhours = 86400000,
-        now = new Date().getTime().toString();
-
-      if (parseInt(now) - parseInt(dateString) > twentyfourhours) {
-        setOpen(true);
-      }
+    if (localStorage.getItem("beta_msg_seen") === null) {
+      setOpen(true);
+      return;
     }
+    
+    const key = localStorage.getItem("beta_msg_seen") || '',
+      object = JSON.parse(key),
+      dateString = object.timestamp,
+      twentyfourhours = 86400000,
+      now = new Date().getTime().toString();
+
+    if (parseInt(now) - parseInt(dateString) > twentyfourhours) {
+      setOpen(true);
+    }
+    
   };
   const handleClose = () => {
     setOpen(false);
     const last_seen = {timestamp: new Date().getTime()}
-    localStorage.setItem('beta_message_seen', JSON.stringify(last_seen));
+    localStorage.setItem('beta_msg_seen', JSON.stringify(last_seen));
   };
   
   React.useEffect(() => {
