@@ -1,8 +1,4 @@
-import { ProfileAPIResponse } from 'types/profile';
-import { PROFILE_API_PATH } from './settings';
 import { profileApi } from '.';
-import { blobToBase64 } from './helpers';
-import { getAuthToken } from '../utils/auth';
 import { upload } from './upload';
 
 export type { BFFDataForProfilePageData as Profile } from '.';
@@ -11,13 +7,8 @@ export const getProfile = async (id: string) => {
   return await profileApi.profileDetails(id);
 };
 
-export const updateProfileSection = async (
-  id: string,
-  organization: string,
-  description: string
-) => {
+export const updateProfileSection = async (id: string, description: string) => {
   return await profileApi.updateProfile(id, {
-    organization,
     description
   });
 };

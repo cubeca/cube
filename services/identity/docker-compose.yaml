@@ -21,6 +21,7 @@ services:
       ENCRYPT_SECRET: $ENCRYPT_SECRET
 
       PROFILE_SERVICE_URL: http://cube_profile_mock_microservice:${PORT}
+      BREVO_API_KEY: $BREVO_API_KEY
 
       PGHOST: postgres
       PGPORT: '5432'

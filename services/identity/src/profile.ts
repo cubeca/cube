@@ -1,7 +1,5 @@
 import axios from 'axios';
-
 import * as settings from './settings';
-import { inspectAxiosResponse } from './inspect';
 
 const profileApi = axios.create({
   baseURL: settings.PROFILE_SERVICE_URL,
@@ -11,28 +9,12 @@ const profileApi = axios.create({
   validateStatus: null
 });
 
-// export interface Headers {
-//   [k: string]: string;
-// }
-
-// const authHeader: Headers = {
-//   Authorization: `bearer ${settings.CLOUDFLARE_API_TOKEN}`
-// };
-
 export const createDefaultProfile = async (organization: string, website: string, tag: string) => {
-  try {
-    const createProfileResponse = await profileApi.post(`/profiles`, {
-      organization,
-      website,
-      tag
-    });
+  const createProfileResponse = await profileApi.post(`/profiles`, {
+    organization,
+    website,
+    tag
+  });
 
-    inspectAxiosResponse(createProfileResponse);
-    // console.dir({ msg:"POST /profiles", status, statusText, headers, data }, {depth:null});
-
-    return createProfileResponse.data.id;
-  } catch (e: any) {
-    console.log(e);
-    throw e;
-  }
+  return createProfileResponse.data.id;
 };
