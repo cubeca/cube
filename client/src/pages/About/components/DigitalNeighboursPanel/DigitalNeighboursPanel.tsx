@@ -16,39 +16,39 @@ const DigitalNeighboursPanel = () => {
     },
     {
       title: t('Projet Collectif'),
-      description: t('Learn about Praxis a new platform for publishing and connecting shared knowledge production'),
+      description: t('projetCollectifDescription'),
       cta: 'Check it out',
       url: 'https://praxis.encommun.io/'
     },
     {
       title: t('221A'),
-      description: t('Digital Strategy funded research on Blockchains & Cultural Padlocks'),
+      description: t('221aDescription'),
       cta: 'Check it out',
       url: 'https://221a.ca/221a-launches-bacp-research-report/'
     },
     {
-      title: t('Livepeer'),
-      description: t('An open video infrastructure protocol for designed to give developers the freedom to innovate and creators autonomy from platforms.'),
-      cta: 'Check it out',
-      url: 'https://livepeer.org/'
-    },
-    {
       title: t('Mobil Art School'),
-      description: t('Try their Arpp App that helps artists create-collaborate-celebrate in the digital space'),
+      description: t('mobileArtSchoolDescription'),
       cta: 'Check it out',
       url: 'https://apps.apple.com/ca/app/arpp/id1498008023'
     },
     {
       title: t('Missing Black Technofossils Here'),
-      description: t('Quentin VerCettys self-guided AR experience with PHI Foundation'),
+      description: t('mbtfDescription'),
       cta: 'Check it out',
       url: 'https://phi.ca/en/events/quentin-vercetty-self-guided-visit/'
     },
     {
-      title: t('...'),
-      description: t('More Coming'),
-      cta: '',
-      url: ''
+      title: t('Magic Keystrokes and Glitter'),
+      description: t('magicGlitterDescription'),
+      cta: 'Check it out',
+      url: 'https://plugin.org/exhibitions/magic-keystrokes-and-glitter-with-dr-syrus-marcus-ware-and-kamran-behrouz/'
+    },
+    {
+      title: t('Metalabel'),
+      description: t('metaLabelDescription'),
+      cta: 'Check it out',
+      url: 'https://www.metalabel.xyz/'
     }
   ];
 
