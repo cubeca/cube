@@ -10,7 +10,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [isDragOver, setIsDragOver] = useState(false);
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: any) => {
     e.preventDefault();
     setIsDragOver(true);
   };
@@ -61,9 +61,6 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           text={t('Media file (required)')}
           onDrop={handleMediaUpload}
           maxFiles={1}
-          onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
@@ -77,9 +74,6 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           text={t('Thumbnail image (required)')}
           onDrop={handleCoverImageUpload}
           maxFiles={1}
-          onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
