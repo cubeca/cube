@@ -171,6 +171,11 @@ app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Resp
   res.status(status).json(data);
 });
 
+app.post('/auth/resend-email-verification', async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('auth/resend-email-verification', req.body);
+  res.status(status).json(data);
+});
+
 app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.get('auth/verify', {
     params: req.query,

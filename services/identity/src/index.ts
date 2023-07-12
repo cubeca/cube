@@ -132,9 +132,15 @@ app.post('/auth/login', async (req: Request, res: Response) => {
       has_verified_email: user.has_verified_email,
       has_accepted_terms: user.has_accepted_terms,
       profile_id: user.profile_id
+<<<<<<< HEAD
     }
 
     res.json({ jwt: token, user: userReturnObj});
+=======
+    };
+
+    res.json({ jwt: token, user: userReturnObj });
+>>>>>>> main
   } catch (error: any) {
     console.error('Error occurred during authentication:', error);
     res.status(500).send('Error occurred during authentication');
@@ -302,6 +308,42 @@ app.post('/auth/forgot-password', async (req: Request, res: Response) => {
   }
 
   res.send('OK');
+});
+
+/**
+ * Trigger email verification if original has expired or didn't arrive.
+ */
+app.post('/auth/resend-email-verification', async (req: Request, res: Response) => {
+  const { token } = req.body;
+  if (!token) {
+    return res.status(401).send('Invalid Request Body. token is required.');
+  }
+
+  try {
+    jwt.verify(token, settings.JWT_TOKEN_SECRET, async (err: any, decoded: any) => {
+      if (err) {
+        return res.status(401).send(err);
+      }
+
+      const encodedUUID = decoded.sub;
+      const encoder = new UuidEncoder('base36');
+      const uuid = encoder.decode(encodedUUID);
+
+      const r = await db.selectUserByID(uuid as string);
+      if (r.rows.length === 1) {
+        const name = r.rows[0].name;
+        const email = r.rows[0].email;
+        await sendVerificationEmail(name, email, token);
+      } else {
+        return res.status(401).send('Incorrect id provided');
+      }
+
+      res.send('OK');
+    });
+  } catch (error: any) {
+    console.error('Error occurred verifying email:', error);
+    return res.status(500).send('Error occurred verifying email!');
+  }
 });
 
 app.get('/', async (req: Request, res: Response) => {
