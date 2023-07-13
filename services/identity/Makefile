@@ -25,6 +25,7 @@ export PORT ?= 3000
 
 export JWT_TOKEN_SECRET ?= secret
 export ENCRYPT_SECRET ?= encrypt_secret
+export BREVO_API_KEY ?= brevo_api_key
 
 export PROFILE_SERVICE_URL ?= http://localhost:4052
 

@@ -171,6 +171,11 @@ app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Resp
   res.status(status).json(data);
 });
 
+app.post('/auth/resend-email-verification', async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('auth/resend-email-verification', req.body);
+  res.status(status).json(data);
+});
+
 app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.get('auth/verify', {
     params: req.query,
@@ -180,8 +185,8 @@ app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Re
   res.status(status).json(data);
 });
 
-app.get('/auth/forgot-password', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.get('auth/forgot-password', {
+app.post('/auth/forgot-password', async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('auth/forgot-password', {
     params: req.query
   });
 
@@ -192,6 +197,17 @@ app.post('/profiles', async (req: Request, res: Response) => {
   const { status, data } = await profileApi.post('profiles', req.body);
   res.status(status).json(data);
 });
+
+app.get('/profiles/:profileId', async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, req.body);
+  res.status(status).json(data);
+});
+
+app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.patch('profiles/' + req.params.profileId, req.body);
+  res.status(status).json(data);
+});
+
 
 // TODO Make this an API endpoint in the cloudflare service
 const getFiles = async (fileIds: string[]) => {

@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Route for creating a new profile
-app.post('/profiles', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
+app.post('/profiles', async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
 
   // Check if required fields are provided in the request body
@@ -36,24 +36,21 @@ app.post('/profiles', allowIfAnyOf('userAdmin'), async (req: Request, res: Respo
 });
 
 // Route for updating an existing profile by its ID
-// TODO: Add back in Auth
 app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
-  console.log('QUERY', req.query);
-  console.log('BODY', req.body);
-
   // Ensure at least one field is provided for update
-  if (!(req.body.heroFileId || req.body.logoFileId || req.body.description || req.body.descriptionUrl)) {
+  if (!(req.body.heroUrl || req.body.logoUrl || req.body.description || req.body.descriptionUrl || req.body.budget)) {
     return res.status(500).json('You must supply at least one field to update!');
   }
 
   // Store the values for each field to be updated
   const args = [
-    req.body.heroFileId as string,
-    req.body.logoFileId as string,
+    req.body.heroUrl as string,
+    req.body.logoUrl as string,
     req.body.description as string,
-    req.body.descriptionUrl as string
+    req.body.descriptionUrl as string,
+    req.body.budget as string
   ];
 
   // Update the profile and return the updated profile

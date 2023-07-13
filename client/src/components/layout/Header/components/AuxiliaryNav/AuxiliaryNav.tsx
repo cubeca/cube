@@ -8,6 +8,7 @@ import useAuth from 'hooks/useAuth';
 import { useState } from 'react';
 import { MainMenu } from 'components/layout/MainMenu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Profile } from '../Profile';
 
 const AuxiliaryNav = () => {
   const { t } = useTranslation();
@@ -15,11 +16,6 @@ const AuxiliaryNav = () => {
   const { isLoggedIn } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
-  const handleLogout = () => {
-    removeAuthToken();
-    navigate('/');
-  };
 
   const handleLogin = () => {
     navigate('/login');
@@ -37,12 +33,11 @@ const AuxiliaryNav = () => {
 
   return (
     <Stack component="nav" direction="row" alignItems="center" spacing={2}>
-      <s.AuxButton variant="outlined" onClick={handleLogin}>
-        {t('Login')}
-      </s.AuxButton>
-      {isLoggedIn && (
-        <s.AuxButton variant="outlined" onClick={handleLogout}>
-          {t('Logout')}
+      {isLoggedIn ? (
+        <Profile />
+      ) : (
+        <s.AuxButton variant="outlined" onClick={handleLogin}>
+          {t('Login')}
         </s.AuxButton>
       )}
       

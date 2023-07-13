@@ -43,7 +43,7 @@ export interface CreateProfileOptions {
 }
 
 const profileIdList: string[] = [];
-const createProfile = async ({ createPermissions = ['userAdmin'] }: CreateProfileOptions = {}) => {
+const createProfile = async ({ createPermissions = [''] }: CreateProfileOptions = {}) => {
   const requestBody = {
     organization: getUniqueOrganizationName(),
     website: getUniqueWebsite(),
@@ -113,42 +113,43 @@ describe('profile test suite', () => {
    */
   test('creates a profile and tries to update without data', async () => {
     const { data } = await createProfile();
-    const { status: statusUpdate } = await profileApi.post('/profiles/${data.id}', {}, getAuthReqOpts('userAdmin'));
+    const { status: statusUpdate } = await profileApi.patch(`/profiles/${data.id}`, {}, getAuthReqOpts('userAdmin'));
     expect(statusUpdate).toEqual(500);
   });
 
   /**
    * Test to create a profile and attempt to update it with one attribute.
-   * Expects to receive a status code of 201 and for the updated attribute to be reflected in the response from a subsequent GET request.
+   * Expects to receive a status code of 200 and for the updated attribute to be reflected in the response from a subsequent GET request.
    */
   test('creates a profile and tries to update with one attribute', async () => {
     const { data } = await createProfile();
-    const { status: statusUpdate } = await profileApi.post(
-      `/profiles/${data.id}?heroUrl=thisisanupdate`,
-      {},
+    const { status: statusUpdate } = await profileApi.patch(
+      `/profiles/${data.id}`,
+      { heroUrl: 'thisisanupdate' },
       getAuthReqOpts('userAdmin')
     );
     const getProfileResponse = await profileApi.get(`/profiles/${data.id}`, {});
-    expect(statusUpdate).toEqual(201);
+    expect(statusUpdate).toEqual(200);
     expect(getProfileResponse.data.herourl).toEqual('thisisanupdate');
   });
 
   /**
    * Test to create a profile and attempt to update it with multiple attributes.
-   * Expects to receive a status code of 201 and for the updated attributes to be reflected in the response from a subsequent GET request.
+   * Expects to receive a status code of 200 and for the updated attributes to be reflected in the response from a subsequent GET request.
    */
   test('creates a profile and tries to update with multiple attribute', async () => {
     const { data } = await createProfile();
-    const { status: statusUpdate } = await profileApi.post(
-      `/profiles/${data.id}?heroUrl=thisisanupdate&descUrl=newurl`,
-      {},
+    const { status: statusUpdate } = await profileApi.patch(
+      `/profiles/${data.id}`,
+      { heroUrl: 'thisisanupdate', descriptionUrl: 'newurl', budget: '1ETH' },
       getAuthReqOpts('userAdmin')
     );
     const getProfileResponse = await profileApi.get(`/profiles/${data.id}`, {});
 
-    expect(statusUpdate).toEqual(201);
+    expect(statusUpdate).toEqual(200);
     expect(getProfileResponse.data.herourl).toEqual('thisisanupdate');
     expect(getProfileResponse.data.descriptionurl).toEqual('newurl');
+    expect(getProfileResponse.data.budget).toEqual('1ETH');
   });
 });
 

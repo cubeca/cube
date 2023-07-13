@@ -36,7 +36,7 @@ const Details = ({
         </Typography>
       </Box>
 
-      <Box my={theme.spacing(5)}>
+      {/* <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('Audio description (required)')}
           onDrop={handleVTTFilesUpload}
@@ -45,7 +45,8 @@ const Details = ({
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t('Upload an audio file describing the information above')}
         </Typography>
-      </Box>
+      </Box> */}
+      {/* // @ashlee we are not currently including audio description upload because we hope to auto generate it. But not sure why we were using the VTTFilesUpload  */}
 
       <Box my={theme.spacing(5)}>
         <UploadInput

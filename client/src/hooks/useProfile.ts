@@ -4,12 +4,14 @@ import { useParams } from 'react-router-dom';
 import { filesApi } from 'api';
 import { useEffect, useState } from 'react';
 import { BFFDataForProfilePageData } from '@cubeca/bff-client-oas-axios';
+import { getProfileId } from 'utils/auth';
 
 const useProfile = () => {
   const { id } = useParams();
   const [isLoadingImages, setIsLoadingImages] = useState(false);
   const [herourl, setHerourl] = useState('');
   const [logourl, setLogourl] = useState('');
+  const profileId = getProfileId();
 
   const { isLoading, isError, data } = useQuery(
     ['profile', id],
@@ -41,7 +43,8 @@ const useProfile = () => {
     data: {
       ...profile,
       herourl,
-      logourl
+      logourl,
+      profileId
     }
   };
 };
