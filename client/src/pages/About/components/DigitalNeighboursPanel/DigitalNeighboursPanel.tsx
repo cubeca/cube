@@ -39,7 +39,7 @@ const DigitalNeighboursPanel = () => {
       url: 'https://phi.ca/en/events/quentin-vercetty-self-guided-visit/'
     },
     {
-      title: t('Magic Keystrokes and Glitter'),
+      title: t('Plug In ICA'),
       description: t('magicGlitterDescription'),
       cta: 'Check it out',
       url: 'https://plugin.org/exhibitions/magic-keystrokes-and-glitter-with-dr-syrus-marcus-ware-and-kamran-behrouz/'
