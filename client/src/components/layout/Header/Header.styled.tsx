@@ -8,7 +8,7 @@ export const Header = styled(Stack)`
   position: relative;
   z-index: 100;
   width: 100%;
-  padding: 32px 8.333333333333333% 32px;
+  padding: 16px 8.333333333333333%;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -16,6 +16,10 @@ export const Header = styled(Stack)`
 
   ul {
     padding: 0;
+  }
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding: 32px 8.333333333333333%;
   }
 `;
 

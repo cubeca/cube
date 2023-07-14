@@ -135,3 +135,9 @@ export const EditWrapper = styled(Box)`
     }
   }
 `;
+
+export const EditFieldsWrapper = styled(Box)`
+  label {
+    color: ${(props) => props.theme.palette.background.default};
+  }
+`;
