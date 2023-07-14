@@ -3,14 +3,6 @@ import { styled } from 'theme/utils';
 
 export const TextInput = styled(MuiTextField)`
 
-& label {
-    display: block;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 0;
-    font-weight: 600;
-  }
-
   & input,
   & fieldset,
   & input:focus + fieldset,
@@ -34,10 +26,6 @@ export const TextInput = styled(MuiTextField)`
   }
 
   &.dark {
-
-    & label {
-      color: ${(props) => props.theme.palette.background.default};
-    }
 
     & input,
     & fieldset,

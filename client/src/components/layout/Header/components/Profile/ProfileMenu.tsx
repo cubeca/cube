@@ -6,6 +6,7 @@ import { removeAuthToken } from 'utils/auth';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import useProfile from 'hooks/useProfile';
+import * as s from './Profile.styled';
 
 interface ProfileMenuProps {
   open: boolean;
@@ -30,7 +31,7 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
   };
 
   return (
-    <Menu
+    <s.ProfileMenu
       open={open}
       anchorEl={anchorEl}
       onClose={onClose}
@@ -49,7 +50,7 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
         text={t('Logout')}
         icon={<LogoutIcon />}
       />
-    </Menu>
+    </s.ProfileMenu>
   );
 };
 

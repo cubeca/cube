@@ -1,4 +1,3 @@
-import { Button, Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { removeAuthToken } from '../../../../../utils/auth';
@@ -32,7 +31,7 @@ const AuxiliaryNav = () => {
   const menuId = 'main-menu';
 
   return (
-    <Stack component="nav" direction="row" alignItems="center" spacing={2}>
+    <s.Aux component="nav" direction="row" alignItems="center" spacing={2}>
       {isLoggedIn ? (
         <Profile />
       ) : (
@@ -41,14 +40,14 @@ const AuxiliaryNav = () => {
         </s.AuxButton>
       )}
       
-      <Button
+      <s.AuxMenuTrigger
         onClick={handleMenuOpen}
         aria-controls={open ? menuId : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
       >
         <MoreVertIcon />
-      </Button>
+      </s.AuxMenuTrigger>
       <MainMenu
         open={open}
         anchorEl={anchorEl}
@@ -56,7 +55,7 @@ const AuxiliaryNav = () => {
         id={menuId}
         isLoggedIn={isLoggedIn}
       />
-    </Stack>
+    </s.Aux>
   );
 };
 

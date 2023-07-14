@@ -91,89 +91,92 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         </s.ImageWrapper>
       </s.EditProfileImagesWrapper>
 
-      <TextInput
-        className='dark'
-        defaultValue={profile.organization}
-        name="organization"
-        id="organization"
-        control={control}
-        fullWidth
-        variant="outlined"
-        label={t('Organization Name')}
-      />
-      <TextInput
-        className='dark'
-        defaultValue={profile.website}
-        name="website"
-        id="website"
-        control={control}
-        fullWidth
-        variant="outlined"
-        label={t('Organization URL')}
-      />
-      <TextInput
-        className='dark'
-        defaultValue={profile.description}
-        name="profileDescription"
-        id="profileDescription"
-        control={control}
-        multiline
-        rows={4}
-        fullWidth
-        variant="outlined"
-        label={t('Description')}
-      />
-      {/*       
-      <Button color='secondary'
-        onClick={() => {
-          setEditAudio(!editAudio);
-        }}
-        variant="text"
-        endIcon={
-          !editAudio && (
-            <Box
-              border="solid"
-              borderRadius="5px"
-              display="inline-block"
-              lineHeight="0"
-            >
-              <FileUploadIcon />
-            </Box>
-          )
-        }
-      >
-        {editAudio
-          ? t('Cancel')
-          : t('Upload an audio file describing the information above')}
-      </Button>
-      {editAudio && (
-
-        <Box textAlign="center" pt="0.5rem">
-          <input
-            type="file"
-            id="audio-description"
-            onChange={onChangeAudioDescription}
-          />
-        </Box>
-        
-      )} 
-      
-      // @jonathan - this is was the old way, and below is what we have on the uploads page. Needs testing. 
-      
-      */}
-
-      <UploadInput
-        text={t('Audio file describing the information above')}
-        onDrop={onChangeAudioDescription}
-        maxFiles={1}
-        style={'dark'}
-      />
-
-      <Stack direction="row" justifyContent="right">
-        <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
-          {t('Update Profile')}
+      <s.EditFieldsWrapper>
+        <TextInput
+          className='dark'
+          defaultValue={profile.organization}
+          name="organization"
+          id="organization"
+          control={control}
+          fullWidth
+          variant="outlined"
+          label={t('Organization Name')}
+        />
+        <TextInput
+          className='dark'
+          defaultValue={profile.website}
+          name="website"
+          id="website"
+          control={control}
+          fullWidth
+          variant="outlined"
+          label={t('Organization URL')}
+        />
+        <TextInput
+          className='dark'
+          defaultValue={profile.description}
+          name="profileDescription"
+          id="profileDescription"
+          control={control}
+          multiline
+          rows={4}
+          fullWidth
+          variant="outlined"
+          label={t('Description')}
+        />
+        {/*       
+        <Button color='secondary'
+          onClick={() => {
+            setEditAudio(!editAudio);
+          }}
+          variant="text"
+          endIcon={
+            !editAudio && (
+              <Box
+                border="solid"
+                borderRadius="5px"
+                display="inline-block"
+                lineHeight="0"
+              >
+                <FileUploadIcon />
+              </Box>
+            )
+          }
+        >
+          {editAudio
+            ? t('Cancel')
+            : t('Upload an audio file describing the information above')}
         </Button>
-      </Stack>
+        {editAudio && (
+
+          <Box textAlign="center" pt="0.5rem">
+            <input
+              type="file"
+              id="audio-description"
+              onChange={onChangeAudioDescription}
+            />
+          </Box>
+          
+        )} 
+        
+        // @jonathan - this is was the old way, and below is what we have on the uploads page. Needs testing. 
+        
+        */}
+
+        <UploadInput
+          text={t('Audio file describing the information above')}
+          onDrop={onChangeAudioDescription}
+          maxFiles={1}
+          style={'dark'}
+        />
+
+        <Stack direction="row" justifyContent="right">
+          <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
+            {t('Update Profile')}
+          </Button>
+        </Stack>
+
+      </s.EditFieldsWrapper>
     </Stack>
   );
 };

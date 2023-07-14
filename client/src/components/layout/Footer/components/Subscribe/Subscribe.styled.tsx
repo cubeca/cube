@@ -22,7 +22,7 @@ export const InlineFormWrapper = styled(Stack)`
   .MuiBox-root,
   .MuiInputBase-root,
   .MuiFormHelperText-root {
-    margin: 0;
+    margin: 0 !important;
   }
 
   .MuiButtonBase-root {
