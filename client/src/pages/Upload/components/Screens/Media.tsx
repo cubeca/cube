@@ -77,7 +77,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Upload a Thumbnail Image. Image dimensions must be square. File size should not exceed xxx kb.'
+            'Upload a Thumbnail Image. For best results, we recommend images dimensions are 720px by 720px. File size should not exceed 500 kb.'
           )}
         </Typography>
       </Box>
