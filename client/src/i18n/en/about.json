@@ -1,6 +1,6 @@
 {
-  "heroText": "CubeCommons aggregates the video, audio, digital publications and activity booklets by arts organizations and artists across northern Turtle Island (Canada). Coming Soon!",
-  "becomeCreatorText": "Coming Soon! I Quick video to learn how to become a contributor.",
+  "heroText": "Coming Soon! CubeCommons aggregates the video, audio, digital publications and activity booklets by arts organizations and artists across northern Turtle Island (Canada).",
+  "becomeCreatorText": "Coming Soon! A quick video on how to set up your organization’s profile and start contributing content.",
   "daoText": "CubeCommons operates like a DAO—which is a decentralized autonomous organization made possible by blockchain technology—while fulfilling the requirements of a not-for-profit. This means that all content creators on CubeCommons are collective owners of the platform. CubeCommons does not produce a publicly traded token, only an internal governance token that CubeCommons creators earn for uploading free, accessible content. They use their governance tokens to vote on improvements to the site and the managing of CubeCommons’s assets. By using an on-chain voting system, we make these decisions public. Cube, unlike other streaming platforms, does not sell your data. The art organizations here are dedicated to online ecosystems that engage with audiences and creators in equitable ways.",
   "dao": "DAO",
   "creators": "Creators",
@@ -14,12 +14,12 @@
   "collaborationsText": "Supporting collaborations also means getting a say in what content you would like to see, with which artists and organizations. Imagine if Netflix gave you access to their producers? We do.",
   "nftsText": "<0>We could not hang out with all these great artists and art organizations and not make art! While we are not an NFT marketplace, we do subsidize gas and other minting fees for artists collaborating with organizations to produce an NFT. The sale and re-sale of these NFTs online, automatically sends profits back to the artists, the organizations and Cube to help create another avenue toward sustainability.</0><1>For decades artists have been producing limited edition multiples for galleries to sell as part of their funding model. However, the sale and resale of these works has not provided income for their artists. We look to blockchain to improve the equity of these collaborations with organizations, and to help artists into a new medium for their work.</1>",
   "Digital Neighbours": "Digital Neighbours",
-  "digitalNeighboursText": "We want to make it easier to discover the online tools and archives being developed by arts organizations across Turtle Island (Canada), including other projects funded by the Canada Council for the Arts Digital Strategy Fund. Here are some of our digital neighbours.",
+  "digitalNeighboursText": "We want to make it easier to discover the online tools and archives being developed by arts organizations across northern Turtle Island (Canada), including other projects funded by the Canada Council for the Arts, Digital Strategy Fund. Here are some of our digital neighbours.",
   "artengineDescription": "Learn about Artengine's Hyperlib Prototype.",
   "projetCollectifDescription": "Learn about En Commun, a new platform for publishing and connecting shared knowledge production.",
   "221aDescription": "Digital Strategy funded research on Blockchains & Cultural Padlocks.",
   "mobileArtSchoolDescription": "Try Arpp App, helping artists create-collaborate-celebrate in the digital space.",
   "mbtfDescription": "Quentin VerCettys self-guided AR experience with PHI Foundation.",
-  "magicGlitterDescription": "Learn about this upcoming curatorial digital justice residency with Dr.Syrus Marcus Ware & Kamran Behrouz.",
+  "magicGlitterDescription": "Magic Keystrokes and Glitter, a curatorial digital justice residency.",
   "metaLabelDescription": "A release club where groups who share interest release work, collaborate, and support each other."
 }

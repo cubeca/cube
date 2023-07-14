@@ -61,7 +61,7 @@ const CenterColumnPanel = () => {
             </Typography>
             <Typography component="p">
               {t(
-                'Cube does not produce a publicly traded token, only an internal governance token that Cube creators earn for uploading free, accessible content. They use their governance tokens to vote on improvements to the site and the managing of Cube’s assets. By using the blockchain for voting we make these decisions publicly transparent.'
+                'Cube does not produce a publicly traded token, only an internal governance token that contributors earn for uploading their content to this shared database. Factors like including Sign-Language translations or multilingual subtitles, weight their governance token earnings. With their tokens, members of Cube can propose and vote on developments to the site, and the use of its assets. Sign-up to request a profile, and as soon as you or your organization is approved by the community, you are a voting DAO member.'
               )}
             </Typography>
             <Typography component="p">
