@@ -39,8 +39,8 @@ const DigitalNeighboursPanel = () => {
       url: 'https://www.example.com'
     },
     {
-      title: t('ARPP APP'),
-      description: t('arppDescription'),
+      title: t('Plug In ICA'),
+      description: t('magicGlitterDescription'),
       cta: 'Check it out',
       url: 'https://www.example.com'
     },
