@@ -24,9 +24,10 @@ export const InlineFormWrapper = styled(Stack)`
   .MuiFormHelperText-root {
     margin: 0 !important;
   }
-
+  
   .MuiButtonBase-root {
     flex: 0 0 auto;
     width: auto;
+    margin: 0 !important;
   }
 `;
