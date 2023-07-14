@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Stack, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton,  } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import { ReactComponent as CubeLogo } from 'assets/icons/cube.svg';
 import NavPanel from './components/NavPanel';
-import Social from './components/Social';
 import { useTranslation } from 'react-i18next';
 import TextInput from 'components/form/TextInput';
 import { ReactComponent as CreditsImg } from 'assets/icons/footer-credits.svg';
+import Subscribe from './components/Subscribe/Subscribe';
 import * as s from './Footer.styled';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -82,32 +83,25 @@ const Footer = () => {
   }, []);
 
   return (
-    <s.Footer
-      component="footer"
-      direction="row"
-      justifyContent="space-between"
-      alignItems="center"
-      p="60px 8.333333333333333%"
-      sx={{ backgroundColor: '#2F4048' }}
-    >
-      <Box sx={{ width: '40%' }}>
-        <Typography component="h4" variant="h4">
-          {t('Sign Up For Updates')}
-        </Typography>
+    <s.Footer component="footer">
 
-        <Typography component="p" variant="body2">
-          {t(
-            'Our emails are few and far between with occasional content teasers and NFT releases.'
-          )}
-        </Typography>
+      <Grid container>
 
-        <CreditsImg />
-      </Box>
+        <Grid xs={10} xsOffset={1} md={4}>
+          <Subscribe></Subscribe>
+        </Grid>
+        
+        <Grid xs={10} xsOffset={1} md={5}>
+          <NavPanel></NavPanel>
+        </Grid>
 
-      <Box py="2rem">
-        <NavPanel></NavPanel>
-      </Box>
-      <Social />
+        <Grid xs={10} xsOffset={1} md={4}>
+          <s.Credits>
+            <CreditsImg />
+          </s.Credits>
+        </Grid>
+      </Grid>
+
 
       <div>
         <BootstrapDialog
@@ -130,9 +124,9 @@ const Footer = () => {
           </DialogActions>
         </BootstrapDialog>
       </div>
+
+
     </s.Footer>
-
-
   );
 };
 
