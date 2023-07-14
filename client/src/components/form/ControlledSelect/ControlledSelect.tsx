@@ -7,6 +7,7 @@ import {
 import { FC, ReactNode } from 'react';
 import { Controller } from 'react-hook-form';
 import { InputProps } from '../types';
+import * as s from '../Select/Select.styled';
 
 interface SelectProps extends InputProps {
   label: string;
@@ -25,7 +26,7 @@ const Select: FC<SelectProps> = ({
   return (
     <Controller
       render={({ field, fieldState: { error } }) => (
-        <Box sx={{ minWidth: 240 }}>
+        <s.Select sx={{ minWidth: 240 }}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">{label}</InputLabel>
             <MuiSelect
@@ -38,7 +39,7 @@ const Select: FC<SelectProps> = ({
               {children}
             </MuiSelect>
           </FormControl>
-        </Box>
+        </s.Select>
       )}
       name={name}
       control={control}

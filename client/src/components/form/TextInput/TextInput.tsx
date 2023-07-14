@@ -1,9 +1,9 @@
-import { TextField as MuiTextField } from '@mui/material';
 import { FC, HTMLInputTypeAttribute } from 'react';
-import { Controller } from 'react-hook-form';
 import FormControl from '../FormControl';
 import { InputProps as MuiInputProps } from '../types';
+import { Controller } from 'react-hook-form';
 import * as s from './TextInput.styled';
+
 
 interface TextInputProps extends MuiInputProps {
   type?: HTMLInputTypeAttribute;
@@ -58,8 +58,9 @@ const TextInput: FC<TextInputProps> = ({
             helperTextId={helperTextId}
             fullWidth={fullWidth}
           >
-            <MuiTextField
+            <s.TextInput
               sx={sx}
+              className={className}
               placeholder={placeholder}
               variant={variant}
               size="small"

@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import useEditProfile from './useEditProfile';
 import CameraIcon from '@mui/icons-material/LocalSee';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import TextInput from 'components/form/TextInput';
 import * as s from './EditProfileForm.styled';
-import * as sTextInput from 'components/form/TextInput/TextInput.styled';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 import UploadInput from 'components/form/UploadInput';
@@ -91,7 +91,8 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         </s.ImageWrapper>
       </s.EditProfileImagesWrapper>
 
-      <sTextInput.DarkTextInput
+      <TextInput
+        className='dark'
         defaultValue={profile.organization}
         name="organization"
         id="organization"
@@ -100,7 +101,8 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         variant="outlined"
         label={t('Organization Name')}
       />
-      <sTextInput.DarkTextInput
+      <TextInput
+        className='dark'
         defaultValue={profile.website}
         name="website"
         id="website"
@@ -109,7 +111,8 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         variant="outlined"
         label={t('Organization URL')}
       />
-      <sTextInput.DarkTextInput
+      <TextInput
+        className='dark'
         defaultValue={profile.description}
         name="profileDescription"
         id="profileDescription"

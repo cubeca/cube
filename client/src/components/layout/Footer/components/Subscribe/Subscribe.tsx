@@ -17,7 +17,8 @@ const Subscribe = () => {
   
   return (
     
-    <s.Test>
+    <s.Subscribe>
+      
       <Typography component="h4" variant="h4">
         {t('Sign Up For Updates')}
       </Typography>
@@ -29,19 +30,22 @@ const Subscribe = () => {
       </Typography>
       
       <form onSubmit={handleSubmit(onSubmit)}>
-        <EmailInput
-          control={control}
-          name="email"
-          label={t('E-mail address')}
-          fullWidth
-          helperText={t('E-mail address required')}
-          variant="outlined"
-        />
-        <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
-          {t('Sign up')}
-        </Button>
+        <s.InlineFormWrapper>
+          <EmailInput
+            control={control}
+            name="email"
+            placeholder={t('E-mail address')}
+            fullWidth
+            helperText={t('E-mail address required')}
+            variant="outlined"
+          />
+          <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
+            {t('Sign up')}
+          </Button>
+        </s.InlineFormWrapper>
       </form>
-    </s.Test>
+
+    </s.Subscribe>
 
   );
 };
