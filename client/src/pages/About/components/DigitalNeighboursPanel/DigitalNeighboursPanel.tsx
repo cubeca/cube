@@ -6,49 +6,49 @@ import * as s from './DigitalNeighboursPanel.styled';
 
 const DigitalNeighboursPanel = () => {
   const { t } = useTranslation('about');
-
+  
   const cards = [
     {
       title: t('Artengine'),
       description: t('artengineDescription'),
       cta: 'Check it out',
-      url: 'https://www.example.com'
+      url: 'https://artengine.ca/hyperlib_proto/'
     },
     {
-      title: t('CAG'),
-      description: t('cagDescription'),
+      title: t('Projet Collectif'),
+      description: t('projetCollectifDescription'),
       cta: 'Check it out',
-      url: 'https://www.example.com'
+      url: 'https://praxis.encommun.io/'
     },
     {
-      title: t('Centrea'),
-      description: t('centreaDescription'),
+      title: t('221A'),
+      description: t('221aDescription'),
       cta: 'Check it out',
-      url: 'https://www.example.com'
+      url: 'https://221a.ca/221a-launches-bacp-research-report/'
     },
     {
-      title: t('MOA'),
-      description: t('moaDescription'),
+      title: t('Mobil Art School'),
+      description: t('mobileArtSchoolDescription'),
       cta: 'Check it out',
-      url: 'https://www.example.com'
+      url: 'https://apps.apple.com/ca/app/arpp/id1498008023'
     },
     {
-      title: t('MOV'),
-      description: t('movDescription'),
+      title: t('Missing Black Technofossils Here'),
+      description: t('mbtfDescription'),
       cta: 'Check it out',
-      url: 'https://www.example.com'
+      url: 'https://phi.ca/en/events/quentin-vercetty-self-guided-visit/'
     },
     {
       title: t('Plug In ICA'),
       description: t('magicGlitterDescription'),
       cta: 'Check it out',
-      url: 'https://www.example.com'
+      url: 'https://plugin.org/exhibitions/magic-keystrokes-and-glitter-with-dr-syrus-marcus-ware-and-kamran-behrouz/'
     },
     {
-      title: t('Trinity Square'),
-      description: t('trinitySquareDescription'),
+      title: t('Metalabel'),
+      description: t('metaLabelDescription'),
       cta: 'Check it out',
-      url: 'https://www.example.com'
+      url: 'https://www.metalabel.xyz/'
     }
   ];
 
