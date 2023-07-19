@@ -179,9 +179,8 @@ app.post('/auth/resend-email-verification', async (req: Request, res: Response) 
 
 app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
   const { status, data } = await identityApi.get('auth/email/verify/' + req.params.token, req.body);
-  
   if (status === 301) {
-    res.redirect(data.redirectUrl);
+    res.redirect(data);
   } else {
     res.status(status).json(data);
   }

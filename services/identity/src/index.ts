@@ -278,7 +278,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       await db.updateActiveStatus(uuid as string, true);
 
       const redirectUrl = `${process.env.HOST}/verified?token=` + encodeURIComponent(token);
-      return res.redirect(301, redirectUrl);
+      return res.status(301).send(redirectUrl);
     });
   } catch (error: any) {
     console.error('Error occurred verifying email:', error);
