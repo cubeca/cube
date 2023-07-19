@@ -12,6 +12,7 @@ import PasswordIcon from '@mui/icons-material/Password';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import useAuth from 'hooks/useAuth';
 import { UserContext } from 'providers/UserProvider';
+import * as s from './Profile.styled';
 
 interface ProfileMenuProps {
   open: boolean;
@@ -60,7 +61,7 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
 
   return (
     <>
-      <Menu
+      <s.ProfileMenu
         open={open}
         anchorEl={anchorEl}
         onClose={onClose}
@@ -91,7 +92,7 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
           text={t('Logout')}
           icon={<LogoutIcon />}
         />
-      </Menu>
+      </s.ProfileMenu>
       <UpdateEmailDialog
         isOpen={isUpdateEmailDialogOpen}
         onClose={handleEmailUpdateDialogClose}

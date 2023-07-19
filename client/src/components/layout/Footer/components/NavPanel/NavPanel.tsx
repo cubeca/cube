@@ -1,37 +1,48 @@
-import { Box, List, MenuItem } from '@mui/material';
+import Social from '../Social';
 import { useTranslation } from 'react-i18next';
-// import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
 
 import * as s from './NavPanel.styled';
 
 const NavPanel = () => {
   const { t } = useTranslation();
   return (
-    <Box
-      component="nav"
-      sx={{display: 'flex', flexDirection: 'column',  }}>
-      <List component="ul" sx={{alignItems: 'center' }}>
-        <MenuItem sx={{ margin: '0 2rem' }}>
-          <s.NavLink to="/">{t('Start Watching')}</s.NavLink>
-        </MenuItem>
-        
-        <MenuItem sx={{ margin: '0 2rem' }}>
-          <s.NavLink to="/about">{t('About')}</s.NavLink>
-        </MenuItem>
-
-        <MenuItem sx={{ margin: '0 2rem' }}>
-          <s.NavLink to="/">{t('Contact Us')}</s.NavLink>
-        </MenuItem>
-
-        <MenuItem sx={{ margin: '0 2rem' }}>
-          <s.NavLink to="/signup">{t('Become a Creator')}</s.NavLink>
-        </MenuItem>
+    
+    <s.NavList component="ul">
       
-        <MenuItem sx={{ margin: '0 2rem' }}>
-          <s.NavLink to="/">{t('FAQs')}</s.NavLink>
-        </MenuItem>
-      </List>
-    </Box>
+      <s.NavItem>
+        <s.NavLink to="/about">{t('Home')}</s.NavLink>
+      </s.NavItem>
+
+      <s.NavItem>
+        <s.NavLink to="/home">{t('Search Content')}</s.NavLink>
+      </s.NavItem>
+      
+      <s.NavItem>
+        <s.NavLink to="/">{t('VR Space')}</s.NavLink>
+      </s.NavItem>
+
+      <s.NavItem>
+        <s.NavLink to="/">{t('Contact Us')}</s.NavLink>
+      </s.NavItem>
+
+      <s.NavItem>
+        <s.NavLink to="/">{t('FAQs')}</s.NavLink>
+      </s.NavItem>
+
+      <s.NavItem>
+        <s.NavLink to="/signup">{t('Become a Creator')}</s.NavLink>
+      </s.NavItem>
+      
+      <s.NavItem>
+        <s.NavLink to="/Login">{t('Login')}</s.NavLink>
+      </s.NavItem>
+
+      <s.NavItem>
+        <Social />
+      </s.NavItem>
+
+    </s.NavList>
+
   );
 };
 

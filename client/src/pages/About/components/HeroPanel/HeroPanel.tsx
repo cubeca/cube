@@ -21,7 +21,7 @@ const HeroPanel = () => {
             </Typography>
             <Typography component="p" variant="body1">
               {t(
-                'CubeCommons aggregates the video, audio, digital publications and activity booklets by arts organizations and artists across northern Turtle Island (Canada). Press "Play" to learn how to use the platform.'
+                'heroText'
               )}
             </Typography>
             <a className="play-button" href="www.happy.com">
@@ -44,9 +44,7 @@ const HeroPanel = () => {
                     {t('Create')}
                   </Typography>
                   <Typography component="p" variant="body1">
-                    {t(
-                      'To learn how to become a contributor press "Play" here.'
-                    )}
+                    {t('becomeCreatorText')}
                   </Typography>
                   <img className="play-button" src={PlaySymbol} alt="play" />
                 </s.HeroContentCTAPlay>

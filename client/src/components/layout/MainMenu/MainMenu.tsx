@@ -8,13 +8,14 @@ import VrpanoIcon from '@mui/icons-material/Vrpano';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
-import ClosedCaptionIcon from '@mui/icons-material/ClosedCaption';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ArticleIcon from '@mui/icons-material/Article';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CloseIcon from '@mui/icons-material/Close';
+import * as s from './MainMenu.styled';
 
 interface MainMenuProps {
   open: boolean;
@@ -39,7 +40,7 @@ const MainMenu = ({
   };
 
   return (
-    <Menu
+    <s.MainMenu
       open={open}
       anchorEl={anchorEl}
       onClose={onClose}
@@ -47,10 +48,12 @@ const MainMenu = ({
       MenuListProps={{
         'aria-labelledby': id
       }}
-    >
-      <Button onClick={onClose}>
-        <CloseIcon fontSize="small" />
+      >
+
+      <Button className='close-button' onClick={onClose}>
+        <CloseIcon />
       </Button>
+
       <MenuList sx={{ padding: '4px 4px' }}>
         <MenuItem
           onClick={() => handleMenuClick('/search')}
@@ -73,7 +76,9 @@ const MainMenu = ({
           text={t('Become a creator')}
         />
       </MenuList>
+      
       <Divider />
+
       <Typography
         component="h3"
         px="16px"
@@ -84,9 +89,11 @@ const MainMenu = ({
       >
         Glossary of Icons
       </Typography>
-      <Typography component="h4" px="16px" m={0} mt={2} mb={1} fontSize="8px">
+      
+      <Typography component="h4">
         Accessibility
       </Typography>
+
       <MenuList>
         <MenuItem
           text={t('Text to Speech')}
@@ -97,13 +104,15 @@ const MainMenu = ({
           icon={<SignLanguageIcon fontSize="small" />}
         />
         <MenuItem
-          text={t('Closed Captioning')}
-          icon={<ClosedCaptionIcon fontSize="small" />}
+          text={t('Subtitles')}
+          icon={<SubtitlesIcon fontSize="small" />}
         />
       </MenuList>
-      <Typography component="h4" px="16px" m={0} mb={2}>
+
+      <Typography component="h4">
         Content Types
       </Typography>
+      
       <MenuItem
         text={t('Video')}
         icon={<PlayArrowIcon fontSize="small" />}
@@ -129,7 +138,7 @@ const MainMenu = ({
         icon={<GroupsIcon fontSize="small" />}
         onClick={() => {}}
       />
-    </Menu>
+    </s.MainMenu>
   );
 };
 

@@ -77,8 +77,8 @@ export const sendPasswordChangeConfirmation = async (uuid: string) => {
     await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent successfully to: ' + user.email);
   } catch (error) {
-    console.error('Error sending verification email:', error);
-    throw new Error('Error sending verification email');
+    console.error('Error sending password change confirmation email:', error);
+    throw new Error('Error sending password change confirmation email');
   }
 };
 
@@ -129,7 +129,7 @@ export const sendPasswordResetEmail = async (email: string) => {
     await apiInstance.sendTransacEmail(sendSmtpEmail);
     console.log('Email sent successfully to: ' + email);
   } catch (error) {
-    console.error('Error sending verification email:', error);
-    throw new Error('Error sending verification email');
+    console.error('Error sending password change email:', error);
+    throw new Error('Error sending password change email');
   }
 };
