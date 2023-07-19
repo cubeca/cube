@@ -176,12 +176,8 @@ app.post('/auth/resend-email-verification', async (req: Request, res: Response) 
   res.status(status).json(data);
 });
 
-app.get('/auth/verify', allowIfAnyOf('unverified'), async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.get('auth/verify', {
-    params: req.query,
-    headers: filterHeadersToForward(req, 'authorization')
-  });
-
+app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.get('auth/email/verify/' + req.params.token, req.body);
   res.status(status).json(data);
 });
 
