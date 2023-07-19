@@ -277,7 +277,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       await db.addPermissionIds(uuid as string, ['active']);
       await db.updateActiveStatus(uuid as string, true);
 
-      const redirectUrl = `${process.env.HOST}/about`;
+      const redirectUrl = `${process.env.HOST}/verified?token=` + encodeURIComponent(token);
       res.redirect(301, redirectUrl);
     });
   } catch (error: any) {
