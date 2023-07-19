@@ -3,7 +3,6 @@ import ContentCard from 'components/ContentCard';
 import { ContentLoader } from 'components/Loaders';
 import UserContentFilter from './UserContentFilter';
 import { ContentLists } from 'types/enums';
-import { ContentListed } from '@cubeca/bff-client-oas-axios';
 import * as s from './UserContent.styled';
 
 import collaboration from 'assets/icons/type-collaboration.svg';

@@ -1,4 +1,3 @@
-import { Settings } from '@mui/icons-material';
 import { createTheme, responsiveFontSizes } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 

@@ -4,7 +4,6 @@ import ContentCard from 'components/ContentCard';
 import useContent from 'hooks/useContent';
 import { ContentLoader } from 'components/Loaders';
 import { ContentLists } from 'types/enums';
-import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 const ContentByMedium = () => {
   const { data, isLoading } = useContent('featured', ContentLists.Featured);
@@ -13,10 +12,9 @@ const ContentByMedium = () => {
 
   return (
     <>
-     
       <Stack direction="row" spacing={6} py="4rem">
         {!isLoading ? (
-          content.map((c: ContentListed) => (
+          content.map((c: any) => (
             <ContentCard
               key={c.id}
               image={c.thumbnailUrl}

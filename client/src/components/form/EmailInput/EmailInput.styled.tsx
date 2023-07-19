@@ -1,7 +1,7 @@
 import { styled } from 'theme/utils';
-import TextInput from 'components/form/TextInput';
+import EmailInput from './EmailInput';
 
-export const DarkTextInput = styled(TextInput)`
+export const DarkEmailInput = styled(EmailInput)`
   & label {
     color: ${(props) => props.theme.palette.background.default};
     display: block;

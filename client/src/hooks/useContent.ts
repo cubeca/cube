@@ -3,8 +3,7 @@ import {
   addContent,
   CategoryType,
   ContentType,
-  NationType,
-  AddContent
+  NationType
 } from 'api/content';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
@@ -42,7 +41,7 @@ const useContent = (list = 'videos', category?: string) => {
   } = useMutation(addContent);
 
   const handleAddContent = (
-    payload: AddContent,
+    payload: any,
     coverImageFile: File,
     mediaFile: File
   ) =>

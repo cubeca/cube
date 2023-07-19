@@ -4,19 +4,19 @@ import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
 import { useTranslation } from 'react-i18next';
 import { ContentTypes } from 'types/enums';
-import {useState} from 'react';
+import { useState } from 'react';
 
 const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [isDragOver, setIsDragOver] = useState(false);
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  };
-  const handleDragLeave = () => {
-    setIsDragOver(false);
-  };
+  // const [isDragOver, setIsDragOver] = useState(false);
+  // const handleDragOver = (e: any) => {
+  //   e.preventDefault();
+  //   setIsDragOver(true);
+  // };
+  // const handleDragLeave = () => {
+  //   setIsDragOver(false);
+  // };
   return (
     <Box className={'upload__media-screen'}>
       <Typography component="h2" variant="h2">
@@ -61,9 +61,9 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           text={t('Media file (required)')}
           onDrop={handleMediaUpload}
           maxFiles={1}
-          onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
+          // onDragOver={handleDragOver}
+          // onDragLeave={handleDragLeave}
+          //style={`background-color: ${isDragOver ? 'red' : 'white'}`}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
@@ -77,9 +77,9 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           text={t('Thumbnail image (required)')}
           onDrop={handleCoverImageUpload}
           maxFiles={1}
-          onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
+          // onDragOver={handleDragOver}
+          // onDragLeave={handleDragLeave}
+          // style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
