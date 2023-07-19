@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ContentList from 'components/ContentList';
 import useContent from 'hooks/useContent';

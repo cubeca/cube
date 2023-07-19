@@ -5,7 +5,6 @@ import useContent from 'hooks/useContent';
 import { ContentLoader } from 'components/Loaders';
 import FeaturedContentFilter from './FeaturedContentFilter';
 import { ContentLists } from 'types/enums';
-import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 const FeaturedContent = () => {
   const { data, isLoading } = useContent('featured', ContentLists.Featured);
@@ -17,7 +16,7 @@ const FeaturedContent = () => {
       <FeaturedContentFilter />
       <Stack direction="row" spacing={6} py="4rem">
         {!isLoading ? (
-          content.map((c: ContentListed) => (
+          content.map((c: any) => (
             <ContentCard
               key={c.id}
               image={c.thumbnailUrl}

@@ -4,63 +4,49 @@ import ErrorMessage from 'components/form/ErrorMessage';
 import PasswordInput from 'components/form/PasswordInput';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { signup, login } from 'api/auth';
+import { userSignup } from 'api/auth';
 import { useState } from 'react';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import CheckboxInput from 'components/form/CheckboxInput';
 
-export const SignupForm = () => {
+export const UserSignupForm = () => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
-  const navigate = useNavigate();
   const [error, setError] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const onSubmit = async (data: FieldValues) => {
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      promotions,
-      terms,
-      organization,
-      website,
-      tag
-    } = data;
+    const { firstName, lastName, email, password, promotions, terms } = data;
     try {
       setError(false);
-      await signup(
+      await userSignup(
         `${firstName} ${lastName}`,
-        organization,
-        website,
-        tag,
         email,
         password,
-        [
-          'active',
-
-          // TODO Remove after MVP presentation on 2023-03-17
-          'contentEditor'
-        ],
         !!promotions,
         terms
       );
 
-      const profileId = await login(email, password);
-      navigate(`/profile/${profileId}`);
-
-      // navigate('/login');
+      setIsFormSubmitted(true);
     } catch (e: any) {
       setError(true);
     }
   };
 
+  if (isFormSubmitted) {
+    return (
+      <Typography>
+        Sign up Successful! Check the email address you provided for your
+        verification link.
+      </Typography>
+    );
+  }
+
   return (
     <>
       <Typography variant="h3" component="h3" pb={4}>
-        {t('Sign up')}
+        {t('User Sign up')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="row" spacing={2} pb={2}>
@@ -82,31 +68,6 @@ export const SignupForm = () => {
           />
         </Stack>
         <Stack spacing={2}>
-          <TextInput
-            control={control}
-            name="organization"
-            label={t('Organization name')}
-            fullWidth
-            helperText={t('Organization name required')}
-            variant="outlined"
-          />
-          <TextInput
-            control={control}
-            name="website"
-            label={t('Website')}
-            fullWidth
-            helperText={t('Website required')}
-            variant="outlined"
-          />
-          <TextInput
-            control={control}
-            name="tag"
-            label={t('Organization Tag')}
-            fullWidth
-            helperText={t('Tag required')}
-            variant="outlined"
-            placeholder="@OrgName"
-          />
           <EmailInput
             control={control}
             name="email"

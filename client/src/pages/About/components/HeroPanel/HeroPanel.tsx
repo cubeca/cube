@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import HeroCTABg from 'assets/images/about-hero-cta-bg.png';
 import PlaySymbol from 'assets/icons/play-symbol.svg';
 import Play from 'assets/icons/play-circle.svg';

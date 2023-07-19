@@ -1,35 +1,38 @@
 import { profileApi } from '.';
 import { upload } from './upload';
 
-export type { BFFDataForProfilePageData as Profile } from '.';
-
 export const getProfile = async (id: string) => {
-  return await profileApi.profileDetails(id);
+  return await profileApi.getProfile(id);
 };
 
-export const updateProfileSection = async (id: string, description: string) => {
+export const updateProfileSection = async (
+  id: string,
+  description: string,
+  budget: string
+) => {
   return await profileApi.updateProfile(id, {
-    description
+    description,
+    budget
   });
 };
 
 export const updateProfileLogo = async (id: string, file: File) => {
   const logoFileId = await upload(file, id);
   return await profileApi.updateProfile(id, {
-    logoFileId
+    logoUrl: logoFileId
   });
 };
 
 export const updateProfileHero = async (id: string, file: File) => {
   const heroFileId = await upload(file, id);
   return await profileApi.updateProfile(id, {
-    heroFileId
+    heroUrl: heroFileId
   });
 };
 
 export const updateProfileAudioDescription = async (id: string, file: File) => {
   const descriptionAudioFileId = await upload(file, id);
-  return await profileApi.updateProfile(id, {
-    descriptionAudioFileId
-  });
+  // return await profileApi.updateProfile(id, {
+  //   descriptionAudioFileId
+  // });
 };

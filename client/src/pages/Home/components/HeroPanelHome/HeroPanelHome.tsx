@@ -1,13 +1,11 @@
-import { Grid, Box, Stack, Typography } from '@mui/material';
-import { Trans, useTranslation } from 'react-i18next';
+import { Grid, Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import HeroHome from 'assets/images/hero-home-page.jpeg';
 import HeroRight from 'assets/images/home-video-cover.jpeg';
 import Play from 'assets/icons/play-circle.svg';
 import PlaySymbol from 'assets/icons/play-symbol.svg'
 
-import Button from 'components/Button';
 import ReactPlayer from 'react-player';
-import { flexbox } from '@mui/system';
 
 const HeroPanelHome = () => {
   const { t } = useTranslation('about');

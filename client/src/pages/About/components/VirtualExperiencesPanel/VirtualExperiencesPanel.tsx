@@ -1,14 +1,11 @@
-import { Box, Typography, Stack } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import AboutPanel from '../../../../components/AboutPanel';
-import Button from 'components/Button';
-import { useNavigate } from 'react-router-dom';
 
 import * as s from './VirtualExperiencesPanel.styled';
 
 const VirtualExperiencesPanel = () => {
   const { t } = useTranslation('about');
-  const navigate = useNavigate();
 
   return (
     <AboutPanel

@@ -1,4 +1,4 @@
-import { setAuthToken, setProfileId } from '../utils/auth';
+import { getAuthToken, setAuthToken, setProfileId } from '../utils/auth';
 import { authApi } from '.';
 
 export const anonymousJWT = async () => {
@@ -12,42 +12,54 @@ export const anonymousJWT = async () => {
 
 export const login = async (email: string, password: string) => {
   const {
-    data: { jwt, profileId }
+    data: { jwt, user }
   } = await authApi.login({
-    username: email,
+    email,
     password
   });
   setAuthToken(jwt);
-  setProfileId(profileId);
-  return profileId;
+  if ((user as any).profile_id) setProfileId((user as any).profile_id);
+  return user;
 };
 
-export const updateEmail = async (userId: string, email: string) =>
-  await authApi.updateEmail({
+export const updateEmail = async (userId: string, email: string) => {
+  const token = await getAuthToken();
+  return await authApi.updateEmail({
     uuid: userId,
-    email
+    email,
+    token: token || ''
   });
+};
 
-export const updatePassword = async (userId: string, password: string) =>
-  await authApi.updatePassword({
+export const updatePassword = async (
+  userId: string,
+  currentPassword: string,
+  newPassword: string
+) => {
+  const token = await getAuthToken();
+  return await authApi.updatePassword({
     uuid: userId,
-    password
+    currentPassword,
+    newPassword,
+    token: token || ''
   });
+};
 
-export const forgotPassword = async (email: string) =>
-  await authApi.forgotPassword(email);
+export const forgotPassword = async (email: string) => {
+  return await authApi.forgotPassword({ email });
+};
 
-export const verifyEmail = async (userId: string) =>
-  await authApi.verifyEmail(userId);
+export const verifyEmail = async (userId: string) => {
+  // await authApi.verifyEmail(userId);
+};
 
-export const signup = async (
+export const creatorSignup = async (
   name: string,
   organization: string,
   website: string,
   tag: string,
   email: string,
   password: string,
-  permissionIds: string[],
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean
 ) =>
@@ -58,7 +70,21 @@ export const signup = async (
     tag,
     email,
     password,
-    permissionIds,
+    hasAcceptedTerms,
+    hasAcceptedNewsletter
+  });
+
+export const userSignup = async (
+  name: string,
+  email: string,
+  password: string,
+  hasAcceptedTerms: boolean,
+  hasAcceptedNewsletter: boolean
+) =>
+  await authApi.user({
+    name,
+    email,
+    password,
     hasAcceptedTerms,
     hasAcceptedNewsletter
   });

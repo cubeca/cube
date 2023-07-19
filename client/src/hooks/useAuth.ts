@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
-import { isAuthed } from 'utils/auth';
+import { useContext, useEffect, useState } from 'react';
+import { isAuthed, removeAuthToken } from 'utils/auth';
+import { login as authLogin } from 'api/auth';
+import { UserContext } from 'providers/UserProvider';
 
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { setUser } = useContext(UserContext);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -12,7 +15,21 @@ const useAuth = () => {
     checkAuth();
   });
 
+  const login = async (email: string, password: string) => {
+    const user = await authLogin(email, password);
+    setUser(user);
+    return user;
+  };
+
+  const logout = () => {
+    removeAuthToken();
+    setUser(undefined);
+    setIsLoggedIn(false);
+  };
+
   return {
+    login,
+    logout,
     isLoggedIn
   };
 };

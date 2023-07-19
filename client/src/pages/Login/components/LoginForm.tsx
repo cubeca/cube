@@ -6,24 +6,28 @@ import Link from 'components/Link';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { login } from 'api/auth';
 import { useState } from 'react';
 import Button from 'components/Button';
+import useAuth from 'hooks/useAuth';
 
 export const LoginForm = () => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
   const [error, setError] = useState(false);
+  const { login } = useAuth();
 
   const onSubmit = async (data: FieldValues) => {
     const { email, password } = data;
     try {
       setError(false);
-      const profileId = await login(email, password);
+      const user = await login(email, password);
 
-      // TODO: Determine profile associated with user
-      navigate(`/profile/${profileId}`);
+      if ((user as any).uuid) {
+        navigate(`/profile/${(user as any).profile_id}`);
+      } else {
+        navigate('/');
+      }
     } catch (e: any) {
       setError(true);
     }

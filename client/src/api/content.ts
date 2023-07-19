@@ -1,5 +1,5 @@
 import { upload } from './upload';
-import { AddContent, contentApi } from '.';
+import { contentApi } from '.';
 
 export type CategoryType =
   | 'all'
@@ -15,8 +15,6 @@ export type CategoryType =
 export type ContentType = 'video' | 'audio' | 'pdf';
 
 export type NationType = 'CA';
-
-export type { AddContent } from '.';
 
 export const getContent = async (
   category?: CategoryType,
@@ -38,7 +36,7 @@ export const addContent = async ({
   subtitlesFile,
   transcriptFile
 }: {
-  payload: AddContent;
+  payload: any;
   coverImageFile?: File;
   mediaFile?: File;
   subtitlesFile?: File;
