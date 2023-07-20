@@ -262,17 +262,23 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       const encoder = new UuidEncoder('base36');
       const uuid = encoder.decode(encodedUUID);
 
-      const r = await db.selectUserByID(uuid as string);
-      if (r.rows.length === 1) {
-        await db.updateEmailVerification(uuid as string, true);
-        await db.addPermissionIds(uuid as string, ['active']);
-        await db.updateActiveStatus(uuid as string, true);
-      } else {
+      const user = await db.selectUserByID(uuid as string);
+      if (user.rows.length !== 1) {
         return res.status(401).send('Incorrect id provided');
       }
 
-      const redirectUrl = `${process.env.HOST}/verify/?token=` + encodeURIComponent(token);
-      res.redirect(301, redirectUrl);
+      const { has_verified_email } = user.rows[0];
+
+      if (has_verified_email) {
+        return res.status(401).send('Email is already verified');
+      }
+
+      await db.updateEmailVerification(uuid as string, true);
+      await db.addPermissionIds(uuid as string, ['active']);
+      await db.updateActiveStatus(uuid as string, true);
+
+      const redirectUrl = `${process.env.HOST}/verified?token=` + encodeURIComponent(token);
+      return res.status(301).send(redirectUrl);
     });
   } catch (error: any) {
     console.error('Error occurred verifying email:', error);

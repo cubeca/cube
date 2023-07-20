@@ -6,16 +6,19 @@ import { ParallaxProvider } from 'react-scroll-parallax';
 
 import getTheme from './theme';
 import Router from 'Router';
+import { UserProvider } from 'providers/UserProvider';
 
 const App = () => (
   <LocalizationProvider dateAdapter={AdapterDateFns}>
     <ThemeProvider theme={getTheme()}>
-      <CssBaseline />
-      <Main>
-        <ParallaxProvider>
-        <Router />
-        </ParallaxProvider>
-      </Main>
+      <UserProvider>
+        <CssBaseline />
+        <Main>
+          <ParallaxProvider>
+            <Router />
+          </ParallaxProvider>
+        </Main>
+      </UserProvider>
     </ThemeProvider>
   </LocalizationProvider>
 );

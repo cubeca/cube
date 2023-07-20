@@ -40,12 +40,14 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update
-  if (!(req.body.heroUrl || req.body.logoUrl || req.body.description || req.body.descriptionUrl || req.body.budget)) {
+  if (!(req.body.organization || req.body.website || req.body.heroUrl || req.body.logoUrl || req.body.description || req.body.descriptionUrl || req.body.budget)) {
     return res.status(500).json('You must supply at least one field to update!');
   }
 
   // Store the values for each field to be updated
   const args = [
+    req.body.organization as string,
+    req.body.website as string,
     req.body.heroUrl as string,
     req.body.logoUrl as string,
     req.body.description as string,
@@ -58,6 +60,7 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
     const dbResult = await db.updateProfile(profileId, ...args);
     res.status(200).json(dbResult);
   } catch (error) {
+    console.log(error)
     res.status(500).json(error);
   }
 });

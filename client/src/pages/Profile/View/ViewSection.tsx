@@ -1,9 +1,5 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
-import Button from 'components/Button';
-import MediaPlayer from 'components/MediaPlayer';
+import { Typography } from '@mui/material';
 import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Profile } from 'api/profile';
 import EditIcon from '@mui/icons-material/Edit';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from '../Profile.styled';

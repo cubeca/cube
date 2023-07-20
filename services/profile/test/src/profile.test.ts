@@ -141,12 +141,14 @@ describe('profile test suite', () => {
     const { data } = await createProfile();
     const { status: statusUpdate } = await profileApi.patch(
       `/profiles/${data.id}`,
-      { heroUrl: 'thisisanupdate', descriptionUrl: 'newurl', budget: '1ETH' },
+      { organization: "bob", website: "bobsnewsite", heroUrl: 'thisisanupdate', descriptionUrl: 'newurl', budget: '1ETH' },
       getAuthReqOpts('userAdmin')
     );
     const getProfileResponse = await profileApi.get(`/profiles/${data.id}`, {});
 
     expect(statusUpdate).toEqual(200);
+    expect(getProfileResponse.data.organization).toEqual('bob');
+    expect(getProfileResponse.data.website).toEqual('bobsnewsite');
     expect(getProfileResponse.data.herourl).toEqual('thisisanupdate');
     expect(getProfileResponse.data.descriptionurl).toEqual('newurl');
     expect(getProfileResponse.data.budget).toEqual('1ETH');

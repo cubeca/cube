@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
 import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -8,6 +8,8 @@ import CameraIcon from '@mui/icons-material/LocalSee';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import TextInput from 'components/form/TextInput';
 import * as s from './EditProfileForm.styled';
+import * as sTextInput from 'components/form/TextInput/TextInput.styled';
+import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 import UploadInput from 'components/form/UploadInput';
@@ -27,8 +29,9 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   const [editAudio, setEditAudio] = useState(false);
 
   const onSubmitSection = (data: FieldValues) => {
-    const { profileDescription } = data;
-    updateSection(profile.id, profileDescription);
+    const { profileDescription, budget } = data;
+    console.log('submitting', budget);
+    updateSection(profile.id, profileDescription, budget);
     onSave();
   };
 
@@ -124,6 +127,31 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           variant="outlined"
           label={t('Description')}
         />
+      <sRadioInput.DarkRadioInput
+        control={control}
+        name="budget"
+        label="Budget"
+        id="website"
+        direction="vertical"
+        defaultValue={profile.budget}
+        options={[
+          {
+            value: '1',
+            label: 'Less than $10,000',
+            id: '1'
+          },
+          {
+            value: '2',
+            label: 'Between $10,000 and $50,000',
+            id: '2'
+          },
+          {
+            value: '3',
+            label: 'Over $50,000',
+            id: '3'
+          }
+        ]}
+      />
         {/*       
         <Button color='secondary'
           onClick={() => {

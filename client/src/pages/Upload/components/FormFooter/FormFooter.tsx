@@ -1,4 +1,4 @@
-import { Typography, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';

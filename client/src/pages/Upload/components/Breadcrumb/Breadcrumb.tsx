@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useTheme } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import * as s from './Breadcrumb.styled';
 

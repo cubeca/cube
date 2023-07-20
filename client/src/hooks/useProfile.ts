@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { filesApi } from 'api';
 import { useEffect, useState } from 'react';
-import { BFFDataForProfilePageData } from '@cubeca/bff-client-oas-axios';
 import { getProfileId } from 'utils/auth';
 
 const useProfile = () => {
