@@ -1,4 +1,5 @@
 import { Box, Link, Stack, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
 import { Trans, useTranslation } from 'react-i18next';
 import Sign from 'assets/icons/signlanguage.svg';
@@ -41,26 +42,33 @@ const AccessibilityPanel = () => {
         /> */}
       </Box>
 
-      <s.IconsRow direction="row" justifyContent="center" spacing={15}>
-        <s.IconDefinition alignItems="center">
-          <img src={Sign} alt="Sign Language symbol" />
-          <Typography component="p" variant="body2">
-            {t('Sign Language')}
-          </Typography>
-        </s.IconDefinition>
-        <s.IconDefinition alignItems="center">
-          <img src={TexttoSpeech} alt="Sign Language symbol" />
-          <Typography component="p" variant="body2">
-            {t('Text to Speech')}
-          </Typography>
-        </s.IconDefinition>
-        <s.IconDefinition alignItems="center">
-          <img src={CC} alt="Sign Language symbol" />
-          <Typography component="p" variant="body2">
-            {t('Closed Captioning')}
-          </Typography>
-        </s.IconDefinition>
-      </s.IconsRow>
+      <Grid container>
+        <Grid xs={12} md={2} mdOffset={3}>
+          <s.IconDefinition alignItems="center">
+            <img src={Sign} alt="Sign Language symbol" />
+            <Typography component="p" variant="body2">
+              {t('Sign Language')}
+            </Typography>
+          </s.IconDefinition>
+        </Grid>
+        <Grid xs={12} md={2}>
+          <s.IconDefinition alignItems="center">
+            <img src={TexttoSpeech} alt="Sign Language symbol" />
+            <Typography component="p" variant="body2">
+              {t('Text to Speech')}
+            </Typography>
+          </s.IconDefinition>
+        </Grid>
+        <Grid xs={12} md={2}>
+          <s.IconDefinition alignItems="center">
+            <img src={CC} alt="Sign Language symbol" />
+            <Typography component="p" variant="body2">
+              {t('Closed Captioning')}
+            </Typography>
+          </s.IconDefinition>
+        </Grid>
+      </Grid>
+
     </Box>
   );
 };
