@@ -19,8 +19,8 @@ export const HeroBg = styled(Box)`
   height: 65.625vw;
   max-width: ${({ theme }) => theme.breakpoints.values.xl}px;
   min-height: 720px;
-  background: transparent no-repeat url('${HeroBgImg}') top left/cover;
-
+  background: transparent no-repeat url('${HeroBgImg}') top center/cover;
+  
   ${(props) => props.theme.breakpoints.up('xl')} {
     background-size: contain;
     min-height: 960px;
@@ -34,8 +34,14 @@ export const HeroContent = styled(Grid)`
 `;
 
 export const HeroContentMain = styled(Box)`
-  height: 480px;
+  height: 600px;
   padding-top: 120px;
+  padding-bottom: 120px;
+  text-align: center;
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    text-align: left;
+  }
 
   ${(props) => props.theme.breakpoints.up('lg')} {
     padding-top: 180px;
@@ -48,12 +54,20 @@ export const HeroContentMain = styled(Box)`
   h1 {
     margin: 24px 0 12px;
     line-height: 1;
+
+    ${(props) => props.theme.breakpoints.down('sm')} {
+      font-size: 60px;
+    }
   }
 
   p {
-    margin: 0 0 12px;
+    margin: 0 0 24px;
     font-weight: 500;
     color: ${({ theme }) => theme.palette.primary.main};
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      margin-bottom: 12px;
+    }
   }
 
   .play-button {
