@@ -1,6 +1,16 @@
-import { Card } from '@mui/material';
+import { Stack, Card } from '@mui/material';
 import { styled } from 'theme/utils';
 import { Link as RouterLink } from 'react-router-dom';
+
+export const DigitalNeighboursPanel = styled(Stack)`
+  padding: 0 8.333333333333333% 24px;
+  text-align: center;
+  align-items: center;
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding: 0 8.333333333333333% 120px;
+  }
+`;
 
 export const NeighbourCard = styled(Card)`
   flex: 0 0 100%;
