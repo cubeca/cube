@@ -14,9 +14,24 @@ import { getPresignedUploadUrl } from './r2';
 export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
+
+app.post('files', async (req: Request, res: Response) => {
+  const fileIds: string[] = req.body.fileIds;
+
+  const files: { [k: string]: any } = {};
+  const errors: any[] = [];
+  for (const fileId of fileIds.filter((x: any) => !!x)) {
+    const { status, data } = await get(`files/${fileId}`);
+    if (200 == status) {
+      files[fileId] = data;
+    } else {
+      errors.push({ fileId, status });
+    }
+  }
+  return { files, errors };
+});
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const fileId = req.query.fileId as string;
@@ -163,7 +178,7 @@ export interface NonVideoPlayerInfo {
   fileType: string;
   publicUrl: string;
 }
-// allowIfAnyOf('anonymous', 'active'),
+
 app.get('/files/:fileId', async (req: Request, res: Response) => {
   const { fileId } = req.params;
   if (!UUID_REGEXP.test(fileId)) {
@@ -213,6 +228,15 @@ app.get('/files/:fileId', async (req: Request, res: Response) => {
     storageType: dbFile.storage_type,
     playerInfo
   });
+});
+
+// API endpoint for checking the service status
+app.get('/', async (req: Request, res: Response) => {
+  try {
+    res.status(200).send('Service is running');
+  } catch (error) {
+    res.status(500).send('Internal server error');
+  }
 });
 
 app.listen(settings.PORT, async () => {
