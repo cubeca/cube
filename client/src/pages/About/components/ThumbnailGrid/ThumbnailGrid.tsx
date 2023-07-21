@@ -8,28 +8,28 @@ const ThumbnailGrid = ({ thumbs, alignment }: any) => {
     switch (obj.type) {
       case 'transparent':
         nodes.push(
-          <Grid xs={4} md={6}>
+          <Grid xs={6} md={6}>
             <s.ThumbTransparent></s.ThumbTransparent>
           </Grid>
         );
         break;
       case 'dark':
         nodes.push(
-          <Grid xs={4} md={6}>
+          <Grid xs={6} md={6}>
             <s.ThumbDark></s.ThumbDark>
           </Grid>
         );
         break;
       case 'light':
         nodes.push(
-          <Grid xs={4} md={6}>
+          <Grid xs={6} md={6}>
             <s.ThumbLight></s.ThumbLight>
           </Grid>
         );
         break;
       case 'img':
         nodes.push(
-          <Grid xs={4} md={6}>
+          <Grid xs={6} md={6}>
             <s.ThumbImg>
               <img src={obj.src} alt="thumbnail" />
             </s.ThumbImg>

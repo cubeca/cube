@@ -2,15 +2,15 @@ import { Box, Link, Stack, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
 import { Trans, useTranslation } from 'react-i18next';
-import Sign from 'assets/icons/signlanguage.svg';
-import TexttoSpeech from 'assets/icons/text-to-speech.svg';
-import CC from 'assets/icons/closed-captioning.svg';
+import SignLanguageIcon from '@mui/icons-material/SignLanguage';
+import VoiceChatIcon from '@mui/icons-material/VoiceChat';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import * as s from './AccessibilityPanel.styled';
 
 const AccessibilityPanel = () => {
   const { t } = useTranslation('about');
   return (
-    <Box sx={{ p: '120px 8.333333333333333%' }}>
+    <s.AccessibilityPanel>
       <Box
         px="5vw"
         sx={{
@@ -45,7 +45,7 @@ const AccessibilityPanel = () => {
       <Grid container>
         <Grid xs={12} md={2} mdOffset={3}>
           <s.IconDefinition alignItems="center">
-            <img src={Sign} alt="Sign Language symbol" />
+            <SignLanguageIcon />
             <Typography component="p" variant="body2">
               {t('Sign Language')}
             </Typography>
@@ -53,7 +53,7 @@ const AccessibilityPanel = () => {
         </Grid>
         <Grid xs={12} md={2}>
           <s.IconDefinition alignItems="center">
-            <img src={TexttoSpeech} alt="Sign Language symbol" />
+            <VoiceChatIcon />
             <Typography component="p" variant="body2">
               {t('Text to Speech')}
             </Typography>
@@ -61,15 +61,15 @@ const AccessibilityPanel = () => {
         </Grid>
         <Grid xs={12} md={2}>
           <s.IconDefinition alignItems="center">
-            <img src={CC} alt="Sign Language symbol" />
+            <SubtitlesIcon />
             <Typography component="p" variant="body2">
-              {t('Closed Captioning')}
+              {t('Subtitles')}
             </Typography>
           </s.IconDefinition>
         </Grid>
       </Grid>
 
-    </Box>
+    </s.AccessibilityPanel>
   );
 };
 

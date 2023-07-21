@@ -30,7 +30,11 @@ export const HeroBg = styled(Box)`
 export const HeroContent = styled(Grid)`
   position: relative;
   z-index: 2;
-  padding: 120px 0;
+  padding: 120px 0 1px 0;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding-bottom: 120px;
+  }
 `;
 
 export const HeroContentMain = styled(Box)`
