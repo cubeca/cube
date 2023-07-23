@@ -10,7 +10,11 @@ import { useState } from 'react';
 import Button from 'components/Button';
 import useAuth from 'hooks/useAuth';
 
-export const LoginForm = () => {
+interface LoginFormProps {
+  verified: boolean;
+}
+
+export const LoginForm = ({ verified }: LoginFormProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -35,6 +39,11 @@ export const LoginForm = () => {
 
   return (
     <>
+      {verified && (
+        <Typography variant="h4" component="h2" pb={4}>
+          {t('Email Verified. Please login.')}
+        </Typography>
+      )}
       <Typography variant="h3" component="h3" pb={4}>
         {t('Account Login')}
       </Typography>
