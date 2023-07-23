@@ -19,8 +19,8 @@ export const HeroBg = styled(Box)`
   height: 65.625vw;
   max-width: ${({ theme }) => theme.breakpoints.values.xl}px;
   min-height: 720px;
-  background: transparent no-repeat url('${HeroBgImg}') top left/cover;
-
+  background: transparent no-repeat url('${HeroBgImg}') top center/cover;
+  
   ${(props) => props.theme.breakpoints.up('xl')} {
     background-size: contain;
     min-height: 960px;
@@ -30,12 +30,22 @@ export const HeroBg = styled(Box)`
 export const HeroContent = styled(Grid)`
   position: relative;
   z-index: 2;
-  padding: 120px 0;
+  padding: 120px 0 1px 0;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding-bottom: 120px;
+  }
 `;
 
 export const HeroContentMain = styled(Box)`
-  height: 480px;
+  height: 600px;
   padding-top: 120px;
+  padding-bottom: 120px;
+  text-align: center;
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    text-align: left;
+  }
 
   ${(props) => props.theme.breakpoints.up('lg')} {
     padding-top: 180px;
@@ -48,12 +58,20 @@ export const HeroContentMain = styled(Box)`
   h1 {
     margin: 24px 0 12px;
     line-height: 1;
+
+    ${(props) => props.theme.breakpoints.down('sm')} {
+      font-size: 60px;
+    }
   }
 
   p {
-    margin: 0 0 12px;
+    margin: 0 0 24px;
     font-weight: 500;
     color: ${({ theme }) => theme.palette.primary.main};
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      margin-bottom: 12px;
+    }
   }
 
   .play-button {
@@ -61,10 +79,13 @@ export const HeroContentMain = styled(Box)`
 `;
 
 export const HeroContentCTA = styled(Box)`
-  height: 480px;
-  max-width: 480px;
-  margin: 0 0 0 auto;
 
+  ${(props) => props.theme.breakpoints.up('md')} {
+    height: 480px;
+    max-width: 480px;
+    margin: 0 0 0 auto;
+  }
+  
   ${(props) => props.theme.breakpoints.up('lg')} {
     height: 600px;
     max-width: 600px;
@@ -74,28 +95,72 @@ export const HeroContentCTA = styled(Box)`
     height: 720px;
     max-width: 720px;
   }
+
+  .react-player__preview {
+    ${(props) => props.theme.breakpoints.down('sm')} {
+      background-color: ${({ theme }) => theme.palette.primary.main} !important;
+      background-position: center right !important;
+      background-size: contain !important;
+      background-repeat: no-repeat !important;
+    }
+  }
 `;
 
 export const HeroContentCTAPlay = styled(Box)`
   width: 100%;
-  height: 480px;
-  padding: 120px 120px 40px 40px;
+  height: auto;
+  padding: 24px 128px 24px 8.333333333333333%;
   color: ${({ theme }) => theme.palette.background.default};
+
+  ${(props) => props.theme.breakpoints.down('sm')} {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+  }
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    height: 480px;
+    padding: 120px 120px 40px 40px;
+  }
 
   h1 {
     margin: 24px 0 12px;
     line-height: 1;
     color: ${({ theme }) => theme.palette.background.default};
+    display: none;
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      display: block;
+    }
+
   }
 
   p {
     margin: 0 0 40px;
-    font-weight: 500;
+    font-weight: 900;
+
+    ${(props) => props.theme.breakpoints.down('sm')} {
+      order: 2;
+      margin-bottom: 0;
+    }
+    
+    ${(props) => props.theme.breakpoints.up('md')} {
+      font-weight: 500;
+    }
   }
 
   .play-button {
     display: block;
-    width: 54px;
-    height: 62px;
+    width: 38px;
+    height: 44px;
+
+    ${(props) => props.theme.breakpoints.down('sm')} {
+      margin-right: 24px;
+    }
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      width: 54px;
+      height: 62px;
+    }
   }
 `;

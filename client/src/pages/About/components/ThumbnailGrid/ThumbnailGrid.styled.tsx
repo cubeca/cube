@@ -7,7 +7,17 @@ export const ThumbnailGridWrapper = styled(Box)`
   flex-flow: column nowrap;
   justify-content: ${(props) =>
     props.alignment == 'bottom' ? 'flex-end' : 'flex-start'};
-  padding-bottom: 120px;
+
+  ${(props) => props.theme.breakpoints.down('sm')} {
+    
+    > div > .MuiGrid-root:nth-child(n+7) {
+      display: none;
+    }
+  }
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding-bottom: 120px;
+  }
 `;
 
 export const ThumbTransparent = styled(Box)`

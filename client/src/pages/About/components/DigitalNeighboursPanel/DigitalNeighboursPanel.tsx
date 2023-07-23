@@ -53,11 +53,7 @@ const DigitalNeighboursPanel = () => {
   ];
 
   return (
-    <Stack
-      textAlign="center"
-      alignItems="center"
-      p="0 8.333333333333333% 120px"
-    >
+    <s.DigitalNeighboursPanel>
       <Typography component="h2" variant="h2">
         {t('Our Digital Community')}
       </Typography>
@@ -85,7 +81,7 @@ const DigitalNeighboursPanel = () => {
           </s.NeighbourCard>
         ))}
       </Grid>
-    </Stack>
+    </s.DigitalNeighboursPanel>
   );
 };
 
