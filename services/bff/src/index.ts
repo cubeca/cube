@@ -12,7 +12,7 @@ const app: Express = express();
 app.use(cors());
 app.use(express.json());
 
-// BEWARE: Do not forward `host` or `content-length` headers!
+// BEWARE: For content related operations, do not forward `host` or `content-length` headers!
 // - `host`: The service you are forwarding to will most likely not have the same `host` available in it's TLS certificate.
 //   Axios will set an appropriate `host` header only if we let it. (I.e. we are not setting it ourselves.)
 // - `content-length`: Express will have deserialized the request body for us already, and Axios will re-serialize it on forward.
@@ -21,6 +21,8 @@ app.use(express.json());
 const filterHeadersToForward = (req: Request, ...allowList: string[]): AxiosHeaders => {
   return new AxiosHeaders(filterObject(req.headers, ...allowList) as { [key: string]: string });
 };
+
+/////////////////// Cloudflare Service ///////////////////
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   // Typically, we receive an empty request body for this endpoint,
@@ -54,6 +56,8 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   res.status(status).json(data);
 });
 
+/////////////////// Content Service ///////////////////
+
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const { status, data } = await contentApi.post('content', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
@@ -74,6 +78,8 @@ app.get('/content/:contentId', async (req: Request, res: Response) => {
   const { status, data } = await contentApi.get('content/' + req.params.contentId);
   res.status(status).json(data);
 });
+
+/////////////////// Identity Service ///////////////////
 
 app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.post('auth/user', req.body, {
@@ -123,6 +129,8 @@ app.post('/auth/forgot-password', async (req: Request, res: Response) => {
 
   res.status(status).json(data);
 });
+
+/////////////////// Profile Service ///////////////////
 
 app.post('/profiles', async (req: Request, res: Response) => {
   const { status, data } = await profileApi.post('profiles', req.body);
