@@ -447,3 +447,25 @@ test('test forgot password', async () => {
   const { status: statusForgotPassword } = await identityApi.post('/auth/forgot-password', requestBodyForgotPassword);
   expect(statusForgotPassword).toEqual(200);
 });
+
+test('test profile user gets contentEditor permission', async () => {
+  const { status: statusCreate, data: dataCreate, requestBody: requestBody } = await createProfileUser();
+  expect(statusCreate).toEqual(201);
+  expect(dataCreate).toEqual(
+    expect.objectContaining({
+      id: expect.stringMatching(UUID_REGEXP)
+    })
+  );
+
+  await db.updateActiveStatus(dataCreate.id, true);
+  await db.updateEmailVerification(dataCreate.id, true);
+
+  const requestBodyLogin = {
+    email: requestBody.email,
+    password: requestBody.password
+  };
+
+  const { status: statusLogin, data: data } = await identityApi.post('/auth/login', requestBodyLogin);
+  expect(statusLogin).toEqual(200);
+  expect(data.user.permission_ids[0]).toEqual('contentEditor');
+});
