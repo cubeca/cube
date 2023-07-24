@@ -6,7 +6,7 @@ import { AxiosHeaders } from 'axios';
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { identityApi, profileApi, contentApi, cloudflareApi } from './microservices';
-import { inspect, filterObject } from './utils';
+import { filterObject, transformContentListForProfile, getFiles } from './utils';
 
 const app: Express = express();
 app.use(cors());
@@ -147,75 +147,6 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
-// TODO Make this an API endpoint in the cloudflare service
-const getFiles = async (fileIds: string[]) => {
-  const files: { [k: string]: any } = {};
-  const errors: any[] = [];
-  for (const fileId of fileIds.filter((x: any) => !!x)) {
-    const { status, data } = await cloudflareApi.get(`files/${fileId}`);
-    if (200 == status) {
-      files[fileId] = data;
-    } else {
-      errors.push({ fileId, status, data });
-    }
-  }
-  return { files, errors };
-};
-
-const transformContentListForProfile = async (profile: any, contentList: any[]) => {
-  const fieldNames = {
-    coverImageFileId: 'coverImageUrl',
-    mediaFileId: 'mediaUrl',
-    subtitlesFileId: 'subtitlesUrl',
-    transcriptFileId: 'transcriptUrl'
-  };
-
-  const fileIds = [];
-  for (const content of contentList) {
-    for (const fileIdFieldName of Object.keys(fieldNames)) {
-      if (content[fileIdFieldName]) {
-        fileIds.push(content[fileIdFieldName]);
-      }
-    }
-  }
-
-  const { files, errors: fileErrors } = await getFiles(fileIds);
-  if (fileErrors.length) {
-    inspect(`in transformContentListForProfile(${profile.id}):`, { fileErrors });
-  }
-
-  for (const content of contentList) {
-    for (const [fileIdFieldName, urlFieldName] of Object.entries(fieldNames)) {
-      if (content[fileIdFieldName] && files[content[fileIdFieldName]]) {
-        const file = files[content[fileIdFieldName]];
-
-        // Videos have both, `dashUrl` or `hlsUrl`. TBD Which one works better for FE?
-        const url = file.playerInfo.publicUrl ? file.playerInfo.publicUrl : file.playerInfo.dashUrl;
-
-        content[urlFieldName] = url;
-      }
-    }
-
-    content.creator = profile.organization;
-    content.iconUrl = profile.logoUrl;
-
-    // TODO Remove hack after migrating existing content to add `category` field.
-    if (!content.category) {
-      content.category = content.type;
-    }
-  }
-
-  const contentByCategory: { [k: string]: any[] } = {};
-  for (const content of contentList) {
-    if (!contentByCategory[content.category]) {
-      contentByCategory[content.category] = [];
-    }
-    contentByCategory[content.category].push(content);
-  }
-
-  return Object.entries(contentByCategory).map(([category, content]) => ({ category, content }));
-};
-
 app.get('/profiles/:id', async (req: Request, res: Response) => {
   const profileId = req.params.id;
   const { status, data: profile } = await profileApi.get('profiles/' + profileId);
@@ -228,6 +159,7 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
     profile?.logoFileId,
     profile?.descriptionAudioFileId
   ]);
+
   if (fileErrors.length) {
     console.log({ profile, fileErrors });
     // TODO prevent internal details from leaking through the error messages
