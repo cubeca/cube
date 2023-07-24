@@ -5,6 +5,7 @@ export const insertIdentity = (
   email: string,
   profileId: string,
   password: string,
+  permissionIds: string[],
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean
 ) => {
@@ -18,7 +19,7 @@ export const insertIdentity = (
     email,
     profileId,
     password,
-    `{}`,
+    `{${permissionIds.join(',')}}`,
     `false`,
     `${hasAcceptedTerms}`,
     `${hasAcceptedNewsletter}`

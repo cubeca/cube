@@ -13,6 +13,10 @@ const Router = () => {
       <Route path="/profile/:id" element={<Profile />} />
       <Route path="/profile/:id/upload" element={<Upload />} />
       <Route path="/content/:id" element={<Content />} />
+      <Route
+        path="/verified"
+        element={<Navigate to="/login?verified=true" />}
+      />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

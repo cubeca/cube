@@ -13,6 +13,8 @@ const Login = () => {
   const location = useLocation();
   const { search } = useLocation();
 
+  const verified = search.includes('verified');
+
   const isLogin = location.pathname.toLowerCase() === '/login';
   const signUpForm = search.includes('user') ? (
     <UserSignupForm />
@@ -33,7 +35,9 @@ const Login = () => {
         order={{ xs: 'reverse' }}
       >
         <Grid item xs={12} md={6} justifyContent={{ xs: 'center' }}>
-          <Box padding={12}>{isLogin ? <LoginForm /> : signUpForm}</Box>
+          <Box padding={12}>
+            {isLogin ? <LoginForm verified={verified} /> : signUpForm}
+          </Box>
         </Grid>
         <Grid item xs={12} md={6}>
           <Box

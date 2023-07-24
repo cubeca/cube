@@ -6,7 +6,7 @@ import * as s from './DigitalNeighboursPanel.styled';
 
 const DigitalNeighboursPanel = () => {
   const { t } = useTranslation('about');
-
+  
   const cards = [
     {
       title: t('Artengine'),
