@@ -42,11 +42,13 @@ app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Respon
   try {
     const hashedPassword = await hashPassword(password);
     const encryptedPassword = encryptString(hashedPassword);
+    const permissionIds = [];
 
     // Create Default Profile
     let profileId = '';
     if (organization || website || tag) {
       profileId = await createDefaultProfile(organization, website, tag);
+      permissionIds.push('contentEditor');
       if (!profileId) {
         return res
           .status(400)
@@ -60,6 +62,7 @@ app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Respon
       email,
       profileId,
       encryptedPassword,
+      permissionIds,
       hasAcceptedNewsletter,
       hasAcceptedTerms
     );
