@@ -66,6 +66,7 @@ export const makeCloudflareTusUploadMetadata = ({
   }
 
   return serialized.join(',');
+  // maxDurationSeconds NjAw,requiresignedurls,expiry MjAyMy0wMi0yMFQwMDowMDowMFoK,creator ZnJvbS1tZXRhZGF0YS1yYXBoYWVsCg==
 };
 
 export const parseTusUploadMetadata = (headerValues: string | string[]):any => {
