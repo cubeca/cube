@@ -20,10 +20,9 @@ app.use(express.json());
 //   only if we let it. (I.e. we are not setting it ourselves.)
 const filterHeadersToForward = (req: Request, ...allowList: string[]): AxiosHeaders => {
   return new AxiosHeaders(filterObject(req.headers, ...allowList) as { [key: string]: string });
-}
+};
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-
   // Typically, we receive an empty request body for this endpoint,
   // together with a (correct!) `content-length` header with value `0`.
   //
@@ -34,62 +33,60 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 
   const { status, data, headers } = await cloudflareApi.post('upload/video-tus-reservation', '', {
     params: req.query,
-    headers: filterHeadersToForward(req, 'upload-length', 'upload-metadata', 'authorization'),
+    headers: filterHeadersToForward(req, 'upload-length', 'upload-metadata', 'authorization')
   });
   res.status(status).set(headers).send(data);
 });
 
 app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await cloudflareApi.post('upload/s3-presigned-url', req.body, { headers: filterHeadersToForward(req, 'authorization') });
+  const { status, data } = await cloudflareApi.post('upload/s3-presigned-url', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
 app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const reqHeaders = { ...req.headers };
   delete reqHeaders['host'];
-  const { status, data } = await contentApi.get(`files/${req.params.fileId}`, { headers: filterHeadersToForward(req, 'authorization') });
+  const { status, data } = await contentApi.get(`files/${req.params.fileId}`, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const { status, data } = await contentApi.post('content', req.body, { headers: filterHeadersToForward(req, 'authorization') });
+  const { status, data } = await contentApi.post('content', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
 app.get('/content', async (req: Request, res: Response) => {
-  const {
-    profileId,
-    page,
-    page_size,
-    category,
-    type,
-    nation,
-    creator
-  } = req.query;
+  const { profileId, page, page_size, category, type, nation, creator } = req.query;
 
   // Temporarily (while working on profile page) respond with the same mock data as content microservice used to do.
   // TODO Transform data returned from content MS to the output format of this mock
   res.status(200).json({
-    "data": [
+    data: [
       {
-        "id": "1",
-        "title": "Title 1",
-        "creator": "Creator 1",
-        "url": "/content/1",
-        "thumbnailUrl": "images/video_thumbnail.jpg",
-        "iconUrl": "images/creator_icon.png",
-        "category": "video",
-        "type": "video"
+        id: '1',
+        title: 'Title 1',
+        creator: 'Creator 1',
+        url: '/content/1',
+        thumbnailUrl: 'images/video_thumbnail.jpg',
+        iconUrl: 'images/creator_icon.png',
+        category: 'video',
+        type: 'video'
       },
       {
-        "id": "2",
-        "title": "Title 2",
-        "creator": "Creator 2",
-        "url": "/content/2",
-        "thumbnailUrl": "images/video_thumbnail.jpg",
-        "iconUrl": "images/creator_icon.png",
-        "category": "video",
-        "type": "video"
+        id: '2',
+        title: 'Title 2',
+        creator: 'Creator 2',
+        url: '/content/2',
+        thumbnailUrl: 'images/video_thumbnail.jpg',
+        iconUrl: 'images/creator_icon.png',
+        category: 'video',
+        type: 'video'
       }
     ]
   });
@@ -105,40 +102,38 @@ app.get('/content/:contentId', async (req: Request, res: Response) => {
   // Temporarily (while working on profile page) respond with the same mock data as content microservice used to do.
   // TODO Transform data returned from content MS to the output format of this mock
   res.status(200).json({
-    "data": {
-      "id": req.params.contentId,
-      "url": "/video.mp4",
-      "title": `Video ${req.params.contentId}`,
-      "createdDate": "07/01/2022",
-      "updatedDate": "07/01/2022",
-      "description": "Description of content Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dolor sem faucibus auctor quam pretium massa nulla cursus. Vel, a nisl ipsum, nisl. Mauris.",
-      "descriptionUrl": "/description.mp3",
-      "credits": "Dawn Powell, Camera Operator, Alissa Cat, Public Programs Magnus Ten, Editor",
-      "contributors": [
+    data: {
+      id: req.params.contentId,
+      url: '/video.mp4',
+      title: `Video ${req.params.contentId}`,
+      createdDate: '07/01/2022',
+      updatedDate: '07/01/2022',
+      description:
+        'Description of content Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dolor sem faucibus auctor quam pretium massa nulla cursus. Vel, a nisl ipsum, nisl. Mauris.',
+      descriptionUrl: '/description.mp3',
+      credits: 'Dawn Powell, Camera Operator, Alissa Cat, Public Programs Magnus Ten, Editor',
+      contributors: [
         {
-          "id": "1",
-          "link": "/profile/1",
-          "name": "Museum Of Anthropology",
-          "socialUrl": "https: //www.twitter.com",
-          "socialHandle": "@Moa",
-          "logoUrl": "/images/moa.svg"
+          id: '1',
+          link: '/profile/1',
+          name: 'Museum Of Anthropology',
+          socialUrl: 'https: //www.twitter.com',
+          socialHandle: '@Moa',
+          logoUrl: '/images/moa.svg'
         },
         {
-          "id": "2",
-          "name": "Museum of Vancouver",
-          "socialUrl": "https: //www.twitter.com",
-          "socialHandle": "@Mov",
-          "logoUrl": ""
+          id: '2',
+          name: 'Museum of Vancouver',
+          socialUrl: 'https: //www.twitter.com',
+          socialHandle: '@Mov',
+          logoUrl: ''
         },
         {
-          "id": "3",
-          "name": "Dana Claxton"
+          id: '3',
+          name: 'Dana Claxton'
         }
       ],
-      "tags": [
-        "tag 1",
-        "tag 2"
-      ]
+      tags: ['tag 1', 'tag 2']
     }
   });
 
@@ -147,7 +142,9 @@ app.get('/content/:contentId', async (req: Request, res: Response) => {
 });
 
 app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.post('auth/user', req.body, { headers: filterHeadersToForward(req, 'authorization') });
+  const { status, data } = await identityApi.post('auth/user', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
@@ -162,12 +159,16 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
 });
 
 app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.put('auth/email', req.body, { headers: filterHeadersToForward(req, 'authorization') });
+  const { status, data } = await identityApi.put('auth/email', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
 app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.put('auth/password', req.body, { headers: filterHeadersToForward(req, 'authorization') });
+  const { status, data } = await identityApi.put('auth/password', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
@@ -204,12 +205,11 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
-
 // TODO Make this an API endpoint in the cloudflare service
 const getFiles = async (fileIds: string[]) => {
   const files: { [k: string]: any } = {};
   const errors: any[] = [];
-  for (const fileId of fileIds.filter((x:any) => !!x)) {
+  for (const fileId of fileIds.filter((x: any) => !!x)) {
     const { status, data } = await cloudflareApi.get(`files/${fileId}`);
     if (200 == status) {
       files[fileId] = data;
@@ -218,9 +218,9 @@ const getFiles = async (fileIds: string[]) => {
     }
   }
   return { files, errors };
-}
+};
 
-const transformContentListForProfile = async (profile:any, contentList:any[]) => {
+const transformContentListForProfile = async (profile: any, contentList: any[]) => {
   const fieldNames = {
     coverImageFileId: 'coverImageUrl',
     mediaFileId: 'mediaUrl',
@@ -272,7 +272,7 @@ const transformContentListForProfile = async (profile:any, contentList:any[]) =>
   }
 
   return Object.entries(contentByCategory).map(([category, content]) => ({ category, content }));
-}
+};
 
 app.get('/profiles/:id', async (req: Request, res: Response) => {
   const profileId = req.params.id;
@@ -281,10 +281,14 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
     return res.status(status).json(profile);
   }
 
-  const { files, errors: fileErrors } = await getFiles([profile?.heroFileId, profile?.logoFileId, profile?.descriptionAudioFileId]);
+  const { files, errors: fileErrors } = await getFiles([
+    profile?.heroFileId,
+    profile?.logoFileId,
+    profile?.descriptionAudioFileId
+  ]);
   if (fileErrors.length) {
     console.log({ profile, fileErrors });
-    // TODO prevent internal details from leaking through the error messages 
+    // TODO prevent internal details from leaking through the error messages
     // return res.status(500).json(fileErrors);
   }
 
@@ -304,7 +308,7 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
 
       // TODO proper pagination on the profile page
       offset: 0,
-      limit: 100,
+      limit: 100
     }
   });
   if (200 != contentStatus) {
@@ -317,7 +321,7 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
 });
 
 app.get('/', async (req: Request, res: Response) => {
-  res.status(200).json({});
+  res.status(200).json('Service is running!');
 });
 
 const server: Server = app.listen(settings.PORT, async () => {
