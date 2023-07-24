@@ -148,50 +148,47 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
 });
 
 app.get('/profiles/:id', async (req: Request, res: Response) => {
-  const profileId = req.params.id;
-  const { status, data: profile } = await profileApi.get('profiles/' + profileId);
-  if (200 != status) {
-    return res.status(status).json(profile);
-  }
+  try {
+    const { id: profileId } = req.params;
 
-  const { files, errors: fileErrors } = await getFiles([
-    profile?.heroFileId,
-    profile?.logoFileId,
-    profile?.descriptionAudioFileId
-  ]);
-
-  if (fileErrors.length) {
-    console.log({ profile, fileErrors });
-    // TODO prevent internal details from leaking through the error messages
-    // return res.status(500).json(fileErrors);
-  }
-
-  if (files[profile?.heroFileId]) {
-    profile.heroUrl = files[profile.heroFileId].playerInfo.publicUrl;
-  }
-  if (files[profile?.logoFileId]) {
-    profile.logoUrl = files[profile.logoFileId].playerInfo.publicUrl;
-  }
-  if (files[profile?.descriptionAudioFileId]) {
-    profile.descriptionAudioUrl = files[profile.descriptionAudioFileId].playerInfo.publicUrl;
-  }
-
-  const { status: contentStatus, data: content } = await contentApi.get('content', {
-    params: {
-      profileId,
-
-      // TODO proper pagination on the profile page
-      offset: 0,
-      limit: 100
+    const profileResponse = await profileApi.get('profiles/' + profileId);
+    if (profileResponse.status !== 200) {
+      return res.status(profileResponse.status).json(profileResponse.data);
     }
-  });
-  if (200 != contentStatus) {
-    return res.status(contentStatus).json(content);
+
+    const { files } = await getFiles([
+      profileResponse.data.heroFileId,
+      profileResponse.data.logoFileId,
+      profileResponse.data.descriptionAudioFileId
+    ]);
+
+    const profile = profileResponse.data;
+    if (files[profile.heroFileId]) {
+      profile.heroUrl = files[profile.heroFileId].playerInfo.publicUrl;
+    }
+    if (files[profile.logoFileId]) {
+      profile.logoUrl = files[profile.logoFileId].playerInfo.publicUrl;
+    }
+    if (files[profile.descriptionAudioFileId]) {
+      profile.descriptionAudioUrl = files[profile.descriptionAudioFileId].playerInfo.publicUrl;
+    }
+
+    const contentResponse = await contentApi.get('content', {
+      params: {
+        profileId,
+        offset: 0,
+        limit: 100
+      }
+    });
+    if (contentResponse.status !== 200) {
+      return res.status(contentResponse.status).json(contentResponse.data);
+    }
+
+    profile.content = await transformContentListForProfile(profile, contentResponse.data);
+    res.status(200).json({ data: profile });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
   }
-
-  profile.content = await transformContentListForProfile(profile, content.data);
-
-  res.status(200).json({ data: profile });
 });
 
 app.get('/', async (req: Request, res: Response) => {
