@@ -102,7 +102,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
     const r = await db.selectUserByEmail(email);
 
     if (!r) {
-      return res.status(403).send('Invalid username or password.');
+      return res.status(403).send('Invalid email or password.');
     }
 
     const user = r.rows[0];
@@ -184,6 +184,11 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
       const userId = decoded.sub;
       if (userId !== uuid) {
         return res.status(401).send('Unauthorized to update email for this user.');
+      }
+
+      const existingUser = await db.selectUserByEmail(email);
+      if (existingUser.rows[0]) {
+        return res.status(409).json('Email is in use by another user');
       }
 
       await db.updateEmail(uuid, email);
