@@ -29,6 +29,7 @@ export const Content = styled(Box)`
   padding-left: 8.333333333333333%;
   padding-right: 8.333333333333333%;
   overflow-x: auto;
+  width: calc(100% + 10px);
 
   > * {
     flex: 0 0 240px;
@@ -37,6 +38,7 @@ export const Content = styled(Box)`
 
   ${(props) => props.theme.breakpoints.up('md')} {
     margin: -15px;
+    width: calc(100% + 15px);
 
     > * {
       flex: 0 0 360px;
