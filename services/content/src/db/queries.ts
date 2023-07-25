@@ -1,17 +1,5 @@
 import * as db from './index';
 
-// CREATE TABLE content (
-//     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-//     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-//     -- An automated `updated_at` would need a trigger, which would need `CREATE
-//     -- LANGUAGE plpgsql;`, etc.
-//     -- See https://stackoverflow.com/questions/1035980/update-timestamp-when-row-is-updated-in-postgresql
-//     -- For now, not automated at SQL level.
-//     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-//     data JSONB NOT NULL DEFAULT '{}'::JSONB
-// );
-// CREATE INDEX content_by_profile_id ON content USING HASH (((data->'profileId')::TEXT));
-
 export const getContentById = async (contentId: string) => {
   const sql = `SELECT * FROM content WHERE id = $1`;
   return await db.querySingle(sql, contentId);
@@ -36,9 +24,7 @@ export const listContentByProfileId = async (offset: number, limit: number, prof
       const tagsString = filters.tags.map((tag: any) => `%${tag}%`).join(', ');
 
       // Replace the `tags` array in `content` with the new string
-      filters = JSON.parse(
-        JSON.stringify(filters).replace(/"tags":\s*\[[^\]]*\]/, `"tags": "${tagsString}"`)
-      );
+      filters = JSON.parse(JSON.stringify(filters).replace(/"tags":\s*\[[^\]]*\]/, `"tags": "${tagsString}"`));
     }
 
     values = Object.values(filters);
@@ -58,13 +44,7 @@ export const listContentByProfileId = async (offset: number, limit: number, prof
   return dbResult.rows;
 };
 
-export interface ContentData {
-  profileId: string;
-}
-
-export const insertContent = async (data: ContentData, profileId: string) => {
-  data.profileId = profileId;
-
+export const insertContent = async (data: any) => {
   const sql = `
     INSERT INTO content (
       data
@@ -75,10 +55,10 @@ export const insertContent = async (data: ContentData, profileId: string) => {
     RETURNING *
   `;
 
-  return await db.querySingle(sql, JSON.stringify(data));
+  return await db.querySingle(sql, data);
 };
 
-export const updateContent = async (data: ContentData, contentId: string) => {
+export const updateContent = async (data: any, contentId: string) => {
   const sql = `
     UPDATE
       content

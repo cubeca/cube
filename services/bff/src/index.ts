@@ -173,13 +173,14 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
       profile.descriptionAudioUrl = files[profile.descriptionAudioFileId].playerInfo.publicUrl;
     }
 
-    const contentResponse = await contentApi.get('content', {
+    const contentResponse = await contentApi.get('/content', {
       params: {
         profileId,
         offset: 0,
         limit: 100
       }
     });
+    
     if (contentResponse.status !== 200) {
       return res.status(contentResponse.status).json(contentResponse.data);
     }
