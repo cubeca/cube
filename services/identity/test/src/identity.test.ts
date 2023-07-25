@@ -287,6 +287,58 @@ test('updates email and logs in with new email', async () => {
   );
 });
 
+test('updates email and tries to update to existing email', async () => {
+  const { status: statusCreate, data: dataCreate, requestBody: requestBodyCreate } = await createRegularUser();
+  expect(statusCreate).toEqual(201);
+  expect(dataCreate).toEqual(
+    expect.objectContaining({
+      id: expect.stringMatching(UUID_REGEXP)
+    })
+  );
+
+  await db.addPermissionIds(dataCreate.id, ['active']);
+  await db.updateActiveStatus(dataCreate.id, true);
+  await db.updateEmailVerification(dataCreate.id, true);
+
+  const requestBodyLogin = {
+    email: requestBodyCreate.email,
+    password: requestBodyCreate.password
+  };
+
+  const { status: statusLogin, data: dataLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  expect(statusLogin).toEqual(200);
+  expect(dataLogin).toEqual(
+    expect.objectContaining({
+      jwt: expect.any(String)
+    })
+  );
+
+  const jwtPayload = await jsonwebtoken.verify(dataLogin.jwt, settings.JWT_TOKEN_SECRET);
+  expect(jwtPayload).toEqual(
+    expect.objectContaining({
+      iss: 'CUBE',
+      sub: dataCreate.id,
+      aud: ['active'],
+      iat: expect.any(Number)
+    })
+  );
+
+  const requestBodyUpdateEmail = {
+    uuid: dataCreate.id,
+    email: requestBodyCreate.email,
+    token: dataLogin.jwt
+  };
+
+  expect(requestBodyUpdateEmail.email).toEqual(requestBodyCreate.email);
+  const { status: statusUpdateEmail } = await identityApi.put(
+    '/auth/email',
+    requestBodyUpdateEmail,
+    getAuthReqOpts('active')
+  );
+
+  expect(statusUpdateEmail).toEqual(409);
+});
+
 test('try to maliciously change another users email', async () => {
   const { status: statusCreate, data: dataCreate, requestBody: requestBodyCreate } = await createRegularUser();
   expect(statusCreate).toEqual(201);
