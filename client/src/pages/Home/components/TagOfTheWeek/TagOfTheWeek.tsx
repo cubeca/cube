@@ -75,9 +75,9 @@ const Content = () => {
 
           // @jonathan - I'm trying to get Swiper.js to work here (currently throwing errors), perhaps a different slider is better? 
           // This is the implementation I'm working off of: https://swiperjs.com/element
+          /* 
           <swiper-container>
-
-            content.map((key: any) => (
+            {content.map((key: any) => (
               <swiper-slide>
                 <ContentCard
                   key={key.id}
@@ -88,9 +88,23 @@ const Content = () => {
                   icon={key.iconUrl}
                 />
               </swiper-slide>
-            ))
-
+            ))}
           </swiper-container>
+          */
+
+          // Temmporary CSS only layout using overflow-x scroll: 
+          <s.Content>
+          {content.map((key: any) => (
+              <ContentCard
+                key={key.id}
+                image={key.thumbnailUrl}
+                title={key.title}
+                creator={key.creator}
+                url={key.url}
+                icon={key.iconUrl}
+              />
+          ))}
+          </s.Content>
 
         ) : (
 

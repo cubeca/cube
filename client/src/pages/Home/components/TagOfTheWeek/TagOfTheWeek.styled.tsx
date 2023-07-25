@@ -11,12 +11,16 @@ export const ContentWrapper = styled(Box)`
 export const Content = styled(Box)`
 
   ${(props) => props.theme.breakpoints.up('md')} {
+
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
     margin: -15px;
+    padding-left: 8.333333333333333%;
+    padding-right: 8.333333333333333%;
+    overflow-x: auto;
 
     > * {
-      flex: 0 0 calc(33.3333% - 30px);
+      flex: 0 0 360px;
       margin: 15px;
     }
   }
