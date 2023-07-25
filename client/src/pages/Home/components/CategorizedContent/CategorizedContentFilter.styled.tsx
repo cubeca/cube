@@ -2,5 +2,9 @@ import { Stack } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const Filters = styled(Stack)`
-//  position: relative;
+  margin-bottom: 8px;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    margin-bottom: 16px;
+  }
 `;

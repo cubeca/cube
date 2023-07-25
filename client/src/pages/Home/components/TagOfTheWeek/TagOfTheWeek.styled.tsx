@@ -5,14 +5,19 @@ import { styled } from 'theme/utils';
 export const ContentWrapper = styled(Box)`
   position: relative;
   z-index: 3;
-  margin-bottom: 60px;
+  margin-bottom: 16px;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    margin-bottom: 32px;
+  }
 `;
 
 export const ContentHeader = styled(Grid)`
-  margin-top: 32px;
+  margin-top: 16px;
   margin-bottom: 32px;
-
+  
   ${(props) => props.theme.breakpoints.up('md')} {
+    margin-top: 32px;
     margin-top: 0;
   }
 
@@ -22,7 +27,6 @@ export const ContentHeader = styled(Grid)`
 `;
 
 export const Content = styled(Box)`
-
   display: flex;
   flex-flow: row nowrap;
   margin: -10px;

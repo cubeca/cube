@@ -67,7 +67,7 @@ export const Content = styled(Box)`
   position: relative;
   z-index: 3;
   padding-bottom: 8.333333333333334vw;
-
+  
   ${(props) => props.theme.breakpoints.up('md')} {
     /* min-height: calc(100vh - 116px); */
   }

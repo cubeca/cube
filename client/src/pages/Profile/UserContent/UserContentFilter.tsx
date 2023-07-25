@@ -6,7 +6,7 @@ import useFilterContent from 'hooks/useFilterContent';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ContentCategories, SignLanguage } from 'types/enums';
-import * as s from './UserContent.styled';
+import * as s from './UserContentFilter.styled';
 
 const UserContentFilter = () => {
   const { control, handleSubmit } = useForm();

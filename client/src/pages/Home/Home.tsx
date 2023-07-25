@@ -1,25 +1,13 @@
-import { Stack, Box } from '@mui/material';
-import Grid from '@mui/system/Unstable_Grid';
-
-import FeaturedContent from './components/FeaturedContent';
-import ContentFilter from './components/FeaturedContent/FeaturedContentFilter';
-import CategorizedContent from './components/CategorizedContent';
+import { Box } from '@mui/material';
 import HeroPanelHome from './components/HeroPanelHome';
+import CategorizedContent from './components/CategorizedContent';
 import Footer from 'components/layout/Footer';
 
 const Home = () => {
   return (
     <Box>
       <HeroPanelHome />
-
-      <Grid container>
-        <Grid xs={10} xsOffset={1}>
-          <ContentFilter />
-          <FeaturedContent />
-          {/* <CategorizedContent /> */}
-        </Grid>
-      </Grid>
-      
+      <CategorizedContent />
       <Footer />
     </Box>
   );
