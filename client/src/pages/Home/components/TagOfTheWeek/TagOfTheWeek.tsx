@@ -1,3 +1,5 @@
+import { Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import useContent from 'hooks/useContent';
 import ContentCard from 'components/ContentCard';
 import { ContentLoader } from 'components/Loaders';
@@ -70,31 +72,21 @@ const Content = () => {
 
   return (
     <s.ContentWrapper>
-        
-        {!isLoading ? (
 
-          // @jonathan - I'm trying to get Swiper.js to work here (currently throwing errors), perhaps a different slider is better? 
-          // This is the implementation I'm working off of: https://swiperjs.com/element
-          /* 
-          <swiper-container>
-            {content.map((key: any) => (
-              <swiper-slide>
-                <ContentCard
-                  key={key.id}
-                  image={key.thumbnailUrl}
-                  title={key.title}
-                  creator={key.creator}
-                  url={key.url}
-                  icon={key.iconUrl}
-                />
-              </swiper-slide>
-            ))}
-          </swiper-container>
-          */
+      <s.ContentHeader container>
+        <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
+          <Typography component="h3" variant="h3"><span>Tag of the week:</span> <strong>#queer</strong></Typography>
+        </Grid>
+      </s.ContentHeader>
 
-          // Temmporary CSS only layout using overflow-x scroll: 
-          <s.Content>
+      {!isLoading ? (
+
+        // @jonathan - I'm trying to get Swiper.js to work here (currently throwing errors), perhaps a different slider is better? 
+        // This is the implementation I'm working off of: https://swiperjs.com/element
+        /* 
+        <swiper-container>
           {content.map((key: any) => (
+            <swiper-slide>
               <ContentCard
                 key={key.id}
                 image={key.thumbnailUrl}
@@ -103,14 +95,30 @@ const Content = () => {
                 url={key.url}
                 icon={key.iconUrl}
               />
+            </swiper-slide>
           ))}
-          </s.Content>
+        </swiper-container>
+        */
 
-        ) : (
+        // Temmporary CSS only layout using overflow-x scroll: 
+        <s.Content>
+        {content.map((key: any) => (
+            <ContentCard
+              key={key.id}
+              image={key.thumbnailUrl}
+              title={key.title}
+              creator={key.creator}
+              url={key.url}
+              icon={key.iconUrl}
+            />
+        ))}
+        </s.Content>
 
-          <ContentLoader size={6} />
+      ) : (
 
-        )}
+        <ContentLoader size={6} />
+
+      )}
 
     </s.ContentWrapper>
   );

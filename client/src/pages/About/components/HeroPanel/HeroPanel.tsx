@@ -24,7 +24,7 @@ const HeroPanel = () => {
                 'heroText'
               )}
             </Typography>
-            <a className="play-button" href="www.happy.com">
+            <a className="play-button" href="#TEST">
               <img src={Play} alt="play" />
             </a>
           </s.ContentMain>
