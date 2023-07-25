@@ -74,7 +74,7 @@ const Content = () => {
         {!isLoading ? (
 
           // @jonathan - I'm trying to get Swiper.js to work here (currently throwing errors), perhaps a different slider is better? 
-          // This is the implementation I'm working off of: https://swiperjs.com/elementx
+          // This is the implementation I'm working off of: https://swiperjs.com/element
           <swiper-container>
 
             content.map((key: any) => (
