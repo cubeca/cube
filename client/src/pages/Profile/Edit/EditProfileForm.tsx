@@ -23,8 +23,14 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
     useEditProfile(profile.id);
 
   const onSubmitSection = (data: FieldValues) => {
-    const { profileDescription, budget } = data;
-    updateSection(profile.id, profileDescription, budget);
+    const { organization, website, profileDescription, budget } = data;
+    updateSection(
+      profile.id,
+      organization,
+      website,
+      profileDescription,
+      budget
+    );
     onSave();
   };
 

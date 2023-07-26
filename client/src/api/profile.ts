@@ -7,14 +7,17 @@ export const getProfile = async (id: string) => {
 
 export const updateProfileSection = async (
   id: string,
+  organization: string,
+  website: string,
   description: string,
   budget: string
-) => {
-  return await profileApi.updateProfile(id, {
+) =>
+  await profileApi.updateProfile(id, {
+    organization,
+    website,
     description,
     budget
   });
-};
 
 export const updateProfileLogo = async (id: string, file: File) => {
   const logoFileId = await upload(file, id);
