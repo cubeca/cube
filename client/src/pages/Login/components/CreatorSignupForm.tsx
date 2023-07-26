@@ -13,7 +13,7 @@ import CheckboxInput from 'components/form/CheckboxInput';
 export const CreatorSignupForm = () => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
-  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const onSubmit = async (data: FieldValues) => {
@@ -29,7 +29,7 @@ export const CreatorSignupForm = () => {
       tag
     } = data;
     try {
-      setError(false);
+      setErrorMessage('');
       await creatorSignup(
         `${firstName} ${lastName}`,
         organization,
@@ -40,10 +40,9 @@ export const CreatorSignupForm = () => {
         !!promotions,
         terms
       );
-
       setIsFormSubmitted(true);
     } catch (e: any) {
-      setError(true);
+      setErrorMessage(e.response.data);
     }
   };
 
@@ -144,9 +143,7 @@ export const CreatorSignupForm = () => {
               'You must agree to the Terms of Use and Privacy Policy to continue'
             )}
           />
-          {error && (
-            <ErrorMessage>{t('Error occurred during sign up')}</ErrorMessage>
-          )}
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
               {t('Sign up')}
