@@ -137,19 +137,14 @@ app.post('/profiles', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
-app.get('/profiles/:profileId', async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, req.body);
-  res.status(status).json(data);
-});
-
 app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const { status, data } = await profileApi.patch('profiles/' + req.params.profileId, req.body);
   res.status(status).json(data);
 });
 
-app.get('/profiles/:id', async (req: Request, res: Response) => {
+app.get('/profiles/:profileId', async (req: Request, res: Response) => {
   try {
-    const { id: profileId } = req.params;
+    const { profileId } = req.params;
 
     const profileResponse = await profileApi.get('profiles/' + profileId);
     if (profileResponse.status !== 200) {
@@ -157,20 +152,20 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
     }
 
     const { files } = await getFiles([
-      profileResponse.data.heroFileId,
-      profileResponse.data.logoFileId,
-      profileResponse.data.descriptionAudioFileId
+      profileResponse.data.herourl,
+      profileResponse.data.logourl,
+      profileResponse.data.descriptionurl
     ]);
 
     const profile = profileResponse.data;
-    if (files[profile.heroFileId]) {
-      profile.heroUrl = files[profile.heroFileId].playerInfo.publicUrl;
+    if (files[profile.herourl]) {
+      profile.heroUrl = files[profile.herourl].playerInfo.publicUrl;
     }
-    if (files[profile.logoFileId]) {
-      profile.logoUrl = files[profile.logoFileId].playerInfo.publicUrl;
+    if (files[profile.logourl]) {
+      profile.logoUrl = files[profile.logourl].playerInfo.publicUrl;
     }
-    if (files[profile.descriptionAudioFileId]) {
-      profile.descriptionAudioUrl = files[profile.descriptionAudioFileId].playerInfo.publicUrl;
+    if (files[profile.descriptionurl]) {
+      profile.descriptionAudioUrl = files[profile.descriptionurl].playerInfo.publicUrl;
     }
 
     const contentResponse = await contentApi.get('/content', {
