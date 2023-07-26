@@ -1,19 +1,26 @@
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import LoginBackground from 'assets/images/login-signup-background.jpg';
-import Link from 'components/Link';
 import { LoginForm } from './components/LoginForm';
-import { SignupForm } from './components/SignupForm';
+import { CreatorSignupForm } from './components/CreatorSignupForm';
+import { UserSignupForm } from './components/UserSignupForm';
 
 const Login = () => {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const location = useLocation();
+  const { search } = useLocation();
+
+  const verified = search.includes('verified');
 
   const isLogin = location.pathname.toLowerCase() === '/login';
+  const signUpForm = search.includes('user') ? (
+    <UserSignupForm />
+  ) : (
+    <CreatorSignupForm />
+  );
 
   return (
     <Stack>
@@ -28,7 +35,9 @@ const Login = () => {
         order={{ xs: 'reverse' }}
       >
         <Grid item xs={12} md={6} justifyContent={{ xs: 'center' }}>
-          <Box padding={12}>{isLogin ? <LoginForm /> : <SignupForm />}</Box>
+          <Box padding={12}>
+            {isLogin ? <LoginForm verified={verified} /> : signUpForm}
+          </Box>
         </Grid>
         <Grid item xs={12} md={6}>
           <Box
@@ -59,13 +68,25 @@ const Login = () => {
                   {t('Sign up and Start Contributing')}
                 </Typography>
               )}
-              <Box>
+              <Box display="flex" gap="10px">
                 <Button
                   color="secondary"
-                  onClick={() => navigate(isLogin ? '/signup' : '/login')}
+                  onClick={() =>
+                    navigate(isLogin ? '/signup?type=user' : '/login')
+                  }
                 >
-                  {isLogin ? t('Sign up') : t('Login')}
+                  {isLogin ? t('User Sign up') : t('Login')}
                 </Button>
+                {isLogin && (
+                  <Button
+                    color="secondary"
+                    onClick={() =>
+                      navigate(isLogin ? '/signup?type=creator' : '/login')
+                    }
+                  >
+                    {isLogin ? t('Creator Sign up') : t('Login')}
+                  </Button>
+                )}
               </Box>
             </Box>
           </Box>

@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { ContentCategories, ContentLists } from 'types/enums';
 import useContent from 'hooks/useContent';
 import { ContentLoader } from 'components/Loaders';
-import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 const CategorizedContent = () => {
   const { t } = useTranslation();
@@ -66,7 +65,7 @@ const CategorizedContent = () => {
       <Stack spacing={2} py="4rem">
         <Stack direction="row" spacing={6}>
           {!isLoading ? (
-            content.map((c: ContentListed) => (
+            content.map((c: any) => (
               <ContentCard
                 key={c.title}
                 image={c.thumbnailUrl}

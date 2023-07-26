@@ -73,6 +73,16 @@ const CenterColumnPanel = () => {
               Browse Our DAO Documentation
             </Button>
           </s.CenterColumnTextSection>
+        </Grid>
+        <Grid xs={10} xsOffset={1} md={3}></Grid>
+        <Grid xs={10} xsOffset={1} md={2}></Grid>
+        <Grid xs={12} md={3} mdOffset={1}  order={{ md: 2 }}>
+          <ThumbnailGrid
+            thumbs={btmThumbGrid}
+            alignment={'bottom'}
+          ></ThumbnailGrid>
+        </Grid>
+        <Grid xs={10} xsOffset={1} md={4}>
           <s.CenterColumnTextSection>
             <Typography component="h2" variant="h2">
               {t('We Are a Commons')}
@@ -86,12 +96,6 @@ const CenterColumnPanel = () => {
               Join Us
             </Button>
           </s.CenterColumnTextSection>
-        </Grid>
-        <Grid xs={12} md={3} mdOffset={1}>
-          <ThumbnailGrid
-            thumbs={btmThumbGrid}
-            alignment={'bottom'}
-          ></ThumbnailGrid>
         </Grid>
       </Grid>
     </s.CenterColumnPanel>

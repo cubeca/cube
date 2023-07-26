@@ -3,7 +3,7 @@ import { ContentQueryKeys } from 'api/enums';
 import Select from 'components/form/Select';
 import TextInput from 'components/form/TextInput';
 import useFilterContent from 'hooks/useFilterContent';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ContentCategories, SignLanguage } from 'types/enums';
 import * as s from './UserContent.styled';

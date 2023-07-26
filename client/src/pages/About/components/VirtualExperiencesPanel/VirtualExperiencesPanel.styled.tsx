@@ -19,7 +19,7 @@ export const VRCover = styled(Box)`
 
 export const VRText = styled(Stack)`
   height: 100%;
-  padding: 60px 8.333333333333333%;
+  padding: 24px 8.333333333333333%;
   background-color: #95f5cb;
   display: flex;
   flex-flow: column nowrap; 
@@ -32,14 +32,24 @@ export const VRText = styled(Stack)`
   * {
     color: #28343C;
   }
-}}
 `;
 
 export const LinkWrapper = styled(Box)`
-  padding: 1.5rem 0;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 0 0 1.5rem 0;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    flex-flow: row wrap;
+    gap: 24px;
+    padding: 1.5rem 0;
+  }
 `;
 
 export const ExternalLinkButton = styled(RouterLink)`
+  width: auto;
   font-size: inherit;
   font-weight: 700;
   text-decoration: inherit;
@@ -56,6 +66,6 @@ export const ExternalLinkText = styled(RouterLink)`
   color: inherit;
   text-decoration: underline;
   line-height: inherit;
-  padding: 1rem 2rem;
+  padding: 1rem 2rem 1rem 0;
   border-radius: 5px;
 `;

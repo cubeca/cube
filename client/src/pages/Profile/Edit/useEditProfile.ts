@@ -10,8 +10,20 @@ const useEditProfile = (profileId: string) => {
   const queryClient = useQueryClient();
 
   const updateSectionMutation = useMutation({
-    mutationFn: (body: { id: string; description: string }) =>
-      updateProfileSection(body.id, body.description),
+    mutationFn: (body: {
+      id: string;
+      description: string;
+      organization: string;
+      website: string;
+      budget: string;
+    }) =>
+      updateProfileSection(
+        body.id,
+        body.organization,
+        body.website,
+        body.description,
+        body.budget
+      ),
     onSuccess: () =>
       queryClient.invalidateQueries({
         queryKey: ['profile', profileId]
@@ -45,10 +57,13 @@ const useEditProfile = (profileId: string) => {
       })
   });
 
-  const updateSection = (id: string, description: string) => {
+  const updateSection = (id: string, organization: string, website: string, description: string, budget: string) => {
     updateSectionMutation.mutate({
       id,
-      description
+      organization,
+      website,
+      description,
+      budget
     });
   };
 

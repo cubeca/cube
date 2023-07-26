@@ -42,11 +42,13 @@ app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Respon
   try {
     const hashedPassword = await hashPassword(password);
     const encryptedPassword = encryptString(hashedPassword);
+    const permissionIds = [];
 
     // Create Default Profile
     let profileId = '';
     if (organization || website || tag) {
       profileId = await createDefaultProfile(organization, website, tag);
+      permissionIds.push('contentEditor');
       if (!profileId) {
         return res
           .status(400)
@@ -60,6 +62,7 @@ app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Respon
       email,
       profileId,
       encryptedPassword,
+      permissionIds,
       hasAcceptedNewsletter,
       hasAcceptedTerms
     );
@@ -99,7 +102,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
     const r = await db.selectUserByEmail(email);
 
     if (!r) {
-      return res.status(403).send('Invalid username or password.');
+      return res.status(403).send('Invalid email or password.');
     }
 
     const user = r.rows[0];
@@ -181,6 +184,11 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
       const userId = decoded.sub;
       if (userId !== uuid) {
         return res.status(401).send('Unauthorized to update email for this user.');
+      }
+
+      const existingUser = await db.selectUserByEmail(email);
+      if (existingUser.rows[0]) {
+        return res.status(409).json('Email is in use by another user');
       }
 
       await db.updateEmail(uuid, email);
@@ -278,7 +286,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       await db.updateActiveStatus(uuid as string, true);
 
       const redirectUrl = `${process.env.HOST}/verified?token=` + encodeURIComponent(token);
-      res.redirect(301, redirectUrl);
+      return res.status(301).send(redirectUrl);
     });
   } catch (error: any) {
     console.error('Error occurred verifying email:', error);

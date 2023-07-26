@@ -12,12 +12,7 @@ const EditDialog = ({ isOpen, onClose, profile }: EditDialogProps) => {
   const { t } = useTranslation();
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      id="edit-profile-dialog"
-      title=''
-    >
+    <Dialog open={isOpen} onClose={onClose} id="edit-profile-dialog" title="">
       <EditProfileForm profile={profile} onSave={onClose} />
     </Dialog>
   );
