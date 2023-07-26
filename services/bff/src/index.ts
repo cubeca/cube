@@ -24,7 +24,7 @@ const filterHeadersToForward = (req: Request, ...allowList: string[]): AxiosHead
 
 /////////////////// Cloudflare Service ///////////////////
 
-app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+app.post('/upload/video-tus-reservation', async (req: Request, res: Response) => {
   // Typically, we receive an empty request body for this endpoint,
   // together with a (correct!) `content-length` header with value `0`.
   //
@@ -40,14 +40,14 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   res.status(status).set(headers).send(data);
 });
 
-app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+app.post('/upload/s3-presigned-url', async (req: Request, res: Response) => {
   const { status, data } = await cloudflareApi.post('upload/s3-presigned-url', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+app.get('/files/:fileId', async (req: Request, res: Response) => {
   const reqHeaders = { ...req.headers };
   delete reqHeaders['host'];
   const { status, data } = await contentApi.get(`files/${req.params.fileId}`, {
@@ -58,7 +58,7 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
 
 /////////////////// Content Service ///////////////////
 
-app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+app.post('/content', async (req: Request, res: Response) => {
   const { status, data } = await contentApi.post('content', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
@@ -81,7 +81,7 @@ app.get('/content/:contentId', async (req: Request, res: Response) => {
 
 /////////////////// Identity Service ///////////////////
 
-app.post('/auth/user', allowIfAnyOf('anonymous', 'userAdmin'), async (req: Request, res: Response) => {
+app.post('/auth/user', async (req: Request, res: Response) => {
   const { status, data } = await identityApi.post('auth/user', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
@@ -98,14 +98,14 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
-app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+app.put('/auth/email', async (req: Request, res: Response) => {
   const { status, data } = await identityApi.put('auth/email', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+app.put('/auth/password', async (req: Request, res: Response) => {
   const { status, data } = await identityApi.put('auth/password', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
