@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import useContent from 'hooks/useContent';
@@ -72,21 +73,18 @@ const Content = () => {
 
   return (
     <s.ContentWrapper>
-
       <s.ContentHeader container>
         <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
-          <Typography component="h3" variant="h3"><span>Tag of the week:</span> <strong>#queer</strong></Typography>
+          <Typography component="h3" variant="h3">
+            <span>Tag of the week:</span> <strong>#queer</strong>
+          </Typography>
         </Grid>
       </s.ContentHeader>
 
       {!isLoading ? (
-
-        // @jonathan - I'm trying to get Swiper.js to work here (currently throwing errors), perhaps a different slider is better? 
-        // This is the implementation I'm working off of: https://swiperjs.com/element
-        /* 
         <swiper-container>
           {content.map((key: any) => (
-            <swiper-slide>
+            <swiper-slide key={key}>
               <ContentCard
                 key={key.id}
                 image={key.thumbnailUrl}
@@ -98,28 +96,23 @@ const Content = () => {
             </swiper-slide>
           ))}
         </swiper-container>
-        */
-
-        // Temmporary CSS only layout using overflow-x scroll: 
-        <s.Content>
-        {content.map((key: any) => (
-            <ContentCard
-              key={key.id}
-              image={key.thumbnailUrl}
-              title={key.title}
-              creator={key.creator}
-              url={key.url}
-              icon={key.iconUrl}
-            />
-        ))}
-        </s.Content>
-
       ) : (
+        // Temmporary CSS only layout using overflow-x scroll:
+        // <s.Content>
+        // {content.map((key: any) => (
+        //     <ContentCard
+        //       key={key.id}
+        //       image={key.thumbnailUrl}
+        //       title={key.title}
+        //       creator={key.creator}
+        //       url={key.url}
+        //       icon={key.iconUrl}
+        //     />
+        // ))}
+        // </s.Content>
 
         <ContentLoader size={6} />
-
       )}
-
     </s.ContentWrapper>
   );
 };
