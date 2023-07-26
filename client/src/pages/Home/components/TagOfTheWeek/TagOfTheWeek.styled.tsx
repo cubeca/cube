@@ -27,6 +27,59 @@ export const ContentHeader = styled(Grid)`
 `;
 
 export const Content = styled(Box)`
+  
+  swiper-container {
+    margin: -10px;
+    width: calc(100% + 10px);
+
+    .swiper-button-prev {
+      font-size: 0 !important;
+    }
+
+    .swiper-button-next {
+      font-size: 0 !important;
+      border: 3px solid red !important;
+    }
+  }
+
+  swiper-slide {
+    width: auto;
+    margin: 10px;
+
+    > * {
+      width: 240px;
+    }
+
+    &:first-child {
+      padding-left: 8.333333333333333%;
+    }
+    
+    &:last-child {
+      padding-right: 8.333333333333333%;
+    }
+  }
+
+ 
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+
+    swiper-container {
+      margin: -15px;
+      width: calc(100% + 15px);
+    }
+
+    swiper-slide {
+      margin: 15px;
+
+      > * {
+        width: 360px;
+      }
+    }
+    
+  }
+`;
+
+export const ContentCSSOnly = styled(Box)`
   display: flex;
   flex-flow: row nowrap;
   margin: -10px;

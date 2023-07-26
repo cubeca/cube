@@ -1,11 +1,11 @@
 // @ts-nocheck
+import { register } from 'swiper/element/bundle';
 import { Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import useContent from 'hooks/useContent';
 import ContentCard from 'components/ContentCard';
 import { ContentLoader } from 'components/Loaders';
 import { ContentLists } from 'types/enums';
-import { register } from 'swiper/element/bundle';
 import * as s from './TagOfTheWeek.styled';
 import collaboration from 'assets/icons/type-collaboration.svg';
 import video from 'assets/icons/type-video.svg';
@@ -35,35 +35,35 @@ const Content = () => {
       iconUrl: video
     },
     {
-      id: 0,
+      id: 1,
       thumbnailUrl: FPOThumb2,
       title: 'Video Title',
       url: 'https://www.example.com',
       iconUrl: video
     },
     {
-      id: 0,
+      id: 2,
       thumbnailUrl: FPOThumb3,
       title: 'Video Title',
       url: 'https://www.example.com',
       iconUrl: video
     },
     {
-      id: 0,
+      id: 3,
       thumbnailUrl: FPOThumb4,
       title: 'Audio Title',
       url: 'https://www.example.com',
       iconUrl: audio
     },
     {
-      id: 0,
+      id: 4,
       thumbnailUrl: FPOThumb5,
       title: 'Audio Title',
       url: 'https://www.example.com',
       iconUrl: audio
     },
     {
-      id: 0,
+      id: 5,
       thumbnailUrl: FPOThumb6,
       title: 'Audio Title',
       url: 'https://www.example.com',
@@ -81,24 +81,31 @@ const Content = () => {
         </Grid>
       </s.ContentHeader>
 
-      {!isLoading ? (
-        <swiper-container>
-          {content.map((key: any) => (
-            <swiper-slide key={key}>
-              <ContentCard
-                key={key.id}
-                image={key.thumbnailUrl}
-                title={key.title}
-                creator={key.creator}
-                url={key.url}
-                icon={key.iconUrl}
-              />
-            </swiper-slide>
-          ))}
-        </swiper-container>
-      ) : (
-        // Temmporary CSS only layout using overflow-x scroll:
-        // <s.Content>
+      <s.Content>
+        {!isLoading ? (
+          <swiper-container slides-per-view="auto" mousewheel="true" direction="horizontal">
+            {content.map((key: any) => (
+              <swiper-slide key={key.id}>
+                <ContentCard
+                  key={key.id}
+                  image={key.thumbnailUrl}
+                  title={key.title}
+                  creator={key.creator}
+                  url={key.url}
+                  icon={key.iconUrl}
+                />
+              </swiper-slide>
+            ))}
+          </swiper-container>
+        ) : (
+          <ContentLoader size={6} />
+        )}
+      </s.Content>
+
+      {
+        // Alternate CSS only layout using overflow-x scroll:
+
+        // <s.ContentCSSOnly>
         // {content.map((key: any) => (
         //     <ContentCard
         //       key={key.id}
@@ -109,10 +116,9 @@ const Content = () => {
         //       icon={key.iconUrl}
         //     />
         // ))}
-        // </s.Content>
-
-        <ContentLoader size={6} />
-      )}
+        // </s.ContentCSSOnly>
+      }
+      
     </s.ContentWrapper>
   );
 };
