@@ -145,33 +145,6 @@ const CategorizedContent = () => {
     }
   ];
 
-  const categories = [
-    {
-      text: t('Video'),
-      value: ContentCategories.Video
-    },
-    {
-      text: t('VR'),
-      value: ContentCategories.VR
-    },
-    {
-      text: t('Digital Publications'),
-      value: ContentCategories.DigitalPublications
-    },
-    {
-      text: t('Talks'),
-      value: ContentCategories.Talks
-    },
-    {
-      text: t('Performances'),
-      value: ContentCategories.Performances
-    },
-    {
-      text: t('Cultural Teachings'),
-      value: ContentCategories.CulturalTeachings
-    }
-  ];
-
   return (
 
     <s.ContentWrapper>
@@ -197,7 +170,49 @@ const CategorizedContent = () => {
             )}
           </s.Content>
 
-          { /* This is the original code from the template :
+          
+
+          { /* This is the original code from the template : */
+
+          /* 
+          This list may map to database categories but it isn't consistant with content types defined in Figma designs. 
+          Figma designs have the following content types:
+          - Video
+          - Audio
+          - Activity Booklets
+          - Digital Publications
+          - Collaborations
+          - External Link
+          */
+          
+          /*
+          { const categories = [
+            {
+              text: t('Video'),
+              value: ContentCategories.Video
+            },
+            {
+              text: t('VR'),
+              value: ContentCategories.VR
+            },
+            {
+              text: t('Digital Publications'),
+              value: ContentCategories.DigitalPublications
+            },
+            {
+              text: t('Talks'),
+              value: ContentCategories.Talks
+            },
+            {
+              text: t('Performances'),
+              value: ContentCategories.Performances
+            },
+            {
+              text: t('Cultural Teachings'),
+              value: ContentCategories.CulturalTeachings
+            }
+          ]; }
+
           <Stack>
             <s.Categories component="ul">
               {categories.map((category) => (

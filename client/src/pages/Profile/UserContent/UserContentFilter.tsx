@@ -13,18 +13,35 @@ const UserContentFilter = () => {
   const { t } = useTranslation();
   const { setFilter } = useFilterContent();
   return (
-    <s.Filters direction="row" spacing={2} alignItems="center">
-      <Typography component="span">{t('Search')}</Typography>
+    <s.Filters>
+
       <TextInput
-        id="profileName"
-        name="profileName"
+        id="searchFilter"
+        name="searchFilter"
+        className='searchFilter'
         control={control}
         variant="standard"
         fullWidth
+        placeholder='Search'
         sx={{ fontSize: '2rem' }}
       />
+
+      {
+        /* 
+        This list may map to database categories but it isn't consistant with content types defined in Figma designs. 
+        Figma designs have the following content types:
+        - Video
+        - Audio
+        - Activity Booklets
+        - Digital Publications
+        - Collaborations
+        - External Link
+        */
+      }
+
       <Select
         label={t('Select Type')}
+        className='typeFilter'
         onChange={(value: string | number) =>
           setFilter(ContentQueryKeys.Type, value as string)
         }

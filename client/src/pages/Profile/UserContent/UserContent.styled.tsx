@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const UserContentWrapper = styled(Box)`
+  margin-top: 60px;
   margin-bottom: 60px;
 `;
 
