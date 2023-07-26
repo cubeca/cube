@@ -19,7 +19,6 @@ const ChangePasswordDialog = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    console.log(email, isOpen);
     if (email && isOpen) {
       forgotPassword(email);
     }
