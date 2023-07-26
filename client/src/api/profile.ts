@@ -32,7 +32,7 @@ export const updateProfileHero = async (id: string, file: File) => {
 
 export const updateProfileAudioDescription = async (id: string, file: File) => {
   const descriptionAudioFileId = await upload(file, id);
-  // return await profileApi.updateProfile(id, {
-  //   descriptionAudioFileId
-  // });
+  return await profileApi.updateProfile(id, {
+    descriptionUrl: descriptionAudioFileId
+  });
 };

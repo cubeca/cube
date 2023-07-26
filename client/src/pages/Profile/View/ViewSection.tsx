@@ -15,7 +15,11 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
-          <s.ImageInner href={profile.website} title={profile!.organization}>
+          <s.ImageInner
+            href={profile.website}
+            title={profile!.organization}
+            target="_blank"
+          >
             <img
               src={profile.logourl || FPOProfileUrl}
               alt="profile thumbnail"
