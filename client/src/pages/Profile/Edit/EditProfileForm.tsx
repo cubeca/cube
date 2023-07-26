@@ -1,14 +1,11 @@
 import { Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
-import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import useEditProfile from './useEditProfile';
 import CameraIcon from '@mui/icons-material/LocalSee';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import TextInput from 'components/form/TextInput';
 import * as s from './EditProfileForm.styled';
-import * as sTextInput from 'components/form/TextInput/TextInput.styled';
 import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
@@ -24,13 +21,9 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   const { control, handleSubmit } = useForm();
   const { updateSection, updateLogo, updateAudioDescription, updateHero } =
     useEditProfile(profile.id);
-  const [logoUrl] = useState(profile.logoUrl);
-  const [heroUrl] = useState(profile.heroUrl);
-  const [editAudio, setEditAudio] = useState(false);
 
   const onSubmitSection = (data: FieldValues) => {
     const { profileDescription, budget } = data;
-    console.log('submitting', budget);
     updateSection(profile.id, profileDescription, budget);
     onSave();
   };
@@ -45,8 +38,8 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
     updateHero(profile.id, file);
   };
 
-  const onChangeAudioDescription = (e: any) => {
-    const file = e.target.files[0];
+  const onChangeAudioDescription = (files: File[]) => {
+    const file = files[0];
     updateAudioDescription(profile.id, file);
   };
 
@@ -96,7 +89,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
 
       <s.EditFieldsWrapper>
         <TextInput
-          className='dark'
+          className="dark"
           defaultValue={profile.organization}
           name="organization"
           id="organization"
@@ -106,7 +99,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           label={t('Organization Name')}
         />
         <TextInput
-          className='dark'
+          className="dark"
           defaultValue={profile.website}
           name="website"
           id="website"
@@ -116,7 +109,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           label={t('Organization URL')}
         />
         <TextInput
-          className='dark'
+          className="dark"
           defaultValue={profile.description}
           name="profileDescription"
           id="profileDescription"
@@ -127,69 +120,36 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           variant="outlined"
           label={t('Description')}
         />
-      <sRadioInput.DarkRadioInput
-        control={control}
-        name="budget"
-        label="Budget"
-        id="website"
-        direction="vertical"
-        defaultValue={profile.budget}
-        options={[
-          {
-            value: '1',
-            label: 'Less than $10,000',
-            id: '1'
-          },
-          {
-            value: '2',
-            label: 'Between $10,000 and $50,000',
-            id: '2'
-          },
-          {
-            value: '3',
-            label: 'Over $50,000',
-            id: '3'
-          }
-        ]}
-      />
-        {/*       
-        <Button color='secondary'
-          onClick={() => {
-            setEditAudio(!editAudio);
-          }}
-          variant="text"
-          endIcon={
-            !editAudio && (
-              <Box
-                border="solid"
-                borderRadius="5px"
-                display="inline-block"
-                lineHeight="0"
-              >
-                <FileUploadIcon />
-              </Box>
-            )
-          }
-        >
-          {editAudio
-            ? t('Cancel')
-            : t('Upload an audio file describing the information above')}
-        </Button>
-        {editAudio && (
-
-          <Box textAlign="center" pt="0.5rem">
-            <input
-              type="file"
-              id="audio-description"
-              onChange={onChangeAudioDescription}
-            />
-          </Box>
-          
-        )} 
-        
-        // @jonathan - this is was the old way, and below is what we have on the uploads page. Needs testing. 
-        
-        */}
+        <sRadioInput.DarkRadioInput
+          control={control}
+          name="budget"
+          label="Budget"
+          id="website"
+          direction="vertical"
+          defaultValue={profile.budget}
+          options={[
+            {
+              value: '1',
+              label: '100 to 10,000',
+              id: '1'
+            },
+            {
+              value: '2',
+              label: '10,000 to 30,000',
+              id: '2'
+            },
+            {
+              value: '3',
+              label: '30,000 to 80,000',
+              id: '3'
+            },
+            {
+              value: '4',
+              label: '80,000+',
+              id: '4'
+            }
+          ]}
+        />
 
         <UploadInput
           text={t('Audio file describing the information above')}
@@ -203,7 +163,6 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
             {t('Update Profile')}
           </Button>
         </Stack>
-
       </s.EditFieldsWrapper>
     </Stack>
   );
