@@ -169,7 +169,7 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
       profile.logoUrl = files[profile.logourl].playerInfo.publicUrl;
     }
     if (files[profile.descriptionurl]) {
-      profile.descriptionAudioUrl = files[profile.descriptionurl].playerInfo.publicUrl;
+      profile.descriptionUrl = files[profile.descriptionurl].playerInfo.publicUrl;
     }
 
     const contentResponse = await contentApi.get('/content', {
