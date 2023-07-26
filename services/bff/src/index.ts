@@ -157,20 +157,20 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
     }
 
     const { files } = await getFiles([
-      profileResponse.data.heroUrl,
-      profileResponse.data.logoUrl,
-      profileResponse.data.descriptionUrl
+      profileResponse.data.heroFileId,
+      profileResponse.data.logoFileId,
+      profileResponse.data.descriptionAudioFileId
     ]);
 
     const profile = profileResponse.data;
-    if (files[profile.heroUrl]) {
-      profile.heroUrl = files[profile.heroUrl].playerInfo.publicUrl;
+    if (files[profile.heroFileId]) {
+      profile.heroUrl = files[profile.heroFileId].playerInfo.publicUrl;
     }
-    if (files[profile.logoUrl]) {
-      profile.logoUrl = files[profile.logoUrl].playerInfo.publicUrl;
+    if (files[profile.logoFileId]) {
+      profile.logoUrl = files[profile.logoFileId].playerInfo.publicUrl;
     }
-    if (files[profile.descriptionUrl]) {
-      profile.descriptionAudioUrl = files[profile.descriptionUrl].playerInfo.publicUrl;
+    if (files[profile.descriptionAudioFileId]) {
+      profile.descriptionAudioUrl = files[profile.descriptionAudioFileId].playerInfo.publicUrl;
     }
 
     const contentResponse = await contentApi.get('/content', {
@@ -188,7 +188,7 @@ app.get('/profiles/:id', async (req: Request, res: Response) => {
     profile.content = await transformContentListForProfile(profile, contentResponse.data);
     res.status(200).json({ data: profile });
   } catch (error) {
-    res.status(500).json('Internal server error');
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

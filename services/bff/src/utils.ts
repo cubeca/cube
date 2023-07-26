@@ -1,4 +1,4 @@
-import { cloudflareApi } from "./microservices";
+import { cloudflareApi } from "microservices";
 
 export const inspect = (...things: any) =>
   things.forEach((thing: any) =>
