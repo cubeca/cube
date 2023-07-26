@@ -184,7 +184,7 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
       return res.status(contentResponse.status).json(contentResponse.data);
     }
 
-    profile.content = await transformContentListForProfile(profile, contentResponse.data);
+    profile.content = contentResponse.data;
     res.status(200).json({ data: profile });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
