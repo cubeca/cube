@@ -25,8 +25,7 @@ register();
 const Content = () => {
   const { data, isLoading } = useContent('featured', ContentLists.Featured);
 
-  // const content = data ?? [
-  const content = [
+  const content = data || [
     {
       id: 0,
       thumbnailUrl: FPOThumb1,

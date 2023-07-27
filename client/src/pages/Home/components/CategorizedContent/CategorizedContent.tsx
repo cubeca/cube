@@ -35,9 +35,8 @@ const CategorizedContent = () => {
     selectedCategory
   );
 
-  // Dummy content used for layout purposes:
-  // const content = data ?? [
-  const content = [
+  // Dummy content used for layout purposes: 
+  const content = data || [
     {
       id: 0,
       thumbnailUrl: FPOThumb1,
