@@ -100,23 +100,6 @@ const Content = () => {
           <ContentLoader size={6} />
         )}
       </s.Content>
-
-      {
-        // Alternate CSS only layout using overflow-x scroll:
-
-        // <s.ContentCSSOnly>
-        // {content.map((key: any) => (
-        //     <ContentCard
-        //       key={key.id}
-        //       image={key.thumbnailUrl}
-        //       title={key.title}
-        //       creator={key.creator}
-        //       url={key.url}
-        //       icon={key.iconUrl}
-        //     />
-        // ))}
-        // </s.ContentCSSOnly>
-      }
       
     </s.ContentWrapper>
   );

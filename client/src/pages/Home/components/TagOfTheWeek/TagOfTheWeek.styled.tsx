@@ -79,28 +79,4 @@ export const Content = styled(Box)`
   }
 `;
 
-export const ContentCSSOnly = styled(Box)`
-  display: flex;
-  flex-flow: row nowrap;
-  margin: -10px;
-  padding-left: 8.333333333333333%;
-  padding-right: 8.333333333333333%;
-  overflow-x: auto;
-  width: calc(100% + 10px);
 
-  > * {
-    flex: 0 0 240px;
-    margin: 10px;
-  }
-
-  ${(props) => props.theme.breakpoints.up('md')} {
-    margin: -15px;
-    width: calc(100% + 15px);
-
-    > * {
-      flex: 0 0 360px;
-      margin: 15px;
-    }
-    
-  }
-`;
