@@ -204,6 +204,11 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
+app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/tag/' + req.params.tag, req.body);
+  res.status(status).json(data);
+});
+
 app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const { status, data } = await profileApi.patch('profiles/' + req.params.profileId, req.body);
   res.status(status).json(data);

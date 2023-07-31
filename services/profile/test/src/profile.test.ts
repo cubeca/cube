@@ -134,6 +134,17 @@ describe('profile test suite', () => {
   });
 
   /**
+   * Test to create a profile and retrieve it by tag.
+   * Expects to receive a status code of 200 in the response from a subsequent GET request.
+   */
+    test('creates a profile and retrieves it using its tag', async () => {
+      const { data, requestBody } = await createProfile();
+      const getProfileResponse = await profileApi.get(`/profiles/tag/${requestBody.tag}`, {});
+      expect(getProfileResponse.status).toEqual(200);
+      expect(getProfileResponse.data.tag).toEqual(requestBody.tag);
+    });
+
+  /**
    * Test to create a profile and attempt to update it with multiple attributes.
    * Expects to receive a status code of 200 and for the updated attributes to be reflected in the response from a subsequent GET request.
    */
