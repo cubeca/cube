@@ -187,10 +187,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
 });
 
 app.post('/auth/forgot-password', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.post('auth/forgot-password', {
-    params: req.query
-  });
-
+  const { status, data } = await identityApi.post('auth/forgot-password', req.body);
   res.status(status).json(data);
 });
 
