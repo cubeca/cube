@@ -122,7 +122,7 @@ export const sendPasswordResetEmail = async (email: string) => {
   sendSmtpEmail.templateId = 4;
   sendSmtpEmail.params = {
     NAME: `${user.name}`,
-    EMAIL_VERIFICATION_URL: `${process.env.HOST}:${process.env.PORT}/somewebformincubeui/${token}`
+    PASSWORD_CHANGE_URL: `${process.env.HOST}/reset-password/${token}`
   };
 
   try {
