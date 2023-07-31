@@ -122,7 +122,7 @@ export const sendPasswordResetEmail = async (email: string) => {
   sendSmtpEmail.templateId = 4;
   sendSmtpEmail.params = {
     NAME: `${user.name}`,
-    PASSWORD_CHANGE_URL: `${process.env.BFF_HOST}/reset-password/${token}`
+    PASSWORD_CHANGE_URL: `${process.env.HOST}/reset-password/${token}`
   };
 
   try {
