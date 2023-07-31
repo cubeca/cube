@@ -91,6 +91,32 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
   }
 });
 
+// Route for fetching a profile by its tag
+app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
+  const { tag } = req.params;
+
+  // Check if the profile ID is provided
+  if (!tag) {
+    res.status(404).send('Profile tag is not provided.');
+    return;
+  }
+
+  // Fetch the profile and return its details
+  try {
+    const r = await db.selectProfileByTag(tag);
+    const profile = r.rows[0];
+
+    if (!profile) {
+      res.status(404).send('Profile tag not found');
+      return;
+    }
+
+    res.status(200).json({ ...profile });
+  } catch (e: any) {
+    res.status(404).send('Organization does not exist');
+  }
+});
+
 // Route for deleting a profile by its ID
 app.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
   const r = await db.deleteProfile(req.params.profileId);
