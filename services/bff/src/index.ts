@@ -127,10 +127,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
 });
 
 app.post('/auth/forgot-password', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.post('auth/forgot-password', {
-    params: req.query
-  });
-
+  const { status, data } = await identityApi.post('auth/forgot-password', req.body);
   res.status(status).json(data);
 });
 
@@ -138,6 +135,16 @@ app.post('/auth/forgot-password', async (req: Request, res: Response) => {
 
 app.post('/profiles', async (req: Request, res: Response) => {
   const { status, data } = await profileApi.post('profiles', req.body);
+  res.status(status).json(data);
+});
+
+app.get('/profiles/:profileId', async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, req.body);
+  res.status(status).json(data);
+});
+
+app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/tag/' + req.params.tag, req.body);
   res.status(status).json(data);
 });
 

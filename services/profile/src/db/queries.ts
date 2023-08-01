@@ -22,6 +22,15 @@ export const selectProfileByID = async (id: string) => {
   return await db.query(text, values);
 };
 
+// Function to select a profile from the 'profiles' table by its tag
+export const selectProfileByTag = async (tag: string) => {
+  const text = `SELECT * from profiles where tag = $1;`;
+  const values = [tag];
+
+  // Execute the query and return the result
+  return await db.query(text, values);
+};
+
 // Function to delete a profile from the 'profiles' table by its ID
 export const deleteProfile = async (profileId: string) => {
   const sql = `

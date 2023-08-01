@@ -113,7 +113,7 @@ app.post('/auth/login', async (req: Request, res: Response) => {
     }
 
     if (!user.is_active || !user.has_verified_email) {
-      return res.status(403).send('User isnt active or verified their email');
+      return res.status(403).send('Please verify your email to continue');
     }
 
     const token = jwt.sign(
