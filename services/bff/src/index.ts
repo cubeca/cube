@@ -6,7 +6,7 @@ import { AxiosHeaders } from 'axios';
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { identityApi, profileApi, contentApi, cloudflareApi } from './microservices';
-import { filterObject, transformContentListForProfile, getFiles } from './utils';
+import { filterObject, transformContentForProfile, getFiles } from './utils';
 
 const app: Express = express();
 app.use(cors());
@@ -176,7 +176,7 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
       params: {
         profileId,
         offset: 0,
-        limit: 100
+        limit: 1000
       }
     });
     
@@ -184,7 +184,7 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
       return res.status(contentResponse.status).json(contentResponse.data);
     }
 
-    profile.content = contentResponse.data;
+    profile.content = await transformContentForProfile(contentResponse.data.data)
     res.status(200).json({ data: profile });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
