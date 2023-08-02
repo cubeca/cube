@@ -1,4 +1,4 @@
-import { Home, About, NotFound, Profile, Content, Upload, Login } from 'pages';
+import { Home, About, NotFound, Profile, Content, Upload, Login, ResetPassword } from 'pages';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -16,6 +16,10 @@ const Router = () => {
       <Route
         path="/verified"
         element={<Navigate to="/login?verified=true" />}
+      />
+      <Route
+        path="/reset-password"
+        element={<ResetPassword />}
       />
       <Route path="*" element={<NotFound />} />
     </Routes>
