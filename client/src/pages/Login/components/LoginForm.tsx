@@ -27,7 +27,7 @@ export const LoginForm = ({ verified }: LoginFormProps) => {
       setError(false);
       const user = await login(email, password);
 
-      if ((user as any).uuid) {
+      if ((user as any).profile_id) {
         navigate(`/profile/${(user as any).profile_id}`);
       } else {
         navigate('/');
