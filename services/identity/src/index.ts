@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
  * Create a user based on provided attributes.  If an organization, website or tag is passed
  * also create an associated profile for the user.
  */
-app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Response) => {
+app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -91,7 +91,7 @@ app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Respon
 /**
  * Log a user in based on supplied username and password.
  */
-app.post('/auth/login', async (req: Request, res: Response) => {
+app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -205,7 +205,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
 /**
  * Update password for a user.
  */
-app.put('/auth/password', async (req: Request, res: Response) => {
+app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { uuid, currentPassword, newPassword, token } = req.body;
 
   if (!uuid || !currentPassword || !newPassword || !token) {
@@ -297,7 +297,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
 /**
  * Trigger password reset email to users who are locked out.
  */
-app.post('/auth/forgot-password', async (req: Request, res: Response) => {
+app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email } = req.body;
   if (!email) {
     return res.status(400).send('email is required.');

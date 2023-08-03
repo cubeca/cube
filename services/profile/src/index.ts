@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Route for creating a new profile
-app.post('/profiles', async (req: Request, res: Response) => {
+app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
 
   // Check if required fields are provided in the request body
@@ -21,6 +21,7 @@ app.post('/profiles', async (req: Request, res: Response) => {
     return res.status(401).send('Invalid Request Body: organization, website, and tag must be provided.');
   }
 
+  
   // Insert the new profile and return its ID
   try {
     const r = await db.insertProfile(organization, website, tag);
@@ -36,7 +37,7 @@ app.post('/profiles', async (req: Request, res: Response) => {
 });
 
 // Route for updating an existing profile by its ID
-app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
+app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update
@@ -66,7 +67,7 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
 });
 
 // Route for fetching a profile by its ID
-app.get('/profiles/:profileId', async (req: Request, res: Response) => {
+app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { profileId } = req.params;
 
   // Check if the profile ID is provided
@@ -92,7 +93,7 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
 });
 
 // Route for fetching a profile by its tag
-app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
+app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { tag } = req.params;
 
   // Check if the profile ID is provided

@@ -60,7 +60,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const urlValidDurationSeconds = Math.ceil(Number(validFor));
 
   try {
-    const { id: userId } = extractUser(req);
+    const { uuid: userId } = extractUser(req);
 
     const dbFileStub = await db.insertVideoFileStubWithForcedFileId(fileId, {
       profileId,
@@ -118,7 +118,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
   }
 
   try {
-    const { id: userId } = extractUser(req);
+    const { uuid: userId } = extractUser(req);
 
     const dbFileStub = await db.insertS3FileStub({
       profileId,
@@ -134,7 +134,6 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     });
 
     const fileId = dbFileStub.id;
-
     const filePathInBucket = `${fileId}/${fileName}`;
     const presignedUrl = await getPresignedUploadUrl(filePathInBucket, mimeType, urlValidDurationSeconds);
 
@@ -143,7 +142,6 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     res.status(201).json({ fileId, presignedUrl });
   } catch (e: any) {
     console.error(e.message);
-    inspect(e);
     res.status(500).send('Error retrieving content upload url');
   }
 });
@@ -163,12 +161,14 @@ export interface NonVideoPlayerInfo {
   fileType: string;
   publicUrl: string;
 }
-// allowIfAnyOf('anonymous', 'active'),
-app.get('/files/:fileId', async (req: Request, res: Response) => {
+
+app.get('/files/:fileId', allowIfAnyOf('anonymous, active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
+
   if (!UUID_REGEXP.test(fileId)) {
     return res.status(400).send(`Invalid 'fileId' path parameter, must be in UUID format.`);
   }
+
   const dbFile = await db.getFileById(fileId);
   if (dbFile === null) {
     return res.status(404).send('File not found.');
@@ -181,10 +181,12 @@ app.get('/files/:fileId', async (req: Request, res: Response) => {
     if (!videoDetails) {
       return res.status(404).send('File not found.');
     }
+
     if (!videoDetails.readyToStream) {
       // inspect('Video is still being processed:', videoDetails);
       return res.status(409).send('Video is still being processed.');
     }
+    
     playerInfo = {
       hlsUrl: videoDetails?.playback?.hls,
       dashUrl: videoDetails?.playback?.dash,
