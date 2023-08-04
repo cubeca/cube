@@ -1,7 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as db from './db/queries';
-import type { ContentData } from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 
@@ -20,8 +19,7 @@ const getApiResultFromDbRow = (r: any) => ({
 
 // API endpoint for creating new content
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const newContent: ContentData = req.body as ContentData;
-  const dbResult = await db.insertContent(newContent, newContent.profileId);
+  const dbResult = await db.insertContent(req.body);
   res.status(201).json(getApiResultFromDbRow(dbResult));
 });
 
@@ -53,9 +51,13 @@ app.get('/content/:contentId', async (req: Request, res: Response) => {
 
 // API endpoint for updating content by content id
 app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const newContent: ContentData = req.body as ContentData;
-  const dbResult = await db.updateContent(newContent, req.params.contentId);
+  const dbResult = await db.updateContent(req.body, req.params.contentId);
   res.status(201).json(getApiResultFromDbRow(dbResult));
+});
+
+// API endpoint for deleting content by content id
+app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  res.status(200).json(getApiResultFromDbRow(await db.deleteContent(req.params.contentId)));
 });
 
 // API endpoint for checking the service status
@@ -65,11 +67,6 @@ app.get('/', async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).send('Internal server error');
   }
-});
-
-// API endpoint for deleting content by content id
-app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  res.status(200).json(getApiResultFromDbRow(await db.deleteContent(req.params.contentId)));
 });
 
 // Starting the server
