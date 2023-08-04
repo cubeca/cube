@@ -58,7 +58,7 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   // Update the profile and return the updated profile
   try {
     const dbResult = await db.updateProfile(profileId, ...args);
-    res.status(200).json(dbResult);
+    res.status(200).json(dbResult.rows[0]);
   } catch (error) {
     console.log(error)
     res.status(500).json(error);
