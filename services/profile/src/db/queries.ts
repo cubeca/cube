@@ -49,7 +49,7 @@ export const deleteProfile = async (profileId: string) => {
 export const updateProfile = async (profileId: string, ...args: string[]) => {
   let sql = 'UPDATE profiles SET';
   const placeholders = [];
-  const COLUMN_NAMES = ['organization', 'website', 'herourl', 'logourl', 'description', 'descriptionurl', 'budget'];
+  const COLUMN_NAMES = ['organization', 'website', 'heroFileId', 'logoFileId', 'description', 'descriptionFileId', 'budget'];
   let count = 0;
   let columnCount = 0;
 

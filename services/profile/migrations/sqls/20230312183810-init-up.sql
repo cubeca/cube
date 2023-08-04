@@ -5,10 +5,10 @@ CREATE TABLE profiles (
     organization VARCHAR NOT NULL UNIQUE,
     website VARCHAR NOT NULL UNIQUE,
     tag VARCHAR NOT NULL UNIQUE,
-    heroUrl VARCHAR DEFAULT '',
-    logoUrl VARCHAR DEFAULT '',
+    heroFileId VARCHAR DEFAULT '',
+    logoFileId VARCHAR DEFAULT '',
     description VARCHAR DEFAULT '',
-    descriptionUrl VARCHAR DEFAULT '',
+    descriptionFileId VARCHAR DEFAULT '',
     budget VARCHAR DEFAULT '',
     PRIMARY KEY (id)
 );
