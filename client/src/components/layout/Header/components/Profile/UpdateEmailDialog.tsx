@@ -22,6 +22,7 @@ const UpdateEmailDialog = ({
   const { t } = useTranslation();
   const { control, handleSubmit, reset } = useForm();
   const [error, setError] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const onSubmit = async (data: FieldValues) => {
     const { newEmail, confirmEmail } = data;
@@ -34,35 +35,48 @@ const UpdateEmailDialog = ({
 
     updateEmail(userId, newEmail);
     reset();
-    onClose();
+    setIsSubmitted(true)
   };
 
   return (
     <Dialog open={isOpen} onClose={onClose} id="update-email-dialog" title="">
       <Stack direction="column">
         <Typography component="h2">{t('Update Email Address')}</Typography>
-        <sEmailInput.DarkEmailInput
-          name="newEmail"
-          id="newEmail"
-          control={control}
-          fullWidth
-          variant="outlined"
-          label={t('New Email')}
-        />
-        <sEmailInput.DarkEmailInput
-          name="confirmEmail"
-          id="confirmEmail"
-          control={control}
-          fullWidth
-          variant="outlined"
-          label={t('Confirm Email')}
-        />
-        {error && <ErrorMessage>{t('Emails must match.')}</ErrorMessage>}
-        <Stack direction="row" justifyContent="right">
-          <Button color="secondary" onClick={handleSubmit(onSubmit)}>
-            {t('Update Email Address')}
-          </Button>
-        </Stack>
+        {isSubmitted ? (
+          <>
+          <Typography component="h3">{t('Check your Email for a verification link.')}</Typography> 
+          <Stack direction="row" justifyContent="right">
+              <Button color="secondary" onClick={onClose}>
+                {t('Ok')}
+              </Button>
+            </Stack>
+          </>
+        ) : (
+          <>
+          <sEmailInput.DarkEmailInput
+            name="newEmail"
+            id="newEmail"
+            control={control}
+            fullWidth
+            variant="outlined"
+            label={t('New Email')}
+          />
+          <sEmailInput.DarkEmailInput
+            name="confirmEmail"
+            id="confirmEmail"
+            control={control}
+            fullWidth
+            variant="outlined"
+            label={t('Confirm Email')}
+          />
+          {error && <ErrorMessage>{t('Emails must match.')}</ErrorMessage>}
+          <Stack direction="row" justifyContent="right">
+            <Button color="secondary" onClick={handleSubmit(onSubmit)}>
+              {t('Update Email Address')}
+            </Button>
+          </Stack>
+          </>
+        )}
       </Stack>
     </Dialog>
   );
