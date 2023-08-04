@@ -1,4 +1,5 @@
-import { Home, About, NotFound, Profile, Content, Upload, Login, ResetPassword } from 'pages';
+import { Home, About, NotFound, Profile, Content, Upload, Login, ResetPassword, ForgotPassword } from 'pages';
+
 
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -10,6 +11,7 @@ const Router = () => {
       <Route path="/signup" element={<Login />} />
       <Route path="/home" element={<Home />} />
       <Route path="/about" element={<About />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/profile/:tag" element={<Profile />} />
       <Route path="/profile/:id/upload" element={<Upload />} />
       <Route path="/content/:id" element={<Content />} />

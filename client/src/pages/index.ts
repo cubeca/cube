@@ -6,5 +6,6 @@ import Content from './Content';
 import Upload from './Upload';
 import Login from './Login';
 import ResetPassword from './ResetPassword'
+import ForgotPassword from './ForgotPassword';
 
-export { About, Home, NotFound, Profile, Content, Upload, Login, ResetPassword };
+export { About, Home, NotFound, Profile, Content, Upload, Login, ResetPassword, ForgotPassword };
