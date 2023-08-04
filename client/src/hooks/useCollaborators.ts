@@ -9,7 +9,7 @@ const useCollaborators = () => {
   return {
     isLoading,
     isError,
-    data: data?.data.data.collaborators
+    data: undefined // data?.data.data.collaborators
   };
 };
 

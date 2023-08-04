@@ -49,10 +49,6 @@ export const forgotPassword = async (email: string) => {
   return await authApi.forgotPassword({ email });
 };
 
-export const verifyEmail = async (userId: string) => {
-  // await authApi.verifyEmail(userId);
-};
-
 export const creatorSignup = async (
   name: string,
   organization: string,

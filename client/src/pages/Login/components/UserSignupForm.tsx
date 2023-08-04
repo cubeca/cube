@@ -13,13 +13,13 @@ import CheckboxInput from 'components/form/CheckboxInput';
 export const UserSignupForm = () => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
-  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const onSubmit = async (data: FieldValues) => {
     const { firstName, lastName, email, password, promotions, terms } = data;
     try {
-      setError(false);
+      setErrorMessage('');
       await userSignup(
         `${firstName} ${lastName}`,
         email,
@@ -30,7 +30,7 @@ export const UserSignupForm = () => {
 
       setIsFormSubmitted(true);
     } catch (e: any) {
-      setError(true);
+      setErrorMessage(e.response?.data || t('An Error occured during sign up'));
     }
   };
 
@@ -106,8 +106,8 @@ export const UserSignupForm = () => {
               'You must agree to the Terms of Use and Privacy Policy to continue'
             )}
           />
-          {error && (
-            <ErrorMessage>{t('Error occurred during sign up')}</ErrorMessage>
+          {errorMessage && (
+            <ErrorMessage>{errorMessage}</ErrorMessage>
           )}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
