@@ -14,7 +14,7 @@ const useContentDetails = () => {
   return {
     isLoading,
     isError,
-    data: data?.data.data
+    data: undefined //data?.data.data
   };
 };
 

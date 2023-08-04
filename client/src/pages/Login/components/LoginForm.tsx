@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Button from 'components/Button';
 import useAuth from 'hooks/useAuth';
+import { getProfile } from 'api/profile';
 
 interface LoginFormProps {
   emailVerified?: boolean;
@@ -27,14 +28,14 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
     try {
       setErrorMessage('');
       const user = await login(email, password);
-
+      
       if ((user as any).profile_id) {
-        navigate(`/profile/tags/${(user as any).tag}`);
+        const { data } = await getProfile((user as any).profile_id)
+        navigate(`/profile/${(data as any).tag}`);
       } else {
         navigate('/home');
       }
     } catch (e: any) {
-      console.log(e.response.data)
       setErrorMessage(e.response?.data || t('An Error occured during login'));
     }
   };

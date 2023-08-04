@@ -44,7 +44,7 @@ const Video = () => {
 
           <s.ContentWrapper>
             <Typography component="h1" variant="h3">
-              {content?.title}
+              {/* {content?.title} */}
             </Typography>
 
             <s.ContentDate component="p" variant="body2">
@@ -52,7 +52,7 @@ const Video = () => {
             </s.ContentDate>
 
             <Typography component="p" variant="body1">
-              {content?.description}
+              {/* {content?.description} */}
             </Typography>
 
             {/* Testing fonts language support: <br/><br/>
@@ -65,7 +65,7 @@ const Video = () => {
             </Typography>
             <br/><br/> */}
 
-            <MediaPlayer url={content?.description || ''} isAudio />
+            {/* <MediaPlayer url={content?.description || ''} isAudio /> */}
           </s.ContentWrapper>
         </Grid>
         <Grid xs={10} md={3}>
@@ -89,7 +89,7 @@ const Video = () => {
 
                 <s.Seperator />
 
-                {(content?.tags?.length || 0) > 0 && (
+                {/* {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <Typography component="h5" variant="h5">
                       {t('Tags')}
@@ -100,7 +100,7 @@ const Video = () => {
                       ))}
                     </s.Tags>
                   </Stack>
-                )}
+                )} */}
               </>
             )}
 

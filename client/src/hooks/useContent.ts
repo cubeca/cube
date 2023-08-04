@@ -57,7 +57,7 @@ const useContent = (list = 'videos', category?: string) => {
     isUploadLoading,
     isUploadError,
     isUploadSuccess,
-    data: data?.data.data,
+    data: undefined, // data?.data.data,
     addContent: handleAddContent
   };
 };
