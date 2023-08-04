@@ -19,13 +19,13 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
-  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const { login } = useAuth();
 
   const onSubmit = async (data: FieldValues) => {
     const { email, password } = data;
     try {
-      setError(false);
+      setErrorMessage('');
       const user = await login(email, password);
 
       if ((user as any).profile_id) {
@@ -34,7 +34,8 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
         navigate('/home');
       }
     } catch (e: any) {
-      setError(true);
+      console.log(e.response.data)
+      setErrorMessage(e.response?.data || t('An Error occured during login'));
     }
   };
 
@@ -71,8 +72,8 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
             helperText={t('Password required')}
             variant="outlined"
           />
-          {error && (
-            <ErrorMessage>{t('Invalid username or password')}</ErrorMessage>
+          {errorMessage && (
+            <ErrorMessage>{errorMessage}</ErrorMessage>
           )}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
