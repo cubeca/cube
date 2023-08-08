@@ -194,7 +194,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
       await db.updateEmail(uuid, email);
       await db.updateEmailVerification(uuid, false);
       await sendVerificationEmail('', email, token);
-      res.send('OK');
+      res.status(200).send('OK');
     });
   } catch (error: any) {
     console.error('Error updating email:', error);
@@ -208,8 +208,8 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
 app.put('/auth/password', async (req: Request, res: Response) => {
   const { uuid, currentPassword, newPassword, token } = req.body;
 
-  if (!uuid || !currentPassword || !newPassword || !token) {
-    return res.status(401).send('Invalid Request Body. uuid, password, and token are required.');
+  if (!uuid || !newPassword || !token) {
+    return res.status(401).send('Invalid Request Body. uuid, newPassword, and token are required.');
   }
 
   try {
@@ -225,24 +225,27 @@ app.put('/auth/password', async (req: Request, res: Response) => {
 
       const r = await db.selectUserByID(uuid);
       if (!r) {
-        return res.status(403).send('Invalid unable to verify users existing password.');
+        return res.status(403).send('Invalid: Unable to verify user.');
       }
 
       const user = r.rows[0];
-      const decryptedPassword = decryptString(user.password);
-      const isValidPassword = await comparePassword(currentPassword, decryptedPassword);
 
-      // Proceed with password update
-      if (isValidPassword) {
-        const hashedPassword = await hashPassword(newPassword);
-        const encryptedPassword = encryptString(hashedPassword);
-
-        await db.updatePassword(uuid as string, encryptedPassword);
-        await sendPasswordChangeConfirmation(uuid as string);
-        res.send('OK');
-      } else {
-        return res.status(403).send('Unable to verify users existing password');
+      if (currentPassword) {
+        const decryptedPassword = decryptString(user.password);
+        const isValidPassword = await comparePassword(currentPassword, decryptedPassword);
+        if (!isValidPassword) {
+          return res.status(403).send("Unable to verify user's existing password");
+        }
       }
+
+      // If we got to this point, either the user has provided the correct currentPassword,
+      // or they're using a valid reset token without the currentPassword.
+      const hashedPassword = await hashPassword(newPassword);
+      const encryptedPassword = encryptString(hashedPassword);
+
+      await db.updatePassword(uuid as string, encryptedPassword);
+      await sendPasswordChangeConfirmation(uuid as string);
+      res.send('OK');
     });
   } catch (error: any) {
     console.error('Error updating password:', error);
