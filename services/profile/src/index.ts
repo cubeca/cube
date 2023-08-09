@@ -2,7 +2,8 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
-import { allowIfAnyOf } from './auth';
+import { allowIfAnyOf, extractUser } from './auth';
+import { isUserAssociatedToProfile } from './db/queries';
 
 // Initialize Express app
 const app: Express = express();
@@ -43,6 +44,12 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
   // Ensure at least one field is provided for update
   if (!(req.body.organization || req.body.website || req.body.heroFileId || req.body.logoFileId || req.body.description || req.body.descriptionFileId || req.body.budget)) {
     return res.status(500).json('You must supply at least one field to update!');
+  }
+
+  const user = extractUser(req);
+  const isUserAssociated = isUserAssociatedToProfile(user.uuid, profileId)
+  if (!isUserAssociated) {
+    return res.status(403).send('User does not have permission to update this profile');
   }
 
   // Store the values for each field to be updated
