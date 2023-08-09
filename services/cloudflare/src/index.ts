@@ -217,6 +217,15 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous, active'), async (req: Request
   });
 });
 
+// Route for checking if the service is running
+app.get('/', async (req: Request, res: Response) => {
+  try {
+    res.status(200).send('Service is running');
+  } catch (error) {
+    res.status(500).send('Internal server error');
+  }
+});
+
 app.listen(settings.PORT, async () => {
   console.log(`Listening on port ${settings.PORT}`);
 });
