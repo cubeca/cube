@@ -22,11 +22,11 @@ export const getContent = async (
   nation?: NationType,
   creator?: string
 ) => {
-  return await contentApi.contentList(1, 10, category, type, nation, creator);
+  //return await contentApi.contentList(1, 10, category, type, nation, creator);
 };
 
 export const getContentDetails = async (id: string) => {
-  return await contentApi.contentDetails(id);
+  //return await contentApi.contentDetails(id);
 };
 
 export const addContent = async ({

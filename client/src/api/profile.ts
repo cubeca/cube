@@ -5,6 +5,10 @@ export const getProfile = async (id: string) => {
   return await profileApi.getProfile(id);
 };
 
+export const getProfileByTag = async (tag: string) => {
+  return await profileApi.getProfileByTag(tag);
+};
+
 export const updateProfileSection = async (
   id: string,
   organization: string,
@@ -22,20 +26,20 @@ export const updateProfileSection = async (
 export const updateProfileLogo = async (id: string, file: File) => {
   const logoFileId = await upload(file, id);
   return await profileApi.updateProfile(id, {
-    logoUrl: logoFileId
+    logoFileId
   });
 };
 
 export const updateProfileHero = async (id: string, file: File) => {
   const heroFileId = await upload(file, id);
   return await profileApi.updateProfile(id, {
-    heroUrl: heroFileId
+    heroFileId
   });
 };
 
 export const updateProfileAudioDescription = async (id: string, file: File) => {
-  const descriptionAudioFileId = await upload(file, id);
+  const descriptionFileId = await upload(file, id);
   return await profileApi.updateProfile(id, {
-    descriptionUrl: descriptionAudioFileId
+    descriptionFileId
   });
 };

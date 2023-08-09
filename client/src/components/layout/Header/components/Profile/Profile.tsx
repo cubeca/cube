@@ -1,17 +1,21 @@
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import ProfileMenu from './ProfileMenu';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import useProfile from 'hooks/useProfile';
 import { useTranslation } from 'react-i18next';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from './Profile.styled';
+import { UserContext } from 'providers/UserProvider';
 
 const Profile = () => {
   const { t } = useTranslation();
   const { data: profile, isLoading } = useProfile();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { user } = useContext(UserContext);
+
+  console.log(user, profile)
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,6 +30,11 @@ const Profile = () => {
   // if (isLoading) {
   //   return <Box>Loading...</Box>;
   // }
+
+  let username = t('Profile')
+  if(user && !user.permission_ids.includes('contentEditor')) {
+    username = user.name.split(' ')[0]
+  }
 
   return (
     <Box>
@@ -46,7 +55,7 @@ const Profile = () => {
             </s.ImageInner>
           </s.ImageWrapper>
           <Box component="span" pl="10px">
-            {t('Profile')}
+            {username}
           </Box>
         </Box>
       </Button>

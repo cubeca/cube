@@ -6,7 +6,7 @@ import { AxiosHeaders } from 'axios';
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { identityApi, profileApi, contentApi, cloudflareApi } from './microservices';
-import { filterObject, transformContentForProfile, getFiles } from './utils';
+import { filterObject, getProfileData } from './utils';
 
 const app: Express = express();
 app.use(cors());
@@ -103,14 +103,14 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
   res.status(status).json(data);
 });
 
-app.put('/auth/password', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.put('auth/password', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+app.post('/auth/resend-email-verification', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.post('auth/resend-email-verification', req.body);
   res.status(status).json(data);
 });
@@ -136,16 +136,6 @@ app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, 
   res.status(status).json(data);
 });
 
-app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, req.body);
-  res.status(status).json(data);
-});
-
-app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.get('profiles/tag/' + req.params.tag, req.body);
-  res.status(status).json(data);
-});
-
 app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { status, data } = await profileApi.patch('profiles/' + req.params.profileId, req.body, {
     headers: filterHeadersToForward(req, 'authorization')
@@ -154,47 +144,34 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
 });
 
 app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, req.body);
+  res.status(status).json(data);
+});
+
+app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   try {
-    const { profileId } = req.params;
+    const { tag } = req.params;
 
-    const profileResponse = await profileApi.get('profiles/' + profileId);
-    if (profileResponse.status !== 200) {
-      return res.status(profileResponse.status).json(profileResponse.data);
+    const tagResponse = await profileApi.get('profiles/tag/' + tag);
+    if (tagResponse.status !== 200) {
+      return res.status(tagResponse.status).json(tagResponse.data);
     }
 
-    const { files } = await getFiles([
-      profileResponse.data.herourl,
-      profileResponse.data.logourl,
-      profileResponse.data.descriptionurl
-    ]);
-
-    const profile = profileResponse.data;
-    if (files[profile.herourl]) {
-      profile.heroUrl = files[profile.herourl].playerInfo.publicUrl;
-    }
-    if (files[profile.logourl]) {
-      profile.logoUrl = files[profile.logourl].playerInfo.publicUrl;
-    }
-    if (files[profile.descriptionurl]) {
-      profile.descriptionUrl = files[profile.descriptionurl].playerInfo.publicUrl;
-    }
-
-    const contentResponse = await contentApi.get('/content', {
-      params: {
-        profileId,
-        offset: 0,
-        limit: 1000
-      }
-    });
-    
-    if (contentResponse.status !== 200) {
-      return res.status(contentResponse.status).json(contentResponse.data);
-    }
-
-    profile.content = await transformContentForProfile(contentResponse.data.data)
+    const profileId = tagResponse.data.id;
+    const profile = await getProfileData(profileId);
     res.status(200).json({ data: profile });
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json('Unable to retrieve profile details');
+  }
+});
+
+app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  try {
+    const { profileId } = req.params;
+    const profile = await getProfileData(profileId);
+    res.status(200).json({ data: profile });
+  } catch (error) {
+    res.status(500).json('Unable to retrieve profile details');
   }
 });
 
