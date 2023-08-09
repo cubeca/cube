@@ -13,7 +13,7 @@ const useProfile = () => {
   const profileId = getProfileId();
 
   const { isLoading, isError, data } = useQuery(
-    ['profile', tag],
+    ['profile_by_tag', tag],
     () => getProfileByTag(tag ?? ''),
     { enabled: !!tag }
   );

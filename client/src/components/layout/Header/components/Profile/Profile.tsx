@@ -15,7 +15,7 @@ const Profile = () => {
   const open = Boolean(anchorEl);
   const { user } = useContext(UserContext);
 
-  console.log(user)
+  console.log(user, profile)
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -32,7 +32,7 @@ const Profile = () => {
   // }
 
   let username = t('Profile')
-  if(user && !user.permission_ids.includes('content_editor')) {
+  if(user && !user.permission_ids.includes('contentEditor')) {
     username = user.name.split(' ')[0]
   }
 

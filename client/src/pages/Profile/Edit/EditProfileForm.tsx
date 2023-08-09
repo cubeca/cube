@@ -20,7 +20,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
   const { updateSection, updateLogo, updateAudioDescription, updateHero } =
-    useEditProfile(profile.id);
+    useEditProfile(profile.tag);
 
   const onSubmitSection = (data: FieldValues) => {
     const { organization, website, profileDescription, budget } = data;
@@ -130,7 +130,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           control={control}
           name="budget"
           label="Budget"
-          id="website"
+          id="budget"
           direction="vertical"
           defaultValue={profile.budget}
           options={[

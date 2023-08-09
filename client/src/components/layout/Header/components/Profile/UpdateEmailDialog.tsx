@@ -21,21 +21,25 @@ const UpdateEmailDialog = ({
 }: UpdateEmailDialogProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit, reset } = useForm();
-  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const onSubmit = async (data: FieldValues) => {
     const { newEmail, confirmEmail } = data;
-    setError(false);
+    setErrorMessage('');
 
     if (newEmail !== confirmEmail) {
-      setError(true);
+      setErrorMessage(t('Emails must match.'));
       return;
     }
 
-    updateEmail(userId, newEmail);
-    reset();
-    setIsSubmitted(true)
+    try {
+      await updateEmail(userId, newEmail);
+      reset();
+      setIsSubmitted(true)
+    } catch(e: any) {
+      setErrorMessage(e.response.data)
+    }
   };
 
   return (
@@ -69,7 +73,7 @@ const UpdateEmailDialog = ({
             variant="outlined"
             label={t('Confirm Email')}
           />
-          {error && <ErrorMessage>{t('Emails must match.')}</ErrorMessage>}
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Stack direction="row" justifyContent="right">
             <Button color="secondary" onClick={handleSubmit(onSubmit)}>
               {t('Update Email Address')}

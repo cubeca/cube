@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Controller } from 'react-hook-form';
 import FormControl from '../FormControl';
 import { InputProps } from '../types';
-import { Box, RadioGroup } from '@mui/material';
+import { Box, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 
 interface Option {
   label: string;
@@ -44,6 +44,9 @@ const RadioInput: FC<RadioInputProps> = ({
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => {
         return (
+          <Box
+            pb="1rem"
+          >
           <FormControl
             className={className}
             id={id}
@@ -53,25 +56,13 @@ const RadioInput: FC<RadioInputProps> = ({
             helperTextId={helperTextId}
             fullWidth={fullWidth}
           >
-            <Box
-              pb="1rem"
-              display="flex"
-              flexDirection={direction === 'horizontal' ? 'row' : 'column'}
-            >
-              <RadioGroup aria-label={name}>
+              <RadioGroup aria-label={name} {...field}>
                 {options.map(({ label, id, value }) => (
-                  <label
-                    htmlFor="field-wind"
-                    key={id}
-                    style={{ marginRight: '5px' }}
-                  >
-                    <input type="radio" id={id} {...field} value={value} />
-                    {label}
-                  </label>
+                  <FormControlLabel key={id} value={value} control={<Radio color="secondary"/>} label={label} />
                 ))}
               </RadioGroup>
-            </Box>
           </FormControl>
+          </Box>
         );
       }}
     />
