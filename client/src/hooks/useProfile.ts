@@ -10,6 +10,7 @@ const useProfile = () => {
   const [isLoadingImages, setIsLoadingImages] = useState(false);
   const [herourl, setHerourl] = useState('');
   const [logourl, setLogourl] = useState('');
+  const [descriptionurl, setDescriptionurl] = useState('');
   const profileId = getProfileId();
 
   const { isLoading, isError, data } = useQuery(
@@ -25,10 +26,12 @@ const useProfile = () => {
       setIsLoadingImages(true);
       const getImages = async (profile: any) => {
         if (tag) {
-          const hero = await filesApi.fileDetails(profile.herourl);
-          const logo = await filesApi.fileDetails(profile.logourl);
+          const hero = await filesApi.fileDetails(profile.herofileid);
+          const logo = await filesApi.fileDetails(profile.logofileid);
+          const description = await filesApi.fileDetails(profile.descriptionfileid)
           setHerourl((hero.data.playerInfo as any).publicUrl);
           setLogourl((logo.data.playerInfo as any).publicUrl);
+          setDescriptionurl((description.data.playerInfo as any).publicUrl);
           setIsLoadingImages(false);
         }
       };
@@ -43,6 +46,7 @@ const useProfile = () => {
       ...profile,
       herourl,
       logourl,
+      descriptionurl,
       profileId
     }
   };
