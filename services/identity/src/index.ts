@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
 import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput } from './utils';
 import * as settings from './settings';
-import { allowIfAnyOf } from './auth';
+import { allowIfAnyOf, extractUser } from './auth';
 import { createDefaultProfile } from './profile';
 import { sendVerificationEmail, sendPasswordChangeConfirmation, sendPasswordResetEmail } from './email';
 
@@ -169,33 +169,27 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
  * Update an email for currently authenticated users.
  */
 app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
-  const { uuid, email, token } = req.body;
+  const { uuid, email } = req.body;
 
-  if (!uuid || !email || !token) {
-    return res.status(401).send('Invalid Request Body. uuid, email, and token are required.');
+  if (!uuid || !email ) {
+    return res.status(401).send('Invalid Request Body. uuid and email are required.');
   }
 
   try {
-    jwt.verify(token, settings.JWT_TOKEN_SECRET, async (err: any, decoded: any) => {
-      if (err) {
-        return res.status(401).send(err);
-      }
+    const user = extractUser(req);
+    if (user.uuid !== uuid) {
+      return res.status(401).send('Unauthorized to update email for this user.');
+    }
 
-      const userId = decoded.sub;
-      if (userId !== uuid) {
-        return res.status(401).send('Unauthorized to update email for this user.');
-      }
+    const existingUser = await db.selectUserByEmail(email);
+    if (existingUser.rows[0]) {
+      return res.status(409).json('Email is in use by another user');
+    }
 
-      const existingUser = await db.selectUserByEmail(email);
-      if (existingUser.rows[0]) {
-        return res.status(409).json('Email is in use by another user');
-      }
-
-      await db.updateEmail(uuid, email);
-      await db.updateEmailVerification(uuid, false);
-      await sendVerificationEmail('', email, token);
-      res.send('OK');
-    });
+    await db.updateEmail(uuid, email);
+    await db.updateEmailVerification(uuid, false);
+    await sendVerificationEmail('', email, user.token);
+    res.send('OK');
   } catch (error: any) {
     console.error('Error updating email:', error);
     return res.status(500).send('Error updating email');

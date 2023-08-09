@@ -12,6 +12,7 @@ interface UserRequest extends Request {
   user?: {
     uuid: string;
     permissionIds: string[];
+    token: string;
   };
 }
 
@@ -48,7 +49,8 @@ const authenticateToken = (req: UserRequest, res: Response, next: NextFunction) 
 
     req.user = {
       uuid: data.sub,
-      permissionIds: data.aud
+      permissionIds: data.aud,
+      token: token
     };
 
     next();
