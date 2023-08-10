@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosHeaders } from 'axios';
 import * as settings from './settings';
 
 const profileApi = axios.create({
@@ -9,12 +9,16 @@ const profileApi = axios.create({
   validateStatus: null
 });
 
-export const createDefaultProfile = async (organization: string, website: string, tag: string) => {
-  const createProfileResponse = await profileApi.post(`/profiles`, {
-    organization,
-    website,
-    tag
-  });
-
+export const createDefaultProfile = async (authHeader: AxiosHeaders, organization: string, website: string, tag: string) => {
+  const createProfileResponse = await profileApi.post(
+    `/profiles`,
+    {
+      organization,
+      website,
+      tag
+    },
+    { headers: authHeader }
+  );
+  
   return createProfileResponse.data.id;
 };

@@ -16,7 +16,7 @@ const pool = createPool(settings.PGDATABASE);
 const poolIdentity = createPool(settings.PGUSERDATABASE);
 
 export const query = async (pool: Pool, sql: string, params: any[]) => {
-  const res = await pool.query(sql, params);
+  const res = await pool.query(sql, ...params);
   return res;
 };
 

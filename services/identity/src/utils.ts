@@ -2,6 +2,8 @@ import * as bcrypt from 'bcrypt';
 import * as CryptoJS from 'crypto-js';
 import * as settings from './settings';
 import { body } from 'express-validator';
+import { AxiosHeaders } from 'axios';
+import { Request } from 'express'
 
 export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
 export const comparePassword = async (password: string, hash: string) => await bcrypt.compare(password, hash);
@@ -18,3 +20,10 @@ export const validateUserCreateInput = [
   body('website').optional().trim().escape(),
   body('tag').optional().trim().escape()
 ];
+
+export const filterHeadersToForward = (req: Request, ...allowList: string[]): AxiosHeaders => {
+  return new AxiosHeaders(filterObject(req.headers, ...allowList) as { [key: string]: string });
+};
+
+const filterObject = (obj: any, ...allowedKeys: string[]) =>
+  Object.fromEntries(Object.entries(obj).filter(([key, _]: [key: string, _: any]) => allowedKeys.includes(key)));

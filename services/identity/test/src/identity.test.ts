@@ -27,11 +27,11 @@ const getUniqueWebsite = () => `https://org-${uniqueWebsiteCounter++}.example.co
 let uniqueTagCounter = 1;
 const getUniqueTag = () => `@org-${uniqueTagCounter++}`;
 
-const getAuthReqOpts = (...permissions: string[]) => {
+const getAuthReqOpts = (permissions: string[], uuid?: string) => {
   const jwt = jsonwebtoken.sign(
     {
       iss: 'CUBE',
-      sub: NIL_UUID,
+      sub: uuid ? uuid : NIL_UUID,
       aud: permissions
     },
     settings.JWT_TOKEN_SECRET
@@ -54,7 +54,7 @@ const createProfileUser = async () => {
     tag: getUniqueTag()
   };
 
-  const { status, data } = await identityApi.post('/auth/user', requestBody);
+  const { status, data } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(['anonymous']));
   return { status, data, requestBody };
 };
 
@@ -67,7 +67,7 @@ const createRegularUser = async () => {
     hasAcceptedTerms: true
   };
 
-  const { status, data } = await identityApi.post('/auth/user', requestBody);
+  const { status, data } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(['anonymous']));
   return { status, data, requestBody };
 };
 
@@ -108,7 +108,7 @@ test('creates user, but no profile duplicates', async () => {
   );
 
   // Duplicate profile should fail.
-  const { status: statusDuplicate } = await identityApi.post('/auth/user', requestBody);
+  const { status: statusDuplicate } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(['anonymous']));
   expect(statusDuplicate).toEqual(400);
 });
 
@@ -123,7 +123,7 @@ test('creates user, but no email duplicates', async () => {
   );
 
   // Duplicate email should fail.
-  const { status: statusDuplicate } = await identityApi.post('/auth/user', requestBody);
+  const { status: statusDuplicate } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(['anonymous']));
   expect(statusDuplicate).toEqual(400);
 });
 
@@ -141,7 +141,11 @@ test('If the user isnt active or verified, block login', async () => {
     password: requestBodyCreate.password
   };
 
-  const { status: statusLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  const { status: statusLogin } = await identityApi.post(
+    '/auth/login',
+    requestBodyLogin,
+    getAuthReqOpts(['anonymous'])
+  );
   expect(statusLogin).toEqual(403);
 });
 
@@ -163,7 +167,11 @@ test('logs in without "anonymous" JWT', async () => {
   await db.updateActiveStatus(dataCreate.id, true);
   await db.updateEmailVerification(dataCreate.id, true);
 
-  const { status: statusLogin, data: dataLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  const { status: statusLogin, data: dataLogin } = await identityApi.post(
+    '/auth/login',
+    requestBodyLogin,
+    getAuthReqOpts(['anonymous'])
+  );
   expect(statusLogin).toEqual(200);
   expect(dataLogin).toEqual(
     expect.objectContaining({
@@ -201,7 +209,11 @@ test('logs in with invalid pw', async () => {
   await db.updateActiveStatus(dataCreate.id, true);
   await db.updateEmailVerification(dataCreate.id, true);
 
-  const { status: statusLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  const { status: statusLogin } = await identityApi.post(
+    '/auth/login',
+    requestBodyLogin,
+    getAuthReqOpts(['anonymous'])
+  );
   expect(statusLogin).toEqual(403);
 });
 
@@ -223,7 +235,11 @@ test('updates email and logs in with new email', async () => {
     password: requestBodyCreate.password
   };
 
-  const { status: statusLogin, data: dataLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  const { status: statusLogin, data: dataLogin } = await identityApi.post(
+    '/auth/login',
+    requestBodyLogin,
+    getAuthReqOpts(['anonymous'])
+  );
   expect(statusLogin).toEqual(200);
   expect(dataLogin).toEqual(
     expect.objectContaining({
@@ -243,15 +259,14 @@ test('updates email and logs in with new email', async () => {
 
   const requestBodyUpdateEmail = {
     uuid: dataCreate.id,
-    email: getUniqueEmail(),
-    token: dataLogin.jwt
+    email: getUniqueEmail()
   };
 
   expect(requestBodyUpdateEmail.email).not.toEqual(requestBodyCreate.email);
   const { status: statusUpdateEmail, data: dataUpdateEmail } = await identityApi.put(
     '/auth/email',
     requestBodyUpdateEmail,
-    getAuthReqOpts('active')
+    getAuthReqOpts(['active'], dataCreate.id)
   );
 
   expect(statusUpdateEmail).toEqual(200);
@@ -266,7 +281,8 @@ test('updates email and logs in with new email', async () => {
 
   const { status: statusLoginWithNewEmail, data: dataLoginWithNewEmail } = await identityApi.post(
     '/auth/login',
-    requestBodyLoginWithNewEmail
+    requestBodyLoginWithNewEmail,
+    getAuthReqOpts(['anonymous'])
   );
 
   expect(statusLoginWithNewEmail).toEqual(200);
@@ -305,7 +321,11 @@ test('updates email and tries to update to existing email', async () => {
     password: requestBodyCreate.password
   };
 
-  const { status: statusLogin, data: dataLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  const { status: statusLogin, data: dataLogin } = await identityApi.post(
+    '/auth/login',
+    requestBodyLogin,
+    getAuthReqOpts(['anonymous'])
+  );
   expect(statusLogin).toEqual(200);
   expect(dataLogin).toEqual(
     expect.objectContaining({
@@ -333,7 +353,7 @@ test('updates email and tries to update to existing email', async () => {
   const { status: statusUpdateEmail } = await identityApi.put(
     '/auth/email',
     requestBodyUpdateEmail,
-    getAuthReqOpts('active')
+    getAuthReqOpts(['active'], dataCreate.id)
   );
 
   expect(statusUpdateEmail).toEqual(409);
@@ -364,7 +384,7 @@ test('try to maliciously change another users email', async () => {
   const { status: statusUpdateEmail } = await identityApi.put(
     '/auth/email',
     requestBodyUpdateEmail,
-    getAuthReqOpts('active')
+    getAuthReqOpts(['active'])
   );
 
   expect(statusUpdateEmail).toEqual(401);
@@ -388,7 +408,11 @@ test('updates password and logs in with new password', async () => {
   await db.updateActiveStatus(dataCreate.id, true);
   await db.updateEmailVerification(dataCreate.id, true);
 
-  const { status: statusLogin, data: dataLogin } = await identityApi.post('/auth/login', requestBodyLogin);
+  const { status: statusLogin, data: dataLogin } = await identityApi.post(
+    '/auth/login',
+    requestBodyLogin,
+    getAuthReqOpts(['anonymous'])
+  );
 
   expect(statusLogin).toEqual(200);
   expect(dataLogin).toEqual(
@@ -408,14 +432,16 @@ test('updates password and logs in with new password', async () => {
   );
 
   const requestBodyUpdatePassword = {
-    uuid: dataCreate.id,
     currentPassword: 'super-secret',
     newPassword: `TOTALLY-DIFFERENT-${requestBodyCreate.password}-TOTALLY-DIFFERENT`,
-    token: dataLogin.jwt
   };
 
   expect(requestBodyUpdatePassword.newPassword).not.toEqual(requestBodyCreate.password);
-  const { status: statusUpdatePassword } = await identityApi.put('/auth/password', requestBodyUpdatePassword);
+  const { status: statusUpdatePassword } = await identityApi.put(
+    '/auth/password',
+    requestBodyUpdatePassword,
+    getAuthReqOpts(['active'], dataCreate.id)
+  );
   expect(statusUpdatePassword).toEqual(200);
 
   // Can log in with new pw
@@ -426,7 +452,8 @@ test('updates password and logs in with new password', async () => {
 
   const { status: statusLoginWithNewPassword, data: dataLoginWithNewPassword } = await identityApi.post(
     '/auth/login',
-    requestBodyLoginWithNewPassword
+    requestBodyLoginWithNewPassword,
+    getAuthReqOpts(['anonymous'])
   );
 
   expect(statusLoginWithNewPassword).toEqual(200);
@@ -478,7 +505,7 @@ test('test resent email verification', async () => {
 
   const { status: statusResendEmail } = await identityApi.post(
     `/auth/resend-email-verification/`,
-    requestBodyResendEmail
+    requestBodyResendEmail, getAuthReqOpts(['active'], dataCreate.id)
   );
   expect(statusResendEmail).toEqual(200);
 });
@@ -496,7 +523,7 @@ test('test forgot password', async () => {
     email: requestBody.email
   };
 
-  const { status: statusForgotPassword } = await identityApi.post('/auth/forgot-password', requestBodyForgotPassword);
+  const { status: statusForgotPassword } = await identityApi.post('/auth/forgot-password', requestBodyForgotPassword, getAuthReqOpts(['anonymous']));
   expect(statusForgotPassword).toEqual(200);
 });
 
@@ -517,7 +544,7 @@ test('test profile user gets contentEditor permission', async () => {
     password: requestBody.password
   };
 
-  const { status: statusLogin, data: data } = await identityApi.post('/auth/login', requestBodyLogin);
+  const { status: statusLogin, data: data } = await identityApi.post('/auth/login', requestBodyLogin, getAuthReqOpts(['anonymous']));
   expect(statusLogin).toEqual(200);
   expect(data.user.permission_ids[0]).toEqual('contentEditor');
 });

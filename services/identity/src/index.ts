@@ -3,7 +3,7 @@ import cors from 'cors';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
-import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput } from './utils';
+import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward } from './utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { createDefaultProfile } from './profile';
@@ -47,7 +47,8 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
     // Create Default Profile
     let profileId = '';
     if (organization || website || tag) {
-      profileId = await createDefaultProfile(organization, website, tag);
+      const authHeader = filterHeadersToForward(req, 'authorization')
+      profileId = await createDefaultProfile(authHeader, organization, website, tag);
       permissionIds.push('contentEditor');
       if (!profileId) {
         return res
@@ -199,19 +200,15 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
  * Update password for a user.
  */
 app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { uuid, currentPassword, newPassword } = req.body;
+  const { currentPassword, newPassword } = req.body;
 
-  if (!uuid || !newPassword) {
-    return res.status(401).send('Invalid Request Body. uuid and newPassword are required.');
+  if (!newPassword) {
+    return res.status(401).send('Invalid Request Body. newPassword is required.');
   }
 
   try {
     const userReq = extractUser(req);
-    if (userReq.uuid !== uuid) {
-      return res.status(401).send('Unauthorized to update password for this user.');
-    }
-
-    const r = await db.selectUserByID(uuid);
+    const r = await db.selectUserByID(userReq.uuid);
     if (!r) {
       return res.status(403).send('Invalid: Unable to verify user.');
     }
@@ -230,8 +227,8 @@ app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Reque
     const hashedPassword = await hashPassword(newPassword);
     const encryptedPassword = encryptString(hashedPassword);
 
-    await db.updatePassword(uuid as string, encryptedPassword);
-    await sendPasswordChangeConfirmation(uuid as string);
+    await db.updatePassword(userReq.uuid as string, encryptedPassword);
+    await sendPasswordChangeConfirmation(userReq.uuid as string);
     res.send('OK');
   } catch (error: any) {
     console.error('Error updating password:', error);
