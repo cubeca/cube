@@ -47,7 +47,7 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
   }
 
   const user = extractUser(req);
-  const isUserAssociated = isUserAssociatedToProfile(user.uuid, profileId)
+  const isUserAssociated = await isUserAssociatedToProfile(user.uuid, profileId)
   if (!isUserAssociated) {
     return res.status(403).send('User does not have permission to update this profile');
   }
@@ -105,8 +105,7 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
 
   // Check if the profile ID is provided
   if (!tag) {
-    res.status(404).send('Profile tag is not provided.');
-    return;
+    return res.status(404).send('Profile tag is not provided.');
   }
 
   // Fetch the profile and return its details
@@ -115,13 +114,12 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
     const profile = r.rows[0];
 
     if (!profile) {
-      res.status(404).send('Profile tag not found');
-      return;
+      return res.status(404).send('Profile tag not found');
     }
 
     res.status(200).json({ ...profile });
   } catch (e: any) {
-    res.status(404).send('Organization does not exist');
+    res.status(404).send('Profile does not exist');
   }
 });
 

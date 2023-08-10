@@ -112,10 +112,6 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
       return res.status(403).send('Invalid email or password.');
     }
 
-    if (!user.is_active || !user.has_verified_email) {
-      return res.status(403).send('Please verify your email to continue');
-    }
-
     const token = jwt.sign(
       {
         iss: 'CUBE',
