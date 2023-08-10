@@ -10,7 +10,7 @@ export const insertProfile = async (organization: string, website: string, tag: 
   const values = [organization, website, tag];
 
   // Execute the query and return the result
-  return await db.queryDefault(text, values);
+  return await db.queryDefault(text, [...values]);
 };
 
 // Function to select a profile from the 'profiles' table by its ID
@@ -49,7 +49,15 @@ export const deleteProfile = async (profileId: string) => {
 export const updateProfile = async (profileId: string, ...args: string[]) => {
   let sql = 'UPDATE profiles SET';
   const placeholders = [];
-  const COLUMN_NAMES = ['organization', 'website', 'heroFileId', 'logoFileId', 'description', 'descriptionFileId', 'budget'];
+  const COLUMN_NAMES = [
+    'organization',
+    'website',
+    'heroFileId',
+    'logoFileId',
+    'description',
+    'descriptionFileId',
+    'budget'
+  ];
   let count = 0;
   let columnCount = 0;
 
@@ -75,7 +83,7 @@ export const updateProfile = async (profileId: string, ...args: string[]) => {
   return await db.queryDefault(sql, argList);
 };
 
-export const isUserAssociatedToProfile = async(uuid: string, profileId: string) => {
+export const isUserAssociatedToProfile = async (uuid: string, profileId: string) => {
   const sql = `
     SELECT EXISTS (
       SELECT 1 
@@ -85,5 +93,6 @@ export const isUserAssociatedToProfile = async(uuid: string, profileId: string) 
     ) as "exists";
   `;
 
-  return await db.queryIdentity(sql, ...[uuid, profileId]);
-}
+  const r = await db.queryIdentity(sql, [uuid, profileId]);
+  return !!r.rows[0].exists;
+};
