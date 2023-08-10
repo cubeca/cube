@@ -1,5 +1,5 @@
 import { styled } from 'theme/utils';
-import HeroBgImg from 'assets/images/about-hero-bg.jpg';
+import BgImg from 'assets/images/about-hero-bg.jpg';
 import Grid from '@mui/system/Unstable_Grid';
 import { Box, Typography } from '@mui/material';
 
@@ -7,10 +7,14 @@ export const Hero = styled(Box)`
   position: relative;
   overflow-y: visible;
   z-index: 1;
-  margin-top: -120px;
+  margin-top: -78px;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    margin-top: -116px;
+  }
 `;
 
-export const HeroBg = styled(Box)`
+export const Bg = styled(Box)`
   position: absolute;
   z-index: 1;
   top: 0;
@@ -19,7 +23,7 @@ export const HeroBg = styled(Box)`
   height: 65.625vw;
   max-width: ${({ theme }) => theme.breakpoints.values.xl}px;
   min-height: 720px;
-  background: transparent no-repeat url('${HeroBgImg}') top center/cover;
+  background: transparent no-repeat url('${BgImg}') top center/cover;
   
   ${(props) => props.theme.breakpoints.up('xl')} {
     background-size: contain;
@@ -27,7 +31,7 @@ export const HeroBg = styled(Box)`
   }
 `;
 
-export const HeroContent = styled(Grid)`
+export const Content = styled(Grid)`
   position: relative;
   z-index: 2;
   padding: 120px 0 1px 0;
@@ -37,7 +41,7 @@ export const HeroContent = styled(Grid)`
   }
 `;
 
-export const HeroContentMain = styled(Box)`
+export const ContentMain = styled(Box)`
   height: 600px;
   padding-top: 120px;
   padding-bottom: 120px;
@@ -78,7 +82,7 @@ export const HeroContentMain = styled(Box)`
   }
 `;
 
-export const HeroContentCTA = styled(Box)`
+export const ContentCTA = styled(Box)`
 
   ${(props) => props.theme.breakpoints.up('md')} {
     height: 480px;
@@ -106,7 +110,7 @@ export const HeroContentCTA = styled(Box)`
   }
 `;
 
-export const HeroContentCTAPlay = styled(Box)`
+export const ContentCTAPlay = styled(Box)`
   width: 100%;
   height: auto;
   padding: 24px 128px 24px 8.333333333333333%;

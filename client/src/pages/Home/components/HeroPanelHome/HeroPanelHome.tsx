@@ -1,10 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
+import TagOfTheWeek from '../TagOfTheWeek';
 import HeroHome from 'assets/images/hero-home-page.jpeg';
 import HeroRight from 'assets/images/home-video-cover.jpeg';
 import Play from 'assets/icons/play-circle.svg';
-import PlaySymbol from 'assets/icons/play-symbol.svg'
+import { ReactComponent as PlaySymbol } from 'assets/icons/play-symbol.svg'
 import * as s from './HeroPanelHome.styled';
 import ReactPlayer from 'react-player';
 
@@ -23,12 +24,14 @@ const HeroPanelHome = () => {
           <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
             <s.Headline>
               <Typography component="h1" variant="h5">
-                {t('Featured in Videos')}
+                <span>{t('Featured in ')}</span>
+                <strong className="category">{t('Videos')}</strong>
+                :
               </Typography>
-              <Typography component="h2" variant="h2">
+              <Typography component="h2" variant="h1">
                 Movement As Collective Process
               </Typography>
-              <a href="#TEST"><img src={Play} alt="play" height="20%"/></a>
+              <a href="#TEST" className="play-button"><img src={Play} alt="play"/></a>
             </s.Headline>
           </Grid>
 
@@ -45,7 +48,7 @@ const HeroPanelHome = () => {
                   height="100%"
                   overflow="hidden"
                   playing
-                  playIcon={<Box sx={{display: 'flex', justifyContent: 'left', width: '100%', p: '4rem'}}><a href="www.happy.com"><img src={PlaySymbol} alt="play"/></a></Box>}
+                  playIcon={<Box className="play-button"><a href="#TEST"><PlaySymbol /></a></Box>}
                   light={HeroRight}
                 />
               </s.CTAVideo>
@@ -54,6 +57,9 @@ const HeroPanelHome = () => {
 
         </Grid>
       </s.Content>
+
+      <TagOfTheWeek />
+
     </s.HeroPanelHome>
   );
 };
