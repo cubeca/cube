@@ -1,8 +1,9 @@
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from '../Profile.styled';
+import MediaPlayer from 'components/MediaPlayer';
 
 interface ViewSectionProps {
   isLoggedIn: boolean;
@@ -39,9 +40,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             {profile!.organization}
           </a>
           <small>
-            {/* <a href="/home" title={profile!.tag}> */}
-            {profile!.tag}
-            {/* </a> */}
+            {`@${profile!.tag}`}
           </small>
         </Typography>
       </s.Header>
@@ -50,6 +49,9 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
         <Typography component="p" variant="body2">
           {profile.description}
         </Typography>
+        <Box pt="16px">
+          {profile?.descriptionurl && <MediaPlayer url={profile?.descriptionurl} isAudio />}
+        </Box>
       </s.Body>
     </s.ViewSection>
   );

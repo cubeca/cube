@@ -6,13 +6,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import useProfile from 'hooks/useProfile';
 import UpdateEmailDialog from './UpdateEmailDialog';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PasswordIcon from '@mui/icons-material/Password';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import useAuth from 'hooks/useAuth';
 import { UserContext } from 'providers/UserProvider';
 import * as s from './Profile.styled';
+import { getProfile } from 'api/profile';
 
 interface ProfileMenuProps {
   open: boolean;
@@ -30,6 +31,15 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
     useState(false);
   const { logout } = useAuth();
   const { user } = useContext(UserContext);
+  const [tag, setTag] = useState('')
+
+  useEffect( () => {
+    const getTag = async () => {
+      const { data } = await getProfile((user as any).profile_id)
+      setTag((data as any).tag)
+    }
+    getTag()
+  }, [])
 
   const handleLogout = () => {
     logout();
@@ -72,7 +82,7 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
       >
         {profile.profileId && (
           <ProfileMenuItem
-            onClick={() => handleProfile(`/profile/${profile.profileId}`)}
+            onClick={() => handleProfile(`/profile/${tag}`)}
             text={t('My Profile')}
             icon={<AccountBoxIcon />}
           />

@@ -6,7 +6,7 @@ import {
   updateProfileAudioDescription
 } from 'api/profile';
 
-const useEditProfile = (profileId: string) => {
+const useEditProfile = (profileTag: string) => {
   const queryClient = useQueryClient();
 
   const updateSectionMutation = useMutation({
@@ -26,7 +26,7 @@ const useEditProfile = (profileId: string) => {
       ),
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ['profile', profileId]
+        queryKey: ['profile_by_tag', profileTag]
       })
   });
 
@@ -35,7 +35,7 @@ const useEditProfile = (profileId: string) => {
       updateProfileLogo(body.id, body.file),
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ['profile', profileId]
+        queryKey: ['profile_by_tag', profileTag]
       })
   });
 
@@ -44,7 +44,7 @@ const useEditProfile = (profileId: string) => {
       updateProfileHero(body.id, body.file),
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ['profile', profileId]
+        queryKey: ['profile_by_tag', profileTag]
       })
   });
 
@@ -53,7 +53,7 @@ const useEditProfile = (profileId: string) => {
       updateProfileAudioDescription(body.id, body.file),
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ['profile', profileId]
+        queryKey: ['profile_by_tag', profileTag]
       })
   });
 

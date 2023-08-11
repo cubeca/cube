@@ -40,7 +40,7 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update
-  if (!(req.body.organization || req.body.website || req.body.heroUrl || req.body.logoUrl || req.body.description || req.body.descriptionUrl || req.body.budget)) {
+  if (!(req.body.organization || req.body.website || req.body.heroFileId || req.body.logoFileId || req.body.description || req.body.descriptionFileId || req.body.budget)) {
     return res.status(500).json('You must supply at least one field to update!');
   }
 
@@ -48,17 +48,17 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
   const args = [
     req.body.organization as string,
     req.body.website as string,
-    req.body.heroUrl as string,
-    req.body.logoUrl as string,
+    req.body.heroFileId as string,
+    req.body.logoFileId as string,
     req.body.description as string,
-    req.body.descriptionUrl as string,
+    req.body.descriptionFileId as string,
     req.body.budget as string
   ];
 
   // Update the profile and return the updated profile
   try {
     const dbResult = await db.updateProfile(profileId, ...args);
-    res.status(200).json(dbResult);
+    res.status(200).json(dbResult.rows[0]);
   } catch (error) {
     console.log(error)
     res.status(500).json(error);
@@ -82,6 +82,32 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
 
     if (!profile) {
       res.status(404).send('Profile Id not found');
+      return;
+    }
+
+    res.status(200).json({ ...profile });
+  } catch (e: any) {
+    res.status(404).send('Organization does not exist');
+  }
+});
+
+// Route for fetching a profile by its tag
+app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
+  const { tag } = req.params;
+
+  // Check if the profile ID is provided
+  if (!tag) {
+    res.status(404).send('Profile tag is not provided.');
+    return;
+  }
+
+  // Fetch the profile and return its details
+  try {
+    const r = await db.selectProfileByTag(tag);
+    const profile = r.rows[0];
+
+    if (!profile) {
+      res.status(404).send('Profile tag not found');
       return;
     }
 
