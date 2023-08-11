@@ -23,11 +23,9 @@ export const login = async (email: string, password: string) => {
 };
 
 export const updateEmail = async (userId: string, email: string) => {
-  const token = await getAuthToken();
   return await authApi.updateEmail({
     uuid: userId,
     email,
-    token: token || ''
   });
 };
 
@@ -36,12 +34,10 @@ export const updatePassword = async (
   currentPassword: string,
   newPassword: string
 ) => {
-  const token = await getAuthToken();
   return await authApi.updatePassword({
     uuid: userId,
     currentPassword,
     newPassword,
-    token: token || ''
   });
 };
 

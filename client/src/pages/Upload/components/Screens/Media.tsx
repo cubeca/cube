@@ -1,9 +1,10 @@
-import { Box, MenuItem, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
 import { useTranslation } from 'react-i18next';
 import { ContentTypes } from 'types/enums';
+import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
 import { useState } from 'react';
 
 const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
@@ -31,9 +32,9 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           fullWidth={false}
           defaultValue=""
         >
-          <MenuItem value={ContentTypes.Video}>{t('Video')}</MenuItem>
-          <MenuItem value={ContentTypes.Audio}>{t('Audio')}</MenuItem>
-          <MenuItem value={ContentTypes.PDF}>{t('PDF')}</MenuItem>
+          <MenuItem.li value={ContentTypes.Video}>{t('Video')}</MenuItem.li>
+          <MenuItem.li value={ContentTypes.Audio}>{t('Audio')}</MenuItem.li>
+          <MenuItem.li value={ContentTypes.PDF}>{t('PDF')}</MenuItem.li>
         </Select>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(

@@ -5,10 +5,10 @@ import useFilterContent from 'hooks/useFilterContent';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ContentCategories, SignLanguage } from 'types/enums';
-import * as s from './UserContentFilter.styled';
-import * as MenuItem from '../../../components/form/Select/MenuItem.styled';
+import * as s from './CategorizedContentFilter.styled';
+import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
 
-const UserContentFilter = () => {
+const CategorizedContentFilter = () => {
   const { control, handleSubmit } = useForm();
   const { t } = useTranslation();
   const { setFilter } = useFilterContent();
@@ -18,12 +18,11 @@ const UserContentFilter = () => {
       <TextInput
         id="searchFilter"
         name="searchFilter"
-        className='searchFilter'
         control={control}
         variant="standard"
         fullWidth
         placeholder='Search'
-        sx={{ fontSize: '2rem' }}
+        className='searchFilter'
       />
 
       {
@@ -45,6 +44,7 @@ const UserContentFilter = () => {
         onChange={(value: string | number) =>
           setFilter(ContentQueryKeys.Type, value as string)
         }
+        
       >
         <MenuItem.li value={ContentCategories.All}>{t('All')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.Video}>{t('Video')}</MenuItem.li>
@@ -70,4 +70,4 @@ const UserContentFilter = () => {
   );
 };
 
-export default UserContentFilter;
+export default CategorizedContentFilter;

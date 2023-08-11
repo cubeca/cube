@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
-import HeroCTABg from 'assets/images/about-hero-cta-bg.png';
+import CTABg from 'assets/images/about-hero-cta-bg.png';
 import PlaySymbol from 'assets/icons/play-symbol.svg';
 import Play from 'assets/icons/play-circle.svg';
 import ReactPlayer from 'react-player';
@@ -11,11 +11,11 @@ const HeroPanel = () => {
   const { t } = useTranslation('about');
   return (
     <s.Hero>
-      <s.HeroBg></s.HeroBg>
+      <s.Bg></s.Bg>
 
-      <s.HeroContent container>
+      <s.Content container>
         <Grid xs={10} xsOffset={1} md={5}>
-          <s.HeroContentMain>
+          <s.ContentMain>
             <Typography component="h1" variant="h1">
               {t('Discover')}
             </Typography>
@@ -24,14 +24,14 @@ const HeroPanel = () => {
                 'heroText'
               )}
             </Typography>
-            <a className="play-button" href="www.happy.com">
+            <a className="play-button" href="#TEST">
               <img src={Play} alt="play" />
             </a>
-          </s.HeroContentMain>
+          </s.ContentMain>
         </Grid>
 
         <Grid xs={12} md={4} mdOffset={2}>
-          <s.HeroContentCTA>
+          <s.ContentCTA>
             <ReactPlayer
               url="https://vimeo.com/243556536"
               width="100%"
@@ -39,7 +39,7 @@ const HeroPanel = () => {
               overflow="hidden"
               playing
               playIcon={
-                <s.HeroContentCTAPlay>
+                <s.ContentCTAPlay>
                   <Typography component="h1" variant="h1">
                     {t('Create')}
                   </Typography>
@@ -47,13 +47,13 @@ const HeroPanel = () => {
                     {t('becomeCreatorText')}
                   </Typography>
                   <img className="play-button" src={PlaySymbol} alt="play" />
-                </s.HeroContentCTAPlay>
+                </s.ContentCTAPlay>
               }
-              light={HeroCTABg}
+              light={CTABg}
             />
-          </s.HeroContentCTA>
+          </s.ContentCTA>
         </Grid>
-      </s.HeroContent>
+      </s.Content>
     </s.Hero>
   );
 };

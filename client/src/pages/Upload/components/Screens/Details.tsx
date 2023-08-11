@@ -1,9 +1,10 @@
-import { Box, MenuItem, TextField, Typography, useTheme } from '@mui/material';
+import { Box, TextField, Typography, useTheme } from '@mui/material';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
 import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
 
 const Details = ({
   control,
@@ -71,8 +72,8 @@ const Details = ({
           fullWidth={false}
           defaultValue=""
         >
-          <MenuItem value="yeskids">{t('Yes, it’s made for kids')}</MenuItem>
-          <MenuItem value="nokids">{t('No, it’s not made for kids')}</MenuItem>
+          <MenuItem.li value="yeskids">{t('Yes, it’s made for kids')}</MenuItem.li>
+          <MenuItem.li value="nokids">{t('No, it’s not made for kids')}</MenuItem.li>
         </Select>
 
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>

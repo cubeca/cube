@@ -10,6 +10,7 @@ import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 import UploadInput from 'components/form/UploadInput';
+import { useState } from 'react';
 
 interface EditProfileFormProps {
   profile: any;
@@ -21,6 +22,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   const { control, handleSubmit } = useForm();
   const { updateSection, updateLogo, updateAudioDescription, updateHero } =
     useEditProfile(profile.tag);
+  const [isAudioUploadComplete, setIsAudioUploadComplete] = useState(false);
 
   const onSubmitSection = (data: FieldValues) => {
     const { organization, website, profileDescription, budget } = data;
@@ -45,8 +47,10 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   };
 
   const onChangeAudioDescription = (files: File[]) => {
+    setIsAudioUploadComplete(false)
     const file = files[0];
     updateAudioDescription(profile.id, file);
+    setIsAudioUploadComplete(true)
   };
 
   const logoIdUpload = 'logo-upload';
@@ -162,6 +166,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           onDrop={onChangeAudioDescription}
           maxFiles={1}
           style={'dark'}
+          isUploadComplete={isAudioUploadComplete}
         />
 
         <Stack direction="row" justifyContent="right">
