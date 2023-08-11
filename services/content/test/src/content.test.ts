@@ -11,55 +11,63 @@ const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 const contentApi = axios.create({
   baseURL: CONTENT_API_URL,
   timeout: 60 * 10000,
-
-  // Do not throw errors for non-2xx responses, that makes testing easier.
   validateStatus: null
 });
 
 const identityApi = axios.create({
   baseURL: IDENTITY_API_URL,
   timeout: 60 * 10000,
-
-  // Do not throw errors for non-2xx responses, that makes testing easier.
   validateStatus: null
 });
 
-const getAuthReqOpts = (...permissions: string[]) => {
+const getAuthReqOpts = (permissions: string[], uuid?: string) => {
   const jwt = jsonwebtoken.sign(
     {
       iss: 'CUBE',
-      sub: NIL_UUID,
+      sub: uuid ? uuid : NIL_UUID,
       aud: permissions
     },
-    'secret'
+    settings.JWT_TOKEN_SECRET
   );
 
   return getReqOptsWithJwt(jwt);
 };
 
+const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer ${jwt}` } });
+
 const createProfileUser = async () => {
   const requestBody = {
     name: 'Real Name',
-    email: 'unique@email.com',
+    email: 'unique@cubecommons.ca',
     password: 'super-secret',
     hasAcceptedNewsletter: false,
     hasAcceptedTerms: false,
-    organization: '1org-1',
-    website: 'w1eb-1',
-    tag: 't1ag-1'
+    organization: 'org-1',
+    website: 'web-1',
+    tag: 'tag-1'
   };
 
-  const { status, data } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts('anonymous'));
+  const { status, data } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(['anonymous']));
   return { status, data };
 };
 
-const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer ${jwt}` } });
-const contentIdList: string[] = [];
+let contentIdList: string[] = [];
+let profileUserUuid: string = '';
+let profileUserProfileId: string = '';
 
 describe('content test suite', () => {
   beforeAll(async () => {
     const { status, data } = await createProfileUser();
-    console.log(data);
+    expect(status).toEqual(201);
+    profileUserUuid = data.id;
+
+    const { status: loginStatus, data: loginData } = await identityApi.post(
+      '/auth/login',
+      { email: 'unique@cubecommons.ca', password: 'super-secret' },
+      getAuthReqOpts(['anonymous'])
+    );
+    expect(loginStatus).toEqual(200);
+    profileUserProfileId = loginData.user.profile_id;
   });
 
   test('sanity test service up', async () => {
@@ -67,10 +75,10 @@ describe('content test suite', () => {
     expect(resp.status).toEqual(200);
   });
 
-  test('creates a content piece', async () => {
+  test('creates a content piece, checks creator owns profile', async () => {
     const requestBody = {
-      profileId: '4863f84d-7ca5-4a00-bd80-b0c87e005711',
-      title: 'Create Content Test',
+      profileId: profileUserProfileId,
+      title: 'UNIT TEST',
       mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd5c',
       description: 'This is a test',
       tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
@@ -83,9 +91,12 @@ describe('content test suite', () => {
       coverImageText: 'Someone laying on table'
     };
 
-    const createContentResponse = await contentApi.post('/content', requestBody, getAuthReqOpts('contentEditor'));
+    const createContentResponse = await contentApi.post(
+      '/content',
+      requestBody,
+      getAuthReqOpts(['contentEditor'], profileUserUuid)
+    );
     const { status: createContentStatus, data: createContentData } = createContentResponse;
-
     expect(createContentStatus).toEqual(201);
     expect(createContentData).toMatchObject(
       expect.objectContaining({
@@ -99,173 +110,163 @@ describe('content test suite', () => {
     contentIdList.push(createContentData.id);
   });
 
-  // test('create and retrieve a content piece', async () => {
-  //   const profileId = '4863f84d-7ca5-4a00-bd80-b0c87e005712';
-  //   const requestBody = {
-  //     profileId,
-  //     title: 'Retrieve Test',
-  //     mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd52',
-  //     description: 'This is a test',
-  //     tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
-  //     type: 'video',
-  //     contributors: ['still a string?'],
-  //     collaborators: ['still a string?'],
-  //     coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
-  //     subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
-  //     transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
-  //     coverImageText: 'Someone saying something'
-  //   };
+  test('create and retrieve a content piece', async () => {
+    const requestBody = {
+      profileId: profileUserProfileId,
+      title: 'Retrieve Test',
+      mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd52',
+      description: 'This is a test',
+      tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
+      type: 'video',
+      contributors: ['still a string?'],
+      collaborators: ['still a string?'],
+      coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
+      subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
+      coverImageText: 'Someone saying something'
+    };
 
-  //   const createContentResponse = await contentApi.post('/content', requestBody, getAuthReqOpts('contentEditor'));
-  //   const { status: createContentStatus, data: createContentData } = createContentResponse;
-  //   expect(createContentStatus).toEqual(201);
+    const createContentResponse = await contentApi.post(
+      '/content',
+      requestBody,
+      getAuthReqOpts(['contentEditor'], profileUserUuid)
+    );
+    const { status: createContentStatus, data: createContentData } = createContentResponse;
+    expect(createContentStatus).toEqual(201);
 
-  //   const contentId = createContentData.id;
-  //   const retrieveContentResponse = await contentApi.get(`/content/${contentId}`);
-  //   const { status: retrieveContentStatus, data: retrieveContentData } = retrieveContentResponse;
+    const contentId = createContentData.id;
+    const retrieveContentResponse = await contentApi.get(
+      `/content/${contentId}`,
+      getAuthReqOpts(['active'], profileUserUuid)
+    );
+    const { status: retrieveContentStatus, data: retrieveContentData } = retrieveContentResponse;
 
-  //   expect(retrieveContentStatus).toEqual(200);
-  //   expect(retrieveContentData).toMatchObject(
-  //     expect.objectContaining({
-  //       id: contentId,
-  //       createdAt: createContentData.createdAt,
-  //       updatedAt: createContentData.updatedAt,
-  //       ...requestBody
-  //     })
-  //   );
+    expect(retrieveContentStatus).toEqual(200);
+    expect(retrieveContentData).toMatchObject(
+      expect.objectContaining({
+        id: contentId,
+        createdAt: createContentData.createdAt,
+        updatedAt: createContentData.updatedAt,
+        ...requestBody
+      })
+    );
 
-  //   const listContentResponse = await contentApi.get('/content', {
-  //     params: {
-  //       offset: 0,
-  //       limit: 10,
-  //       profileId
-  //     }
-  //   });
+    const encodedProfileId = encodeURIComponent(profileUserProfileId);
+    const queryString = `?offset=0&limit=10&profileId=${encodedProfileId}`;
+    const listContentResponse = await contentApi.get(`/content${queryString}`, getAuthReqOpts(['active']));
 
-  //   const { status: listContentStatus, data: listContentData } = listContentResponse;
+    const { status: listContentStatus, data: listContentData } = listContentResponse;
+    expect(listContentStatus).toEqual(200);
+    expect(listContentData.data.length).toEqual(2);
+    contentIdList.push(createContentData.id);
+  });
 
-  //   expect(listContentStatus).toEqual(200);
-  //   expect(listContentData).toMatchObject(
-  //     expect.objectContaining({
-  //       meta: {
-  //         offset: 0,
-  //         limit: 10,
-  //         filters: {}
-  //       },
-  //       data: [
-  //         {
-  //           id: contentId,
-  //           createdAt: createContentData.createdAt,
-  //           updatedAt: createContentData.updatedAt,
-  //           ...requestBody
-  //         }
-  //       ]
-  //     })
-  //   );
+  test('create, update and retrieve a content piece', async () => {
+    const requestBody = {
+      profileId: profileUserProfileId,
+      title: 'Update Test',
+      mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd52',
+      description: 'This is a test',
+      tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
+      type: 'video',
+      contributors: ['still a string?'],
+      collaborators: ['still a string?'],
+      coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
+      subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
+      coverImageText: 'Someone saying something'
+    };
 
-  //   contentIdList.push(createContentData.id);
-  // });
+    const createContentResponse = await contentApi.post(
+      '/content',
+      requestBody,
+      getAuthReqOpts(['contentEditor'], profileUserUuid)
+    );
+    const { status: createContentStatus, data: createContentData } = createContentResponse;
+    expect(createContentStatus).toEqual(201);
 
-  // test('create, update and retrieve a content piece', async () => {
-  //   const requestBody = {
-  //     profileId: '4863f84d-7ca5-4a00-bd80-b0c87e005713',
-  //     title: 'Update Test',
-  //     mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd52',
-  //     description: 'This is a test',
-  //     tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
-  //     type: 'video',
-  //     contributors: ['still a string?'],
-  //     collaborators: ['still a string?'],
-  //     coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
-  //     subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
-  //     transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
-  //     coverImageText: 'Someone saying something'
-  //   };
+    const contentId = createContentData.id;
+    const updateRequestBody = {
+      profileId: profileUserProfileId,
+      title: 'Updated Test Content Successfully!',
+      mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd52',
+      description: 'This is a test',
+      tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
+      type: 'video',
+      contributors: ['still a string?'],
+      collaborators: ['still a string?'],
+      coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
+      subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
+      coverImageText: 'Someone saying something'
+    };
 
-  //   const createContentResponse = await contentApi.post('/content', requestBody, getAuthReqOpts('contentEditor'));
-  //   const { status: createContentStatus, data: createContentData } = createContentResponse;
-  //   expect(createContentStatus).toEqual(201);
+    const updateContentResponse = await contentApi.post(
+      `/content/${contentId}`,
+      updateRequestBody,
+      getAuthReqOpts(['contentEditor'], profileUserUuid)
+    );
+    const { status: updateContentStatus } = updateContentResponse;
+    expect(updateContentStatus).toEqual(200);
 
-  //   const contentId = createContentData.id;
-  //   const updateRequestBody = {
-  //     profileId: '4863f84d-7ca5-4a00-bd80-b0c87e005713',
-  //     title: 'Updated Test Content Successfully!',
-  //     mediaFileId: '360cfe42-0db2-47d1-926b-9e627a22dd52',
-  //     description: 'This is a test',
-  //     tags: ['exercises', 'art', 'rest', 'BC', 'still a string?'],
-  //     type: 'video',
-  //     contributors: ['still a string?'],
-  //     collaborators: ['still a string?'],
-  //     coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
-  //     subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
-  //     transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
-  //     coverImageText: 'Someone saying something'
-  //   };
+    const retrieveContentResponse = await contentApi.get(`/content/${contentId}`, getAuthReqOpts(['active']));
+    const { status: retrieveContentStatus, data: retrieveContentData } = retrieveContentResponse;
 
-  //   const updateContentResponse = await contentApi.post(
-  //     `/content/${contentId}`,
-  //     updateRequestBody,
-  //     getAuthReqOpts('contentEditor')
-  //   );
-  //   const { status: updateContentStatus } = updateContentResponse;
-  //   expect(updateContentStatus).toEqual(201);
+    expect(retrieveContentStatus).toEqual(200);
+    expect(retrieveContentData).toMatchObject(
+      expect.objectContaining({
+        id: contentId,
+        createdAt: createContentData.createdAt,
+        updatedAt: createContentData.updatedAt,
+        ...updateRequestBody
+      })
+    );
 
-  //   const retrieveContentResponse = await contentApi.get(`/content/${contentId}`);
-  //   const { status: retrieveContentStatus, data: retrieveContentData } = retrieveContentResponse;
+    contentIdList.push(retrieveContentData.id);
+  });
 
-  //   expect(retrieveContentStatus).toEqual(200);
-  //   expect(retrieveContentData).toMatchObject(
-  //     expect.objectContaining({
-  //       id: contentId,
-  //       createdAt: createContentData.createdAt,
-  //       updatedAt: createContentData.updatedAt,
-  //       ...updateRequestBody
-  //     })
-  //   );
+  test('retrieve content by search filters', async () => {
+    const profileId = profileUserProfileId;
+    const filters = { type: 'video', description: 'this is', tags: ['art', 'rest'] };
+    const encodedFilters = encodeURIComponent(JSON.stringify(filters));
 
-  //   contentIdList.push(retrieveContentData.id);
-  // });
+    const getContentResponse = await contentApi.get(
+      `/content/?profileId=${profileId}&limit=5&filters=${encodedFilters}`,
+      getAuthReqOpts(['active'])
+    );
 
-  // test('retrieve content by search filters', async () => {
-  //   const profileId = '4863f84d-7ca5-4a00-bd80-b0c87e005713';
-  //   const filters = { type: 'video', description: 'this is', tags: ['art', 'rest'] };
-  //   const encodedFilters = encodeURIComponent(JSON.stringify(filters));
+    const { status: getContentStatus, data: getContentData } = getContentResponse;
+    expect(getContentStatus).toEqual(200);
+    expect(getContentData.data[0]).toHaveProperty('profileId');
+    expect(getContentData.data[0]).toHaveProperty('type', 'video');
+    expect(getContentData.data[0]).toHaveProperty('description', 'This is a test');
+    expect(getContentData.data[0]).toHaveProperty('tags', ['exercises', 'art', 'rest', 'BC', 'still a string?']);
+  });
 
-  //   const getContentResponse = await contentApi.get(
-  //     `/content/?profileId=${profileId}&limit=5&filters=${encodedFilters}`
-  //   );
-  //   const { status: getContentStatus, data: getContentData } = getContentResponse;
+  test('retrieve content by search simple filter', async () => {
+    const profileId = profileUserProfileId;
+    const filters = { type: 'video' };
+    const encodedFilters = encodeURIComponent(JSON.stringify(filters));
 
-  //   expect(getContentStatus).toEqual(200);
-  //   expect(getContentData.data[0]).toHaveProperty('profileId');
-  //   expect(getContentData.data[0]).toHaveProperty('type', 'video');
-  //   expect(getContentData.data[0]).toHaveProperty('description', 'This is a test');
-  //   expect(getContentData.data[0]).toHaveProperty('tags', ['exercises', 'art', 'rest', 'BC', 'still a string?']);
-  // });
+    const getContentResponse = await contentApi.get(
+      `/content/?profileId=${profileId}&filters=${encodedFilters}`,
+      getAuthReqOpts(['active'])
+    );
+    const { status: getContentStatus, data: getContentData } = getContentResponse;
 
-  // test('retrieve content by search simple filter', async () => {
-  //   const profileId = '4863f84d-7ca5-4a00-bd80-b0c87e005713';
-  //   const filters = { type: 'video' };
-  //   const encodedFilters = encodeURIComponent(JSON.stringify(filters));
-
-  //   const getContentResponse = await contentApi.get(
-  //     `/content/?profileId=${profileId}&filters=${encodedFilters}`
-  //   );
-  //   const { status: getContentStatus, data: getContentData } = getContentResponse;
-
-  //   expect(getContentStatus).toEqual(200);
-  //   expect(getContentData.data[0]).toHaveProperty('profileId');
-  //   expect(getContentData.data[0]).toHaveProperty('type', 'video');
-  //   expect(getContentData.data[0]).toHaveProperty('description', 'This is a test');
-  //   expect(getContentData.data[0]).toHaveProperty('tags', ['exercises', 'art', 'rest', 'BC', 'still a string?']);
-  // });
+    expect(getContentStatus).toEqual(200);
+    expect(getContentData.data[0]).toHaveProperty('profileId');
+    expect(getContentData.data[0]).toHaveProperty('type', 'video');
+    expect(getContentData.data[0]).toHaveProperty('description', 'This is a test');
+    expect(getContentData.data[0]).toHaveProperty('tags', ['exercises', 'art', 'rest', 'BC', 'still a string?']);
+  });
 });
 
 afterAll(async () => {
   for (const contentId in contentIdList) {
     const deleteContentResponse = await contentApi.delete(
       `/content/${contentIdList[contentId]}`,
-      getAuthReqOpts('contentEditor')
+      getAuthReqOpts(['contentEditor'], profileUserUuid)
     );
     expect(deleteContentResponse.status).toEqual(200);
   }

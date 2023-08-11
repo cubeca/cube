@@ -30,7 +30,6 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 
     // Check that the user creating content is indeed associated to the profile submitted in the request
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
-
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to create content for this profile');
     }
@@ -84,7 +83,6 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
 
     // Check that the user updating content is indeed associated to the profile submitted in the request
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
-    
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update content for this profile');
     }
@@ -116,7 +114,7 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
     }
 
     // Check if user is associated with the profile of the content item
-    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, contentItem.profileId);
+    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, contentItem.data.profileId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to delete content for this profile');
     }

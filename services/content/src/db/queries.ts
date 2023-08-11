@@ -84,7 +84,7 @@ export const deleteContent = async (contentId: string) => {
   return await db.querySingleDefault(sql, contentId);
 };
 
-export const isUserAssociatedToProfile = async(uuid: string, profileId: string) => {
+export const isUserAssociatedToProfile = async (uuid: string, profileId: string) => {
   const sql = `
     SELECT EXISTS (
       SELECT 1 
@@ -94,5 +94,6 @@ export const isUserAssociatedToProfile = async(uuid: string, profileId: string) 
     ) as "exists";
   `;
 
-  return await db.queryIdentity(sql, ...[uuid, profileId]);
-}
+  const r = await db.queryIdentity(sql, ...[ uuid, profileId ]);
+  return !!r.rows[0].exists;
+};
