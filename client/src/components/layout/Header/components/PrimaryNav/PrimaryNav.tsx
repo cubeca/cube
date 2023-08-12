@@ -6,11 +6,11 @@ import * as s from './PrimaryNav.styled';
 const getNavItems = (t: TFunction<'translation', undefined>) => [
   {
     text: t('Search Content'),
-    path: '/home'
+    path: '/search'
   },
   {
     text: t('Cube VR'),
-    path: '/about#vr'
+    path: '/#vr'
   },
   {
     text: t('Become a Creator'),
