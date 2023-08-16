@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
-import { allowIfAnyOf } from './auth';
+import { allowIfAnyOf, extractUser } from './auth';
 
 // Creating an instance of Express application
 const app: Express = express();
@@ -19,17 +19,37 @@ const getApiResultFromDbRow = (r: any) => ({
 
 // API endpoint for creating new content
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const dbResult = await db.insertContent(req.body);
-  res.status(201).json(getApiResultFromDbRow(dbResult));
+  try {
+    const user = extractUser(req);
+    const { profileId, ...contentData } = req.body;
+
+    // Validate request body
+    if (!profileId || Object.keys(contentData).length === 0) {
+      return res.status(400).send('Invalid request body');
+    }
+
+    // Check that the user creating content is indeed associated to the profile submitted in the request
+    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to create content for this profile');
+    }
+
+    // Insert content into database
+    const dbResult = await db.insertContent({ profileId, ...contentData });
+    return res.status(201).json(getApiResultFromDbRow(dbResult));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error creating the content item');
+  }
 });
 
 // API endpoint for listing content by profile id with ability to filter by
 // data points such as type or tags
-app.get('/content', async (req: Request, res: Response) => {
+app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = req.query.profileId;
-  const filters = JSON.parse(req.query.filters as string ?? '{}');
+  const filters = JSON.parse((req.query.filters as string) ?? '{}');
 
   const dbResult = await db.listContentByProfileId(offset, limit, profileId as string, filters);
 
@@ -38,27 +58,76 @@ app.get('/content', async (req: Request, res: Response) => {
     meta: {
       offset,
       limit,
-      filters,
+      filters
     },
     data: dbResult.map(getApiResultFromDbRow)
   });
 });
 
 // API endpoint for getting content by content id
-app.get('/content/:contentId', async (req: Request, res: Response) => {
+app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   res.status(200).json(getApiResultFromDbRow(await db.getContentById(req.params.contentId)));
 });
 
 // API endpoint for updating content by content id
 app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  const dbResult = await db.updateContent(req.body, req.params.contentId);
-  res.status(201).json(getApiResultFromDbRow(dbResult));
+  try {
+    const user = extractUser(req);
+    const { profileId, ...contentData } = req.body;
+    const { contentId } = req.params;
+
+    // Validate request body and parameters
+    if (!profileId || Object.keys(contentData).length === 0 || !contentId) {
+      return res.status(400).send('Invalid request body or parameters');
+    }
+
+    // Check that the user updating content is indeed associated to the profile submitted in the request
+    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to update content for this profile');
+    }
+
+    // Update content in the database
+    const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
+    return res.status(200).json(getApiResultFromDbRow(dbResult));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error updating the content item');
+  }
 });
 
 // API endpoint for deleting content by content id
 app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-  res.status(200).json(getApiResultFromDbRow(await db.deleteContent(req.params.contentId)));
+  try {
+    const user = extractUser(req);
+    const { contentId } = req.params;
+
+    // Validate request parameters
+    if (!contentId) {
+      return res.status(400).send('Invalid request parameters');
+    }
+
+    // Retrieve content item to delete
+    const contentItem = await db.getContentById(contentId);
+    if (!contentItem) {
+      return res.status(404).send('Content not found');
+    }
+
+    // Check if user is associated with the profile of the content item
+    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, contentItem.data.profileId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to delete content for this profile');
+    }
+
+    // Delete content in the database
+    const dbResult = await db.deleteContent(contentId);
+    return res.status(200).json(getApiResultFromDbRow(dbResult));
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Could not delete content item');
+  }
 });
+
 
 // API endpoint for checking the service status
 app.get('/', async (req: Request, res: Response) => {

@@ -2,15 +2,20 @@ import axios from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 import * as settings from './settings';
 
-const API_URL = `http://${settings.MICROSERVICE}:${settings.PORT}`;
+const PROFILE_API_URL = `http://${settings.PROFILE_MICROSERVICE}:${settings.PROFILE_PORT}`;
+const IDENTITY_API_URL = `http://${settings.IDENTITY_MICROSERVICE}:${settings.IDENTITY_PORT}`;
 const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const NIL_UUID = '00000000-0000-0000-0000-000000000000';
 
 const profileApi = axios.create({
-  baseURL: API_URL,
+  baseURL: PROFILE_API_URL,
   timeout: 10000,
+  validateStatus: null
+});
 
-  // Do not throw errors for non-2xx responses, that makes testing easier.
+const identityApi = axios.create({
+  baseURL: IDENTITY_API_URL,
+  timeout: 10000,
   validateStatus: null
 });
 
@@ -21,13 +26,43 @@ let uniqueWebsiteCounter = 1;
 const getUniqueWebsite = () => `https://org-${uniqueWebsiteCounter++}.example.com`;
 
 let uniqueTagCounter = 1;
-const getUniqueTag = () => `@org-${uniqueTagCounter++}`;
+const getUniqueTag = () => `org-${uniqueTagCounter++}`;
 
-const getAuthReqOpts = (...permissions: string[]) => {
+const profileIdList: string[] = [];
+const createProfile = async () => {
+  const requestBody = {
+    organization: getUniqueOrganizationName(),
+    website: getUniqueWebsite(),
+    tag: getUniqueTag()
+  };
+
+  const { status, data } = await profileApi.post('/profiles', requestBody, getAuthReqOpts(['anonymous']));
+
+  profileIdList.push(data.id);
+  return { status, data, requestBody };
+};
+
+const createProfileUser = async () => {
+  const requestBody = {
+    name: 'Real Name',
+    email: 'email@cubecommons.ca',
+    password: 'super-secret',
+    hasAcceptedNewsletter: false,
+    hasAcceptedTerms: false,
+    organization: getUniqueOrganizationName(),
+    website: getUniqueWebsite(),
+    tag: getUniqueTag()
+  };
+
+  const { status, data } = await identityApi.post('/auth/user', requestBody, getAuthReqOpts(['anonymous']));
+  return { status, data, requestBody };
+};
+
+const getAuthReqOpts = (permissions: string[], uuid?: string) => {
   const jwt = jsonwebtoken.sign(
     {
       iss: 'CUBE',
-      sub: NIL_UUID,
+      sub: uuid ? uuid : NIL_UUID,
       aud: permissions
     },
     settings.JWT_TOKEN_SECRET
@@ -37,25 +72,6 @@ const getAuthReqOpts = (...permissions: string[]) => {
 };
 
 const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer ${jwt}` } });
-
-export interface CreateProfileOptions {
-  createPermissions?: string[] | null;
-}
-
-const profileIdList: string[] = [];
-const createProfile = async ({ createPermissions = [''] }: CreateProfileOptions = {}) => {
-  const requestBody = {
-    organization: getUniqueOrganizationName(),
-    website: getUniqueWebsite(),
-    tag: getUniqueTag()
-  };
-
-  const authReqOpts = null === createPermissions ? undefined : getAuthReqOpts(...createPermissions);
-  const { status, data } = await profileApi.post('/profiles', requestBody, authReqOpts);
-
-  profileIdList.push(data.id);
-  return { status, data, requestBody };
-};
 
 /**
  * A test suite for testing the functionality of a profile API.
@@ -90,7 +106,7 @@ describe('profile test suite', () => {
    */
   test('checks duplicate profile creation fails', async () => {
     const { requestBody } = await createProfile();
-    const { status: statusDuplicate } = await profileApi.post('/profiles', requestBody, getAuthReqOpts('userAdmin'));
+    const { status: statusDuplicate } = await profileApi.post('/profiles', requestBody, getAuthReqOpts(['active']));
     expect(statusDuplicate).toEqual(400);
   });
 
@@ -103,7 +119,7 @@ describe('profile test suite', () => {
       organization: 'org',
       website: 'website'
     };
-    const { status: statusBadProfile } = await profileApi.post('/profiles', requestBody, getAuthReqOpts('userAdmin'));
+    const { status: statusBadProfile } = await profileApi.post('/profiles', requestBody, getAuthReqOpts(['anonymous']));
     expect(statusBadProfile).toEqual(401);
   });
 
@@ -111,53 +127,60 @@ describe('profile test suite', () => {
    * Test to create a profile and attempt to update it with an empty object.
    * Expects to receive a status code of 500, indicating a server error.
    */
-  test('creates a profile and tries to update without data', async () => {
-    const { data } = await createProfile();
-    const { status: statusUpdate } = await profileApi.patch(`/profiles/${data.id}`, {}, getAuthReqOpts('userAdmin'));
-    expect(statusUpdate).toEqual(500);
-  });
-
-  /**
-   * Test to create a profile and attempt to update it with one attribute.
-   * Expects to receive a status code of 200 and for the updated attribute to be reflected in the response from a subsequent GET request.
-   */
-  test('creates a profile and tries to update with one attribute', async () => {
+  test('creates a profile and tries to update without permssion to do so', async () => {
     const { data } = await createProfile();
     const { status: statusUpdate } = await profileApi.patch(
       `/profiles/${data.id}`,
-      { heroFileId: 'thisisanupdate' },
-      getAuthReqOpts('userAdmin')
+      { organization: 'bob' },
+      getAuthReqOpts(['active'], NIL_UUID)
     );
-    const getProfileResponse = await profileApi.get(`/profiles/${data.id}`, {});
-    expect(statusUpdate).toEqual(200);
-    expect(getProfileResponse.data.herofileid).toEqual('thisisanupdate');
+    expect(statusUpdate).toEqual(403);
   });
 
   /**
    * Test to create a profile and retrieve it by tag.
    * Expects to receive a status code of 200 in the response from a subsequent GET request.
    */
-    test('creates a profile and retrieves it using its tag', async () => {
-      const { data, requestBody } = await createProfile();
-      const getProfileResponse = await profileApi.get(`/profiles/tag/${requestBody.tag}`, {});
-      expect(getProfileResponse.status).toEqual(200);
-      expect(getProfileResponse.data.tag).toEqual(requestBody.tag);
-    });
+  test('creates a profile and retrieves it using its tag', async () => {
+    const { requestBody } = await createProfile();
+    const getProfileResponse = await profileApi.get(`/profiles/tag/${requestBody.tag}`, getAuthReqOpts(['anonymous']));
+    expect(getProfileResponse.status).toEqual(200);
+    expect(getProfileResponse.data.tag).toEqual(requestBody.tag);
+  });
 
   /**
    * Test to create a profile and attempt to update it with multiple attributes.
    * Expects to receive a status code of 200 and for the updated attributes to be reflected in the response from a subsequent GET request.
    */
   test('creates a profile and tries to update with multiple attribute', async () => {
-    const { data } = await createProfile();
-    const { status: statusUpdate } = await profileApi.patch(
-      `/profiles/${data.id}`,
-      { organization: "bob", website: "bobsnewsite", heroFileId: 'thisisanupdate', descriptionFileId: 'newurl', budget: '1ETH' },
-      getAuthReqOpts('userAdmin')
-    );
-    const getProfileResponse = await profileApi.get(`/profiles/${data.id}`, {});
+    const { status: createUserStatus, data, requestBody } = await createProfileUser();
+    expect(createUserStatus).toEqual(201);
 
+    const { status: loginStatus, data: userData } = await identityApi.post(
+      '/auth/login',
+      { email: requestBody.email, password: requestBody.password },
+      getAuthReqOpts(['anonymous'])
+    );
+    expect(loginStatus).toEqual(200);
+
+    const { status: statusUpdate } = await profileApi.patch(
+      `/profiles/${userData.user.profile_id}`,
+      {
+        organization: 'bob',
+        website: 'bobsnewsite',
+        heroFileId: 'thisisanupdate',
+        descriptionFileId: 'newurl',
+        budget: '1ETH'
+      },
+      getAuthReqOpts(['active'], userData.user.uuid)
+    );
     expect(statusUpdate).toEqual(200);
+    profileIdList.push(userData.user.profile_id);
+
+    const getProfileResponse = await profileApi.get(
+      `/profiles/${userData.user.profile_id}`,
+      getAuthReqOpts(['anonymous'])
+    );
     expect(getProfileResponse.data.organization).toEqual('bob');
     expect(getProfileResponse.data.website).toEqual('bobsnewsite');
     expect(getProfileResponse.data.herofileid).toEqual('thisisanupdate');
@@ -172,7 +195,7 @@ describe('profile test suite', () => {
  */
 afterAll(async () => {
   for (const profileId in profileIdList) {
-    const { status } = await profileApi.delete(`/profiles/${profileIdList[profileId]}`, getAuthReqOpts('userAdmin'));
+    const { status } = await profileApi.delete(`/profiles/${profileIdList[profileId]}`, getAuthReqOpts(['userAdmin']));
     expect(status).toEqual(200);
   }
 });

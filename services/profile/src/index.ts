@@ -2,7 +2,8 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
-import { allowIfAnyOf } from './auth';
+import { allowIfAnyOf, extractUser } from './auth';
+import { isUserAssociatedToProfile } from './db/queries';
 
 // Initialize Express app
 const app: Express = express();
@@ -13,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Route for creating a new profile
-app.post('/profiles', async (req: Request, res: Response) => {
+app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
 
   // Check if required fields are provided in the request body
@@ -21,6 +22,7 @@ app.post('/profiles', async (req: Request, res: Response) => {
     return res.status(401).send('Invalid Request Body: organization, website, and tag must be provided.');
   }
 
+  
   // Insert the new profile and return its ID
   try {
     const r = await db.insertProfile(organization, website, tag);
@@ -36,12 +38,18 @@ app.post('/profiles', async (req: Request, res: Response) => {
 });
 
 // Route for updating an existing profile by its ID
-app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
+app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update
   if (!(req.body.organization || req.body.website || req.body.heroFileId || req.body.logoFileId || req.body.description || req.body.descriptionFileId || req.body.budget)) {
     return res.status(500).json('You must supply at least one field to update!');
+  }
+
+  const user = extractUser(req);
+  const isUserAssociated = await isUserAssociatedToProfile(user.uuid, profileId)
+  if (!isUserAssociated) {
+    return res.status(403).send('User does not have permission to update this profile');
   }
 
   // Store the values for each field to be updated
@@ -66,7 +74,7 @@ app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
 });
 
 // Route for fetching a profile by its ID
-app.get('/profiles/:profileId', async (req: Request, res: Response) => {
+app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { profileId } = req.params;
 
   // Check if the profile ID is provided
@@ -92,13 +100,12 @@ app.get('/profiles/:profileId', async (req: Request, res: Response) => {
 });
 
 // Route for fetching a profile by its tag
-app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
+app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { tag } = req.params;
 
   // Check if the profile ID is provided
   if (!tag) {
-    res.status(404).send('Profile tag is not provided.');
-    return;
+    return res.status(404).send('Profile tag is not provided.');
   }
 
   // Fetch the profile and return its details
@@ -107,13 +114,12 @@ app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
     const profile = r.rows[0];
 
     if (!profile) {
-      res.status(404).send('Profile tag not found');
-      return;
+      return res.status(404).send('Profile tag not found');
     }
 
     res.status(200).json({ ...profile });
   } catch (e: any) {
-    res.status(404).send('Organization does not exist');
+    res.status(404).send('Profile does not exist');
   }
 });
 

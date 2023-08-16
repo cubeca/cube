@@ -24,7 +24,7 @@ const filterHeadersToForward = (req: Request, ...allowList: string[]): AxiosHead
 
 /////////////////// Cloudflare Service ///////////////////
 
-app.post('/upload/video-tus-reservation', async (req: Request, res: Response) => {
+app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   // Typically, we receive an empty request body for this endpoint,
   // together with a (correct!) `content-length` header with value `0`.
   //
@@ -40,14 +40,14 @@ app.post('/upload/video-tus-reservation', async (req: Request, res: Response) =>
   res.status(status).set(headers).send(data);
 });
 
-app.post('/upload/s3-presigned-url', async (req: Request, res: Response) => {
+app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const { status, data } = await cloudflareApi.post('upload/s3-presigned-url', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.get('/files/:fileId', async (req: Request, res: Response) => {
+app.get('/files/:fileId', allowIfAnyOf('anonymous, active'), async (req: Request, res: Response) => {
   const reqHeaders = { ...req.headers };
   delete reqHeaders['host'];
   const { status, data } = await contentApi.get(`files/${req.params.fileId}`, {
@@ -58,14 +58,14 @@ app.get('/files/:fileId', async (req: Request, res: Response) => {
 
 /////////////////// Content Service ///////////////////
 
-app.post('/content', async (req: Request, res: Response) => {
+app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const { status, data } = await contentApi.post('content', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.get('/content', async (req: Request, res: Response) => {
+app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { status, data } = await contentApi.get('content', {
     params: req.query,
     headers: filterHeadersToForward(req, 'authorization')
@@ -74,22 +74,27 @@ app.get('/content', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
-app.get('/content/:contentId', async (req: Request, res: Response) => {
-  const { status, data } = await contentApi.get('content/' + req.params.contentId);
+app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.get('content/' + req.params.contentId, {
+    params: req.query,
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
 /////////////////// Identity Service ///////////////////
 
-app.post('/auth/user', async (req: Request, res: Response) => {
+app.post('/auth/user', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.post('auth/user', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.post('/auth/login', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.post('auth/login', req.body);
+app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('auth/login', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
@@ -98,27 +103,31 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
   res.status(status).json(data);
 });
 
-app.put('/auth/email', async (req: Request, res: Response) => {
+app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.put('auth/email', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.put('/auth/password', async (req: Request, res: Response) => {
+app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.put('auth/password', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.post('/auth/resend-email-verification', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.post('auth/resend-email-verification', req.body);
+app.post('/auth/resend-email-verification', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('auth/resend-email-verification', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
 app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.get('auth/email/verify/' + req.params.token, req.body);
+  const { status, data } = await identityApi.get('auth/email/verify/' + req.params.token, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   if (status === 301) {
     res.redirect(data);
   } else {
@@ -126,49 +135,63 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
   }
 });
 
-app.post('/auth/forgot-password', async (req: Request, res: Response) => {
-  const { status, data } = await identityApi.post('auth/forgot-password', req.body);
+app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('auth/forgot-password', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
 /////////////////// Profile Service ///////////////////
 
-app.post('/profiles', async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.post('profiles', req.body);
+app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.post('profiles', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
-app.get('/profiles/:profileId', async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, req.body);
+app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.patch('profiles/' + req.params.profileId, req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
   res.status(status).json(data);
 });
 
-app.get('/profiles/tag/:tag', async (req: Request, res: Response) => {
+app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/' + req.params.profileId, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+  res.status(status).json(data);
+});
+
+app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const filteredAuthHeader = filterHeadersToForward(req, 'authorization');
+
   try {
     const { tag } = req.params;
+    const tagResponse = await profileApi.get('profiles/tag/' + tag, {
+      headers: filteredAuthHeader
+    });
 
-    const tagResponse = await profileApi.get('profiles/tag/' + tag);
     if (tagResponse.status !== 200) {
       return res.status(tagResponse.status).json(tagResponse.data);
     }
 
     const profileId = tagResponse.data.id;
-    const profile = await getProfileData(profileId);
+    const profile = await getProfileData(profileId, filteredAuthHeader);
     res.status(200).json({ data: profile });
   } catch (error) {
     res.status(500).json('Unable to retrieve profile details');
   }
 });
 
-app.patch('/profiles/:profileId', async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.patch('profiles/' + req.params.profileId, req.body);
-  res.status(status).json(data);
-});
+app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const filteredAuthHeader = filterHeadersToForward(req, 'authorization');
 
-app.get('/profiles/:profileId', async (req: Request, res: Response) => {
   try {
     const { profileId } = req.params;
-    const profile = await getProfileData(profileId);
+    const profile = await getProfileData(profileId, filteredAuthHeader);
     res.status(200).json({ data: profile });
   } catch (error) {
     res.status(500).json('Unable to retrieve profile details');
