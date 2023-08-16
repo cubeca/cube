@@ -3,9 +3,9 @@ import cors from 'cors';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
-import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput } from './utils';
+import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward } from './utils';
 import * as settings from './settings';
-import { allowIfAnyOf } from './auth';
+import { allowIfAnyOf, extractUser } from './auth';
 import { createDefaultProfile } from './profile';
 import { sendVerificationEmail, sendPasswordChangeConfirmation, sendPasswordResetEmail } from './email';
 
@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
  * Create a user based on provided attributes.  If an organization, website or tag is passed
  * also create an associated profile for the user.
  */
-app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Response) => {
+app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -47,7 +47,8 @@ app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Respon
     // Create Default Profile
     let profileId = '';
     if (organization || website || tag) {
-      profileId = await createDefaultProfile(organization, website, tag);
+      const authHeader = filterHeadersToForward(req, 'authorization')
+      profileId = await createDefaultProfile(authHeader, organization, website, tag);
       permissionIds.push('contentEditor');
       if (!profileId) {
         return res
@@ -91,7 +92,7 @@ app.post('/auth/user', validateUserCreateInput, async (req: Request, res: Respon
 /**
  * Log a user in based on supplied username and password.
  */
-app.post('/auth/login', async (req: Request, res: Response) => {
+app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -100,7 +101,6 @@ app.post('/auth/login', async (req: Request, res: Response) => {
 
   try {
     const r = await db.selectUserByEmail(email);
-
     if (!r) {
       return res.status(403).send('Invalid email or password.');
     }
@@ -110,10 +110,6 @@ app.post('/auth/login', async (req: Request, res: Response) => {
     const isValidPassword = await comparePassword(password, decryptedPassword);
     if (!isValidPassword) {
       return res.status(403).send('Invalid email or password.');
-    }
-
-    if (!user.is_active || !user.has_verified_email) {
-      return res.status(403).send('Please verify your email to continue');
     }
 
     const token = jwt.sign(
@@ -169,33 +165,27 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
  * Update an email for currently authenticated users.
  */
 app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
-  const { uuid, email, token } = req.body;
+  const { uuid, email } = req.body;
 
-  if (!uuid || !email || !token) {
-    return res.status(401).send('Invalid Request Body. uuid, email, and token are required.');
+  if (!uuid || !email) {
+    return res.status(401).send('Invalid Request Body. uuid and email are required.');
   }
 
   try {
-    jwt.verify(token, settings.JWT_TOKEN_SECRET, async (err: any, decoded: any) => {
-      if (err) {
-        return res.status(401).send(err);
-      }
+    const user = extractUser(req);
+    if (user.uuid !== uuid) {
+      return res.status(401).send('Unauthorized to update email for this user.');
+    }
 
-      const userId = decoded.sub;
-      if (userId !== uuid) {
-        return res.status(401).send('Unauthorized to update email for this user.');
-      }
+    const existingUser = await db.selectUserByEmail(email);
+    if (existingUser.rows[0]) {
+      return res.status(409).json('Email is in use by another user');
+    }
 
-      const existingUser = await db.selectUserByEmail(email);
-      if (existingUser.rows[0]) {
-        return res.status(409).json('Email is in use by another user');
-      }
-
-      await db.updateEmail(uuid, email);
-      await db.updateEmailVerification(uuid, false);
-      await sendVerificationEmail('', email, token);
-      res.status(200).send('OK');
-    });
+    await db.updateEmail(uuid, email);
+    await db.updateEmailVerification(uuid, false);
+    await sendVerificationEmail('', email, user.token);
+    res.send('OK');
   } catch (error: any) {
     console.error('Error updating email:', error);
     return res.status(500).send('Error updating email');
@@ -205,48 +195,37 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
 /**
  * Update password for a user.
  */
-app.put('/auth/password', async (req: Request, res: Response) => {
-  const { uuid, currentPassword, newPassword, token } = req.body;
+app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { currentPassword, newPassword } = req.body;
 
-  if (!uuid || !newPassword || !token) {
-    return res.status(401).send('Invalid Request Body. uuid, newPassword, and token are required.');
+  if (!newPassword) {
+    return res.status(401).send('Invalid Request Body. newPassword is required.');
   }
 
   try {
-    jwt.verify(token, settings.JWT_TOKEN_SECRET, async (err: any, decoded: any) => {
-      if (err) {
-        return res.status(401).send(err);
+    const userReq = extractUser(req);
+    const r = await db.selectUserByID(userReq.uuid);
+    if (!r) {
+      return res.status(403).send('Invalid: Unable to verify user.');
+    }
+
+    const user = r.rows[0];
+    if (currentPassword) {
+      const decryptedPassword = decryptString(user.password);
+      const isValidPassword = await comparePassword(currentPassword, decryptedPassword);
+      if (!isValidPassword) {
+        return res.status(403).send("Unable to verify user's existing password");
       }
+    }
 
-      const userId = decoded.sub;
-      if (userId !== uuid) {
-        return res.status(401).send('Unauthorized to update password for this user.');
-      }
+    // If we got to this point, either the user has provided the correct currentPassword,
+    // or they're using a valid auth token without the currentPassword.
+    const hashedPassword = await hashPassword(newPassword);
+    const encryptedPassword = encryptString(hashedPassword);
 
-      const r = await db.selectUserByID(uuid);
-      if (!r) {
-        return res.status(403).send('Invalid: Unable to verify user.');
-      }
-
-      const user = r.rows[0];
-
-      if (currentPassword) {
-        const decryptedPassword = decryptString(user.password);
-        const isValidPassword = await comparePassword(currentPassword, decryptedPassword);
-        if (!isValidPassword) {
-          return res.status(403).send("Unable to verify user's existing password");
-        }
-      }
-
-      // If we got to this point, either the user has provided the correct currentPassword,
-      // or they're using a valid reset token without the currentPassword.
-      const hashedPassword = await hashPassword(newPassword);
-      const encryptedPassword = encryptString(hashedPassword);
-
-      await db.updatePassword(uuid as string, encryptedPassword);
-      await sendPasswordChangeConfirmation(uuid as string);
-      res.send('OK');
-    });
+    await db.updatePassword(userReq.uuid as string, encryptedPassword);
+    await sendPasswordChangeConfirmation(userReq.uuid as string);
+    res.send('OK');
   } catch (error: any) {
     console.error('Error updating password:', error);
     return res.status(500).send('Error updating password');
@@ -300,10 +279,10 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
 /**
  * Trigger password reset email to users who are locked out.
  */
-app.post('/auth/forgot-password', async (req: Request, res: Response) => {
+app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email } = req.body;
   if (!email) {
-    return res.status(400).send('email is required.');
+    return res.status(400).send('Email is required');
   }
 
   try {
@@ -311,7 +290,7 @@ app.post('/auth/forgot-password', async (req: Request, res: Response) => {
     if (r.rows.length === 1) {
       await sendPasswordResetEmail(email);
     } else {
-      return res.status(403).send('email does not exist');
+      return res.status(403).send('Email does not exist');
     }
   } catch (error: any) {
     console.error('Error occurred sending password reset email:', error);
@@ -324,33 +303,20 @@ app.post('/auth/forgot-password', async (req: Request, res: Response) => {
 /**
  * Trigger email verification if original has expired or didn't arrive.
  */
-app.post('/auth/resend-email-verification', async (req: Request, res: Response) => {
-  const { token } = req.body;
-  if (!token) {
-    return res.status(401).send('Invalid Request Body. token is required.');
-  }
+app.post('/auth/resend-email-verification', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+  const user = extractUser(req);
 
   try {
-    jwt.verify(token, settings.JWT_TOKEN_SECRET, async (err: any, decoded: any) => {
-      if (err) {
-        return res.status(401).send(err);
-      }
+    const r = await db.selectUserByID(user.uuid);
+    if (r.rows.length === 1) {
+      const name = r.rows[0].name;
+      const email = r.rows[0].email;
+      await sendVerificationEmail(name, email, user.token);
+    } else {
+      return res.status(401).send('Incorrect id provided');
+    }
 
-      const encodedUUID = decoded.sub;
-      const encoder = new UuidEncoder('base36');
-      const uuid = encoder.decode(encodedUUID);
-
-      const r = await db.selectUserByID(uuid as string);
-      if (r.rows.length === 1) {
-        const name = r.rows[0].name;
-        const email = r.rows[0].email;
-        await sendVerificationEmail(name, email, token);
-      } else {
-        return res.status(401).send('Incorrect id provided');
-      }
-
-      res.send('OK');
-    });
+    res.send('OK');
   } catch (error: any) {
     console.error('Error occurred verifying email:', error);
     return res.status(500).send('Error occurred verifying email!');

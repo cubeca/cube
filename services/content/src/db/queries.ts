@@ -2,7 +2,7 @@ import * as db from './index';
 
 export const getContentById = async (contentId: string) => {
   const sql = `SELECT * FROM content WHERE id = $1`;
-  return await db.querySingle(sql, contentId);
+  return await db.querySingleDefault(sql, contentId);
 };
 
 export const listContentByProfileId = async (offset: number, limit: number, profileId: string, filters: any) => {
@@ -40,7 +40,7 @@ export const listContentByProfileId = async (offset: number, limit: number, prof
     OFFSET $${values.length + 3}
 `;
 
-  const dbResult = await db.query(sql, profileId, ...values, limit, offset);
+  const dbResult = await db.queryDefault(sql, profileId, ...values, limit, offset);
   return dbResult.rows;
 };
 
@@ -55,7 +55,7 @@ export const insertContent = async (data: any) => {
     RETURNING *
   `;
 
-  return await db.querySingle(sql, data);
+  return await db.querySingleDefault(sql, data);
 };
 
 export const updateContent = async (data: any, contentId: string) => {
@@ -69,7 +69,7 @@ export const updateContent = async (data: any, contentId: string) => {
     RETURNING *
   `;
 
-  return await db.querySingle(sql, JSON.stringify(data), contentId);
+  return await db.querySingleDefault(sql, JSON.stringify(data), contentId);
 };
 
 export const deleteContent = async (contentId: string) => {
@@ -81,5 +81,19 @@ export const deleteContent = async (contentId: string) => {
     RETURNING *
   `;
 
-  return await db.querySingle(sql, contentId);
+  return await db.querySingleDefault(sql, contentId);
+};
+
+export const isUserAssociatedToProfile = async (uuid: string, profileId: string) => {
+  const sql = `
+    SELECT EXISTS (
+      SELECT 1 
+        FROM users 
+      WHERE id = $1
+        AND profile_id = $2
+    ) as "exists";
+  `;
+
+  const r = await db.queryIdentity(sql, ...[ uuid, profileId ]);
+  return !!r.rows[0].exists;
 };
