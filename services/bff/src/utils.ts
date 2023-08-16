@@ -1,3 +1,4 @@
+import { AxiosHeaders } from 'axios';
 import { cloudflareApi, profileApi, contentApi } from './microservices';
 
 export const inspect = (...things: any) =>
@@ -6,7 +7,7 @@ export const inspect = (...things: any) =>
 export const filterObject = (obj: any, ...allowedKeys: string[]) =>
   Object.fromEntries(Object.entries(obj).filter(([key, _]: [key: string, _: any]) => allowedKeys.includes(key)));
 
-export const getFiles = async (fileIds: string[]) => {
+export const getFiles = async (fileIds: string[], authHeader: AxiosHeaders) => {
   const files: { [k: string]: any } = {};
   const errors: any[] = [];
 
@@ -16,7 +17,7 @@ export const getFiles = async (fileIds: string[]) => {
   // Perform API requests concurrently using Promise.all
   const apiRequests = filteredFileIds.map((fileId) =>
     cloudflareApi
-      .get(`files/${fileId}`)
+      .get(`files/${fileId}`, { headers: authHeader })
       .then(({ status, data }) => {
         if (status === 200) {
           files[fileId] = data;
@@ -34,13 +35,15 @@ export const getFiles = async (fileIds: string[]) => {
   return { files, errors };
 };
 
-export const getProfileData = async (profileId: string) => {
-  const profileResponse = await profileApi.get('profiles/' + profileId);
-  const { files } = await getFiles([
-    profileResponse.data.herofileid,
-    profileResponse.data.logofileid,
-    profileResponse.data.descriptionfileid
-  ]);
+export const getProfileData = async (profileId: string, authHeader: AxiosHeaders) => {
+  const profileResponse = await profileApi.get('profiles/' + profileId, {
+    headers: authHeader
+  });
+
+  const { files } = await getFiles(
+    [profileResponse.data.herofileid, profileResponse.data.logofileid, profileResponse.data.descriptionfileid],
+    authHeader
+  );
 
   const profile = profileResponse.data;
   if (files[profile.herofileid]) {
@@ -58,9 +61,10 @@ export const getProfileData = async (profileId: string) => {
       profileId,
       offset: 0,
       limit: 1000
-    }
+    },
+    headers: authHeader
   });
-  
+
   profile.content = await transformContentForProfile(contentResponse.data.data);
   return profile;
 };
