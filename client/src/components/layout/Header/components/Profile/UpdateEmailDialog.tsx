@@ -42,8 +42,13 @@ const UpdateEmailDialog = ({
     }
   };
 
+  const handleClose = () => {
+    reset();
+    onClose();
+  }
+
   return (
-    <Dialog open={isOpen} onClose={onClose} id="update-email-dialog" title="">
+    <Dialog open={isOpen} onClose={handleClose} id="update-email-dialog" title="">
       <Stack direction="column">
         <Typography component="h2">{t('Update Email Address')}</Typography>
         {isSubmitted ? (
