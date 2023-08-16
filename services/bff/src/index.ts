@@ -47,10 +47,8 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
   res.status(status).json(data);
 });
 
-app.get('/files/:fileId', allowIfAnyOf('anonymous, active'), async (req: Request, res: Response) => {
-  const reqHeaders = { ...req.headers };
-  delete reqHeaders['host'];
-  const { status, data } = await contentApi.get(`files/${req.params.fileId}`, {
+app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await cloudflareApi.get(`files/${req.params.fileId}`, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);

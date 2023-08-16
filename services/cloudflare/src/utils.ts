@@ -1,10 +1,5 @@
 import { Buffer } from 'node:buffer';
 
-export const inspect = (...things: any) =>
-  things.forEach((thing: any) =>
-    console.dir(thing, { depth: null, color: true })
-  );
-
 export const base64encode = (s: any) => Buffer.from(String(s), 'utf8').toString('base64');
 export const base64decode = (b64: any): string | Buffer | undefined => {
   let decoded = undefined;

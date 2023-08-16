@@ -59,6 +59,7 @@ export const allowIfAnyOf = (...allowList: string[]) => [
   authenticateToken,
   (req: UserRequest, res: Response, next: NextFunction) => {
     const isOnAllowList = (permission: string) => allowList.includes(permission);
+
     if (!req.user) {
       return res.status(403).send('No user object found in request');
     }
