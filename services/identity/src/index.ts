@@ -3,7 +3,15 @@ import cors from 'cors';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
-import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward } from './utils';
+import {
+  comparePassword,
+  encryptString,
+  decryptString,
+  hashPassword,
+  validateUserCreateInput,
+  filterHeadersToForward,
+  UUID_REGEXP
+} from './utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { createDefaultProfile } from './profile';
@@ -47,7 +55,7 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
     // Create Default Profile
     let profileId = '';
     if (organization || website || tag) {
-      const authHeader = filterHeadersToForward(req, 'authorization')
+      const authHeader = filterHeadersToForward(req, 'authorization');
       profileId = await createDefaultProfile(authHeader, organization, website, tag);
       permissionIds.push('contentEditor');
       if (!profileId) {
@@ -248,9 +256,11 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
         return res.status(401).send(err);
       }
 
-      const encodedUUID = decoded.sub;
-      const encoder = new UuidEncoder('base36');
-      const uuid = encoder.decode(encodedUUID);
+      let uuid = decoded.sub;
+      if (!UUID_REGEXP.test(uuid)) {
+        const encoder = new UuidEncoder('base36');
+        uuid = encoder.decode(uuid);
+      }
 
       const user = await db.selectUserByID(uuid as string);
       if (user.rows.length !== 1) {
