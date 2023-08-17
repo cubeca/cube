@@ -9,7 +9,7 @@ const Breadcrumb = () => {
         <Grid xs={10} xsOffset={1}>
           <s.Breadcrumb className={'upload__breadcrumb'}>
             <li>
-              <Button variant="contained">Dashboard</Button>
+              <Button variant="contained">My Profile</Button>
             </li>
             <li>
               <Typography variant="body2">Upload new media</Typography>
