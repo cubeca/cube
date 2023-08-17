@@ -4,7 +4,10 @@ import Button from 'components/Button';
 
 export const Aux = styled(Stack)`
   position: relative;
-  top: 4px;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    top: 4px;
+  }
 `;
 
 export const AuxMenuTrigger = styled('button')`
