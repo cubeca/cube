@@ -60,9 +60,9 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
           <EmailInput
             control={control}
             name="email"
-            label={t('E-mail address')}
+            label={t('Email address')}
             fullWidth
-            helperText={t('E-mail address required')}
+            helperText={t('Email address required')}
             variant="outlined"
           />
           <PasswordInput
@@ -76,7 +76,7 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
           {errorMessage && (
             <ErrorMessage>{errorMessage}</ErrorMessage>
           )}
-          <Box pt="1rem">
+          <Box>
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
               {t('Login')}
             </Button>
