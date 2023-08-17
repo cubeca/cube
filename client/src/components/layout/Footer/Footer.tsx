@@ -87,14 +87,18 @@ const Footer = () => {
 
       <Grid container>
 
-        <Grid xs={10} xsOffset={1} md={4}>
+        {/* <Grid xs={10} xsOffset={1} md={4}>
           <Subscribe></Subscribe>
         </Grid>
-        
+         */}
+
         <Grid xs={10} xsOffset={1} md={5}>
           <NavPanel></NavPanel>
         </Grid>
+        
+      </Grid>
 
+      <Grid container>
         <Grid xs={10} xsOffset={1} md={4}>
           <s.Credits>
             <CreditsImg />
