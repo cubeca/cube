@@ -1,4 +1,3 @@
-import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import ProfileMenu from './ProfileMenu';
 import { useContext, useState } from 'react';
@@ -38,12 +37,11 @@ const Profile = () => {
 
   return (
     <Box>
-      <Button
+      <s.ProfileButton
         onClick={handleMenuOpen}
         aria-controls={open ? menuId : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        sx={{ padding: '10px 20px' }}
       >
         <Box display="flex" justifyContent="center" alignItems="center">
           <s.ImageWrapper>
@@ -54,11 +52,11 @@ const Profile = () => {
               />
             </s.ImageInner>
           </s.ImageWrapper>
-          <Box component="span" pl="10px">
+          <s.Label component="span" pl="10px">
             {username}
-          </Box>
+          </s.Label>
         </Box>
-      </Button>
+      </s.ProfileButton>
       <ProfileMenu
         open={open}
         anchorEl={anchorEl}

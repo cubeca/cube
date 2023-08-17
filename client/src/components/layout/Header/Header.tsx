@@ -4,7 +4,7 @@ import * as s from './Header.styled';
 
 const Header = () => (
   <s.Header component="header" direction="row">
-    <s.HomeLink to="/about" />
+    <s.HomeLink to="/" />
     <PrimaryNav />
     <AuxiliaryNav />
   </s.Header>

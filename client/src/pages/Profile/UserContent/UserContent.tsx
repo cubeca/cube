@@ -23,7 +23,8 @@ import FPOThumb8 from 'assets/images/fpo/eldar-nazarov-gnYfMrL0rck-unsplash-thum
 const UserContent = () => {
   const { data, isLoading } = useContent('featured', ContentLists.Featured);
 
-  const content = data || [
+  // const content = data || [
+  const content = [
     {
       id: 0,
       thumbnailUrl: FPOThumb1,

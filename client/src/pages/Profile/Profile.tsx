@@ -34,6 +34,10 @@ const Profile = () => {
 
   return (
     <Box>
+      <s.UserHeroBg>
+        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
+      </s.UserHeroBg>
+
       <s.UserProfile>
         <ViewSection
           profile={profile!}
@@ -41,10 +45,6 @@ const Profile = () => {
           onEdit={() => setIsOpen(true)}
         />
       </s.UserProfile>
-
-      <s.UserHeroBg>
-        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
-      </s.UserHeroBg>
 
       <Grid container>
         <Grid xs={10} xsOffset={1} md={7}>
