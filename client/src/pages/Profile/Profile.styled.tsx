@@ -6,16 +6,24 @@ export const UserProfile = styled(Box)``;
 export const UserHeroBg = styled(Box)`
   position: relative;
   width: 100%;
-  height: 360px;
+  height: 184px;
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    height: 360px;
+  }
 
   img {
     display: block;
     position: absolute;
     top: 0;
     left: 0;
-    width: 87.5%;
+    width: 100%;
     height: 100%;
     object-fit: cover;
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      width: 87.5%;
+    }
   }
 
   &::after {
@@ -23,16 +31,26 @@ export const UserHeroBg = styled(Box)`
     display: block;
     position: absolute;
     z-index: 2;
-    top: 0;
-    right: 0;
-    width: 25%;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    background-image: linear-gradient(
-      90deg,
-      rgba(40, 52, 60, 0) 0%,
-      rgba(40, 52, 60, 0.666) 25%,
-      rgba(40, 52, 60, 1) 50%
-    );
+    background: linear-gradient(0deg, rgba(47,64,72,1) 0%, rgba(47,64,72,0) 100%);
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      top: 0;
+      bottom: auto;
+      right: 0;
+      left: auto;
+      width: 25%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        rgba(40, 52, 60, 0) 0%,
+        rgba(40, 52, 60, 0.666) 25%,
+        rgba(40, 52, 60, 1) 50%
+      );
+    }
   }
 `;
 
@@ -47,23 +65,48 @@ export const UserContentHeader = styled(Stack)`
 `;
 
 export const ViewSection = styled(Stack)`
-  position: fixed;
-  z-index: 3;
-  overflow-y: auto;
-  top: 120px;
-  right: 0;
-  width: 25vw;
-  height: calc(100vh - 120px);
+  position: relative;
   align-items: center;
+  margin-top: -136px;
+  z-index: 3;
+  
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    z-index: -1;
+    top: 136px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2F4048;
+  }
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    position: fixed;
+    overflow-y: auto;
+    top: 120px;
+    right: 0;
+    width: 25vw;
+    height: calc(100vh - 120px);
+    margin-top: 0;
+
+    &::before {
+      display: none;
+    }
+  }
 `;
 
 export const Header = styled(Box)`
-  height: 360px;
-  flex: 0 0 360px;
-  display: flex;
-  flex-flow: column nowrap;
-  justify-content: center;
   text-align: center;
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    height: 360px;
+    flex: 0 0 360px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+  }
 
   small {
     display: block;
@@ -157,5 +200,9 @@ export const EditProfileHeroBg = styled(Box)`
 `;
 
 export const Body = styled(Box)`
-  padding: 60px 30px;
+  padding: 30px;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding: 60px 30px;
+  }
 `;
