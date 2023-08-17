@@ -30,11 +30,12 @@ export const CreatorSignupForm = () => {
     } = data;
     try {
       setErrorMessage('');
+
       await creatorSignup(
         `${firstName} ${lastName}`,
         organization,
         website,
-        tag,
+        tag.startsWith('@') ? tag.substring(1) : tag,
         email,
         password,
         !!promotions,

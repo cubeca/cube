@@ -7,7 +7,7 @@ import mime from 'mime';
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-import { inspect, parseTusUploadMetadata } from './utils';
+import { parseTusUploadMetadata } from './utils';
 import * as stream from './stream';
 import { getPresignedUploadUrl } from './r2';
 
@@ -102,7 +102,6 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     res.status(200).send('OK');
   } catch (e: any) {
     console.error(e.message);
-    inspect(e);
     res.status(500).send('Error retrieving content upload url');
   }
 });
@@ -162,7 +161,7 @@ export interface NonVideoPlayerInfo {
   publicUrl: string;
 }
 
-app.get('/files/:fileId', allowIfAnyOf('anonymous, active'), async (req: Request, res: Response) => {
+app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
 
   if (!UUID_REGEXP.test(fileId)) {
@@ -186,7 +185,7 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous, active'), async (req: Request
       // inspect('Video is still being processed:', videoDetails);
       return res.status(409).send('Video is still being processed.');
     }
-    
+
     playerInfo = {
       hlsUrl: videoDetails?.playback?.hls,
       dashUrl: videoDetails?.playback?.dash,
