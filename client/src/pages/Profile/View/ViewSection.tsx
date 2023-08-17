@@ -11,13 +11,18 @@ interface ViewSectionProps {
   onEdit: () => void;
 }
 
+const getUrl = (website: string) => {
+  return website.startsWith('http') ? website : `https://${website}`
+}
+
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
+  console.log(profile)
   return (
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
           <s.ImageInner
-            href={profile.website}
+            href={getUrl(profile.website)}
             title={profile!.organization}
             target="_blank"
           >
