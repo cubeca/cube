@@ -2,6 +2,7 @@ import { profileApi } from '.';
 import { upload } from './upload';
 
 export const getProfile = async (id: string) => {
+  console.log('getProfile', id)
   return await profileApi.getProfile(id);
 };
 

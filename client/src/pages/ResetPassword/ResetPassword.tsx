@@ -11,15 +11,11 @@ import PasswordInput from 'components/form/PasswordInput';
 
 const ResetPassword = () => {
   const { t } = useTranslation('common');
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { search } = useLocation();
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
-  const { user } = useContext(UserContext);
 
   const onSubmit = async (data: FieldValues) => {
-    const { currentPassword, newPassword, confirmPassword } = data;
+    const { newPassword, confirmPassword } = data;
     setErrorMessage('');
 
     if (newPassword !== confirmPassword) {
@@ -28,7 +24,7 @@ const ResetPassword = () => {
     }
 
     try {
-      await updatePassword(user.id, currentPassword, newPassword);
+      await updatePassword(newPassword);
     } catch(e: any) {
       setErrorMessage(e.response.data)
     }
@@ -42,14 +38,6 @@ const ResetPassword = () => {
 
       <Stack direction="column">
         <Typography component="h2">{t('Update Your Password')}</Typography>
-        <PasswordInput
-            name="currenetPassword"
-            id="currentPassword"
-            control={control}
-            fullWidth
-            variant="outlined"
-            label={t('Current Password')}
-          />
           <PasswordInput
             name="newPassword"
             id="newPassword"

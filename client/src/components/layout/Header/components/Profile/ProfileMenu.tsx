@@ -14,6 +14,7 @@ import useAuth from 'hooks/useAuth';
 import { UserContext } from 'providers/UserProvider';
 import * as s from './Profile.styled';
 import { getProfile } from 'api/profile';
+import { getProfileId } from 'utils/auth';
 
 interface ProfileMenuProps {
   open: boolean;
@@ -32,10 +33,13 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
   const { logout } = useAuth();
   const { user } = useContext(UserContext);
   const [tag, setTag] = useState('')
+  const profileId = getProfileId();
 
   useEffect( () => {
+    console.log('useEffect')
     const getTag = async () => {
-      const { data } = await getProfile((user as any).profile_id)
+      const { data } = await getProfile((user as any).profile_id || profileId)
+      console.log('getTag', data)
       setTag((data as any).tag)
     }
     getTag()
@@ -80,7 +84,7 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
           'aria-labelledby': id
         }}
       >
-        {profile.profileId && (
+        {profileId && (
           <ProfileMenuItem
             onClick={() => handleProfile(`/profile/${tag}`)}
             text={t('My Profile')}

@@ -35,7 +35,7 @@ const Profile = () => {
   return (
     <Box>
       <s.UserHeroBg>
-        <img src={profile.herourl || profileHeroUrl} alt="user profile hero" />
+        <img src={profile.heroUrl || profileHeroUrl} alt="user profile hero" />
       </s.UserHeroBg>
 
       <s.UserProfile>

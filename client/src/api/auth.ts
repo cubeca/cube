@@ -30,19 +30,18 @@ export const updateEmail = async (userId: string, email: string) => {
 };
 
 export const updatePassword = async (
-  userId: string,
-  currentPassword: string,
-  newPassword: string
+  newPassword: string,
+  currentPassword?: string
 ) => {
   return await authApi.updatePassword({
-    uuid: userId,
     currentPassword,
     newPassword,
   });
 };
 
 export const forgotPassword = async (email: string) => {
-  return await authApi.forgotPassword({ email });
+  const anonToken = await anonymousJWT()
+  return await authApi.forgotPassword({ email }, { headers: { Authorization: `Bearer ${anonToken}`}});
 };
 
 export const creatorSignup = async (

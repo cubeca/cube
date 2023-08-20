@@ -8,9 +8,9 @@ import { getProfileId } from 'utils/auth';
 const useProfile = () => {
   const { tag } = useParams();
   const [isLoadingImages, setIsLoadingImages] = useState(false);
-  const [herourl, setHerourl] = useState('');
-  const [logourl, setLogourl] = useState('');
-  const [descriptionurl, setDescriptionurl] = useState('');
+  const [heroUrl, setHeroUrl] = useState('');
+  const [logoUrl, setLogoUrl] = useState('');
+  const [descriptionUrl, setDescriptionUrl] = useState('');
   const profileId = getProfileId();
 
   const { isLoading, isError, data } = useQuery(
@@ -21,6 +21,8 @@ const useProfile = () => {
 
   const profile = data?.data;
 
+  console.log(profile)
+
   useEffect(() => {
     if (profile) {
       setIsLoadingImages(true);
@@ -29,9 +31,9 @@ const useProfile = () => {
           const hero = await filesApi.fileDetails(profile.herofileid);
           const logo = await filesApi.fileDetails(profile.logofileid);
           const description = await filesApi.fileDetails(profile.descriptionfileid)
-          setHerourl((hero.data.playerInfo as any).publicUrl);
-          setLogourl((logo.data.playerInfo as any).publicUrl);
-          setDescriptionurl((description.data.playerInfo as any).publicUrl);
+          setHeroUrl((hero.data.playerInfo as any).publicUrl);
+          setLogoUrl((logo.data.playerInfo as any).publicUrl);
+          setDescriptionUrl((description.data.playerInfo as any).publicUrl);
           setIsLoadingImages(false);
         }
       };
@@ -44,9 +46,9 @@ const useProfile = () => {
     isError,
     data: {
       ...profile,
-      herourl,
-      logourl,
-      descriptionurl,
+      heroUrl,
+      logoUrl,
+      descriptionUrl,
       profileId
     }
   };

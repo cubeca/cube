@@ -18,7 +18,7 @@ const Router = () => {
         element={<Navigate to="/login?verified=true" />}
       />
       <Route
-        path="/reset-password"
+        path="/reset-password/:token"
         element={<ResetPassword />}
       />
       <Route path="*" element={<NotFound />} />
