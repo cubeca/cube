@@ -65,11 +65,11 @@ export const getProfileData = async (profileId: string, authHeader: AxiosHeaders
     headers: authHeader
   });
 
-  profile.content = await transformContentForProfile(contentResponse.data.data);
+  profile.content = await transformContentForProfile(contentResponse.data.data, authHeader);
   return profile;
 };
 
-export async function transformContentForProfile(contentItems: any[]) {
+export async function transformContentForProfile(contentItems: any[], authHeader: AxiosHeaders) {
   const fieldNames = {
     coverImageFileId: 'coverImageUrl',
     mediaFileId: 'mediaUrl',
@@ -82,7 +82,7 @@ export async function transformContentForProfile(contentItems: any[]) {
       const newItem = { ...item };
       for (const [key, value] of Object.entries(fieldNames)) {
         if (item[key]) {
-          const getFileResponse = await cloudflareApi.get(`files/${item[key]}`);
+          const getFileResponse = await cloudflareApi.get(`files/${item[key]}`, { headers: authHeader });
           newItem[value] = getFileResponse.data;
           delete newItem[key];
         }
