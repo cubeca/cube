@@ -212,6 +212,11 @@ app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: 
 
   try {
     const userReq = extractUser(req);
+    if (!UUID_REGEXP.test(userReq.uuid)) {
+      const encoder = new UuidEncoder('base36');
+      userReq.uuid = encoder.decode(userReq.uuid);
+    }
+    
     const r = await db.selectUserByID(userReq.uuid);
     if (!r) {
       return res.status(403).send('Invalid: Unable to verify user.');
