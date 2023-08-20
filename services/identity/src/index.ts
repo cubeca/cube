@@ -59,6 +59,12 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
       profileId = await createDefaultProfile(authHeader, organization, website, tag);
       permissionIds.push('contentEditor');
       if (!profileId) {
+        console.error(
+          'Error creating profile for user. Organization name, website or tag already exist',
+          organization,
+          website,
+          tag
+        );
         return res
           .status(400)
           .send('Error creating profile for user. Organization name, website, or tag already exists');
@@ -89,9 +95,10 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
     res.status(201).json({ id: user.id, jwt: token });
   } catch (error: any) {
     if (error.message.includes('duplicate key')) {
+      console.error('Email already exists', error);
       res.status(400).send('Email already exists');
     } else {
-      console.error(error);
+      console.error('Error creating identity', error);
       res.status(500).send('Error creating identity');
     }
   }
@@ -195,7 +202,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
     await sendVerificationEmail('', email, user.token);
     res.send('OK');
   } catch (error: any) {
-    console.error('Error updating email:', error);
+    console.error('Error updating email: ', error);
     return res.status(500).send('Error updating email');
   }
 });
@@ -216,7 +223,7 @@ app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: 
       const encoder = new UuidEncoder('base36');
       userReq.uuid = encoder.decode(userReq.uuid);
     }
-    
+
     const r = await db.selectUserByID(userReq.uuid);
     if (!r) {
       return res.status(403).send('Invalid: Unable to verify user.');
@@ -240,7 +247,7 @@ app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: 
     await sendPasswordChangeConfirmation(userReq.uuid as string);
     res.send('OK');
   } catch (error: any) {
-    console.error('Error updating password:', error);
+    console.error('Error updating password: ', error);
     return res.status(500).send('Error updating password');
   }
 });
@@ -289,12 +296,11 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       return res.status(301).send(redirectUrl);
     });
   } catch (error: any) {
-    console.error('Error occurred verifying email:', error);
+    console.error('Error occurred verifying email: ', error);
     const redirectUrl = `${process.env.HOST}/verified?errorCode=SERVER_ERROR`;
     return res.status(500).send(redirectUrl);
   }
 });
-
 
 /**
  * Trigger password reset email to users who are locked out.
@@ -313,7 +319,7 @@ app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request
       return res.status(403).send('Email does not exist');
     }
   } catch (error: any) {
-    console.error('Error occurred sending password reset email:', error);
+    console.error('Error occurred sending password reset email: ', error);
     return res.status(500).send('Error updating email');
   }
 
@@ -338,7 +344,7 @@ app.post('/auth/resend-email-verification', allowIfAnyOf('active'), async (req: 
 
     res.send('OK');
   } catch (error: any) {
-    console.error('Error occurred verifying email:', error);
+    console.error('Error occurred verifying email: ', error);
     return res.status(500).send('Error occurred verifying email!');
   }
 });
