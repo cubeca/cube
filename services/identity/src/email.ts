@@ -101,7 +101,7 @@ export const sendPasswordResetEmail = async (email: string) => {
     {
       iss: 'CUBE',
       sub: encodedUuid,
-      aud: ['cube-password-reset']
+      aud: ['password-reset']
     },
     settings.JWT_TOKEN_SECRET,
     { expiresIn: '4h' }
