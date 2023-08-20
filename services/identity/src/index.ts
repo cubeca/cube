@@ -203,7 +203,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
 /**
  * Update password for a user.
  */
-app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: Request, res: Response) => {
   const { currentPassword, newPassword } = req.body;
 
   if (!newPassword) {
