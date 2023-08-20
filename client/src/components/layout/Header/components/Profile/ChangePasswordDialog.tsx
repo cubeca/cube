@@ -35,7 +35,7 @@ const ChangePasswordDialog = ({
       return;
     }
     try {
-      updatePassword(user.uuid, currentPassword, newPassword);
+      updatePassword(currentPassword, newPassword);
       reset();
       setIsPasswordUpdated(true)
     }
@@ -43,7 +43,6 @@ const ChangePasswordDialog = ({
       setErrorMessage(e.response.data || t('An error occurred while updating password'))
     }
   };
-
 
   return (
     <Dialog open={isOpen} onClose={onClose} id="update-email-dialog" title="">

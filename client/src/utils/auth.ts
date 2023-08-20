@@ -7,7 +7,6 @@ export const getAuthToken = async (): Promise<string | null> => {
   let jwt = localStorage.getItem(AUTH_TOKEN);
   if (!jwt) {
     jwt = await anonymousJWT();
-    setAuthToken(jwt || '');
   }
   return jwt;
 };

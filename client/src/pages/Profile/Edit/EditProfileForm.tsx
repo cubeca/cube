@@ -61,7 +61,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
       <s.EditProfileImagesWrapper>
         <s.EditProfileHeroBg>
           <img
-            src={profile.herourl || profileHeroUrl}
+            src={profile.heroUrl || profileHeroUrl}
             alt="user profile hero"
           />
           <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
@@ -78,7 +78,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         <s.ImageWrapper>
           <s.ImageInner>
             <img
-              src={profile.logourl || FPOProfileUrl}
+              src={profile.logoUrl || FPOProfileUrl}
               alt="profile thumbnail"
             />
           </s.ImageInner>

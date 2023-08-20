@@ -12,7 +12,7 @@ interface ViewSectionProps {
 }
 
 const getUrl = (website: string) => {
-  return website.startsWith('http') ? website : `https://${website}`
+  return website?.startsWith('http') ? website : `https://${website}`
 }
 
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
@@ -22,12 +22,12 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
       <s.Header>
         <s.ImageWrapper>
           <s.ImageInner
-            href={getUrl(profile.website)}
+            href={getUrl(profile?.website)}
             title={profile!.organization}
             target="_blank"
           >
             <img
-              src={profile.logourl || FPOProfileUrl}
+              src={profile.logoUrl || FPOProfileUrl}
               alt="profile thumbnail"
             />
           </s.ImageInner>
@@ -55,7 +55,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
           {profile.description}
         </Typography>
         <Box pt="16px">
-          {profile?.descriptionurl && <MediaPlayer url={profile?.descriptionurl} isAudio />}
+          {profile?.descriptionUrl && <MediaPlayer url={profile?.descriptionUrl} isAudio />}
         </Box>
       </s.Body>
     </s.ViewSection>
