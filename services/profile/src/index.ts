@@ -22,7 +22,6 @@ app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, 
     return res.status(401).send('Invalid Request Body: organization, website, and tag must be provided.');
   }
 
-  
   // Insert the new profile and return its ID
   try {
     const r = await db.insertProfile(organization, website, tag);
@@ -30,8 +29,10 @@ app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, 
     res.status(201).json({ id: profile.id });
   } catch (e: any) {
     if (e.message.indexOf('duplicate key') !== -1) {
+      console.error('Organization with provided details already exists', e);
       res.status(400).send('Organization with provided details already exists');
     } else {
+      console.error('Error creating profile', e);
       res.status(500).send('Error creating profile');
     }
   }
@@ -42,12 +43,22 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update
-  if (!(req.body.organization || req.body.website || req.body.heroFileId || req.body.logoFileId || req.body.description || req.body.descriptionFileId || req.body.budget)) {
+  if (
+    !(
+      req.body.organization ||
+      req.body.website ||
+      req.body.heroFileId ||
+      req.body.logoFileId ||
+      req.body.description ||
+      req.body.descriptionFileId ||
+      req.body.budget
+    )
+  ) {
     return res.status(500).json('You must supply at least one field to update!');
   }
 
   const user = extractUser(req);
-  const isUserAssociated = await isUserAssociatedToProfile(user.uuid, profileId)
+  const isUserAssociated = await isUserAssociatedToProfile(user.uuid, profileId);
   if (!isUserAssociated) {
     return res.status(403).send('User does not have permission to update this profile');
   }
@@ -68,7 +79,7 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
     const dbResult = await db.updateProfile(profileId, ...args);
     res.status(200).json(dbResult.rows[0]);
   } catch (error) {
-    console.log(error)
+    console.error('Error updating profile', error);
     res.status(500).json(error);
   }
 });
@@ -95,6 +106,7 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
 
     res.status(200).json({ ...profile });
   } catch (e: any) {
+    console.error('Organization does not exist', e);
     res.status(404).send('Organization does not exist');
   }
 });
@@ -119,6 +131,7 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
 
     res.status(200).json({ ...profile });
   } catch (e: any) {
+    console.error('Profile does not exists', e);
     res.status(404).send('Profile does not exist');
   }
 });

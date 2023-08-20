@@ -38,7 +38,7 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
     const dbResult = await db.insertContent({ profileId, ...contentData });
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
-    console.error(error);
+    console.error('Error creating the content item', error);
     res.status(500).send('Error creating the content item');
   }
 });
@@ -91,7 +91,7 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
     const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
-    console.error(error);
+    console.error('Error updating the content item', error);
     res.status(500).send('Error updating the content item');
   }
 });
@@ -123,7 +123,7 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
     const dbResult = await db.deleteContent(contentId);
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
-    console.error(error);
+    console.error('Error deleting content item', error);
     res.status(500).send('Could not delete content item');
   }
 });

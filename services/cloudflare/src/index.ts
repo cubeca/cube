@@ -22,19 +22,19 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const fileId = req.query.fileId as string;
 
   if (!fileId) {
-    console.log(400, `Invalid Request. 'fileId' query parameter required`);
+    console.error(400, `Invalid Request. 'fileId' query parameter required`);
     return res.status(400).send(`Invalid Request. 'fileId' query parameter required`);
   }
 
   const { 'upload-length': tusUploadLength, 'upload-metadata': tusUploadMetadata } = req.headers;
 
   if (!tusUploadLength) {
-    console.log(400, `Invalid Request. 'Upload-Length' header required`);
+    console.error(400, `Invalid Request. 'Upload-Length' header required`);
     return res.status(400).send(`Invalid Request. 'Upload-Length' header required`);
   }
 
   if (!tusUploadMetadata) {
-    console.log(400, `Invalid Request. 'Upload-Metadata' header required`);
+    console.error(400, `Invalid Request. 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'Upload-Metadata' header required`);
   }
 
@@ -52,7 +52,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   // return res.status(500).send('Error retrieving content upload url');
 
   if (!allocVidTime) {
-    console.log(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
+    console.error(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
   }
 
@@ -101,7 +101,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     });
     res.status(200).send('OK');
   } catch (e: any) {
-    console.error(e.message);
+    console.error('Error retrieving content upload url', e);
     res.status(500).send('Error retrieving content upload url');
   }
 });
@@ -140,7 +140,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
 
     res.status(201).json({ fileId, presignedUrl });
   } catch (e: any) {
-    console.error(e.message);
+    console.error('Error retrieving content upload url', e);
     res.status(500).send('Error retrieving content upload url');
   }
 });
@@ -182,7 +182,6 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
     }
 
     if (!videoDetails.readyToStream) {
-      // inspect('Video is still being processed:', videoDetails);
       return res.status(409).send('Video is still being processed.');
     }
 
