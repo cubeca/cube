@@ -6,7 +6,7 @@ import { AxiosHeaders } from 'axios';
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { identityApi, profileApi, contentApi, cloudflareApi } from './microservices';
-import { filterObject, getProfileData } from './utils';
+import { filterObject, getProfileData, transformContent } from './utils';
 
 const app: Express = express();
 app.use(cors());

@@ -105,10 +105,7 @@ export const uploadS3 = async (
 
   const r2PutOptions = {
     timeout: 10 * 60 * 1000,
-
-    // Do not throw errors for non-2xx responses, that makes handling them easier.
     validateStatus: null,
-
     headers: {
       'Content-Type': mimeType,
       'Content-Length': fileSizeBytes

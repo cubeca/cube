@@ -3,14 +3,12 @@ import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { createHash } from 'node:crypto';
-
 import axios from 'axios';
 import type { ResponseType } from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 import mime from 'mime';
-
 import * as settings from './settings';
-import { inspect, inspectAxiosResponse, inspectAxiosError, makeUUID } from './utils';
+import { makeUUID } from './utils';
 import { uploadViaTus } from './tus';
 
 const API_URL = `http://${settings.MICROSERVICE}:${settings.PORT}`;
@@ -22,8 +20,6 @@ const TEST_TIMEOUT_UPLOAD = 5 * 60 * 1000;
 const cloudflareApi = axios.create({
   baseURL: API_URL,
   timeout: 60 * 1000,
-
-  // Do not throw errors for non-2xx responses, that makes testing easier.
   validateStatus: null
 });
 
@@ -48,7 +44,6 @@ test('uploads video via TUS', async () => {
 
   // First, we have a long-running TUS upload.
   // Then we are waiting for a real video to get encoded over at Cloudflare.
-  // Both things will take some real wall clock time.
   jest.useRealTimers();
 
   const meta = {
@@ -158,10 +153,7 @@ test(
     const fileId = r2SignData.fileId;
     const r2PutOptions = {
       timeout: 10 * 1000,
-
-      // Do not throw errors for non-2xx responses, that makes handling them easier.
       validateStatus: null,
-
       headers: {
         'Content-Type': mimeType,
         'Content-Length': fileLength
@@ -175,7 +167,7 @@ test(
     try {
       r2UploadResponse = await axios.put(r2SignData.presignedUrl, fileStream, r2PutOptions);
     } catch (err: any) {
-      inspectAxiosError(err);
+      console.log(err);
       throw err;
     }
 
@@ -205,8 +197,6 @@ test(
 
     const r2DownloadOptions = {
       timeout: 60 * 1000,
-
-      // Do not throw errors for non-2xx responses, that makes handling them easier.
       validateStatus: null,
       responseType: 'arraybuffer' as ResponseType
     };
@@ -217,7 +207,7 @@ test(
     try {
       r2DownloadResponse = await axios.get(detailResponse.data?.playerInfo?.publicUrl, r2DownloadOptions);
     } catch (err: any) {
-      inspectAxiosError(err);
+      console.log(err);
       throw err;
     }
     console.log('after R2 download', detailResponse.data?.playerInfo?.publicUrl);
