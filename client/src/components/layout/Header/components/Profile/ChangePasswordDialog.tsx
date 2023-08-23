@@ -35,7 +35,7 @@ const ChangePasswordDialog = ({
       return;
     }
     try {
-      updatePassword(currentPassword, newPassword);
+      updatePassword({ currentPassword, newPassword});
       reset();
       setIsPasswordUpdated(true)
     }

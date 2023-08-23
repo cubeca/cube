@@ -21,8 +21,6 @@ const useProfile = () => {
 
   const profile = data?.data;
 
-  console.log(profile)
-
   useEffect(() => {
     if (profile) {
       setIsLoadingImages(true);
