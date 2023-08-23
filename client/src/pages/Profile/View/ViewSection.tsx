@@ -16,7 +16,6 @@ const getUrl = (website: string) => {
 }
 
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
-  console.log(profile)
   return (
     <s.ViewSection>
       <s.Header>
