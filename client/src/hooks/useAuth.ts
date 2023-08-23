@@ -22,9 +22,9 @@ const useAuth = () => {
   };
 
   const logout = () => {
-    removeAuthToken();
-    setUser(undefined);
     setIsLoggedIn(false);
+    setUser(undefined);
+    removeAuthToken();
   };
 
   return {
