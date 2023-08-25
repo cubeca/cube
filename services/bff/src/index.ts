@@ -108,7 +108,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
   res.status(status).json(data);
 });
 
-app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.put('auth/password', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
