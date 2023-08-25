@@ -1,7 +1,11 @@
 import { styled } from 'theme/utils';
-import { Button, Divider, Menu, MenuList, Typography } from '@mui/material';
+import { Button, Divider, Menu, MenuList, Typography, Box } from '@mui/material';
 
 export const MainMenu = styled(Menu)`
+
+  .MuiList-root {
+    padding: 0 !important;
+  }
 
   .close-button {
     padding: 16px;
@@ -24,17 +28,7 @@ export const MainMenu = styled(Menu)`
 
   .MuiDivider-root {
     border-color: ${(props) => props.theme.palette.background.default} !important;
-    opacity: 0.2 !important;
     margin-top: 16px;
-  }
-  
-  h3 {
-    margin: 12px 0 24px 0;
-  }
-
-  h4 {
-    font-size: 14px;
-    margin: 8px 16px;
   }
 
   li {
@@ -42,4 +36,19 @@ export const MainMenu = styled(Menu)`
     padding-right: 64px;
   }
 
+`;
+
+export const Glossary = styled(Box)`
+  padding: 1px 0;
+  background-color: #D8FFEE;
+
+  h3 {
+    margin: 0 0 12px 0;
+  }
+
+  h4 {
+    font-size: 14px;
+    margin: 16px 16px 8px;
+    color: ${(props) => props.theme.palette.primary.dark} !important;
+  }
 `;
