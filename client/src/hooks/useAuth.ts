@@ -5,12 +5,12 @@ import { UserContext } from 'providers/UserProvider';
 
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     const checkAuth = async () => {
       const isLoggedIn = await isAuthed();
-      setIsLoggedIn(isLoggedIn);
+      setIsLoggedIn(isLoggedIn && user?.has_verified_email);
     };
     checkAuth();
   });
