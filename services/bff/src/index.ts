@@ -115,7 +115,7 @@ app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: 
   res.status(status).json(data);
 });
 
-app.post('/auth/resend-email-verification', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.post('auth/resend-email-verification', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
