@@ -19,7 +19,8 @@ const Login = () => {
   const passwordReset = search.includes('password-reset');
 
   const isLogin = location.pathname.toLowerCase() === '/login';
-  const signUpForm = search.includes('user') ? (
+  const isUserSignup = search.includes('user')
+  const signUpForm = isUserSignup ? (
     <UserSignupForm />
   ) : (
     <CreatorSignupForm />
@@ -72,6 +73,18 @@ const Login = () => {
                     }
                   >
                     {isLogin ? t('Creator Sign up') : t('Login')}
+                  </Button>
+                )}
+
+                {!isLogin && (
+                  <Button
+                    color="secondary"
+                    variant="outlined"
+                    onClick={() =>
+                      navigate(`/signup?type=${isUserSignup ? 'creator' : 'user'}`)
+                    }
+                  >
+                    {isUserSignup ? t('Creator Sign up') : t('User Sign up')}
                   </Button>
                 )}
 
