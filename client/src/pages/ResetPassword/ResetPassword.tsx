@@ -1,12 +1,11 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
 import ErrorMessage from 'components/form/ErrorMessage';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { updatePassword } from 'api/auth';
-import { UserContext } from 'providers/UserProvider';
 import PasswordInput from 'components/form/PasswordInput';
 
 const ResetPassword = () => {
@@ -14,6 +13,7 @@ const ResetPassword = () => {
   const { token } = useParams();
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate()
 
   const onSubmit = async (data: FieldValues) => {
     const { newPassword, confirmPassword } = data;
@@ -26,6 +26,8 @@ const ResetPassword = () => {
 
     try {
       await updatePassword({newPassword, token});
+      reset()
+      navigate('/login?password-reset=true')
     } catch(e: any) {
       setErrorMessage(e.response.data)
     }
