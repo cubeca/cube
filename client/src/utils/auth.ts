@@ -38,8 +38,5 @@ export const removeAuthToken = () => {
 
 export const isAuthed = async () => {
   const payload = await getAuthTokenPayload();
-  if (!(payload.aud as Array<string>).includes('anonymous')) {
-    return true;
-  }
-  return false;
+  return (payload.aud as Array<string>).includes('active')
 };

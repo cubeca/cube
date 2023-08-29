@@ -10,7 +10,7 @@ const useAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       const isLoggedIn = await isAuthed();
-      setIsLoggedIn(isLoggedIn && user?.has_verified_email);
+      setIsLoggedIn(isLoggedIn);
     };
     checkAuth();
   });
