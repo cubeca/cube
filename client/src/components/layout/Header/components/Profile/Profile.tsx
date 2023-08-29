@@ -1,19 +1,39 @@
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import ProfileMenu from './ProfileMenu';
-import { useContext, useState } from 'react';
-import useProfile from 'hooks/useProfile';
+import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from './Profile.styled';
 import { UserContext } from 'providers/UserProvider';
+import { getProfileId } from 'utils/auth';
+import { getProfile, getProfileByTag } from 'api/profile';
+import { BFFGetProfileByTagData } from '@cubeca/bff-client-oas-axios';
 
 const Profile = () => {
   const { t } = useTranslation();
-  const { data: profile, isLoading } = useProfile();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { user } = useContext(UserContext);
+  const [tag, setTag] = useState('')
+  const profileId = getProfileId();
+  const [profile, setProfile] = useState<BFFGetProfileByTagData>();
+
+  useEffect(() => {
+    const getTag = async () => {
+      const { data } = await getProfile((user as any).profile_id || profileId)
+      setTag((data as any).tag)
+    }
+    getTag()
+  }, [])
+
+  useEffect(() => {
+    const getProfileDetails = async () => {
+      const { data } = await getProfileByTag(tag)
+      setProfile(data.data)
+    }
+    getProfileDetails()
+  }, [tag])
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -24,10 +44,6 @@ const Profile = () => {
   };
 
   const menuId = 'profile-menu';
-
-  // if (isLoading) {
-  //   return <Box>Loading...</Box>;
-  // }
 
   let username = t('Profile')
   if(user && !user.permission_ids.includes('contentEditor')) {
@@ -47,7 +63,7 @@ const Profile = () => {
           <s.ImageWrapper>
             <s.ImageInner>
               <img
-                src={profile.logoUrl || FPOProfileUrl}
+                src={profile?.logoUrl || FPOProfileUrl}
                 alt="profile thumbnail"
               />
             </s.ImageInner>
@@ -62,6 +78,8 @@ const Profile = () => {
         anchorEl={anchorEl}
         onClose={handleMenuClose}
         id={menuId}
+        profile={profile}
+        profileId={profileId || ''}
       />
     </Box>
   );
