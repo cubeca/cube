@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+import he from 'he';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
@@ -56,7 +57,7 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
     let profileId = '';
     if (organization || website || tag) {
       const authHeader = filterHeadersToForward(req, 'authorization');
-      profileId = await createDefaultProfile(authHeader, organization, website, tag);
+      profileId = await createDefaultProfile(authHeader, organization, he.decode(website), tag);
       permissionIds.push('contentEditor');
       if (!profileId) {
         console.error(
