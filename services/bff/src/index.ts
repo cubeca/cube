@@ -6,7 +6,7 @@ import { AxiosHeaders } from 'axios';
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { identityApi, profileApi, contentApi, cloudflareApi } from './microservices';
-import { filterObject, getProfileData } from './utils';
+import { filterObject, getProfileData, transformContent } from './utils';
 
 const app: Express = express();
 app.use(cors());
@@ -69,7 +69,8 @@ app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
     headers: filterHeadersToForward(req, 'authorization')
   });
 
-  res.status(status).json(data);
+  const transformedContent = await transformContent(data, filterHeadersToForward(req, 'authorization'));
+  res.status(status).json(transformedContent);
 });
 
 app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
@@ -77,7 +78,9 @@ app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: 
     params: req.query,
     headers: filterHeadersToForward(req, 'authorization')
   });
-  res.status(status).json(data);
+
+  const transformedContent = await transformContent([data], filterHeadersToForward(req, 'authorization'));
+  res.status(status).json(transformedContent[0]);
 });
 
 /////////////////// Identity Service ///////////////////

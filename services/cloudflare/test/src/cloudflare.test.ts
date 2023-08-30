@@ -3,12 +3,10 @@ import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { createHash } from 'node:crypto';
-
 import axios from 'axios';
 import type { ResponseType } from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 import mime from 'mime';
-
 import * as settings from './settings';
 import { makeUUID } from './utils';
 import { uploadViaTus } from './tus';
@@ -202,8 +200,6 @@ test(
 
     const r2DownloadOptions = {
       timeout: 60 * 1000,
-
-      // Do not throw errors for non-2xx responses, that makes handling them easier.
       validateStatus: null,
       responseType: 'arraybuffer' as ResponseType
     };

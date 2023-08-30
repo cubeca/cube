@@ -65,11 +65,11 @@ export const getProfileData = async (profileId: string, authHeader: AxiosHeaders
     headers: authHeader
   });
 
-  profile.content = await transformContentForProfile(contentResponse.data.data, authHeader);
+  profile.content = await transformContent(contentResponse.data.data, authHeader);
   return profile;
 };
 
-export async function transformContentForProfile(contentItems: any[], authHeader: AxiosHeaders) {
+export async function transformContent(contentItems: any[], authHeader: AxiosHeaders) {
   const fieldNames = {
     coverImageFileId: 'coverImageUrl',
     mediaFileId: 'mediaUrl',

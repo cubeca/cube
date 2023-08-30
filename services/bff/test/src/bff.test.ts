@@ -40,12 +40,11 @@ const bffApi = axios.create({
   validateStatus: null
 });
 
-
-const getAuthReqOpts = (...permissions: string[]) => {
+const getAuthReqOpts = (permissions: string[], uuid?: string) => {
   const jwt = jsonwebtoken.sign(
     {
       iss: 'CUBE',
-      sub: NIL_UUID,
+      sub: uuid ? uuid : NIL_UUID,
       aud: permissions
     },
     settings.JWT_TOKEN_SECRET
