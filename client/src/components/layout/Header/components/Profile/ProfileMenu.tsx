@@ -36,10 +36,8 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
   const profileId = getProfileId();
 
   useEffect( () => {
-    console.log('useEffect')
     const getTag = async () => {
       const { data } = await getProfile((user as any).profile_id || profileId)
-      console.log('getTag', data)
       setTag((data as any).tag)
     }
     getTag()

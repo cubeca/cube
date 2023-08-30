@@ -1,5 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+import he from 'he';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
@@ -50,13 +51,13 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
   try {
     const hashedPassword = await hashPassword(password);
     const encryptedPassword = encryptString(hashedPassword);
-    const permissionIds = [];
+    const permissionIds = ['anonymous'];
 
     // Create Default Profile
     let profileId = '';
     if (organization || website || tag) {
       const authHeader = filterHeadersToForward(req, 'authorization');
-      profileId = await createDefaultProfile(authHeader, organization, website, tag);
+      profileId = await createDefaultProfile(authHeader, organization, he.decode(website), tag);
       permissionIds.push('contentEditor');
       if (!profileId) {
         console.error(
@@ -329,7 +330,7 @@ app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request
 /**
  * Trigger email verification if original has expired or didn't arrive.
  */
-app.post('/auth/resend-email-verification', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const user = extractUser(req);
 
   try {

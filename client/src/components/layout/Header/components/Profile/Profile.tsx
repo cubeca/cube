@@ -15,8 +15,6 @@ const Profile = () => {
   const open = Boolean(anchorEl);
   const { user } = useContext(UserContext);
 
-  console.log(user, profile)
-
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };

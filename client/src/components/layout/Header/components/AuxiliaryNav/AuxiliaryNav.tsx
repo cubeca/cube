@@ -1,7 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { removeAuthToken } from '../../../../../utils/auth';
-import HamburgerMenu from '../HamburgerMenu';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as s from './AuxiliaryNav.styled';
 import useAuth from 'hooks/useAuth';
 import { useState } from 'react';
@@ -11,13 +9,19 @@ import { Profile } from '../Profile';
 
 const AuxiliaryNav = () => {
   const { t } = useTranslation();
+  const location = useLocation();
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleLogin = () => {
-    navigate('/login');
+    if(location.pathname.includes('/login')) {
+      // If on login page, force refresh to reset state
+      navigate(0);
+    } else {
+      navigate('/login');
+    }
   };
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {

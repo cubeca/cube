@@ -16,15 +16,15 @@ const getUrl = (website: string) => {
 }
 
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
-  console.log(profile)
   return (
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
           <s.ImageInner
-            href={getUrl(profile?.website)}
+            onClick={isLoggedIn ? onEdit : undefined}
             title={profile!.organization}
             target="_blank"
+            style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
           >
             <img
               src={profile.logoUrl || FPOProfileUrl}
@@ -41,7 +41,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
         </s.ImageWrapper>
 
         <Typography component="h5" variant="h5">
-          <a href={profile.website} title={profile!.organization}>
+          <a href={getUrl(profile?.website)} title={profile!.organization} target="_blank" rel="noreferrer">
             {profile!.organization}
           </a>
           <small>

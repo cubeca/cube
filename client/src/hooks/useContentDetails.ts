@@ -1,8 +1,15 @@
 import { getContentDetails } from 'api/content';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+import { ContentStorage } from '@cubeca/bff-client-oas-axios';
 
-const useContentDetails = () => {
+interface ContentDetailsResponse {
+  isLoading: boolean;
+  isError: boolean;
+  data?: ContentStorage;
+}
+
+const useContentDetails = (): ContentDetailsResponse => {
   const { id } = useParams();
 
   const { isLoading, isError, data } = useQuery(
@@ -14,7 +21,7 @@ const useContentDetails = () => {
   return {
     isLoading,
     isError,
-    data: undefined //data?.data.data
+    data: data?.data as unknown as ContentStorage
   };
 };
 

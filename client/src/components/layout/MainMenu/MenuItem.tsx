@@ -5,29 +5,25 @@ import {
   Typography
 } from '@mui/material';
 
+import * as s from './MenuItem.styled';
+
 interface MenuItemProps {
   onClick?: () => void;
-  icon: JSX.Element;
+  icon?: JSX.Element;
   text: string;
 }
 
 const MenuItem = ({ onClick, icon, text }: MenuItemProps) => (
-  <MuiMenuItem
+
+  <s.Item
     onClick={onClick}
-    sx={{
-      marginBottom: 1,
-      paddingX: '20px',
-      cursor: onClick ? 'pointer' : 'default',
-      '&:hover': {
-        background: onClick ? '' : 'none'
-      }
-    }}
+    active={onClick ? true : false}
   >
-    <ListItemIcon sx={{ paddingRight: '10px' }}>{icon}</ListItemIcon>
+    {icon && <ListItemIcon sx={{ paddingRight: '10px' }}>{icon}</ListItemIcon>}
     <Typography component="div" sx={{ margin: 0 }}>
       {text}
     </Typography>
-  </MuiMenuItem>
+  </s.Item>
 );
 
 export default MenuItem;

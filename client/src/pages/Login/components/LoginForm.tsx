@@ -10,6 +10,8 @@ import { useState } from 'react';
 import Button from 'components/Button';
 import useAuth from 'hooks/useAuth';
 import { getProfile } from 'api/profile';
+import { resendEmailVerification } from 'api/auth';
+import { is } from 'date-fns/locale';
 
 interface LoginFormProps {
   emailVerified?: boolean;
@@ -21,24 +23,57 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const [isUnverifiedLogin, setIsUnverifiedLogin] = useState(false)
+  const [isLinkResent, setIsLinkResent] = useState(false)
   const { login } = useAuth();
+  const [user, setUser] = useState<any>()
 
   const onSubmit = async (data: FieldValues) => {
     const { email, password } = data;
     try {
       setErrorMessage('');
       const user = await login(email, password);
-      
-      if ((user as any).profile_id) {
-        const { data } = await getProfile((user as any).profile_id)
-        navigate(`/profile/${(data as any).tag}`);
+      setUser(user)
+
+      const isEmailVerified = !!(user as any).has_verified_email
+
+      if(isEmailVerified) {
+        if ((user as any).profile_id) {
+          const { data } = await getProfile((user as any).profile_id)
+          navigate(`/profile/${(data as any).tag}`);
+        } else {
+          navigate('/home');
+        }
       } else {
-        navigate('/home');
+        setIsUnverifiedLogin(true);
+        setUser(user)
       }
     } catch (e: any) {
       setErrorMessage(e.response?.data || t('An Error occured during login'));
     }
   };
+
+  const handleResendVerification = async () => {
+    await resendEmailVerification(user.email)
+    setIsLinkResent(true)
+  }
+
+  if(isUnverifiedLogin) {
+    return (
+      <Box display="flex" flexDirection="column">
+        <Box pt={4}>
+          {isLinkResent ? (
+            <Typography>{t('Email verification link has been resent to the provided email address.')}</Typography>
+          ) : (
+          <ErrorMessage>{t('Email is unverified. Check your email for a verification link, or resend to provided email address.')}</ErrorMessage>
+          )}
+        </Box>
+        {!isLinkResent ? (<Button type="submit" onClick={handleResendVerification} fullWidth>
+          {t('Resend Email Verification Link')}
+        </Button>) : null}
+      </Box>
+    )
+  }
 
   return (
     <>

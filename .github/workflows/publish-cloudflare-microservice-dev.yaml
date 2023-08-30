@@ -25,5 +25,5 @@ jobs:
       GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
 
       GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-dev:northamerica-northeast2:dev
-      GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-dev:northamerica-northeast2:dev,PGDATABASE=cube_cloudflare,PGUSER=postgres,CLOUDFLARE_ACCOUNT_ID=812b8374abe5aa28e1ff4b96f82e1340,CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=customer-ayah89x7bps0l5b8.cloudflarestream.com,CLOUDFLARE_R2_BUCKET_NAME=cubecommons-dev,CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL=https://files-dev.cubecommons.ca
+      GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-dev:northamerica-northeast2:dev,PGDATABASE=cube_cloudflare,PGUSER=postgres,CLOUDFLARE_ACCOUNT_ID=812b8374abe5aa28e1ff4b96f82e1340,CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=customer-ayah89x7bps0l5b8.cloudflarestream.com,CLOUDFLARE_R2_BUCKET_NAME=cubecommons-dev,CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL=https://pub-3ced16ee967249a58b58e7c1ec6ca05e.r2.dev
       GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=dev-jwt-token-secret:latest,CLOUDFLARE_R2_ACCESS_KEY_ID=dev-cloudflare-r2-access-key-id:latest,CLOUDFLARE_API_TOKEN=dev-cloudflare-api-token:latest,CLOUDFLARE_R2_SECRET_ACCESS_KEY=dev-cloudflare-r2-secret-access-key:latest,PGPASSWORD=dev-db-password:latest

@@ -1,4 +1,4 @@
-import { getAuthToken, setAuthToken, setProfileId } from '../utils/auth';
+import { getAuthToken, removeAuthToken, setAuthToken, setProfileId } from '../utils/auth';
 import { authApi } from '.';
 
 export const anonymousJWT = async () => {
@@ -11,6 +11,7 @@ export const anonymousJWT = async () => {
 };
 
 export const login = async (email: string, password: string) => {
+  removeAuthToken();
   const {
     data: { jwt, user }
   } = await authApi.login({
@@ -29,14 +30,24 @@ export const updateEmail = async (userId: string, email: string) => {
   });
 };
 
-export const updatePassword = async (
-  newPassword: string,
-  currentPassword?: string
-) => {
+export const updatePassword = async ({
+  newPassword,
+  currentPassword,
+  token
+} : {
+  newPassword: string;
+  currentPassword?: string;
+  token?: string;
+}) => {
+  const headers = token ? {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+   } : undefined;
   return await authApi.updatePassword({
     currentPassword,
     newPassword,
-  });
+  }, headers);
 };
 
 export const forgotPassword = async (email: string) => {
@@ -79,3 +90,8 @@ export const userSignup = async (
     hasAcceptedTerms,
     hasAcceptedNewsletter
   });
+
+export const resendEmailVerification = async (email: string) => {
+  const authToken = await getAuthToken()
+  return await authApi.resendEmailVerification({ email }, { headers: { Authorization : `Bearer ${authToken}`}})
+}

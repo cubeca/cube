@@ -4,13 +4,14 @@ import ErrorMessage from 'components/form/ErrorMessage';
 import { useContext, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { updatePassword } from 'api/auth';
 import { UserContext } from 'providers/UserProvider';
 import PasswordInput from 'components/form/PasswordInput';
 
 const ResetPassword = () => {
   const { t } = useTranslation('common');
+  const { token } = useParams();
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -24,7 +25,7 @@ const ResetPassword = () => {
     }
 
     try {
-      await updatePassword(newPassword);
+      await updatePassword({newPassword, token});
     } catch(e: any) {
       setErrorMessage(e.response.data)
     }

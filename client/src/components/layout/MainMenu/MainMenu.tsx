@@ -57,87 +57,81 @@ const MainMenu = ({
       <MenuList sx={{ padding: '4px 4px' }}>
         <MenuItem
           onClick={() => handleMenuClick('/search')}
-          icon={<SearchIcon fontSize="small" />}
+          // icon={<SearchIcon fontSize="small" />}
           text={t('Search Content')}
         />
         <MenuItem
-          onClick={() => handleMenuClick('/playlists')}
-          icon={<FormatListBulletedIcon fontSize="small" />}
-          text={t('Playlists')}
-        />
-        <MenuItem
           onClick={() => handleMenuClick('/vr')}
-          icon={<VrpanoIcon fontSize="small" />}
-          text={t('VR Space')}
+          // icon={<VrpanoIcon fontSize="small" />}
+          text={t('Cube VR')}
         />
         <MenuItem
           onClick={() => handleMenuClick('/signup')}
-          icon={<AddCircleIcon fontSize="small" />}
+          // icon={<AddCircleIcon fontSize="small" />}
           text={t('Become a creator')}
         />
       </MenuList>
       
       <Divider />
 
-      <Typography
-        component="h3"
-        px="16px"
-        pt="20px"
-        fontWeight="bold"
-        m={0}
-        mb={1}
-      >
-        Glossary of Icons
-      </Typography>
-      
-      <Typography component="h4">
-        Accessibility
-      </Typography>
+      <s.Glossary>
 
-      <MenuList>
-        <MenuItem
-          text={t('Text to Speech')}
-          icon={<VoiceChatIcon fontSize="small" />}
-        />
-        <MenuItem
-          text={t('Sign Language')}
-          icon={<SignLanguageIcon fontSize="small" />}
-        />
-        <MenuItem
-          text={t('Subtitles')}
-          icon={<SubtitlesIcon fontSize="small" />}
-        />
-      </MenuList>
+        <Typography
+          component="h3"
+          px="16px"
+          pt="20px"
+          fontWeight="bold"
+          m={0}
+          mb={1}
+        >
+          Glossary of Icons
+        </Typography>
+        
+        <Typography component="h4">
+          Accessibility
+        </Typography>
 
-      <Typography component="h4">
-        Content Types
-      </Typography>
+        <MenuList>
+          <MenuItem
+            text={t('Text to Speech')}
+            icon={<VoiceChatIcon fontSize="small" />}
+          />
+          <MenuItem
+            text={t('Sign Language')}
+            icon={<SignLanguageIcon fontSize="small" />}
+          />
+          <MenuItem
+            text={t('Subtitles')}
+            icon={<SubtitlesIcon fontSize="small" />}
+          />
+        </MenuList>
+
+        <Typography component="h4">
+          Content Types
+        </Typography>
+        
+        <MenuItem
+          text={t('Video')}
+          icon={<PlayArrowIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Audio')}
+          icon={<VolumeUpIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Activity Books')}
+          icon={<ArticleIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Digital Publications')}
+          icon={<MenuBookIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Collaborators')}
+          icon={<GroupsIcon fontSize="small" />}
+        />
+      </s.Glossary>
       
-      <MenuItem
-        text={t('Video')}
-        icon={<PlayArrowIcon fontSize="small" />}
-        onClick={() => {}}
-      />
-      <MenuItem
-        text={t('Audio')}
-        icon={<VolumeUpIcon fontSize="small" />}
-        onClick={() => {}}
-      />
-      <MenuItem
-        text={t('Activity Books')}
-        icon={<ArticleIcon fontSize="small" />}
-        onClick={() => {}}
-      />
-      <MenuItem
-        text={t('Digital Publications')}
-        icon={<MenuBookIcon fontSize="small" />}
-        onClick={() => {}}
-      />
-      <MenuItem
-        text={t('Collaborators')}
-        icon={<GroupsIcon fontSize="small" />}
-        onClick={() => {}}
-      />
     </s.MainMenu>
   );
 };
