@@ -11,9 +11,10 @@ import Details from './components/Screens/Details';
 import Accessibility from './components/Screens/Accessibility';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
+import { getProfileId } from 'utils/auth';
 
 const Upload = () => {
-  const { id } = useParams();
+  const { tag } = useParams();
   const navigate = useNavigate();
   const { control, handleSubmit } = useForm();
   const {
@@ -22,6 +23,7 @@ const Upload = () => {
     isUploadError: isError,
     isUploadSuccess: isSuccess
   } = useContent();
+  const profileId = getProfileId();
 
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
@@ -47,7 +49,7 @@ const Upload = () => {
   const onSubmit = (values: FieldValues) => {
     addContent(
       {
-        profileId: id!,
+        profileId,
         title: values.title,
         type: values.type,
         expiry: values.expiry,
@@ -96,8 +98,10 @@ const Upload = () => {
 
   const activeScreenView = SCREENS[screenIndex].view;
 
+  console.log(tag)
+
   if (isSuccess) {
-    navigate(`/profile/${id!}`);
+    navigate(`/profile/${tag}`);
   }
 
   if (isError) {
