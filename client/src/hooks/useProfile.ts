@@ -16,7 +16,7 @@ const useProfile = () => {
   const profile = data?.data.data;
 
   return {
-    isLoading: isLoading,
+    isLoading,
     isError,
     data: {
       ...profile,
