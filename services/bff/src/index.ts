@@ -83,6 +83,13 @@ app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: 
   res.status(status).json(transformedContent[0]);
 });
 
+app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.delete('content/' + req.params.contentId, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+  res.status(status).json(data);
+});
+
 /////////////////// Identity Service ///////////////////
 
 app.post('/auth/user', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
