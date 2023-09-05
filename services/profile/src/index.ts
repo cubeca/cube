@@ -13,6 +13,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  try {
+    const r = await db.selectAllProfiles();
+    res.status(200).json(r.rows);
+  } catch (e: any) {
+    console.error('Error return all profiles', e);
+    res.status(404).send('Error return all profiles');
+  }
+});
+
 // Route for creating a new profile
 app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;

@@ -206,6 +206,14 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
   }
 });
 
+app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/', {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+
+  res.status(status).json(data);
+});
+
 app.get('/', async (req: Request, res: Response) => {
   res.status(200).json('Service is running!');
 });
