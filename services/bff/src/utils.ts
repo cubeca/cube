@@ -65,28 +65,78 @@ export const getProfileData = async (profileId: string, authHeader: AxiosHeaders
     headers: authHeader
   });
 
-  profile.content = await transformContentForProfile(contentResponse.data.data, authHeader);
+  profile.content = await transformContent(contentResponse.data.data, authHeader);
   return profile;
 };
 
-export async function transformContentForProfile(contentItems: any[], authHeader: AxiosHeaders) {
-  const fieldNames = {
+interface Collaborator {
+  logofileid?: string;
+  logoUrl?: string;
+  website?: string;
+  herofileid?: string;
+  descriptionfileid?: string;
+  description?: string;
+  budget?: string;
+}
+
+export async function transformContent(contentItems: any[], authHeader: AxiosHeaders) {
+  const urlFieldNames = {
     coverImageFileId: 'coverImageUrl',
     mediaFileId: 'mediaUrl',
     subtitlesFileId: 'subtitlesUrl',
     transcriptFileId: 'transcriptUrl'
   };
 
+  const collaboratorFieldName = {
+    collaborators: 'collaboratorDetails'
+  };
+
+  // Separated the logic to get the file from cloudflare API for reusability
+  async function getFileFromCloudflare(fileId: string) {
+    const response = await cloudflareApi.get(`files/${fileId}`, { headers: authHeader });
+    return response.data;
+  }
+
   return Promise.all(
     contentItems.map(async (item) => {
       const newItem = { ...item };
-      for (const [key, value] of Object.entries(fieldNames)) {
+
+      // Process URL fields
+      for (const [key, value] of Object.entries(urlFieldNames)) {
         if (item[key]) {
-          const getFileResponse = await cloudflareApi.get(`files/${item[key]}`, { headers: authHeader });
-          newItem[value] = getFileResponse.data;
+          newItem[value] = await getFileFromCloudflare(item[key]);
           delete newItem[key];
         }
       }
+
+      // Process collaborator fields
+      for (const [key, value] of Object.entries(collaboratorFieldName)) {
+        if (item[key]) {
+          const getCollaboratorInfoResponse = await profileApi.post(
+            'getProfilesByIdList',
+            { profileIdList: item[key] },
+            { headers: authHeader }
+          );
+          const collaborators: Collaborator[] = Object.values(getCollaboratorInfoResponse.data);
+
+          const updatedCollaborators = await Promise.all(
+            collaborators.map(async (collaborator) => {
+              if (collaborator.logofileid) {
+                const data = await getFileFromCloudflare(collaborator.logofileid);
+                return {
+                  ...collaborator,
+                  logoUrl: data.playerInfo.publicUrl
+                };
+              }
+              return collaborator;
+            })
+          );
+
+          newItem[value] = updatedCollaborators.filter((collaborator) => collaborator.logoUrl);
+          delete newItem[key];
+        }
+      }
+
       return newItem;
     })
   );

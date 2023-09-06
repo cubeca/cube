@@ -6,7 +6,7 @@ import { AxiosHeaders } from 'axios';
 import * as settings from './settings';
 import { allowIfAnyOf } from './auth';
 import { identityApi, profileApi, contentApi, cloudflareApi } from './microservices';
-import { filterObject, getProfileData } from './utils';
+import { filterObject, getProfileData, transformContent } from './utils';
 
 const app: Express = express();
 app.use(cors());
@@ -69,12 +69,22 @@ app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
     headers: filterHeadersToForward(req, 'authorization')
   });
 
-  res.status(status).json(data);
+  const transformedContent = await transformContent(data, filterHeadersToForward(req, 'authorization'));
+  res.status(status).json(transformedContent);
 });
 
 app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { status, data } = await contentApi.get('content/' + req.params.contentId, {
     params: req.query,
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+
+  const transformedContent = await transformContent([data], filterHeadersToForward(req, 'authorization'));
+  res.status(status).json(transformedContent[0]);
+});
+
+app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.delete('content/' + req.params.contentId, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
@@ -108,14 +118,14 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
   res.status(status).json(data);
 });
 
-app.put('/auth/password', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.put('auth/password', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
 });
 
-app.post('/auth/resend-email-verification', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { status, data } = await identityApi.post('auth/resend-email-verification', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
@@ -194,6 +204,14 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
   } catch (error) {
     res.status(500).json('Unable to retrieve profile details');
   }
+});
+
+app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('getProfilesByIdList/', {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+
+  res.status(status).json(data);
 });
 
 app.get('/', async (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import useContent from 'hooks/useContent';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumb from './components/Breadcrumb';
@@ -11,9 +11,10 @@ import Details from './components/Screens/Details';
 import Accessibility from './components/Screens/Accessibility';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
+import { getProfileId } from 'utils/auth';
 
 const Upload = () => {
-  const { id } = useParams();
+  const { tag } = useParams();
   const navigate = useNavigate();
   const { control, handleSubmit } = useForm();
   const {
@@ -22,6 +23,8 @@ const Upload = () => {
     isUploadError: isError,
     isUploadSuccess: isSuccess
   } = useContent();
+  const profileId = getProfileId();
+  const topRef = useRef(null);
 
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
@@ -44,10 +47,15 @@ const Upload = () => {
     setVTTFiles(files);
   };
 
+  const handleScreenChange = (screen: number) => {
+    setScreenIndex(screen);
+    (topRef?.current as unknown as HTMLElement)?.scrollIntoView();
+  }
+
   const onSubmit = (values: FieldValues) => {
     addContent(
       {
-        profileId: id!,
+        profileId,
         title: values.title,
         type: values.type,
         expiry: values.expiry,
@@ -97,27 +105,27 @@ const Upload = () => {
   const activeScreenView = SCREENS[screenIndex].view;
 
   if (isSuccess) {
-    navigate(`/profile/${id!}`);
+    navigate(`/profile/${tag}`);
   }
 
   if (isError) {
-    alert('Error');
+    console.log('Upload Error');
   }
 
   return (
-    <Box className={'upload'}>
-      <Breadcrumb />
+    <Box className={'upload'} ref={topRef}>
+      <Breadcrumb/>
       <Progress
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
-        onScreenIndexChange={setScreenIndex}
+        onScreenIndexChange={handleScreenChange}
       />
       <Screens screen={activeScreenView} />
       <FormFooter
         isLoading={isLoading}
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
-        onScreenIndexChange={setScreenIndex}
+        onScreenIndexChange={handleScreenChange}
         handleSubmit={handleSubmit}
         onSubmit={onSubmit}
       />

@@ -11,6 +11,7 @@ import Button from 'components/Button';
 import useAuth from 'hooks/useAuth';
 import { getProfile } from 'api/profile';
 import { resendEmailVerification } from 'api/auth';
+import { is } from 'date-fns/locale';
 
 interface LoginFormProps {
   emailVerified?: boolean;
@@ -23,6 +24,7 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [isUnverifiedLogin, setIsUnverifiedLogin] = useState(false)
+  const [isLinkResent, setIsLinkResent] = useState(false)
   const { login } = useAuth();
   const [user, setUser] = useState<any>()
 
@@ -51,19 +53,24 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
     }
   };
 
-  const handleResendVerification = () => {
-    resendEmailVerification(user.email)
+  const handleResendVerification = async () => {
+    await resendEmailVerification(user.email)
+    setIsLinkResent(true)
   }
 
   if(isUnverifiedLogin) {
     return (
       <Box display="flex" flexDirection="column">
         <Box pt={4}>
+          {isLinkResent ? (
+            <Typography>{t('Email verification link has been resent to the provided email address.')}</Typography>
+          ) : (
           <ErrorMessage>{t('Email is unverified. Check your email for a verification link, or resend to provided email address.')}</ErrorMessage>
+          )}
         </Box>
-        <Button type="submit" onClick={handleResendVerification} fullWidth>
+        {!isLinkResent ? (<Button type="submit" onClick={handleResendVerification} fullWidth>
           {t('Resend Email Verification Link')}
-        </Button>
+        </Button>) : null}
       </Box>
     )
   }

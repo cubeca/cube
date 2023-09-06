@@ -3,14 +3,12 @@ import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import { setTimeout } from 'node:timers/promises';
 import { createHash } from 'node:crypto';
-
 import axios from 'axios';
 import type { ResponseType } from 'axios';
 import jsonwebtoken from 'jsonwebtoken';
 import mime from 'mime';
-
 import * as settings from './settings';
-import { inspect, inspectAxiosResponse, inspectAxiosError, makeUUID } from './utils';
+import { makeUUID } from './utils';
 import { uploadViaTus } from './tus';
 
 const API_URL = `http://${settings.MICROSERVICE}:${settings.PORT}`;
@@ -22,8 +20,6 @@ const TEST_TIMEOUT_UPLOAD = 5 * 60 * 1000;
 const cloudflareApi = axios.create({
   baseURL: API_URL,
   timeout: 60 * 1000,
-
-  // Do not throw errors for non-2xx responses, that makes testing easier.
   validateStatus: null
 });
 
@@ -44,69 +40,72 @@ const getAuthReqOpts = (...permissions: string[]) => {
 
 const getReqOptsWithJwt = (jwt: string) => ({ headers: { Authorization: `Bearer ${jwt}` } });
 
-test('uploads video via TUS', async () => {
+test(
+  'uploads video via TUS',
+  async () => {
+    // First, we have a long-running TUS upload.
+    // Then we are waiting for a real video to get encoded over at Cloudflare.
+    // Both things will take some real wall clock time.
+    jest.useRealTimers();
 
-  // First, we have a long-running TUS upload.
-  // Then we are waiting for a real video to get encoded over at Cloudflare.
-  // Both things will take some real wall clock time.
-  jest.useRealTimers();
+    const meta = {
+      profileId: NIL_UUID,
+      allocVidTime: 31,
+      validFor: 5 * 60,
+      type: 'video/mp4',
+      name: 'Test Video',
+      filetype: 'video/mp4'
+    };
 
-  const meta = {
-    profileId: NIL_UUID,
-    allocVidTime: 31,
-    validFor: 5 * 60,
-    type: "video/mp4",
-    name: "Test Video",
-    filetype: "video/mp4",
-  };
+    // See https://file-examples.com/
+    // See /services/cloudflare/test/scripts/download_example_files.sh
+    const filePath = `${__dirname}/../example-files/file_example_MP4_480_1_5MG.mp4`;
+    const fileId = makeUUID();
 
-  // See https://file-examples.com/
-  // See /services/cloudflare/test/scripts/download_example_files.sh
-  const filePath = `${__dirname}/../example-files/file_example_MP4_480_1_5MG.mp4`;
-  const fileId = makeUUID();
+    const uploadTusEndpoint = new URL(`${API_URL}/upload/video-tus-reservation`);
+    uploadTusEndpoint.searchParams.set('fileId', fileId);
+    uploadTusEndpoint.searchParams.set('authorization', makeJwt('contentEditor'));
 
-  const uploadTusEndpoint = new URL(`${API_URL}/upload/video-tus-reservation`);
-  uploadTusEndpoint.searchParams.set('fileId', fileId);
-  uploadTusEndpoint.searchParams.set('authorization', makeJwt('contentEditor'));
+    await uploadViaTus(uploadTusEndpoint.toString(), filePath, meta);
 
-  await uploadViaTus(uploadTusEndpoint.toString(), filePath, meta);
+    let detailStatus,
+      detailData: any = {};
+    for (let i = 0; i < 20; i++) {
+      console.log('Checking if file is available ... ');
+      ({ status: detailStatus, data: detailData } = await cloudflareApi.get(
+        `/files/${fileId}`,
+        getAuthReqOpts('anonymous')
+      ));
 
-  let detailStatus, detailData: any = {};
-  for (let i = 0; i < 20; i++) {
-    ({ status: detailStatus, data: detailData } = await cloudflareApi.get(
-      `/files/${fileId}`,
-      getAuthReqOpts('anonymous')
-    ));
-
-    if (409 === detailStatus) {
-      await setTimeout(5 * 1000, 'Wait a moment!');
-    } else {
-      expect(detailStatus).toEqual(200);
-      break;
+      if (409 === detailStatus) {
+        await setTimeout(5 * 1000, 'Wait a moment!');
+      } else {
+        expect(detailStatus).toEqual(200);
+        break;
+      }
     }
-  }
 
-  expect(detailStatus).toEqual(200);
+    expect(detailStatus).toEqual(200);
+    expect(detailData).toEqual(
+      expect.objectContaining({
+        id: fileId,
+        createdAt: expect.stringMatching(TIMESTAMP_REGEXP),
+        updatedAt: expect.stringMatching(TIMESTAMP_REGEXP),
+        storageType: expect.stringMatching(/^cloudflareStream$/),
+        playerInfo: expect.anything()
+      })
+    );
 
-  expect(detailData).toEqual(
-    expect.objectContaining({
-      id: fileId,
-      createdAt: expect.stringMatching(TIMESTAMP_REGEXP),
-      updatedAt: expect.stringMatching(TIMESTAMP_REGEXP),
-      storageType: expect.stringMatching(/^cloudflareStream$/),
-      playerInfo: expect.anything()
-    })
-  );
-
-  expect(detailData?.playerInfo).toEqual(
-    expect.objectContaining({
+    expect(detailData?.playerInfo).toEqual(
+      expect.objectContaining({
         hlsUrl: expect.any(String),
         dashUrl: expect.any(String),
-        videoIdOrSignedUrl: expect.any(String),
-    })
-  );
-
-}, TEST_TIMEOUT_UPLOAD);
+        videoIdOrSignedUrl: expect.any(String)
+      })
+    );
+  },
+  TEST_TIMEOUT_UPLOAD
+);
 
 test(
   'uploads non-video via S3 presigned URL',
@@ -158,10 +157,7 @@ test(
     const fileId = r2SignData.fileId;
     const r2PutOptions = {
       timeout: 10 * 1000,
-
-      // Do not throw errors for non-2xx responses, that makes handling them easier.
       validateStatus: null,
-
       headers: {
         'Content-Type': mimeType,
         'Content-Length': fileLength
@@ -175,8 +171,7 @@ test(
     try {
       r2UploadResponse = await axios.put(r2SignData.presignedUrl, fileStream, r2PutOptions);
     } catch (err: any) {
-      inspectAxiosError(err);
-      throw err;
+      console.error(err);
     }
 
     console.log('after R2 upload', r2SignData.presignedUrl);
@@ -205,8 +200,6 @@ test(
 
     const r2DownloadOptions = {
       timeout: 60 * 1000,
-
-      // Do not throw errors for non-2xx responses, that makes handling them easier.
       validateStatus: null,
       responseType: 'arraybuffer' as ResponseType
     };
@@ -217,15 +210,14 @@ test(
     try {
       r2DownloadResponse = await axios.get(detailResponse.data?.playerInfo?.publicUrl, r2DownloadOptions);
     } catch (err: any) {
-      inspectAxiosError(err);
-      throw err;
+      console.error(err);
     }
     console.log('after R2 download', detailResponse.data?.playerInfo?.publicUrl);
 
-    expect(r2DownloadResponse.status).toEqual(200);
+    expect(r2DownloadResponse?.status).toEqual(200);
 
     const r2DownloadHash = createHash('sha256');
-    r2DownloadHash.update(r2DownloadResponse.data);
+    r2DownloadHash.update(r2DownloadResponse?.data);
 
     const localFileHash = createHash('sha256');
     localFileHash.update(await readFile(filePath));

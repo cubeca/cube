@@ -26,7 +26,7 @@ export const getContent = async (
 };
 
 export const getContentDetails = async (id: string) => {
-  //return await contentApi.contentDetails(id);
+  return await contentApi.getContent(id);
 };
 
 export const addContent = async ({

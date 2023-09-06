@@ -15,33 +15,25 @@ import { UserContext } from 'providers/UserProvider';
 import * as s from './Profile.styled';
 import { getProfile } from 'api/profile';
 import { getProfileId } from 'utils/auth';
+import { BFFGetProfileByTagData } from '@cubeca/bff-client-oas-axios';
 
 interface ProfileMenuProps {
   open: boolean;
   anchorEl: null | HTMLElement;
   onClose: () => void;
   id: string;
+  profile?: BFFGetProfileByTagData;
+  profileId?: string;
 }
 
-const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
+const ProfileMenu = ({ open, anchorEl, onClose, id, profile, profileId }: ProfileMenuProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: profile } = useProfile();
   const [isUpdateEmailDialogOpen, setIsUpdateEmailDialogOpen] = useState(false);
   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] =
     useState(false);
   const { logout } = useAuth();
   const { user } = useContext(UserContext);
-  const [tag, setTag] = useState('')
-  const profileId = getProfileId();
-
-  useEffect( () => {
-    const getTag = async () => {
-      const { data } = await getProfile((user as any).profile_id || profileId)
-      setTag((data as any).tag)
-    }
-    getTag()
-  }, [])
 
   const handleLogout = () => {
     logout();
@@ -82,9 +74,9 @@ const ProfileMenu = ({ open, anchorEl, onClose, id }: ProfileMenuProps) => {
           'aria-labelledby': id
         }}
       >
-        {profileId && (
+        {profileId && profile && (
           <ProfileMenuItem
-            onClick={() => handleProfile(`/profile/${tag}`)}
+            onClick={() => handleProfile(`/profile/${profile.tag}`)}
             text={t('My Profile')}
             icon={<AccountBoxIcon />}
           />

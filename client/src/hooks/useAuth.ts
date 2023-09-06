@@ -5,7 +5,7 @@ import { UserContext } from 'providers/UserProvider';
 
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     const checkAuth = async () => {

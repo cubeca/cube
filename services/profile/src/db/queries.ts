@@ -22,6 +22,23 @@ export const selectProfileByID = async (id: string) => {
   return await db.queryDefault(text, values);
 };
 
+// Function to select a profile from the 'profiles' table by its ID
+export const selectProfilesByIdList = async (idList: any) => {
+  const text = `SELECT * FROM profiles WHERE id = ANY($1::uuid[])`;
+  const values = [idList];
+
+  // Execute the query and return the result
+  return await db.queryDefault(text, values);
+};
+
+// Function to select all of the profiles from the 'profiles' table
+export const selectAllProfiles = async () => {
+  const text = `SELECT id, organization, tag from profiles;`;
+
+  // Execute the query and return the result
+  return await db.queryDefault(text);
+};
+
 // Function to select a profile from the 'profiles' table by its tag
 export const selectProfileByTag = async (tag: string) => {
   const text = `SELECT * from profiles where tag = $1;`;

@@ -64,7 +64,7 @@ const Profile = () => {
             </s.UserContentHeader>
           )}
 
-          <UserContent />
+          <UserContent content={profile?.content}/>
         </Grid>
       </Grid>
       <EditDialog
