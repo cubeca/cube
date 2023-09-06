@@ -13,6 +13,7 @@ const VirtualExperiencesPanel = () => {
       imageContent={<s.VRCover />}
       textContent={
         <s.VRText>
+          <div id="virtual-experiences"></div>
           <Typography component="h2" variant="h2">
             {t('virtualExperiences')}
           </Typography>

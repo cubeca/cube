@@ -21,6 +21,14 @@ export const NavItem = styled(MenuItem)`
   &:hover {
     background: transparent;
   }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    font-size: inherit;
+    font-weight: 500;
+    line-height: inherit;
+  }
 `;
 
 export const LinkButton = styled(RouterLink)`
