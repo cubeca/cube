@@ -116,8 +116,8 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
 
     res.status(200).json({ ...profile });
   } catch (e: any) {
-    console.error('Organization does not exist', e);
-    res.status(404).send('Organization does not exist');
+    console.error('Profile does not exist', e);
+    res.status(404).send('Profile does not exist');
   }
 });
 
@@ -143,6 +143,33 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
   } catch (e: any) {
     console.error('Profile does not exists', e);
     res.status(404).send('Profile does not exist');
+  }
+});
+
+// Route for fetching a list of profile by their ids
+app.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { profileIdList } = req.body;
+
+  // Check if the profile id list is provided
+  if (!profileIdList) {
+    res.status(404).send('Profile id list not provided.');
+    return;
+  }
+
+  // Fetch the profile and return its details
+  try {
+    const r = await db.selectProfilesByIdList(profileIdList);
+    const profiles = r.rows;
+
+    if (!profiles) {
+      res.status(404).send('No profiles found');
+      return;
+    }
+
+    res.status(200).json({ ...profiles });
+  } catch (e: any) {
+    console.error('Error retrieving profile list', e);
+    res.status(404).send('Error retrieving profile list');
   }
 });
 
