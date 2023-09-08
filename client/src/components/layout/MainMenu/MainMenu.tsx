@@ -1,5 +1,6 @@
 import { Button, Divider, Menu, MenuList, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { HashLink } from 'react-router-hash-link';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
 import MenuItem from './MenuItem';
@@ -16,6 +17,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import GroupsIcon from '@mui/icons-material/Groups';
 import CloseIcon from '@mui/icons-material/Close';
 import * as s from './MainMenu.styled';
+
 
 interface MainMenuProps {
   open: boolean;
@@ -57,17 +59,15 @@ const MainMenu = ({
       <MenuList sx={{ padding: '4px 4px' }}>
         <MenuItem
           onClick={() => handleMenuClick('/search')}
-          // icon={<SearchIcon fontSize="small" />}
           text={t('Search Content')}
         />
-        <MenuItem
-          onClick={() => handleMenuClick('/vr')}
-          // icon={<VrpanoIcon fontSize="small" />}
-          text={t('Cube VR')}
-        />
+        <s.MenuHashItem>
+          <HashLink smooth to="/#virtual-experiences">
+            {t('Cube VR')}
+          </HashLink>
+        </s.MenuHashItem>
         <MenuItem
           onClick={() => handleMenuClick('/signup')}
-          // icon={<AddCircleIcon fontSize="small" />}
           text={t('Become a creator')}
         />
       </MenuList>
