@@ -59,7 +59,7 @@ export const CreatorSignupForm = () => {
   return (
     <>
       <Typography variant="h3" component="h3" pb={4}>
-        {t('Creator Sign up')}
+        {t('Sign up for a Creator Account')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="row" spacing={2} pb={2}>
