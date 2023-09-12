@@ -19,7 +19,9 @@ const Login = () => {
   const passwordReset = search.includes('password-reset');
 
   const isLogin = location.pathname.toLowerCase() === '/login';
-  const isUserSignup = search.includes('user')
+  const isUserSignup = search.includes('user');
+  const isCreatorSignup = !isUserSignup && !isLogin;
+
   const signUpForm = isUserSignup ? (
     <UserSignupForm />
   ) : (
@@ -37,60 +39,129 @@ const Login = () => {
 
         </Grid>
         <Grid xs={12} md={6}>
-          
           <s.CTAWrapper>
-            <s.CTAMessage>
-              <Typography component="h2" variant="h2" color="secondary">
-                {isLogin ? t('New Here?') : t('Already have an account?')}
-              </Typography>
+            
+            {isLogin && (
+              <s.CTAMessage>
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('New Here?')}
+                </Typography>
 
-              {isLogin && (
                 <Typography
-                  component="h4"
-                  variant="h4"
+                  component="p" 
+                  variant="body1"
                   color="secondary"
                 >
-                  {t('Sign up and Start Contributing')}
+                  {t('User accounts can create playlists and lorem ipsum dolor sit amet.')}
                 </Typography>
-              )}
-
-              <s.LinkWrapper>
                 
                 <Button
                   color="secondary"
                   onClick={() =>
-                    navigate(isLogin ? '/signup?type=user' : '/login')
+                    navigate('/signup?type=user')
                   }
                 >
-                  {isLogin ? t('User Sign up') : t('Login')}
+                  {t('Sign up for a User Account')}
                 </Button>
 
-                {isLogin && (
-                  <Button
-                    color="secondary"
-                    onClick={() =>
-                      navigate(isLogin ? '/signup?type=creator' : '/login')
-                    }
-                  >
-                    {isLogin ? t('Creator Sign up') : t('Login')}
-                  </Button>
-                )}
+                <Typography
+                  component="p" 
+                  variant="body1"
+                  color="secondary"
+                >
+                  {t('Creator accounts can upload content and lorem ipsum dolor sit amet.')}
+                </Typography>
+                
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/signup?')
+                  }
+                >
+                  {t('Sign up for a Creator Account')}
+                </Button>
 
-                {!isLogin && (
-                  <Button
-                    color="secondary"
-                    variant="outlined"
-                    onClick={() =>
-                      navigate(`/signup?type=${isUserSignup ? 'creator' : 'user'}`)
-                    }
-                  >
-                    {isUserSignup ? t('Creator Sign up') : t('User Sign up')}
-                  </Button>
-                )}
+              </s.CTAMessage>
+            )}
+            
+            {isUserSignup && (
+              <s.CTAMessage>
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Or, become a Creator')}
+                </Typography>
 
-              </s.LinkWrapper>
+                <Typography
+                  component="p" 
+                  variant="body1"
+                  color="secondary"
+                >
+                  {t('Creator accounts can upload content and lorem ipsum dolor sit amet.')}
+                </Typography>
 
-            </s.CTAMessage>
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/signup')
+                  }
+                >
+                  {t('Sign up for a Creator Account')}
+                </Button>
+
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Already have an account?')}
+                </Typography>
+
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/login')
+                  }
+                >
+                  {t('Login')}
+                </Button>
+
+              </s.CTAMessage>
+            )}
+            
+            {isCreatorSignup && (
+              <s.CTAMessage>
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Or, become a User')}
+                </Typography>
+
+                <Typography
+                  component="p" 
+                  variant="body1"
+                  color="secondary"
+                >
+                  {t('User accounts can create playlists and lorem ipsum dolor sit amet.')}
+                </Typography>
+
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/signup?type=user')
+                  }
+                >
+                  {t('Sign up for a User Account')}
+                </Button>
+
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Already have an account?')}
+                </Typography>
+
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/login')
+                  }
+                >
+                  {t('Login')}
+                </Button>
+
+              </s.CTAMessage>
+            )}
+            
           </s.CTAWrapper>
 
         </Grid>

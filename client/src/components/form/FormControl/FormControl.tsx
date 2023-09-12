@@ -39,7 +39,7 @@ const FormControl: FC<FormControlInputProps> = ({
         <FormLabel htmlFor={id}>{label}</FormLabel>
       </Box>
       {children}
-      <FormHelperText id={helperTextId}>{!!error && helperText}</FormHelperText>
+      <FormHelperText id={helperTextId} sx={{ margin: '-10px 0 0' }}>{!!error && helperText}</FormHelperText>
     </Box>
   </MuiFormControl>
 );

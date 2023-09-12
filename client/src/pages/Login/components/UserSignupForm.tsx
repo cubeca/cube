@@ -46,7 +46,7 @@ export const UserSignupForm = () => {
   return (
     <>
       <Typography variant="h3" component="h3" pb={4}>
-        {t('User Sign up')}
+        {t('Sign up for a User Account')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="row" spacing={2} pb={2}>

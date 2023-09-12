@@ -7,6 +7,11 @@ export const AccessibilityPanel = styled(Box)`
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 120px 8.333333333333333%;
   }
+
+  a {
+    color: ${(props) => props.theme.palette.primary.main};
+    display: inline;
+  }
 `;
 
 export const IconDefinition = styled(Stack)`

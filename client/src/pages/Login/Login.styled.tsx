@@ -15,12 +15,25 @@ export const FormWrapper = styled(Box)`
 `;
 
 export const CTAWrapper = styled(Box)`
-  background: ${({ theme }) => theme.palette.background.paper} url(${LoginBackground}) no-repeat center/cover;
+  position: relative;
+  background: ${({ theme }) => theme.palette.primary.main};
   min-height: 100vw;
   padding: 8.3333% 0 8.3333% 8.3333%;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent url(${LoginBackground}) no-repeat center/cover;
+    opacity: 0.5;
+  }
   
   ${(props) => props.theme.breakpoints.up('md')} {
     height: 50vw;
@@ -31,21 +44,27 @@ export const CTAWrapper = styled(Box)`
 `;
 
 export const CTAMessage = styled(Box)`
+  position: relative;
+  z-index: 2;
 
-  ${(props) => props.theme.breakpoints.up('md')} {
+  h3 {
+    margin-bottom: 8px;
+    max-width: 320px;
   }
-`;
-
-export const LinkWrapper = styled(Box)`
-  display: flex;
-  flex-flow: column nowrap;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 0;
   
+  p {
+    margin-bottom: 4px;
+    max-width: 320px;
+  }
+
+  button {
+
+    &:not(:last-child) {
+      margin-bottom: 48px;
+    }
+  }
+
   ${(props) => props.theme.breakpoints.up('md')} {
-    flex-flow: row wrap;
-    gap: 24px;
-    padding: 1.5rem 0;
   }
 `;
+

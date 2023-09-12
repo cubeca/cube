@@ -25,21 +25,22 @@ const UploadInput = ({ text, onDrop, maxFiles, style, isUploadComplete }: Upload
   });
 
   return (
-    <s.UploadBox className={style} {...getRootProps()}>
+    <s.UploadBox className={style} {...getRootProps()} isUploadComplete={isUploadComplete}>
       <input {...getInputProps()} />
-      {isDragActive ? (
-        <Typography component="p">{t('Drop the files here...')}</Typography>
-      ) : (
-        <>
+      
           <Typography component="h6" variant="h6">
             {isUploadComplete ? 'Upload Complete' : text}
           </Typography>
-          <Typography component="p" variant="body2">
-            <s.UploadButton>{t('Choose a file')}</s.UploadButton>{' '}
-            {t('or drag it here')}
-          </Typography>
-        </>
-      )}
+          
+          {isDragActive ? (
+            <Typography component="p" variant="body2">{t('Drop the files here...')}</Typography>
+          ) : (
+            <Typography component="p" variant="body2">
+              <s.UploadButton>{t('Choose a file')}</s.UploadButton>{' '}
+              {t('or drag it here')}
+            </Typography>
+          )}
+      
     </s.UploadBox>
   );
 };
