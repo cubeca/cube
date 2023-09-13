@@ -48,10 +48,10 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
-  const profileId = req.query.profileId;
+  const profileId = req.query.profileId as string;
   const filters = JSON.parse((req.query.filters as string) ?? '{}');
 
-  const dbResult = await db.listContentByProfileId(offset, limit, profileId as string, filters);
+  const dbResult = await db.listContentByProfileId(offset, limit, filters, profileId);
 
   // Returning paginated content data
   res.status(200).json({
@@ -127,7 +127,6 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
     res.status(500).send('Could not delete content item');
   }
 });
-
 
 // API endpoint for checking the service status
 app.get('/', async (req: Request, res: Response) => {

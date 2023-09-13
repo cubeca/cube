@@ -5,42 +5,39 @@ export const getContentById = async (contentId: string) => {
   return await db.querySingleDefault(sql, contentId);
 };
 
-export const listContentByProfileId = async (offset: number, limit: number, profileId: string, filters: any) => {
-  let values: string[] = [];
-  let placeholders = '';
+export const listContentByProfileId = async (offset: number, limit: number, filters: any, profileId?: string) => {
+  const values: any[] = [];
+  const whereClauses = [];
+
+  if (profileId) {
+    whereClauses.push(`(data->>'profileId')::TEXT = $${values.length + 1}`);
+    values.push(profileId);
+  }
+
   if (filters) {
-    placeholders = Object.keys(filters)
-      .map((key, i) => {
-        if (key === 'tags') {
-          return `(data->>'${key}')::TEXT ILIKE ANY (ARRAY[ $${i + 2} ])`;
-        } else {
-          return `(data->>'${key}')::TEXT ILIKE '%' || $${i + 2} || '%'`;
-        }
-      })
-      .join(' AND ');
-
-    if (filters.tags) {
-      // Convert the `tags` array to a comma-separated string wrapped in % signs
-      const tagsString = filters.tags.map((tag: any) => `%${tag}%`).join(', ');
-
-      // Replace the `tags` array in `content` with the new string
-      filters = JSON.parse(JSON.stringify(filters).replace(/"tags":\s*\[[^\]]*\]/, `"tags": "${tagsString}"`));
-    }
-
-    values = Object.values(filters);
+    Object.keys(filters).forEach((key, i) => {
+      if (key === 'tags') {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE ANY (ARRAY[ $${values.length + 1} ])`);
+        values.push(filters[key].map((tag: any) => `%${tag}%`));
+      } else {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE '%' || $${values.length + 1} || '%'`);
+        values.push(filters[key]);
+      }
+    });
   }
 
   const sql = `
     SELECT *
     FROM content
-    WHERE (data->>'profileId')::TEXT = $1
-    ${placeholders ? `AND ${placeholders}` : ''}
+    ${whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : ''}
     ORDER BY updated_at DESC
-    LIMIT $${values.length + 2}
-    OFFSET $${values.length + 3}
+    LIMIT $${values.length + 1}
+    OFFSET $${values.length + 2}
 `;
 
-  const dbResult = await db.queryDefault(sql, profileId, ...values, limit, offset);
+  values.push(limit, offset);
+
+  const dbResult = await db.queryDefault(sql, ...values);
   return dbResult.rows;
 };
 
@@ -94,6 +91,6 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
     ) as "exists";
   `;
 
-  const r = await db.queryIdentity(sql, ...[ uuid, profileId ]);
+  const r = await db.queryIdentity(sql, ...[uuid, profileId]);
   return !!r.rows[0].exists;
 };
