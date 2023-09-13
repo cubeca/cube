@@ -173,6 +173,33 @@ app.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req
   }
 });
 
+app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const offset = parseInt(req.query.offset as string, 10) || 0;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+  const searchTerm = req.query.searchTerm as string;
+  const filters = JSON.parse((req.query.filters as string) ?? '{}');
+
+  // Check if the search term is provided
+  if (!searchTerm) {
+    return res.status(404).send('Search term not provided.');
+  }
+
+  // Fetch the profile and return its details
+  try {
+    const r = await db.searchProfiles(searchTerm);
+    const profiles = r.rows;
+
+    if (!profiles) {
+      return res.status(404).send('No profiles found');
+    }
+
+    res.status(200).json({ ...profiles });
+  } catch (e: any) {
+    console.error('Error retrieving profile search results', e);
+    res.status(404).send('Error retrieving profile search results');
+  }
+});
+
 // Route for deleting a profile by its ID
 app.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
   const r = await db.deleteProfile(req.params.profileId);

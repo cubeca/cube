@@ -214,6 +214,20 @@ app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   res.status(status).json(data);
 });
 
+app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { searchContentStatus, searchContentData } = await contentApi.get('search/', {
+    params: req.query,
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+
+  const { searchProfileStatus, searchProfileData } = await profileApi.get('search/', {
+    params: req.query,
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+
+  res.status(200).json(searchProfileData);
+});
+
 app.get('/', async (req: Request, res: Response) => {
   res.status(200).json('Service is running!');
 });

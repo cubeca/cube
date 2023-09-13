@@ -94,3 +94,11 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
   const r = await db.queryIdentity(sql, ...[uuid, profileId]);
   return !!r.rows[0].exists;
 };
+
+export const searchContent = async (offset: number, limit: number, filters: any, searchTerm: string) => {
+  const sql = `
+  
+  `;
+
+  return await db.querySingleDefault(sql, searchTerm);
+};

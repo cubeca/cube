@@ -64,15 +64,15 @@ export const updateEmailVerification = (id: string, hasBeenVerified: boolean) =>
 };
 
 export const addPermissionIds = (id: string, perms: string[]) => {
-  const text = `UPDATE users SET permission_ids = array_cat(permission_ids, $1) WHERE id = $2;`
-  const values = [`{${perms.join(',')}}`, id]
+  const text = `UPDATE users SET permission_ids = array_cat(permission_ids, $1) WHERE id = $2;`;
+  const values = [`{${perms.join(',')}}`, id];
 
   return db.query(text, values);
-} 
+};
 
 export const updateActiveStatus = (id: string, status: boolean) => {
   const text = `UPDATE users SET is_active = $1 where id = $2;`;
   const values = [`${status}`, id];
 
   return db.query(text, values);
-}
+};
