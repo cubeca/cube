@@ -21,6 +21,7 @@ const Login = () => {
   const isLogin = location.pathname.toLowerCase() === '/login';
   const isUserSignup = search.includes('user');
   const isCreatorSignup = !isUserSignup && !isLogin;
+  const isInvalidToken = search.includes('invalidToken');
 
   const signUpForm = isUserSignup ? (
     <UserSignupForm />
@@ -34,7 +35,7 @@ const Login = () => {
         <Grid xs={10} xsOffset={1} md={5}>
           
           <s.FormWrapper>
-            {isLogin ? <LoginForm emailVerified={emailVerified} passwordReset={passwordReset} /> : signUpForm}
+            {isLogin ? <LoginForm emailVerified={emailVerified} passwordReset={passwordReset} invalidToken={isInvalidToken} /> : signUpForm}
           </s.FormWrapper>
 
         </Grid>

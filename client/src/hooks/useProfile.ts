@@ -3,14 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { getProfileId } from 'utils/auth';
 
-const useProfile = () => {
-  const { tag } = useParams();
+const useProfile = (tag?: string) => {
+  const { tag: paramTag } = useParams();
   const profileId = getProfileId();
 
   const { isLoading, isError, data } = useQuery(
     ['profile_by_tag', tag],
-    () => getProfileByTag(tag ?? ''),
-    { enabled: !!tag }
+    () => getProfileByTag(tag ?? paramTag ?? ''),
+    { enabled: !!tag || !!paramTag}
   );
 
   const profile = data?.data.data;
