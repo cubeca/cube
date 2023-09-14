@@ -114,11 +114,48 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
   return !!r.rows[0].exists;
 };
 
-export const searchProfiles = async (query: string, limit: number, offset: number, searchTerm: string) => {
-  const sql = ` 
-  
+export const searchProfiles = async (offset: number, limit: number, filters: any, searchTerm: string) => {
+  const whereClauses = [];
+  const parameters = [];
+
+  // Add filters to the WHERE clause
+  if (filters && Object.keys(filters).length > 0) {
+    Object.keys(filters).forEach((key, index) => {
+      whereClauses.push(`${key} ILIKE $${index + 1}`);
+      parameters.push(`%${filters[key]}%`);
+    });
+  }
+
+  // Add the general search term to the WHERE clause
+  if (searchTerm) {
+    const searchCondition = `(organization ILIKE $${parameters.length + 1} 
+      OR website ILIKE $${parameters.length + 1}
+      OR tag ILIKE $${parameters.length + 1}
+      OR heroFileId ILIKE $${parameters.length + 1}
+      OR logoFileId ILIKE $${parameters.length + 1}
+      OR description ILIKE $${parameters.length + 1}
+      OR descriptionFileId ILIKE $${parameters.length + 1}
+      OR budget ILIKE $${parameters.length + 1})`;
+    whereClauses.push(searchCondition);
+    parameters.push(`%${searchTerm}%`);
+  }
+
+  // Combine all WHERE conditions
+  const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+  // Construct the final SQL query
+  const sql = `
+    SELECT * 
+    FROM profiles 
+    ${whereStatement}
+    ORDER BY organization 
+    LIMIT $${parameters.length + 1} 
+    OFFSET $${parameters.length + 2}
   `;
 
-  // Execute the query and return the result
-  return await db.queryDefault(sql, searchTerm);
+  // Add limit and offset to the parameters list
+  parameters.push(limit, offset);
+
+  const result = await db.queryDefault(sql, [...parameters]);
+  return result.rows;
 };

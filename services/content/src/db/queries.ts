@@ -96,9 +96,33 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
 };
 
 export const searchContent = async (offset: number, limit: number, filters: any, searchTerm: string) => {
+  const whereClauses = [];
+  const parameters = [];
+
+  if (filters && Object.keys(filters).length > 0) {
+    Object.keys(filters).forEach((key, index) => {
+      whereClauses.push(`data->>'${key}' = $${index + 1}`);
+      parameters.push(filters[key]);
+    });
+  }
+
+  if (searchTerm) {
+    parameters.push(`%${searchTerm}%`);
+    whereClauses.push(`data::text ILIKE $${parameters.length}`);
+  }
+
+  const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
   const sql = `
-  
+    SELECT * 
+    FROM content 
+    ${whereStatement}
+    ORDER BY created_at DESC 
+    LIMIT $${parameters.length + 1} 
+    OFFSET $${parameters.length + 2}
   `;
 
-  return await db.querySingleDefault(sql, searchTerm);
+  parameters.push(limit, offset);
+  const result = await db.queryDefault(sql, ...parameters);
+  return result.rows;
 };

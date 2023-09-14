@@ -173,7 +173,7 @@ app.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req
   }
 });
 
-app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+app.get('/search', async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = req.query.searchTerm as string;
@@ -186,17 +186,18 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
   // Fetch the profile and return its details
   try {
-    const r = await db.searchProfiles(searchTerm);
-    const profiles = r.rows;
-
-    if (!profiles) {
-      return res.status(404).send('No profiles found');
-    }
-
-    res.status(200).json({ ...profiles });
-  } catch (e: any) {
-    console.error('Error retrieving profile search results', e);
-    res.status(404).send('Error retrieving profile search results');
+    const searchResult = await db.searchProfiles(offset, limit, filters, searchTerm);
+    res.status(200).json({
+      meta: {
+        offset,
+        limit,
+        filters
+      },
+      data: searchResult
+    });
+  } catch (error) {
+    console.error('Error searching for profiles', error);
+    res.status(500).send('Error searching for profiles');
   }
 });
 

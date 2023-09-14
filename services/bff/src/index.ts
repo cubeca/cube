@@ -214,18 +214,54 @@ app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   res.status(status).json(data);
 });
 
-app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { searchContentStatus, searchContentData } = await contentApi.get('search/', {
-    params: req.query,
-    headers: filterHeadersToForward(req, 'authorization')
-  });
+app.get('/search', async (req: Request, res: Response) => {
+  type ServiceResult = {
+    status: number | null;
+    data: any | null;
+    error: string | null;
+  };
 
-  const { searchProfileStatus, searchProfileData } = await profileApi.get('search/', {
-    params: req.query,
-    headers: filterHeadersToForward(req, 'authorization')
-  });
+  const searchContentResult: ServiceResult = { status: null, data: null, error: null };
+  const searchProfileResult: ServiceResult = { status: null, data: null, error: null };
 
-  res.status(200).json(searchProfileData);
+  try {
+    const contentResponse = await contentApi.get('search/', {
+      params: req.query,
+      headers: filterHeadersToForward(req, 'authorization')
+    });
+
+    searchContentResult.status = contentResponse.status;
+    searchContentResult.data = contentResponse.data.data;
+  } catch (error: any) {
+    searchContentResult.status = error.response?.status || 500;
+    searchContentResult.error = error.message;
+  }
+
+  try {
+    const profileResponse = await profileApi.get('search/', {
+      params: req.query,
+      headers: filterHeadersToForward(req, 'authorization')
+    });
+
+    searchProfileResult.status = profileResponse.status;
+    searchProfileResult.data = profileResponse.data.data;
+  } catch (error: any) {
+    searchProfileResult.status = error.response?.status || 500;
+    searchProfileResult.error = error.message;
+  }
+
+  res.status(200).json({
+    contentResults: {
+      data: searchContentResult.data,
+      status: searchContentResult.status,
+      error: searchContentResult.error
+    },
+    profileResults: {
+      data: searchProfileResult.data,
+      status: searchProfileResult.status,
+      error: searchProfileResult.error
+    }
+  });
 });
 
 app.get('/', async (req: Request, res: Response) => {
