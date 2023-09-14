@@ -16,9 +16,10 @@ import { is } from 'date-fns/locale';
 interface LoginFormProps {
   emailVerified?: boolean;
   passwordReset?: boolean;
+  invalidToken?: boolean;
 }
 
-export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
+export const LoginForm = ({ emailVerified, passwordReset, invalidToken }: LoginFormProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -85,6 +86,11 @@ export const LoginForm = ({ emailVerified, passwordReset }: LoginFormProps) => {
         {passwordReset && (
         <Typography variant="h4" component="h2" pb={4}>
           {t('Password reset successful. Please login with your new password.')}
+        </Typography>
+      )}
+      {invalidToken && (
+        <Typography variant="h4" component="h2" pb={4}>
+          {t('Session has expired. Please login again.')}
         </Typography>
       )}
       <Typography variant="h3" component="h3" pb={4}>
