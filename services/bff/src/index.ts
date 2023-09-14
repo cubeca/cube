@@ -219,10 +219,11 @@ app.get('/search', async (req: Request, res: Response) => {
     status: number | null;
     data: any | null;
     error: string | null;
+    meta: any;
   };
 
-  const searchContentResult: ServiceResult = { status: null, data: null, error: null };
-  const searchProfileResult: ServiceResult = { status: null, data: null, error: null };
+  const searchContentResult: ServiceResult = { status: null, data: null, error: null, meta: null };
+  const searchProfileResult: ServiceResult = { status: null, data: null, error: null, meta: null };
 
   try {
     const contentResponse = await contentApi.get('search/', {
@@ -230,6 +231,7 @@ app.get('/search', async (req: Request, res: Response) => {
       headers: filterHeadersToForward(req, 'authorization')
     });
 
+    searchContentResult.meta = contentResponse.data.meta;
     searchContentResult.status = contentResponse.status;
     searchContentResult.data = contentResponse.data.data;
   } catch (error: any) {
@@ -243,6 +245,7 @@ app.get('/search', async (req: Request, res: Response) => {
       headers: filterHeadersToForward(req, 'authorization')
     });
 
+    searchProfileResult.meta = profileResponse.data.meta;
     searchProfileResult.status = profileResponse.status;
     searchProfileResult.data = profileResponse.data.data;
   } catch (error: any) {
@@ -252,11 +255,13 @@ app.get('/search', async (req: Request, res: Response) => {
 
   res.status(200).json({
     contentResults: {
+      meta: searchContentResult.meta,
       data: searchContentResult.data,
       status: searchContentResult.status,
       error: searchContentResult.error
     },
     profileResults: {
+      meta: searchProfileResult.meta,
       data: searchProfileResult.data,
       status: searchProfileResult.status,
       error: searchProfileResult.error
