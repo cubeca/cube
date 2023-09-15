@@ -114,17 +114,9 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
   return !!r.rows[0].exists;
 };
 
-export const searchProfiles = async (offset: number, limit: number, filters: any, searchTerm: string) => {
+export const searchProfiles = async (offset: number, limit: number, searchTerm: string) => {
   const whereClauses = [];
   const parameters = [];
-
-  // Add filters to the WHERE clause
-  if (filters && Object.keys(filters).length > 0) {
-    Object.keys(filters).forEach((key, index) => {
-      whereClauses.push(`${key} ILIKE $${index + 1}`);
-      parameters.push(`%${filters[key]}%`);
-    });
-  }
 
   // Add the general search term to the WHERE clause
   if (searchTerm) {

@@ -4,6 +4,7 @@ import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { isUserAssociatedToProfile } from './db/queries';
+import { stringToKeyValuePairs } from './utils/utils';
 
 // Initialize Express app
 const app: Express = express();
@@ -177,7 +178,6 @@ app.get('/search', async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = req.query.searchTerm as string;
-  const filters = JSON.parse((req.query.filters as string) ?? '{}');
 
   // Check if the search term is provided
   if (!searchTerm) {
@@ -186,12 +186,11 @@ app.get('/search', async (req: Request, res: Response) => {
 
   // Fetch the profile and return its details
   try {
-    const searchResult = await db.searchProfiles(offset, limit, filters, searchTerm);
+    const searchResult = await db.searchProfiles(offset, limit, searchTerm);
     res.status(200).json({
       meta: {
         offset,
-        limit,
-        filters
+        limit
       },
       data: searchResult
     });
