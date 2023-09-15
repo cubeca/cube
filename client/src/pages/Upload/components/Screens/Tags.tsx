@@ -1,13 +1,23 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
+import { set } from 'date-fns';
 
 const Tags = ({ control }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const [otherContributors, setOtherContributors] = useState<any[]>([])
+
+  const handleAddMore = () => {
+    setOtherContributors([...otherContributors, {
+      role: `other_role_${otherContributors.length + 1}`,
+      name: `other_name_${otherContributors.length + 1}`
+    }])
+  }
 
   return (
     <Box className={'upload__tags-screen'}>
@@ -98,6 +108,7 @@ const Tags = ({ control }: any) => {
               name="editor"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false}}
             />
           </Grid>
           <Grid xs={3}>
@@ -111,6 +122,7 @@ const Tags = ({ control }: any) => {
               name="camera"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false}}
             />
           </Grid>
           <Grid xs={3}>
@@ -124,27 +136,56 @@ const Tags = ({ control }: any) => {
               name="sound"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false}}
             />
           </Grid>
           <Grid xs={3}>
             <TextInput
               control={control}
-              name=""
+              name="other_role"
               fullWidth
               placeholder={t('Role')}
+              rules={{ required: false}}
             />
           </Grid>
           <Grid xs={9}>
             <TextInput
               control={control}
-              name="sound"
+              name="other_name"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false}}
             />
           </Grid>
+          {
+            otherContributors.length > 0 && otherContributors.map((contributor, index) => (
+              <>
+              <Grid xs={3}>
+            <TextInput
+              control={control}
+              name={contributor.role}
+              fullWidth
+              placeholder={t('Role')}
+              rules={{ required: false}}
+            />
+          </Grid>
+          <Grid xs={9}>
+            <Stack direction="row" gap={2} alignItems="center">
+            <TextInput
+              control={control}
+              name={contributor.name}
+              fullWidth
+              placeholder={t('Add only one contributor name here')}
+              rules={{ required: false}}
+            />
+            </Stack>
+          </Grid>
+              </>
+            ))
+          }
         </Grid>
         <Box display="flex" justifyContent="flex-end">
-          <Button variant="outlined">{t('+ add more')}</Button>
+          <Button variant="outlined" onClick={handleAddMore}>{t('+ add more')}</Button>
         </Box>
       </Box>
 
@@ -154,6 +195,8 @@ const Tags = ({ control }: any) => {
           name="collaborators"
           fullWidth
           placeholder={t('Collaborators')}
+          rules={{ required: false}}
+        
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
