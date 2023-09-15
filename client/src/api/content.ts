@@ -1,5 +1,6 @@
 import { upload } from './upload';
 import { contentApi } from '.';
+import { AddContentRequest } from '@cubeca/bff-client-oas-axios';
 
 export type CategoryType =
   | 'all'
@@ -36,7 +37,7 @@ export const addContent = async ({
   subtitlesFile,
   transcriptFile
 }: {
-  payload: any;
+  payload: AddContentRequest;
   coverImageFile?: File;
   mediaFile?: File;
   subtitlesFile?: File;

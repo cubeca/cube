@@ -12,7 +12,6 @@ const FormFooter = ({
   screenIndex,
   onScreenIndexChange,
   handleSubmit,
-  onSubmit
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -35,7 +34,7 @@ const FormFooter = ({
   const nextButton =
     screenIndex == lastScreen ? (
       <Button
-        onClick={handleSubmit(onSubmit)}
+        onClick={handleSubmit}
         fullWidth={false}
         disabled={isLoading}
       >
