@@ -13,6 +13,38 @@ import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
 
+const getContributors = (values: FieldValues) => {
+  const contributors: string[] = [];
+  const keys = Object.keys(values);
+
+  keys.forEach(key => {
+    switch(key) {
+      case 'artist':
+        contributors.push(`artist:${values[key]}`)
+        break;
+      case 'camera':
+        if(values[key]) contributors.push(`camera:${values[key]}`)
+        break;
+      case 'sound':
+        if(values[key]) contributors.push(`sound:${values[key]}`)
+        break;
+      case 'editor':
+        if(values[key]) contributors.push(`editor:${values[key]}`)
+        break;
+      case 'other_role':
+        if(values['other_role'] && values['other_name']) contributors.push(`${values['other_role']}:${values['other_name']}`)
+        break;
+    }
+
+    if(key.includes('other_role_')) {
+      const index = key.split('_')[2]
+      if(values[key] && values[`other_name_${index}`]) contributors.push(`${values[key]}:${values[`other_name_${index}`]}`)
+    }
+  })
+  
+  return contributors
+}
+
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
@@ -53,16 +85,18 @@ const Upload = () => {
   }
 
   const onSubmit = (values: FieldValues) => {
+    console.log(values)
+    const contributors = getContributors(values)
     addContent(
       {
-        profileId,
+        profileId: profileId!,
         title: values.title,
         type: values.type,
         expiry: values.expiry,
         description: values.description,
         coverImageText: values.imageText,
         collaborators: [values.collaborators],
-        contributors: [values.contributors],
+        contributors,
         tags: [values.tags]
       },
       coverImageFile!,
@@ -126,8 +160,7 @@ const Upload = () => {
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
         onScreenIndexChange={handleScreenChange}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
+        handleSubmit={handleSubmit(onSubmit)}
       />
     </Box>
   );
