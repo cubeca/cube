@@ -10,10 +10,11 @@ interface UploadInputProps {
   onDrop: (files: File[]) => void;
   maxFiles?: number;
   style?: string;
+  isUploadReady?: boolean;
   isUploadComplete?: boolean;
 }
 
-const UploadInput = ({ text, onDrop, maxFiles, style, isUploadComplete }: UploadInputProps) => {
+const UploadInput = ({ text, onDrop, maxFiles, style, isUploadReady, isUploadComplete }: UploadInputProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const handleDrop = useCallback((files: File[]) => {
@@ -24,13 +25,19 @@ const UploadInput = ({ text, onDrop, maxFiles, style, isUploadComplete }: Upload
     maxFiles
   });
 
+  let descText = text;
+
+  if (isUploadReady) {
+    descText = t('Upload Ready');
+  } else if (isUploadComplete) {
+    descText = t('Upload Complete');
+  }
+
   return (
-    <s.UploadBox className={style} {...getRootProps()} isUploadComplete={isUploadComplete}>
+    <s.UploadBox className={style} {...getRootProps()} isUploadReady={isUploadReady} isUploadComplete={isUploadComplete}>
       <input {...getInputProps()} />
       
-          <Typography component="h6" variant="h6">
-            {isUploadComplete ? 'Upload Complete' : text}
-          </Typography>
+          <Typography component="h6" variant="h6">{descText}</Typography>
           
           {isDragActive ? (
             <Typography component="p" variant="body2">{t('Drop the files here...')}</Typography>
