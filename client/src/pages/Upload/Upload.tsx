@@ -165,6 +165,11 @@ const Upload = () => {
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
         onScreenIndexChange={handleScreenChange}
+        isNextDisabled={
+          !formState.isValid ||
+          (screenIndex === 0 && (!isCoverImageSelected || !isMediaSelected)) ||
+          (screenIndex === 1 && !isVTTSelected)
+        }
       />
       <Screens screen={activeScreenView} />
       <FormFooter
