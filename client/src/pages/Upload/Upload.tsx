@@ -17,38 +17,44 @@ const getContributors = (values: FieldValues) => {
   const contributors: string[] = [];
   const keys = Object.keys(values);
 
-  keys.forEach(key => {
-    switch(key) {
+  keys.forEach((key) => {
+    switch (key) {
       case 'artist':
-        contributors.push(`artist:${values[key]}`)
+        contributors.push(`artist:${values[key]}`);
         break;
       case 'camera':
-        if(values[key]) contributors.push(`camera:${values[key]}`)
+        if (values[key]) contributors.push(`camera:${values[key]}`);
         break;
       case 'sound':
-        if(values[key]) contributors.push(`sound:${values[key]}`)
+        if (values[key]) contributors.push(`sound:${values[key]}`);
         break;
       case 'editor':
-        if(values[key]) contributors.push(`editor:${values[key]}`)
+        if (values[key]) contributors.push(`editor:${values[key]}`);
         break;
       case 'other_role':
-        if(values['other_role'] && values['other_name']) contributors.push(`${values['other_role']}:${values['other_name']}`)
+        if (values['other_role'] && values['other_name'])
+          contributors.push(`${values['other_role']}:${values['other_name']}`);
         break;
     }
 
-    if(key.includes('other_role_')) {
-      const index = key.split('_')[2]
-      if(values[key] && values[`other_name_${index}`]) contributors.push(`${values[key]}:${values[`other_name_${index}`]}`)
+    if (key.includes('other_role_')) {
+      const index = key.split('_')[2];
+      if (values[key] && values[`other_name_${index}`])
+        contributors.push(`${values[key]}:${values[`other_name_${index}`]}`);
     }
-  })
-  
-  return contributors
-}
+  });
+
+  return contributors;
+};
 
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, formState } = useForm({
+    mode: 'onChange',
+    criteriaMode: 'all'
+  });
+
   const {
     addContent,
     isUploadLoading: isLoading,
@@ -63,30 +69,36 @@ const Upload = () => {
   const [expiryValue, setExpiryValue] = useState<dateFns | null>(null);
   const [VTTFiles, setVTTFiles] = useState<File[]>([]);
   const [screenIndex, setScreenIndex] = useState(0);
+  const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
+  const [isMediaSelected, setIsMediaSelected] = useState(false);
+  const [isVTTSelected, setIsVTTSelected] = useState(false);
 
   // const { data: collaborators, isLoading: isCollaboratorsLoading } =
   //   useCollaborators();
 
   const handleCoverImageUpload = (files: File[]) => {
     setCoverImageFile(files[0]);
+    setIsCoverImageSelected(true);
   };
 
   const handleMediaUpload = (files: File[]) => {
     setMediaFile(files[0]);
+    setIsMediaSelected(true);
   };
 
   const handleVTTFilesUpload = (files: File[]) => {
     setVTTFiles(files);
+    setIsVTTSelected(true);
   };
 
   const handleScreenChange = (screen: number) => {
     setScreenIndex(screen);
     (topRef?.current as unknown as HTMLElement)?.scrollIntoView();
-  }
+  };
 
   const onSubmit = (values: FieldValues) => {
-    console.log(values)
-    const contributors = getContributors(values)
+    console.log(values);
+    const contributors = getContributors(values);
     addContent(
       {
         profileId: profileId!,
@@ -148,11 +160,16 @@ const Upload = () => {
 
   return (
     <Box className={'upload'} ref={topRef}>
-      <Breadcrumb/>
+      <Breadcrumb />
       <Progress
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
         onScreenIndexChange={handleScreenChange}
+        isNextDisabled={
+          !formState.isValid ||
+          (screenIndex === 0 && (!isCoverImageSelected || !isMediaSelected)) ||
+          (screenIndex === 1 && !isVTTSelected)
+        }
       />
       <Screens screen={activeScreenView} />
       <FormFooter
@@ -161,6 +178,11 @@ const Upload = () => {
         screenIndex={screenIndex}
         onScreenIndexChange={handleScreenChange}
         handleSubmit={handleSubmit(onSubmit)}
+        isNextDisabled={
+          !formState.isValid ||
+          (screenIndex === 0 && (!isCoverImageSelected || !isMediaSelected)) ||
+          (screenIndex === 1 && !isVTTSelected)
+        }
       />
     </Box>
   );
