@@ -206,8 +206,8 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
   }
 });
 
-app.post('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.post('getProfilesByIdList/', req.body, {
+app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await profileApi.get('profiles/', {
     headers: filterHeadersToForward(req, 'authorization')
   });
 
