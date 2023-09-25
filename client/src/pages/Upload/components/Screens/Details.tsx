@@ -5,6 +5,7 @@ import UploadInput from 'components/form/UploadInput';
 import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
+import { useState } from 'react';
 
 const Details = ({
   control,
@@ -14,6 +15,13 @@ const Details = ({
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const [isVTTUploadReady, setIsVTTUploadReady] = useState(false);
+
+  const handleVTTOnDrop = (files: File[]) => {
+    handleVTTFilesUpload(files);
+    setIsVTTUploadReady(true);
+  };
 
   return (
     <Box className={'upload__details-screen'}>
@@ -52,8 +60,9 @@ const Details = ({
       <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('VTT file (required)')}
-          onDrop={handleVTTFilesUpload}
+          onDrop={handleVTTOnDrop}
           maxFiles={1}
+          isUploadReady={isVTTUploadReady}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
