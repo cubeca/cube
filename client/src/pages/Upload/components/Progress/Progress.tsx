@@ -1,7 +1,12 @@
 import { Box } from '@mui/material';
 import * as s from './Progress.styled';
 
-const Progress = ({ screens, screenIndex, onScreenIndexChange }: any) => {
+const Progress = ({
+  screens,
+  screenIndex,
+  onScreenIndexChange,
+  isNextDisabled
+}: any) => {
   const nodes: any[] = [];
 
   screens.forEach((label: string, i: number) => {
@@ -11,6 +16,7 @@ const Progress = ({ screens, screenIndex, onScreenIndexChange }: any) => {
         onScreenIndexChange={onScreenIndexChange}
         isActive={screenIndex == i}
         label={label}
+        isDisabled={isNextDisabled}
       />
     );
   });
@@ -26,13 +32,15 @@ const ProgressItem = ({
   screenIndex,
   onScreenIndexChange,
   label,
-  isActive
+  isActive,
+  isDisabled
 }: any): any => {
   const Button = (
     <ProgressItemButton
       screenIndex={screenIndex}
       onScreenIndexChange={onScreenIndexChange}
       label={label}
+      isDisabled={isDisabled}
     />
   );
 
@@ -46,10 +54,16 @@ const ProgressItem = ({
 const ProgressItemButton = ({
   screenIndex,
   onScreenIndexChange,
-  label
+  label,
+  isDisabled
 }: any): any => {
   return (
-    <button onClick={(e) => onScreenIndexChange(screenIndex)}>{label}</button>
+    <button
+      onClick={(e) => onScreenIndexChange(screenIndex)}
+      disabled={isDisabled}
+    >
+      {label}
+    </button>
   );
 };
 

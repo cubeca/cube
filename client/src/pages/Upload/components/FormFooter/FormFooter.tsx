@@ -6,13 +6,23 @@ import * as s from './FormFooter.styled';
 import Lottie from 'lottie-react';
 import LoadingAnimation from 'assets/animations/loading-circle.json';
 
+interface FormFooterProps {
+  isLoading: boolean;
+  screens: string[];
+  screenIndex: number;
+  onScreenIndexChange: (screen: number) => void;
+  handleSubmit: () => void;
+  isNextDisabled?: boolean;
+}
+
 const FormFooter = ({
   isLoading,
   screens,
   screenIndex,
   onScreenIndexChange,
   handleSubmit,
-}: any) => {
+  isNextDisabled
+}: FormFooterProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -36,7 +46,7 @@ const FormFooter = ({
       <Button
         onClick={handleSubmit}
         fullWidth={false}
-        disabled={isLoading}
+        disabled={isLoading || isNextDisabled}
       >
         {t('Submit')}
       </Button>
@@ -44,6 +54,7 @@ const FormFooter = ({
       <Button
         onClick={(e) => onScreenIndexChange(++screenIndex)}
         fullWidth={false}
+        disabled={isNextDisabled || isLoading}
       >
         {t('Next Step: ' + screens[screenIndex + 1])}
       </Button>
