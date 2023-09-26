@@ -1,14 +1,15 @@
 import Social from '../Social';
+import LegalModal from './LegalModal';
+
 import { useTranslation } from 'react-i18next';
 
 import * as s from './NavPanel.styled';
 
 const NavPanel = () => {
   const { t } = useTranslation();
+
   return (
-    
     <s.NavList component="ul">
-      
       <s.NavItem>
         <s.NavLink to="/about">{t('Home')}</s.NavLink>
       </s.NavItem>
@@ -16,7 +17,7 @@ const NavPanel = () => {
       <s.NavItem>
         <s.NavLink to="/home">{t('Search Content')}</s.NavLink>
       </s.NavItem>
-      
+
       <s.NavItem>
         <s.NavLink to="/">{t('VR Space')}</s.NavLink>
       </s.NavItem>
@@ -32,17 +33,16 @@ const NavPanel = () => {
       <s.NavItem>
         <s.NavLink to="/signup">{t('Become a Creator')}</s.NavLink>
       </s.NavItem>
-      
+
       <s.NavItem>
         <s.NavLink to="/Login">{t('Login')}</s.NavLink>
       </s.NavItem>
+      <LegalModal />
 
       <s.NavItem>
         <Social />
       </s.NavItem>
-
     </s.NavList>
-
   );
 };
 
