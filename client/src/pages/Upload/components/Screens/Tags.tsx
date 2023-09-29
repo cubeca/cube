@@ -9,6 +9,7 @@ import { set } from 'date-fns';
 import useCollaborators from 'hooks/useCollaborators';
 import CollaboratorInput from 'components/form/CollaboratorInput';
 import TagInputAutocomplete from 'components/form/TagInputAutocomplete';
+import { GetCollaboratorsByIdListResponseInner } from '@cubeca/bff-client-oas-axios';
 
 const Tags = ({ control }: any) => {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ const Tags = ({ control }: any) => {
   useEffect(() => {
     if (collaborators) {
       setAllCollaborators(
-        collaborators.map((collaborator) => collaborator.organization)
+        collaborators.map((collaborator: GetCollaboratorsByIdListResponseInner) => collaborator.organization)
       );
     }
   }, [collaborators]);

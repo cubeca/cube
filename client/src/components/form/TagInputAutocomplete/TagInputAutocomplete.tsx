@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, SyntheticEvent } from 'react';
 import {
   Autocomplete,
   Chip,
@@ -114,18 +114,20 @@ const TextInput: FC<TagInputAutocompleteProps> = ({
                     inputRef.current!.value = '';
                   }
                 }}
-                // onSelect={(event, value) => {
-                //   if (value) {
-                //     const newTags = [...tags, value.toString()];
-                //     setTags(newTags);
-                //     field.onChange(newTags.join(', '));
-                //     console.log(newTags);
-                //     setAutocompleteValue('');
-                //     inputRef.current!.value = '';
-                //   } else {
-                //     inputRef.current!.value = '';
-                //   }
-                // }}
+                onSelect={(e: SyntheticEvent<HTMLInputElement>) => {
+                  const { target } = e;
+                  const value = target as HTMLInputElement
+                  if (value) {
+                    const newTags = [...tags, value.toString()];
+                    setTags(newTags);
+                    field.onChange(newTags.join(', '));
+                    console.log(newTags);
+                    setAutocompleteValue('');
+                    inputRef.current!.value = '';
+                  } else {
+                    inputRef.current!.value = '';
+                  }
+                }}
                 onInputChange={(event, value) => {
                   setAutocompleteValue(value);
                 }}
