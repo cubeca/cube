@@ -14,7 +14,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import ArticleIcon from '@mui/icons-material/Article';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import GroupsIcon from '@mui/icons-material/Groups';
+import LinkIcon from '@mui/icons-material/Link';
 import CloseIcon from '@mui/icons-material/Close';
 import * as s from './MainMenu.styled';
 
@@ -92,10 +92,10 @@ const MainMenu = ({
         </Typography>
 
         <MenuList>
-          <MenuItem
+          {/* <MenuItem
             text={t('Text to Speech')}
             icon={<VoiceChatIcon fontSize="small" />}
-          />
+          /> */}
           <MenuItem
             text={t('Sign Language')}
             icon={<SignLanguageIcon fontSize="small" />}
@@ -119,16 +119,12 @@ const MainMenu = ({
           icon={<VolumeUpIcon fontSize="small" />}
         />
         <MenuItem
-          text={t('Activity Books')}
-          icon={<ArticleIcon fontSize="small" />}
-        />
-        <MenuItem
-          text={t('Digital Publications')}
+          text={t('PDF')}
           icon={<MenuBookIcon fontSize="small" />}
         />
         <MenuItem
-          text={t('Collaborators')}
-          icon={<GroupsIcon fontSize="small" />}
+          text={t('Link')}
+          icon={<LinkIcon fontSize="small" />}
         />
       </s.Glossary>
       
