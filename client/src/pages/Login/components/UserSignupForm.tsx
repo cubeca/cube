@@ -9,6 +9,7 @@ import { useState } from 'react';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import CheckboxInput from 'components/form/CheckboxInput';
+import LegalModal from 'components/LegalModal';
 
 export const UserSignupForm = () => {
   const { t } = useTranslation();
@@ -106,9 +107,8 @@ export const UserSignupForm = () => {
               'You must agree to the Terms of Use and Privacy Policy to continue'
             )}
           />
-          {errorMessage && (
-            <ErrorMessage>{errorMessage}</ErrorMessage>
-          )}
+          <LegalModal type="openText" />
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
               {t('Sign up')}

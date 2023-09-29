@@ -37,7 +37,7 @@ const CheckboxInput = ({
         helperTextId={helperTextId}
         fullWidth={fullWidth}
       >
-        <s.FormLable
+        <s.FormLabel
           control={
             <Checkbox
               checked={field.value}
