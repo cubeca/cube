@@ -1,11 +1,9 @@
 import { Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
-import CTABg from 'assets/images/about-hero-cta-bg.png';
-import PlaySymbol from 'assets/icons/play-symbol.svg';
-import Play from 'assets/icons/play-circle.svg';
 import Button from 'components/Button';
-import ReactPlayer from 'react-player';
+import HeroCTA from 'components/heroCTA';
+import CtaImage from 'assets/images/home-create-cta-cover.jpg';
 import * as s from './HeroPanel.styled';
 
 const HeroPanel = () => {
@@ -31,7 +29,17 @@ const HeroPanel = () => {
           </s.ContentMain>
         </Grid>
 
-        <Grid xs={12} md={4} mdOffset={2}>
+        <Grid xs={10} xsOffset={1} md={4} mdOffset={2}>
+          <HeroCTA 
+            title="Create"
+            text={t('becomeCreatorText')}
+            video="https://vimeo.com/243556536"
+            image={CtaImage}
+          />
+        </Grid>
+
+        {/* <Grid xs={12} md={4} mdOffset={2}>
+          
           <s.ContentCTA>
             <ReactPlayer
               url="https://vimeo.com/243556536"
@@ -53,7 +61,8 @@ const HeroPanel = () => {
               light={CTABg}
             />
           </s.ContentCTA>
-        </Grid>
+        </Grid> */}
+        
       </s.Content>
     </s.Hero>
   );
