@@ -2,6 +2,7 @@ import { Box, Card, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { ReactComponent as PlayButton } from 'assets/icons/play.svg';
+import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import * as s from './ContentCard.styled';
 
 export interface ContentCardProps {
@@ -10,6 +11,7 @@ export interface ContentCardProps {
   image: string;
   title: string;
   icon?: string;
+  hasSignLanguage?: boolean;
 }
 
 const ContentCard: FC<ContentCardProps> = ({
@@ -17,7 +19,8 @@ const ContentCard: FC<ContentCardProps> = ({
   title,
   image,
   icon,
-  url
+  url,
+  hasSignLanguage
 }) => {
   return (
     <s.ContentCard>
@@ -27,7 +30,10 @@ const ContentCard: FC<ContentCardProps> = ({
             backgroundImage: `url('${image}')`
           }}
         >
-          {icon && <img src={icon} alt="" />}
+          <div className='types'>
+            {icon}
+            {hasSignLanguage && <SignLanguageIcon fontSize="small" />}
+          </div>
         </s.Thumbnail>
 
         <s.Data direction="row" alignItems="space-between">

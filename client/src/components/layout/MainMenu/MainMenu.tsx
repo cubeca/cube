@@ -1,23 +1,16 @@
-import { Button, Divider, Menu, MenuList, Typography } from '@mui/material';
+import { Button, Divider, MenuList, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
 import MenuItem from './MenuItem';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import VrpanoIcon from '@mui/icons-material/Vrpano';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import ArticleIcon from '@mui/icons-material/Article';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import LinkIcon from '@mui/icons-material/Link';
 import CloseIcon from '@mui/icons-material/Close';
 import * as s from './MainMenu.styled';
-
 
 interface MainMenuProps {
   open: boolean;
