@@ -72,10 +72,6 @@ export const ContentMain = styled(Box)`
     margin: 0 0 24px;
     font-weight: 500;
     color: ${({ theme }) => theme.palette.primary.main};
-
-    ${(props) => props.theme.breakpoints.up('md')} {
-      margin-bottom: 12px;
-    }
   }
 
   .play-button {

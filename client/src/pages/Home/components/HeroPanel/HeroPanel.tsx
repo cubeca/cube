@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import CTABg from 'assets/images/about-hero-cta-bg.png';
 import PlaySymbol from 'assets/icons/play-symbol.svg';
 import Play from 'assets/icons/play-circle.svg';
+import Button from 'components/Button';
 import ReactPlayer from 'react-player';
 import * as s from './HeroPanel.styled';
 
@@ -24,9 +25,9 @@ const HeroPanel = () => {
                 'heroText'
               )}
             </Typography>
-            <a className="play-button" href="#TEST">
-              <img src={Play} alt="play" />
-            </a>
+            <Button href="/search" variant="contained" size='large'>
+              {t('Start Watching')}
+            </Button>
           </s.ContentMain>
         </Grid>
 
