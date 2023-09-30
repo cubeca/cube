@@ -1,7 +1,6 @@
 import { Controller } from 'react-hook-form';
-import FormControl from '../FormControl';
 import { InputProps } from '../types';
-import { Checkbox, FormControlLabel } from '@mui/material';
+import { Checkbox } from '@mui/material';
 import * as s from './CheckboxInput.styled';
 
 const defaultRules = {

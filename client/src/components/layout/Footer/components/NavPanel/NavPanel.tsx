@@ -1,5 +1,5 @@
 import Social from '../Social';
-import LegalModal from '../../../../LegalModal/LegalModal';
+import LegalModalNav from '../../../../Legal/LegalModalNav';
 
 import { useTranslation } from 'react-i18next';
 
@@ -38,7 +38,7 @@ const NavPanel = () => {
         <s.NavLink to="/Login">{t('Login')}</s.NavLink>
       </s.NavItem>
       <s.NavItem>
-        <LegalModal type="navlink" />
+        <LegalModalNav />
       </s.NavItem>
 
       <s.NavItem>

@@ -9,7 +9,6 @@ import { useState } from 'react';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import CheckboxInput from 'components/form/CheckboxInput';
-import LegalModal from 'components/LegalModal';
 
 export const CreatorSignupForm = () => {
   const { t } = useTranslation();
@@ -134,22 +133,11 @@ export const CreatorSignupForm = () => {
             }}
             fullWidth
           />
-          <CheckboxInput
-            control={control}
-            name="terms"
-            label={t(
-              `I agree to creating a Cube Commons account, and I agree to Cube Commons' Terms of Use and Privacy Policy (required).`
-            )}
-            fullWidth
-            helperText={t(
-              'You must agree to the Terms of Use and Privacy Policy to continue'
-            )}
-          />
-          <LegalModal type="openText" />
+
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
-              {t('Sign up')}
+              {t('Review Terms and Sign up')}
             </Button>
           </Box>
         </Stack>
