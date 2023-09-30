@@ -79,7 +79,7 @@ const Login = () => {
                     navigate('/signup?')
                   }
                 >
-                  {t('Sign up for a Creator Account')}
+                  {t('Apply for a Creator Account')}
                 </Button>
 
               </s.CTAMessage>
@@ -105,7 +105,7 @@ const Login = () => {
                     navigate('/signup')
                   }
                 >
-                  {t('Sign up for a Creator Account')}
+                  {t('Apply for a Creator Account')}
                 </Button>
 
                 <Typography component="h3" variant="h3" color="secondary">

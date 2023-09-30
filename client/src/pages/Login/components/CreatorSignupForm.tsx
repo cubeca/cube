@@ -50,8 +50,7 @@ export const CreatorSignupForm = () => {
   if (isFormSubmitted) {
     return (
       <Typography>
-        Sign up Successful! Check the email address you provided for your
-        verification link.
+        Application Submitted! If approved, you will receive a verification link to the email address you provided.
       </Typography>
     );
   }
@@ -59,7 +58,7 @@ export const CreatorSignupForm = () => {
   return (
     <>
       <Typography variant="h3" component="h3" pb={4}>
-        {t('Sign up for a Creator Account')}
+        {t('Apply for a Creator Account')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="row" spacing={2} pb={2}>
