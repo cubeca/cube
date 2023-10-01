@@ -45,7 +45,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             {profile!.organization}
           </a>
           <small>
-            {`@${profile!.tag}`}
+            {profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`}
           </small>
         </Typography>
       </s.Header>
