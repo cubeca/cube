@@ -27,7 +27,7 @@ const UserContentFilter = () => {
       />
 
       <Select
-        label={t('Select Type')}
+        label={t('Filter Results')}
         className='typeFilter'
         onChange={(value: string | number) =>
           setFilter(ContentQueryKeys.Type, value as string)
