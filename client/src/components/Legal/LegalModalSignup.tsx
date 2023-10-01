@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import {
@@ -9,8 +8,6 @@ import {
   Button,
   IconButton
 } from '@mui/material';
-import { useTranslation } from 'react-i18next';
-import * as s from './Legal.styled';
 import ToS from './ToS';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
