@@ -1,9 +1,10 @@
 import { Button as MuiButton, ButtonProps } from '@mui/material';
 import { FC } from 'react';
+import * as s from './Button.styled';
 
 const Button: FC<ButtonProps> = ({ children, ...rest }) => (
-  <MuiButton variant="contained" {...rest} sx={{fontSize: '1rem', marginTop: '1rem'}}>
+  <s.Button variant="contained" {...rest}>
     {children}
-  </MuiButton>
+  </s.Button>
 );
 export default Button;

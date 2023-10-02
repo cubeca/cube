@@ -22,6 +22,9 @@ const THEME_COLORS = {
   background: {
     default: '#28343C',
     paper: '#2f4048'
+  },
+  error: {
+    main: "#FFB7C4"
   }
 };
 
@@ -118,7 +121,7 @@ const getTheme = (mode?: 'dark' | 'light') =>
           disabled: THEME_COLORS.primary.dark
         },
         error: {
-          main: '#c01534'
+          main: THEME_COLORS.error.main
         },
         warning: {
           main: '#ffde33'

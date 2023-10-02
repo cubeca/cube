@@ -33,7 +33,7 @@ const AccessibilityPanel = () => {
               margin: '0 auto',
             }}
           >
-            CubeCommons advocates for accessibility standards from which further efforts can be made and developed as technology improves. We aim to be a tool that supports the accessibility of online arts and cultural content, and to be a point of connection to Canadian organizations like <a href="https://deafspectrum.com/" target="_blank" rel="noopener noreferrer" style={{padding: 0}} className="css-1mo7lgz">Deaf Spectrum</a> and <a href="https://openaccessfoundation.org/" target="_blank" rel="noopener noreferrer" style={{padding: 0}} className="css-1mo7lgz">OAFAC</a>.
+            CubeCommons advocates for accessibility standards from which further efforts can be made and developed as technology improves. We aim to be a tool that supports the accessibility of online arts and cultural content, and to be a point of connection to Canadian organizations like <a href="https://deafspectrum.com/" target="_blank" rel="noopener noreferrer" className="inline-link">Deaf Spectrum</a> and <a href="https://openaccessfoundation.org/" target="_blank" rel="noopener noreferrer" className="inline-link">OAFAC</a>.
           </Typography>
         {/* </Trans> */}
         {/* <MediaPlayer

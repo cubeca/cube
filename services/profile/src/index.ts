@@ -167,7 +167,7 @@ app.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req
       return;
     }
 
-    res.status(200).json({ ...profiles });
+    res.status(200).json(profiles);
   } catch (e: any) {
     console.error('Error retrieving profile list', e);
     res.status(404).send('Error retrieving profile list');

@@ -58,6 +58,11 @@ export const ExternalLinkButton = styled(RouterLink)`
   color: ${(props) => props.theme.palette.primary.main} !important;
   padding: 1rem 2rem;
   border-radius: 5px;
+
+  &:hover {
+    background-color: ${(props) => props.theme.palette.primary.light};
+    color: ${(props) => props.theme.palette.primary.contrastText} !important;
+  }
 `;
 
 export const ExternalLinkText = styled(RouterLink)`

@@ -7,8 +7,11 @@ import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from './Profile.styled';
 import { UserContext } from 'providers/UserProvider';
 import { getProfileId } from 'utils/auth';
-import { getProfile, getProfileByTag } from 'api/profile';
+import { getProfile } from 'api/profile';
 import { BFFGetProfileByTagData } from '@cubeca/bff-client-oas-axios';
+import { useNavigate } from 'react-router-dom';
+import useAuth from 'hooks/useAuth';
+import useProfile from 'hooks/useProfile';
 
 const Profile = () => {
   const { t } = useTranslation();
@@ -17,23 +20,22 @@ const Profile = () => {
   const { user } = useContext(UserContext);
   const [tag, setTag] = useState('')
   const profileId = getProfileId();
-  const [profile, setProfile] = useState<BFFGetProfileByTagData>();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const { data: profile} = useProfile(tag);
 
   useEffect(() => {
     const getTag = async () => {
-      const { data } = await getProfile((user as any).profile_id || profileId)
-      setTag((data as any).tag)
+      try {
+        const { data } = await getProfile((user as any)?.profile_id || profileId)
+        setTag((data as any).tag)
+      } catch(e: any) {
+        logout();
+        navigate('/login?error=invalidToken');
+      }
     }
     getTag()
   }, [])
-
-  useEffect(() => {
-    const getProfileDetails = async () => {
-      const { data } = await getProfileByTag(tag)
-      setProfile(data.data)
-    }
-    getProfileDetails()
-  }, [tag])
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -78,7 +80,7 @@ const Profile = () => {
         anchorEl={anchorEl}
         onClose={handleMenuClose}
         id={menuId}
-        profile={profile}
+        profile={profile as BFFGetProfileByTagData}
         profileId={profileId || ''}
       />
     </Box>

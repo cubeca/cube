@@ -207,11 +207,17 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
 });
 
 app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { status, data } = await profileApi.get('getProfilesByIdList/', {
+  const { status, data } = await profileApi.get('profiles/', {
     headers: filterHeadersToForward(req, 'authorization')
   });
 
-  res.status(status).json(data);
+  const result = Object.values(data).map((item: any) => ({
+    id: item.id,
+    organization: item.organization,
+    tag: item.tag
+  }));
+
+  res.status(status).json(result);
 });
 
 app.get('/search', async (req: Request, res: Response) => {

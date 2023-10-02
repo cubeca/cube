@@ -1,4 +1,5 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
+import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
 import AboutPanel from '../../../../components/AboutPanel/AboutPanel';
 import CollaborationsHero from 'assets/images/collaborations.jpg';

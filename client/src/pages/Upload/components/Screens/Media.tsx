@@ -10,6 +10,20 @@ import { useState } from 'react';
 const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const [isMediaUploadReady, setIsMediaUploadReady] = useState(false);
+  const [isThumbUploadReady, setIsThumbUploadReady] = useState(false);
+
+  const handleMediaOnDrop = (files: File[]) => {
+    handleMediaUpload(files);
+    setIsMediaUploadReady(true);
+  };
+  
+  const handleThumbnailOnDrop = (files: File[]) => {
+    handleCoverImageUpload(files);
+    setIsThumbUploadReady(true);
+  };
+
   // const [isDragOver, setIsDragOver] = useState(false);
   // const handleDragOver = (e: any) => {
   //   e.preventDefault();
@@ -18,6 +32,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
   // const handleDragLeave = () => {
   //   setIsDragOver(false);
   // };
+
   return (
     <Box className={'upload__media-screen'}>
       <Typography component="h2" variant="h2">
@@ -35,6 +50,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           <MenuItem.li value={ContentTypes.Video}>{t('Video')}</MenuItem.li>
           <MenuItem.li value={ContentTypes.Audio}>{t('Audio')}</MenuItem.li>
           <MenuItem.li value={ContentTypes.PDF}>{t('PDF')}</MenuItem.li>
+          <MenuItem.li value={ContentTypes.Link}>{t('Link')}</MenuItem.li>
         </Select>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
@@ -60,8 +76,9 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
       <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('Media file (required)')}
-          onDrop={handleMediaUpload}
+          onDrop={handleMediaOnDrop}
           maxFiles={1}
+          isUploadReady={isMediaUploadReady}
           // onDragOver={handleDragOver}
           // onDragLeave={handleDragLeave}
           //style={`background-color: ${isDragOver ? 'red' : 'white'}`}
@@ -76,8 +93,9 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
       <Box my={theme.spacing(5)}>
         <UploadInput
           text={t('Thumbnail image (required)')}
-          onDrop={handleCoverImageUpload}
+          onDrop={handleThumbnailOnDrop}
           maxFiles={1}
+          isUploadReady={isThumbUploadReady}
           // onDragOver={handleDragOver}
           // onDragLeave={handleDragLeave}
           // style={{ backgroundColor: isDragOver ? 'red' : 'white' }}

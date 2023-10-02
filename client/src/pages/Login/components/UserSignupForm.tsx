@@ -9,15 +9,27 @@ import { useState } from 'react';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import CheckboxInput from 'components/form/CheckboxInput';
+import LegalModalSignup from 'components/Legal/LegalModalSignup';
 
 export const UserSignupForm = () => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
+  const [displayLegal, setDisplayLegal] = useState(false);
+  const [submittableData, setSubmittableData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    promotions: false,
+    terms: false
+  });
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const onSubmit = async (data: FieldValues) => {
-    const { firstName, lastName, email, password, promotions, terms } = data;
+  const handleSignup = async () => {
+    const { firstName, lastName, email, password, promotions, terms } =
+      submittableData;
+    setDisplayLegal(false);
     try {
       setErrorMessage('');
       await userSignup(
@@ -33,6 +45,17 @@ export const UserSignupForm = () => {
       setErrorMessage(e.response?.data || t('An Error occured during sign up'));
     }
   };
+  const onSubmit = async (data: FieldValues) => {
+    setSubmittableData({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      password: data.password,
+      promotions: data.promotions,
+      terms: data.terms
+    });
+    setDisplayLegal(true);
+  };
 
   if (isFormSubmitted) {
     return (
@@ -46,7 +69,7 @@ export const UserSignupForm = () => {
   return (
     <>
       <Typography variant="h3" component="h3" pb={4}>
-        {t('User Sign up')}
+        {t('Sign up for a User Account')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="row" spacing={2} pb={2}>
@@ -57,6 +80,7 @@ export const UserSignupForm = () => {
             fullWidth
             helperText={t('First name required')}
             variant="outlined"
+            placeholder="First"
           />
           <TextInput
             control={control}
@@ -65,6 +89,7 @@ export const UserSignupForm = () => {
             fullWidth
             helperText={t('Last name required')}
             variant="outlined"
+            placeholder="Last"
           />
         </Stack>
         <Stack spacing={2}>
@@ -75,6 +100,7 @@ export const UserSignupForm = () => {
             fullWidth
             helperText={t('E-mail address required')}
             variant="outlined"
+            placeholder="name@example.com"
           />
           <PasswordInput
             control={control}
@@ -95,27 +121,20 @@ export const UserSignupForm = () => {
             }}
             fullWidth
           />
-          <CheckboxInput
-            control={control}
-            name="terms"
-            label={t(
-              `I agree to creating a Cube Commons account, and I agree to Cube Commons' Terms of Use and Privacy Policy (required).`
-            )}
-            fullWidth
-            helperText={t(
-              'You must agree to the Terms of Use and Privacy Policy to continue'
-            )}
-          />
-          {errorMessage && (
-            <ErrorMessage>{errorMessage}</ErrorMessage>
-          )}
+
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
-              {t('Sign up')}
+              {t('Review Terms and Sign up')}
             </Button>
           </Box>
         </Stack>
       </form>
+      <LegalModalSignup
+        callback={handleSignup}
+        display={displayLegal}
+        setDisplay={setDisplayLegal}
+      />
     </>
   );
 };
