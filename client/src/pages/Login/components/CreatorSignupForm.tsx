@@ -69,6 +69,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('First name required')}
             variant="outlined"
+            placeholder="First"
           />
           <TextInput
             control={control}
@@ -77,6 +78,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Last name required')}
             variant="outlined"
+            placeholder="Last"
           />
         </Stack>
         <Stack spacing={2}>
@@ -87,6 +89,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Organization name required')}
             variant="outlined"
+            placeholder="Organization"
           />
           <TextInput
             control={control}
@@ -95,6 +98,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Website required')}
             variant="outlined"
+            placeholder="https://www.example.com"
           />
           <TextInput
             control={control}
@@ -103,7 +107,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Tag required')}
             variant="outlined"
-            placeholder="@OrgName"
+            placeholder="OrgName"
           />
           <EmailInput
             control={control}
@@ -112,6 +116,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('E-mail address required')}
             variant="outlined"
+            placeholder="name@example.com"
           />
           <PasswordInput
             control={control}

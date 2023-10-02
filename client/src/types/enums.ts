@@ -7,18 +7,16 @@ export enum ContentCategories {
   All = 'all',
   Video = 'video',
   Audio = 'audio',
-  VR = 'vr',
-  PDF = 'pdf',
-  DigitalPublications = 'digital-publications',
-  Talks = 'talks',
-  Performances = 'performances',
-  CulturalTeachings = 'cultural-teachings'
+  ActivityBook = 'activity-book',
+  DigitalPublication = 'digital-publication',
+  Collaboration = 'collaboration'
 }
 
 export enum ContentTypes {
   Video = 'video',
   Audio = 'audio',
-  PDF = 'pdf'
+  PDF = 'pdf',
+  Link = 'link'
 }
 
 export enum Nation {

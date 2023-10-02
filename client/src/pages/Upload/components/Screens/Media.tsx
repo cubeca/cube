@@ -50,6 +50,7 @@ const Media = ({ control, handleMediaUpload, handleCoverImageUpload }: any) => {
           <MenuItem.li value={ContentTypes.Video}>{t('Video')}</MenuItem.li>
           <MenuItem.li value={ContentTypes.Audio}>{t('Audio')}</MenuItem.li>
           <MenuItem.li value={ContentTypes.PDF}>{t('PDF')}</MenuItem.li>
+          <MenuItem.li value={ContentTypes.Link}>{t('Link')}</MenuItem.li>
         </Select>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(

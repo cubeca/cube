@@ -15,6 +15,14 @@ export const NavList = styled(List)`
 
 export const NavItem = styled(ListItem)`
   padding: 8px 0;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+    font-size: inherit;
+    font-weight: 500;
+    line-height: inherit;
+  }
 `;
 
 export const NavLink = styled(Link)`

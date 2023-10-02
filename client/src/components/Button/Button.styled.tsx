@@ -23,4 +23,8 @@ export const Button = styled(MuiButton)`
       color: ${({ theme }) => theme.palette.primary.contrastText} !important;
     }
   }
+
+  &.MuiButton-sizeLarge {
+    font-size: 1.25rem;
+  }
 `;
