@@ -9,6 +9,7 @@ import Screens from './components/Screens';
 import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
 import Accessibility from './components/Screens/Accessibility';
+import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
@@ -145,6 +146,10 @@ const Upload = () => {
     {
       label: 'Tags',
       view: <Tags control={control} />
+    },
+    {
+      label: 'Terms of Service',
+      view: <TOS />
     }
   ];
 

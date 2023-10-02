@@ -2,10 +2,9 @@ import FormControl from '../FormControl';
 import { Checkbox, FormControlLabel } from '@mui/material';
 import { styled } from 'theme/utils';
 
-export const FormWrapper = styled(FormControl)`
-`;
+export const FormWrapper = styled(FormControl)``;
 
-export const FormLable = styled(FormControlLabel)`
+export const FormLabel = styled(FormControlLabel)`
   align-items: flex-start !important;
 
   .MuiCheckbox-root {
@@ -15,5 +14,4 @@ export const FormLable = styled(FormControlLabel)`
   .MuiFormControlLabel-label {
     font-size: 1rem !important;
   }
-
 `;
