@@ -200,6 +200,7 @@ export const EditProfileHeroBg = styled(Box)`
 `;
 
 export const Body = styled(Box)`
+  width: 100%;
   padding: 30px;
   
   ${(props) => props.theme.breakpoints.up('md')} {
