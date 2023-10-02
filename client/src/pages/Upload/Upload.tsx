@@ -160,7 +160,8 @@ const Upload = () => {
     // @ts-ignore
     if (!['video'].includes(formValues.type)) {
       const tmpScreens = [...SCREENS_BASE];
-      delete tmpScreens[2]; //Remove accessibility if not video
+      //remove accessibility screen
+      tmpScreens.splice(2, 1);
       setSCREENS(tmpScreens);
     } else {
       setSCREENS(SCREENS_BASE);

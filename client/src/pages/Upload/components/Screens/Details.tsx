@@ -29,7 +29,7 @@ const Details = ({
       video: ['description', 'vtt', 'kidsContent', 'expiry'],
       audio: ['description', 'vtt', 'kidsContent', 'expiry'],
       pdf: ['description', 'vtt', 'kidsContent', 'expiry'],
-      link: ['description', 'vtt', 'kidsContent', 'expiry']
+      link: ['description', 'kidsContent', 'expiry']
     };
     if (!uploadType) return false;
     // @ts-ignore
