@@ -9,14 +9,27 @@ import { useState } from 'react';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import CheckboxInput from 'components/form/CheckboxInput';
+import LegalModalSignup from 'components/Legal/LegalModalSignup';
 
 export const CreatorSignupForm = () => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
+  const [displayLegal, setDisplayLegal] = useState(false);
+  const [submittableData, setSubmittableData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    promotions: false,
+    terms: false,
+    organization: '',
+    website: '',
+    tag: ''
+  });
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const onSubmit = async (data: FieldValues) => {
+  const handleSignup = async () => {
     const {
       firstName,
       lastName,
@@ -27,10 +40,10 @@ export const CreatorSignupForm = () => {
       organization,
       website,
       tag
-    } = data;
+    } = submittableData;
+    setDisplayLegal(false);
     try {
       setErrorMessage('');
-
       await creatorSignup(
         `${firstName} ${lastName}`,
         organization,
@@ -41,16 +54,42 @@ export const CreatorSignupForm = () => {
         !!promotions,
         terms
       );
+
       setIsFormSubmitted(true);
     } catch (e: any) {
-      setErrorMessage(e.response.data);
+      setErrorMessage(e.response?.data || t('An Error occured during sign up'));
     }
+  };
+
+  const onSubmit = async (data: FieldValues) => {
+    setSubmittableData({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      password: data.password,
+      promotions: data.promotions,
+      terms: data.terms,
+      organization: data.organization,
+      website: data.website,
+      tag: data.tag
+    });
+    setDisplayLegal(true);
   };
 
   if (isFormSubmitted) {
     return (
       <Typography>
-        Application Submitted! If approved, you will receive a verification link to the email address you provided.
+        Sign up Successful! Check the email address you provided for your
+        verification link.
+      </Typography>
+    );
+  }
+
+  if (isFormSubmitted) {
+    return (
+      <Typography>
+        Application Submitted! If approved, you will receive a verification link
+        to the email address you provided.
       </Typography>
     );
   }
@@ -69,6 +108,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('First name required')}
             variant="outlined"
+            placeholder="First"
           />
           <TextInput
             control={control}
@@ -77,6 +117,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Last name required')}
             variant="outlined"
+            placeholder="Last"
           />
         </Stack>
         <Stack spacing={2}>
@@ -87,6 +128,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Organization name required')}
             variant="outlined"
+            placeholder="Organization"
           />
           <TextInput
             control={control}
@@ -95,6 +137,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Website required')}
             variant="outlined"
+            placeholder="https://www.example.com"
           />
           <TextInput
             control={control}
@@ -103,7 +146,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Tag required')}
             variant="outlined"
-            placeholder="@OrgName"
+            placeholder="OrgName"
           />
           <EmailInput
             control={control}
@@ -112,6 +155,7 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('E-mail address required')}
             variant="outlined"
+            placeholder="name@example.com"
           />
           <PasswordInput
             control={control}
@@ -132,25 +176,20 @@ export const CreatorSignupForm = () => {
             }}
             fullWidth
           />
-          <CheckboxInput
-            control={control}
-            name="terms"
-            label={t(
-              `I agree to creating a Cube Commons account, and I agree to Cube Commons' Terms of Use and Privacy Policy (required).`
-            )}
-            fullWidth
-            helperText={t(
-              'You must agree to the Terms of Use and Privacy Policy to continue'
-            )}
-          />
+
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box pt="1rem">
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
-              {t('Apply')}
+              {t('Review Terms and Sign up')}
             </Button>
           </Box>
         </Stack>
       </form>
+      <LegalModalSignup
+        callback={handleSignup}
+        display={displayLegal}
+        setDisplay={setDisplayLegal}
+      />
     </>
   );
 };
