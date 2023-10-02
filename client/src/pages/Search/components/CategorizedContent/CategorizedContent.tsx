@@ -9,11 +9,10 @@ import { ContentLoader } from 'components/Loaders';
 import ContentFilter from './CategorizedContentFilter';
 
 // Category icons
-import collaboration from 'assets/icons/type-collaboration.svg';
-import video from 'assets/icons/type-video.svg';
-import audio from 'assets/icons/type-audio.svg';
-import book from 'assets/icons/type-book.svg';
-import publication from 'assets/icons/type-publication.svg';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LinkIcon from '@mui/icons-material/Link';
 
 // FPO images
 import FPOThumb1 from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
@@ -43,105 +42,96 @@ const CategorizedContent = () => {
       thumbnailUrl: FPOThumb1,
       title: 'Video Title',
       url: 'https://www.example.com',
-      iconUrl: video
+      icon: <PlayArrowIcon fontSize="small" />,
+      hasSignLanguage: true
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb2,
       title: 'Video Title',
       url: 'https://www.example.com',
-      iconUrl: video
+      icon: <PlayArrowIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb3,
       title: 'Video Title',
       url: 'https://www.example.com',
-      iconUrl: video
+      icon: <PlayArrowIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb4,
       title: 'Audio Title',
       url: 'https://www.example.com',
-      iconUrl: audio
+      icon: <VolumeUpIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb5,
       title: 'Audio Title',
       url: 'https://www.example.com',
-      iconUrl: audio
+      icon: <VolumeUpIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb6,
       title: 'Audio Title',
       url: 'https://www.example.com',
-      iconUrl: audio
+      icon: <VolumeUpIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb7,
       title: 'Book Title',
       url: 'https://www.example.com',
-      iconUrl: book
+      icon: <MenuBookIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb8,
       title: 'Book Title',
       url: 'https://www.example.com',
-      iconUrl: book
+      icon: <MenuBookIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb1,
       title: 'Book Title',
       url: 'https://www.example.com',
-      iconUrl: book
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb2,
-      title: 'Publication Title',
-      url: 'https://www.example.com',
-      iconUrl: publication
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb3,
-      title: 'Publication Title',
-      url: 'https://www.example.com',
-      iconUrl: publication
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb4,
-      title: 'Publication Title',
-      url: 'https://www.example.com',
-      iconUrl: publication
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb5,
-      title: 'Collaboration Title',
-      url: 'https://www.example.com',
-      iconUrl: collaboration
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb6,
-      title: 'Collaboration Title',
-      url: 'https://www.example.com',
-      iconUrl: collaboration
+      icon: <MenuBookIcon fontSize="small" />,
+      hasSignLanguage: false
     },
     {
       id: 0,
       thumbnailUrl: FPOThumb7,
-      title: 'Collaboration Title',
+      title: 'Link Title',
       url: 'https://www.example.com',
-      iconUrl: collaboration
+      icon: <LinkIcon fontSize="small" />,
+      hasSignLanguage: false
+    },
+    {
+      id: 0,
+      thumbnailUrl: FPOThumb8,
+      title: 'Link Title',
+      url: 'https://www.example.com',
+      icon: <LinkIcon fontSize="small" />,
+      hasSignLanguage: false
+    },
+    {
+      id: 0,
+      thumbnailUrl: FPOThumb1,
+      title: 'Link Title',
+      url: 'https://www.example.com',
+      icon: <LinkIcon fontSize="small" />,
+      hasSignLanguage: false
     }
   ];
 
@@ -162,92 +152,14 @@ const CategorizedContent = () => {
                   title={key.title}
                   creator={key.creator}
                   url={key.url}
-                  icon={key.iconUrl}
+                  icon={key.icon}
+                  hasSignLanguage={key.hasSignLanguage}
                 />
               ))
             ) : (
               <ContentLoader size={6} />
             )}
           </s.Content>
-
-          
-
-          { /* This is the original code from the template : */
-
-          /* 
-          This list may map to database categories but it isn't consistant with content types defined in Figma designs. 
-          Figma designs have the following content types:
-          - Video
-          - Audio
-          - Activity Booklets
-          - Digital Publications
-          - Collaborations
-          - External Link
-          */
-          
-          /*
-          { const categories = [
-            {
-              text: t('Video'),
-              value: ContentCategories.Video
-            },
-            {
-              text: t('VR'),
-              value: ContentCategories.VR
-            },
-            {
-              text: t('Digital Publications'),
-              value: ContentCategories.DigitalPublications
-            },
-            {
-              text: t('Talks'),
-              value: ContentCategories.Talks
-            },
-            {
-              text: t('Performances'),
-              value: ContentCategories.Performances
-            },
-            {
-              text: t('Cultural Teachings'),
-              value: ContentCategories.CulturalTeachings
-            }
-          ]; }
-
-          <Stack>
-            <s.Categories component="ul">
-              {categories.map((category) => (
-                <MenuItem
-                  key={category.text}
-                  onClick={() => {
-                    setSelectedCategory(category.value);
-                  }}
-                  sx={{ padding: '1rem' }}
-                  selected={selectedCategory === category.value}
-                >
-                  {category.text}
-                </MenuItem>
-              ))}
-            </s.Categories>
-            <Stack spacing={2} py="4rem">
-              <Stack direction="row" spacing={6}>
-                {!isLoading ? (
-                  content.map((c: any) => (
-                    <ContentCard
-                      key={c.title}
-                      image={c.thumbnailUrl}
-                      title={c.title}
-                      creator={c.creator}
-                      url={c.url}
-                      icon={c.iconUrl}
-                    />
-                  ))
-                ) : (
-                  <ContentLoader size={6} />
-                )}
-              </Stack>
-            </Stack>
-          </Stack>
-          */}
 
         </Grid>
       </Grid>

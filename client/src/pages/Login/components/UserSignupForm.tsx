@@ -80,6 +80,7 @@ export const UserSignupForm = () => {
             fullWidth
             helperText={t('First name required')}
             variant="outlined"
+            placeholder="First"
           />
           <TextInput
             control={control}
@@ -88,6 +89,7 @@ export const UserSignupForm = () => {
             fullWidth
             helperText={t('Last name required')}
             variant="outlined"
+            placeholder="Last"
           />
         </Stack>
         <Stack spacing={2}>
@@ -98,6 +100,7 @@ export const UserSignupForm = () => {
             fullWidth
             helperText={t('E-mail address required')}
             variant="outlined"
+            placeholder="name@example.com"
           />
           <PasswordInput
             control={control}

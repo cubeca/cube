@@ -1,23 +1,16 @@
-import { Button, Divider, Menu, MenuList, Typography } from '@mui/material';
+import { Button, Divider, MenuList, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
-import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
 import MenuItem from './MenuItem';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
-import VrpanoIcon from '@mui/icons-material/Vrpano';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import ArticleIcon from '@mui/icons-material/Article';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import GroupsIcon from '@mui/icons-material/Groups';
+import LinkIcon from '@mui/icons-material/Link';
 import CloseIcon from '@mui/icons-material/Close';
 import * as s from './MainMenu.styled';
-
 
 interface MainMenuProps {
   open: boolean;
@@ -92,10 +85,10 @@ const MainMenu = ({
         </Typography>
 
         <MenuList>
-          <MenuItem
+          {/* <MenuItem
             text={t('Text to Speech')}
             icon={<VoiceChatIcon fontSize="small" />}
-          />
+          /> */}
           <MenuItem
             text={t('Sign Language')}
             icon={<SignLanguageIcon fontSize="small" />}
@@ -119,16 +112,12 @@ const MainMenu = ({
           icon={<VolumeUpIcon fontSize="small" />}
         />
         <MenuItem
-          text={t('Activity Books')}
-          icon={<ArticleIcon fontSize="small" />}
-        />
-        <MenuItem
-          text={t('Digital Publications')}
+          text={t('PDF')}
           icon={<MenuBookIcon fontSize="small" />}
         />
         <MenuItem
-          text={t('Collaborators')}
-          icon={<GroupsIcon fontSize="small" />}
+          text={t('Link')}
+          icon={<LinkIcon fontSize="small" />}
         />
       </s.Glossary>
       

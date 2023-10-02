@@ -25,21 +25,8 @@ const CategorizedContentFilter = () => {
         className='searchFilter'
       />
 
-      {
-        /* 
-        This list may map to database categories but it isn't consistant with content types defined in Figma designs. 
-        Figma designs have the following content types:
-        - Video
-        - Audio
-        - Activity Booklets
-        - Digital Publications
-        - Collaborations
-        - External Link
-        */
-      }
-
       <Select
-        label={t('Select Type')}
+        label={t('Filter Results')}
         className='typeFilter'
         onChange={(value: string | number) =>
           setFilter(ContentQueryKeys.Type, value as string)
@@ -49,22 +36,12 @@ const CategorizedContentFilter = () => {
         <MenuItem.li value={ContentCategories.All}>{t('All')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.Video}>{t('Video')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.Audio}>{t('Audio')}</MenuItem.li>
-        <MenuItem.li value={ContentCategories.VR}>{t('PDF')}</MenuItem.li>
-        <MenuItem.li value={ContentCategories.DigitalPublications}>
-          {t('Digital Publications')}
-        </MenuItem.li>
-        <MenuItem.li value={ContentCategories.Talks}>{t('Talks')}</MenuItem.li>
-        <MenuItem.li value={ContentCategories.Performances}>
-          {t('Performances')}
-        </MenuItem.li>
-        <MenuItem.li value={ContentCategories.CulturalTeachings}>
-          {t('Cultural Teachings')}
-        </MenuItem.li>
-        <MenuItem.li value={ContentQueryKeys.SignLanguage}>
-          {t('Has Sign Language')}
-        </MenuItem.li>
-        <MenuItem.li value={SignLanguage.ASL}>{t('ASL Available')}</MenuItem.li>
-        <MenuItem.li value={'artist 1'}>{t('By an Artist')}</MenuItem.li>
+        <MenuItem.li value={ContentCategories.ActivityBook}>{t('Activity Book')}</MenuItem.li>
+        <MenuItem.li value={ContentCategories.DigitalPublication}>{t('Digital Publication')}</MenuItem.li>
+        <MenuItem.li value={ContentCategories.Collaboration}>{t('Collaboration')}</MenuItem.li>
+        <MenuItem.li value={'artist 1'}>{t('By Artist')}</MenuItem.li>
+        <MenuItem.li value={'organization 1'}>{t('By Organization')}</MenuItem.li>
+        <MenuItem.li value={ContentQueryKeys.SignLanguage}>{t('Has Sign Language')}</MenuItem.li>
       </Select>
     </s.Filters>
   );

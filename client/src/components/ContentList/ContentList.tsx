@@ -35,7 +35,8 @@ const ContentList: FC<ContentListProps> = ({
             title={c.title}
             creator={c.creator}
             url={c.url}
-            icon={c.iconUrl}
+            icon={c.icon}
+            hasSignLanguage={c.hasSignLanguage}
           />
 
         ))}

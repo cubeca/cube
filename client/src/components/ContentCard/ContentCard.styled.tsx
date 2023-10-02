@@ -13,11 +13,21 @@ export const Thumbnail = styled(Box)`
   position: relative;
   padding-bottom: 100%;
   background: no-repeat center/cover;
-
-  img {
+  
+  .types{
     position: absolute;
-    left: 20px;
-    bottom: 20px;
+    left: 8px;
+    bottom: 8px;
+    width: calc(100% - 16px);
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+
+    ${(props) => props.theme.breakpoints.up('md')} {
+      left: 16px;
+      bottom: 16px;
+      width: calc(100% - 32px);
+    }
   }
 `;
 
