@@ -27,9 +27,9 @@ const Details = ({
   const showField = (field: string) => {
     const reqMap = {
       video: ['description', 'vtt', 'kidsContent', 'expiry'],
-      audio: ['description', 'vtt', 'kidsContent', 'expiry'],
-      pdf: ['description', 'vtt', 'kidsContent', 'expiry'],
-      link: ['description', 'kidsContent', 'expiry']
+      audio: ['description', 'vtt', 'expiry'],
+      pdf: ['description', 'vtt', 'expiry'],
+      link: ['description', 'expiry']
     };
     if (!uploadType) return false;
     // @ts-ignore
