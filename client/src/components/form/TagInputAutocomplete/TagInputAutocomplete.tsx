@@ -74,20 +74,6 @@ const TextInput: FC<TagInputAutocompleteProps> = ({
             fullWidth={fullWidth}
           >
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                {tags.map((tag) => (
-                  <Chip
-                    key={tag}
-                    label={tag}
-                    onDelete={() => {
-                      const newTags = tags.filter((t) => t !== tag);
-                      setTags(newTags);
-                      field.onChange(newTags.join(', '));
-                    }}
-                    style={{ margin: '4px' }}
-                  />
-                ))}
-              </div>
               <Autocomplete
                 {...field}
                 options={filteredOptions}
@@ -114,20 +100,22 @@ const TextInput: FC<TagInputAutocompleteProps> = ({
                     inputRef.current!.value = '';
                   }
                 }}
-                onSelect={(e: SyntheticEvent<HTMLInputElement>) => {
-                  const { target } = e;
-                  const value = target as HTMLInputElement
-                  if (value) {
-                    const newTags = [...tags, value.toString()];
-                    setTags(newTags);
-                    field.onChange(newTags.join(', '));
-                    console.log(newTags);
-                    setAutocompleteValue('');
-                    inputRef.current!.value = '';
-                  } else {
-                    inputRef.current!.value = '';
-                  }
-                }}
+                // onSelect={(e: SyntheticEvent<HTMLInputElement>) => {
+                //   const { target } = e;
+                //   console.log(target);
+                //   const value = target as HTMLInputElement;
+                //   console.log(value);
+                //   if (value) {
+                //     const newTags = [...tags, value.toString()];
+                //     setTags(newTags);
+                //     field.onChange(newTags.join(', '));
+                //     console.log(newTags);
+                //     setAutocompleteValue('');
+                //     inputRef.current!.value = '';
+                //   } else {
+                //     inputRef.current!.value = '';
+                //   }
+                // }}
                 onInputChange={(event, value) => {
                   setAutocompleteValue(value);
                 }}
@@ -162,6 +150,26 @@ const TextInput: FC<TagInputAutocompleteProps> = ({
                   />
                 )}
               />
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  paddingTop: '10px'
+                }}
+              >
+                {tags.map((tag) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    onDelete={() => {
+                      const newTags = tags.filter((t) => t !== tag);
+                      setTags(newTags);
+                      field.onChange(newTags.join(', '));
+                    }}
+                    style={{ margin: '4px' }}
+                  />
+                ))}
+              </div>
             </div>
           </FormControl>
         );

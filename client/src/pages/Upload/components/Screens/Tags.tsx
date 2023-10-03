@@ -22,7 +22,10 @@ const Tags = ({ control }: any) => {
   useEffect(() => {
     if (collaborators) {
       setAllCollaborators(
-        collaborators.map((collaborator: GetCollaboratorsByIdListResponseInner) => collaborator.organization)
+        collaborators.map(
+          (collaborator: GetCollaboratorsByIdListResponseInner) =>
+            collaborator.organization
+        )
       );
     }
   }, [collaborators]);
@@ -208,21 +211,21 @@ const Tags = ({ control }: any) => {
       </Box>
 
       <Box my={theme.spacing(5)}>
-        {/* <CollaboratorInput
+        <CollaboratorInput
           control={control}
           name="collaborators"
           fullWidth
           placeholder={t('Collaborators')}
           rules={{ required: false }}
-        /> */}
-        <TagInputAutocomplete
+        />
+        {/* <TagInputAutocomplete
           control={control}
           name="collaborators"
           fullWidth
           placeholder={t('Collaborators')}
           rules={{ required: false }}
           options={allCollaborators}
-        />
+        /> */}
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Did you work with another organization? Include them in the credits. Separate collaborators by comma.'
