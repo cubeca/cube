@@ -4,7 +4,8 @@ import {
   ContentApi,
   ProfileApi,
   UploadApi,
-  FilesApi
+  FilesApi,
+  BffApi
 } from '@cubeca/bff-client-oas-axios';
 
 import { BFF_URL } from './settings';
@@ -40,3 +41,6 @@ export const uploadApi = new UploadApi(uploadConfiguration);
 
 const filesConfiguration = createConfiguration();
 export const filesApi = new FilesApi(filesConfiguration);
+
+const bffConfiguration = createConfiguration();
+export const bffApi = new BffApi(bffConfiguration);
