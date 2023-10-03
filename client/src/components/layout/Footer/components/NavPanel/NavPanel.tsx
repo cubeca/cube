@@ -1,24 +1,27 @@
 import Social from '../Social';
-import { useTranslation } from 'react-i18next';
+import LegalModalNav from '../../../../Legal/LegalModalNav';
 
+import { useTranslation } from 'react-i18next';
+import { HashLink } from 'react-router-hash-link';
 import * as s from './NavPanel.styled';
 
 const NavPanel = () => {
   const { t } = useTranslation();
+
   return (
-    
     <s.NavList component="ul">
-      
       <s.NavItem>
-        <s.NavLink to="/about">{t('Home')}</s.NavLink>
+        <s.NavLink to="/">{t('Home')}</s.NavLink>
       </s.NavItem>
 
       <s.NavItem>
-        <s.NavLink to="/home">{t('Search Content')}</s.NavLink>
+        <s.NavLink to="/search">{t('Search Content')}</s.NavLink>
       </s.NavItem>
-      
+
       <s.NavItem>
-        <s.NavLink to="/">{t('VR Space')}</s.NavLink>
+        <HashLink smooth to="/#virtual-experiences">
+          {t('Cube VR')}
+        </HashLink>
       </s.NavItem>
 
       <s.NavItem>
@@ -32,17 +35,18 @@ const NavPanel = () => {
       <s.NavItem>
         <s.NavLink to="/signup">{t('Become a Creator')}</s.NavLink>
       </s.NavItem>
-      
+
       <s.NavItem>
-        <s.NavLink to="/Login">{t('Login')}</s.NavLink>
+        <s.NavLink to="/login">{t('Login')}</s.NavLink>
+      </s.NavItem>
+      <s.NavItem>
+        <LegalModalNav />
       </s.NavItem>
 
       <s.NavItem>
         <Social />
       </s.NavItem>
-
     </s.NavList>
-
   );
 };
 

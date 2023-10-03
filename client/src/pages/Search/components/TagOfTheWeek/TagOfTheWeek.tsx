@@ -7,11 +7,11 @@ import ContentCard from 'components/ContentCard';
 import { ContentLoader } from 'components/Loaders';
 import { ContentLists } from 'types/enums';
 import * as s from './TagOfTheWeek.styled';
-import collaboration from 'assets/icons/type-collaboration.svg';
-import video from 'assets/icons/type-video.svg';
-import audio from 'assets/icons/type-audio.svg';
-import book from 'assets/icons/type-book.svg';
-import publication from 'assets/icons/type-publication.svg';
+
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LinkIcon from '@mui/icons-material/Link';
 
 import FPOThumb1 from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
 import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
@@ -32,42 +32,43 @@ const Content = () => {
       thumbnailUrl: FPOThumb1,
       title: 'Video Title',
       url: 'https://www.example.com',
-      iconUrl: video
+      icon: <PlayArrowIcon fontSize="small" />,
+      hasSignLanguage: true
     },
     {
       id: 1,
       thumbnailUrl: FPOThumb2,
       title: 'Video Title',
       url: 'https://www.example.com',
-      iconUrl: video
+      icon: <PlayArrowIcon fontSize="small" />
     },
     {
       id: 2,
       thumbnailUrl: FPOThumb3,
       title: 'Video Title',
       url: 'https://www.example.com',
-      iconUrl: video
+      icon: <PlayArrowIcon fontSize="small" />
     },
     {
       id: 3,
       thumbnailUrl: FPOThumb4,
-      title: 'Audio Title',
+      title: 'Book Title',
       url: 'https://www.example.com',
-      iconUrl: audio
+      icon: <MenuBookIcon fontSize="small" />
     },
     {
       id: 4,
       thumbnailUrl: FPOThumb5,
       title: 'Audio Title',
       url: 'https://www.example.com',
-      iconUrl: audio
+      icon: <VolumeUpIcon fontSize="small" />
     },
     {
       id: 5,
       thumbnailUrl: FPOThumb6,
-      title: 'Audio Title',
+      title: 'Link Title',
       url: 'https://www.example.com',
-      iconUrl: audio
+      icon: <LinkIcon fontSize="small" />
     }
   ];
 
@@ -86,13 +87,14 @@ const Content = () => {
           <swiper-container slides-per-view="auto" mousewheel="true" direction="horizontal">
             {content.map((key: any) => (
               <swiper-slide key={key.id}>
-                <ContentCard
+               <ContentCard
                   key={key.id}
                   image={key.thumbnailUrl}
                   title={key.title}
                   creator={key.creator}
                   url={key.url}
-                  icon={key.iconUrl}
+                  icon={key.icon}
+                  hasSignLanguage={key.hasSignLanguage}
                 />
               </swiper-slide>
             ))}

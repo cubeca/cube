@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 import { Control } from 'react-hook-form';
 
 export interface InputProps extends MuiInputProps {
-  label?: string;
+  label?: any;
   name: string;
   control: Control;
   defaultValue?: string;
