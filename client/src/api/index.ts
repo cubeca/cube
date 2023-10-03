@@ -4,13 +4,11 @@ import {
   ContentApi,
   ProfileApi,
   UploadApi,
-  FilesApi
+  FilesApi,
+  BffApi
 } from '@cubeca/bff-client-oas-axios';
 
-import {
-  CLOUDFLARE_SERVICE_URL,
-  BFF_URL
-} from './settings';
+import { CLOUDFLARE_SERVICE_URL, BFF_URL } from './settings';
 import { getAuthToken } from '../utils/auth';
 
 // `tus-js-client` expects to talk to this endpoint directly instead of going through our API client lib.
@@ -48,6 +46,13 @@ const uploadConfiguration = new Configuration({
   basePath: BFF_URL,
   accessToken: async () => String(await getAuthToken())
 });
+
+const bffConfiguration = new Configuration({
+  basePath: BFF_URL,
+  accessToken: async () => String(await getAuthToken())
+});
+
+export const bffApi = new BffApi(bffConfiguration);
 
 export const uploadApi = new UploadApi(uploadConfiguration);
 export const filesApi = new FilesApi(uploadConfiguration);
