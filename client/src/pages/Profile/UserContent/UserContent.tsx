@@ -3,7 +3,6 @@ import ContentCard from 'components/ContentCard';
 import { ContentLoader } from 'components/Loaders';
 import UserContentFilter from './UserContentFilter';
 import { ContentLists } from 'types/enums';
-import { ContentListed } from '@cubeca/bff-client-oas-axios';
 import * as s from './UserContent.styled';
 
 import collaboration from 'assets/icons/type-collaboration.svg';
@@ -21,137 +20,27 @@ import FPOThumb6 from 'assets/images/fpo/coline-beulin-oLWGI-Q76Yc-unsplash-thum
 import FPOThumb7 from 'assets/images/fpo/abi-baurer-2xbcFBRGsZo-unsplash-thumb.png';
 import FPOThumb8 from 'assets/images/fpo/eldar-nazarov-gnYfMrL0rck-unsplash-thumb.png';
 
-const UserContent = () => {
-  const { data, isLoading } = useContent('featured', ContentLists.Featured);
+interface UserContentProps {
+  content?: any;
+}
 
-  // const content = data ?? [
-  const content = [
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb1,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      iconUrl: video
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb2,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      iconUrl: video
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb3,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      iconUrl: video
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb4,
-      title: 'Audio Title',
-      url: 'https://www.example.com',
-      iconUrl: audio
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb5,
-      title: 'Audio Title',
-      url: 'https://www.example.com',
-      iconUrl: audio
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb6,
-      title: 'Audio Title',
-      url: 'https://www.example.com',
-      iconUrl: audio
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb7,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      iconUrl: book
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb8,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      iconUrl: book
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb1,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      iconUrl: book
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb2,
-      title: 'Publication Title',
-      url: 'https://www.example.com',
-      iconUrl: publication
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb3,
-      title: 'Publication Title',
-      url: 'https://www.example.com',
-      iconUrl: publication
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb4,
-      title: 'Publication Title',
-      url: 'https://www.example.com',
-      iconUrl: publication
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb5,
-      title: 'Collaboration Title',
-      url: 'https://www.example.com',
-      iconUrl: collaboration
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb6,
-      title: 'Collaboration Title',
-      url: 'https://www.example.com',
-      iconUrl: collaboration
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb7,
-      title: 'Collaboration Title',
-      url: 'https://www.example.com',
-      iconUrl: collaboration
-    }
-  ];
-
+const UserContent = ({ content }: UserContentProps) => {
   return (
     <s.UserContentWrapper>
       <UserContentFilter />
 
       <s.UserContent>
-        {!isLoading ? (
-          content.map((c: any) => (
+        {
+          content?.map((c: any) => (
             <ContentCard
               key={c.id}
-              image={c.thumbnailUrl}
+              image={c.coverImageUrl.playerInfo.publicUrl}
               title={c.title}
               creator={c.creator}
-              url={c.url}
+              url={`/content/${c.id}`}
               icon={c.iconUrl}
             />
-          ))
-        ) : (
-          <ContentLoader size={6} />
-        )}
+          ))}
       </s.UserContent>
     </s.UserContentWrapper>
   );

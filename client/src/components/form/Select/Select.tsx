@@ -6,21 +6,23 @@ import {
   SelectChangeEvent
 } from '@mui/material';
 import { FC, ReactNode } from 'react';
+import * as s from './Select.styled';
 
 interface SelectProps {
   label: string;
   value?: string | number;
+  className?: string;
   children: ReactNode;
   onChange: (value: string | number) => void;
 }
 
-const Select: FC<SelectProps> = ({ label, value, children, onChange }) => {
+const Select: FC<SelectProps> = ({ label, value, children, className, onChange }) => {
   const handleChange = (event: SelectChangeEvent<string | number>) => {
     onChange(event.target.value);
   };
 
   return (
-    <Box sx={{ minWidth: 240 }}>
+    <s.Select sx={{ minWidth: 240 }} className={className}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">{label}</InputLabel>
         <MuiSelect
@@ -33,7 +35,7 @@ const Select: FC<SelectProps> = ({ label, value, children, onChange }) => {
           {children}
         </MuiSelect>
       </FormControl>
-    </Box>
+    </s.Select>
   );
 };
 

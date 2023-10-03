@@ -1,5 +1,6 @@
 import { upload } from './upload';
-import { AddContent, contentApi } from '.';
+import { contentApi } from '.';
+import { AddContentRequest } from '@cubeca/bff-client-oas-axios';
 
 export type CategoryType =
   | 'all'
@@ -16,19 +17,17 @@ export type ContentType = 'video' | 'audio' | 'pdf';
 
 export type NationType = 'CA';
 
-export type { AddContent } from '.';
-
 export const getContent = async (
   category?: CategoryType,
   type?: ContentType,
   nation?: NationType,
   creator?: string
 ) => {
-  return await contentApi.contentList(1, 10, category, type, nation, creator);
+  //return await contentApi.contentList(1, 10, category, type, nation, creator);
 };
 
 export const getContentDetails = async (id: string) => {
-  return await contentApi.contentDetails(id);
+  return await contentApi.getContent(id);
 };
 
 export const addContent = async ({
@@ -38,7 +37,7 @@ export const addContent = async ({
   subtitlesFile,
   transcriptFile
 }: {
-  payload: AddContent;
+  payload: AddContentRequest;
   coverImageFile?: File;
   mediaFile?: File;
   subtitlesFile?: File;

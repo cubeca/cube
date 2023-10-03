@@ -1,4 +1,4 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 
 // TODO Replace with https://www.npmjs.com/package/file-type
@@ -7,7 +7,7 @@ import mime from 'mime';
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-import { inspect, parseTusUploadMetadata } from './utils';
+import { parseTusUploadMetadata } from './utils';
 import * as stream from './stream';
 import { getPresignedUploadUrl } from './r2';
 
@@ -19,26 +19,22 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
-
   const fileId = req.query.fileId as string;
 
   if (!fileId) {
-    console.log(400, `Invalid Request. 'fileId' query parameter required`);
+    console.error(400, `Invalid Request. 'fileId' query parameter required`);
     return res.status(400).send(`Invalid Request. 'fileId' query parameter required`);
   }
 
-  const {
-    'upload-length': tusUploadLength,
-    'upload-metadata': tusUploadMetadata,
-  } = req.headers;
+  const { 'upload-length': tusUploadLength, 'upload-metadata': tusUploadMetadata } = req.headers;
 
   if (!tusUploadLength) {
-    console.log(400, `Invalid Request. 'Upload-Length' header required`);
+    console.error(400, `Invalid Request. 'Upload-Length' header required`);
     return res.status(400).send(`Invalid Request. 'Upload-Length' header required`);
   }
 
   if (!tusUploadMetadata) {
-    console.log(400, `Invalid Request. 'Upload-Metadata' header required`);
+    console.error(400, `Invalid Request. 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'Upload-Metadata' header required`);
   }
 
@@ -56,7 +52,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   // return res.status(500).send('Error retrieving content upload url');
 
   if (!allocVidTime) {
-    console.log(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
+    console.error(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
   }
 
@@ -64,29 +60,32 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const urlValidDurationSeconds = Math.ceil(Number(validFor));
 
   try {
-    const { id:userId } = extractUser(req);
+    const { uuid: userId } = extractUser(req);
 
-    const dbFileStub = await db.insertVideoFileStubWithForcedFileId(
-      fileId,
-      {
-        profileId,
-        upload: {
-          userId,
-          fileName,
-          fileSizeBytes: Number(tusUploadLength),
-          debug: {
-            reserveDurationSeconds,
-            urlValidDurationSeconds
-          }
+    const dbFileStub = await db.insertVideoFileStubWithForcedFileId(fileId, {
+      profileId,
+      upload: {
+        userId,
+        fileName,
+        fileSizeBytes: Number(tusUploadLength),
+        debug: {
+          reserveDurationSeconds,
+          urlValidDurationSeconds
         }
       }
-    );
+    });
 
     if (fileId != dbFileStub.id) {
       return res.status(500).send('Error creating the DB entry for this file');
     }
 
-    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(fileId, Number(tusUploadLength), reserveDurationSeconds, urlValidDurationSeconds, userId);
+    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(
+      fileId,
+      Number(tusUploadLength),
+      reserveDurationSeconds,
+      urlValidDurationSeconds,
+      userId
+    );
 
     if (!tusUploadUrl || !cloudflareStreamUid) {
       return res.status(500).send('Error retrieving content upload url');
@@ -95,15 +94,14 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
 
     res.set({
-      "Access-Control-Expose-Headers": "Location",
-      "Access-Control-Allow-Headers": "*",
-      "Access-Control-Allow-Origin": "*",
-      Location: tusUploadUrl,
-    })
-    res.status(200).send("OK")
+      'Access-Control-Expose-Headers': 'Location',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Allow-Origin': '*',
+      Location: tusUploadUrl
+    });
+    res.status(200).send('OK');
   } catch (e: any) {
-    console.error(e.message);
-    inspect(e);
+    console.error('Error retrieving content upload url', e);
     res.status(500).send('Error retrieving content upload url');
   }
 });
@@ -111,21 +109,15 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
 app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const {
     profileId,
-    upload: {
-      fileName,
-      fileSizeBytes,
-      mimeType,
-      urlValidDurationSeconds = 30 * 60
-    }
+    upload: { fileName, fileSizeBytes, mimeType, urlValidDurationSeconds = 30 * 60 }
   } = req.body;
-
 
   if (!fileName) {
     return res.status(400).send(`Invalid Request. 'upload.fileName' required`);
   }
 
   try {
-    const { id:userId } = extractUser(req);
+    const { uuid: userId } = extractUser(req);
 
     const dbFileStub = await db.insertS3FileStub({
       profileId,
@@ -141,7 +133,6 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     });
 
     const fileId = dbFileStub.id;
-
     const filePathInBucket = `${fileId}/${fileName}`;
     const presignedUrl = await getPresignedUploadUrl(filePathInBucket, mimeType, urlValidDurationSeconds);
 
@@ -149,11 +140,9 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
 
     res.status(201).json({ fileId, presignedUrl });
   } catch (e: any) {
-    console.error(e.message);
-    inspect(e);
+    console.error('Error retrieving content upload url', e);
     res.status(500).send('Error retrieving content upload url');
   }
-
 });
 
 export interface VideoPlayerInfo {
@@ -174,9 +163,11 @@ export interface NonVideoPlayerInfo {
 
 app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
+
   if (!UUID_REGEXP.test(fileId)) {
     return res.status(400).send(`Invalid 'fileId' path parameter, must be in UUID format.`);
   }
+
   const dbFile = await db.getFileById(fileId);
   if (dbFile === null) {
     return res.status(404).send('File not found.');
@@ -189,10 +180,11 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
     if (!videoDetails) {
       return res.status(404).send('File not found.');
     }
+
     if (!videoDetails.readyToStream) {
-      // inspect('Video is still being processed:', videoDetails);
       return res.status(409).send('Video is still being processed.');
     }
+
     playerInfo = {
       hlsUrl: videoDetails?.playback?.hls,
       dashUrl: videoDetails?.playback?.dash,
@@ -221,6 +213,15 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
     storageType: dbFile.storage_type,
     playerInfo
   });
+});
+
+// Route for checking if the service is running
+app.get('/', async (req: Request, res: Response) => {
+  try {
+    res.status(200).send('Service is running');
+  } catch (error) {
+    res.status(500).send('Internal server error');
+  }
 });
 
 app.listen(settings.PORT, async () => {

@@ -1,10 +1,13 @@
 import { styled } from 'theme/utils';
-import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
 
 export const BreadcrumbWrapper = styled(Box)`
-  padding: ${({ theme }) => theme.spacing(1)};
   background: ${({ theme }) => theme.palette.background.paper};
+  padding: ${({ theme }) => theme.spacing(1)} 0;
+  
+  ${(props) => props.theme.breakpoints.up('md')} {
+    padding: ${({ theme }) => theme.spacing(1)};
+  }
 `;
 
 export const Breadcrumb = styled('ul')`

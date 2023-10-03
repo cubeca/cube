@@ -1,12 +1,9 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
-import Button from 'components/Button';
-import MediaPlayer from 'components/MediaPlayer';
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Profile } from 'api/profile';
 import EditIcon from '@mui/icons-material/Edit';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
-import * as s from './ViewSection.styled';
+import * as s from '../Profile.styled';
+import MediaPlayer from 'components/MediaPlayer';
 
 interface ViewSectionProps {
   isLoggedIn: boolean;
@@ -14,19 +11,29 @@ interface ViewSectionProps {
   onEdit: () => void;
 }
 
+const getUrl = (website: string) => {
+  return website?.startsWith('http') ? website : `https://${website}`
+}
+
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
-  const { t } = useTranslation();
   return (
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
-          <s.ImageInner href={profile.website} title={profile!.organization}>
-            <img src={FPOProfileUrl} alt="profile thumbnail" />
+          <s.ImageInner
+            onClick={isLoggedIn ? onEdit : undefined}
+            title={profile!.organization}
+            target="_blank"
+            style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
+          >
+            <img
+              src={profile.logoUrl || FPOProfileUrl}
+              alt="profile thumbnail"
+            />
           </s.ImageInner>
           {isLoggedIn && (
             <s.EditWrapper>
-              {/* <button onClick={onEdit}> */}
-              <button>
+              <button onClick={onEdit} style={{ cursor: 'pointer' }}>
                 <EditIcon />
               </button>
             </s.EditWrapper>
@@ -34,27 +41,24 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
         </s.ImageWrapper>
 
         <Typography component="h5" variant="h5">
-          <a href={profile.website} title={profile!.organization}>
+          <a href={getUrl(profile?.website)} title={profile!.organization} target="_blank" rel="noreferrer">
             {profile!.organization}
           </a>
           <small>
-            {/* <a href="/home" title={profile!.tag}> */}
-            {profile!.tag}
-            {/* </a> */}
+            {profile!.tag && (
+              profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`
+            )}
           </small>
         </Typography>
       </s.Header>
 
       <s.Body>
         <Typography component="p" variant="body2">
-          {/* {profile.description} */}
-          You have successfully created your profile on CubeCommons! In the next
-          week we will send you an email update when your profile is confirmed
-          and you can start editing this profile description. You can already
-          start uploading content which will appear when your profile is
-          confirmed. All content players will be embeddable on your website
-          which we have linked to your username.
+          {profile.description}
         </Typography>
+        <Box pt="16px">
+          {profile?.descriptionUrl && <MediaPlayer url={profile?.descriptionUrl} isAudio />}
+        </Box>
       </s.Body>
     </s.ViewSection>
   );

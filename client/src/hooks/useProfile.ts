@@ -1,20 +1,27 @@
-import { getProfile } from 'api/profile';
+import { getProfileByTag } from 'api/profile';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
+import { getProfileId } from 'utils/auth';
 
-const useProfile = () => {
-  const { id } = useParams();
+const useProfile = (tag?: string) => {
+  const { tag: paramTag } = useParams();
+  const profileId = getProfileId();
 
   const { isLoading, isError, data } = useQuery(
-    ['profile', id],
-    () => getProfile(id ?? ''),
-    { enabled: !!id }
+    ['profile_by_tag', tag],
+    () => getProfileByTag(tag ?? paramTag ?? ''),
+    { enabled: !!tag || !!paramTag}
   );
+
+  const profile = data?.data.data;
 
   return {
     isLoading,
     isError,
-    data: data?.data
+    data: {
+      ...profile,
+      profileId
+    }
   };
 };
 

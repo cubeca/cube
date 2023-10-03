@@ -1,76 +1,174 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
+import Footer from 'components/layout/Footer';
 import Button from 'components/Button';
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-import LoginBackground from 'assets/images/login-signup-background.jpg';
-import Link from 'components/Link';
 import { LoginForm } from './components/LoginForm';
-import { SignupForm } from './components/SignupForm';
+import { CreatorSignupForm } from './components/CreatorSignupForm';
+import { UserSignupForm } from './components/UserSignupForm';
+import * as s from './Login.styled';
 
 const Login = () => {
   const { t } = useTranslation('common');
   const navigate = useNavigate();
   const location = useLocation();
+  const { search } = useLocation();
+
+  const emailVerified = search.includes('verified');
+  const passwordReset = search.includes('password-reset');
 
   const isLogin = location.pathname.toLowerCase() === '/login';
+  const isUserSignup = search.includes('user');
+  const isCreatorSignup = !isUserSignup && !isLogin;
+  const isInvalidToken = search.includes('invalidToken');
+
+  const signUpForm = isUserSignup ? (
+    <UserSignupForm />
+  ) : (
+    <CreatorSignupForm />
+  );
 
   return (
     <Stack>
-      <Grid
-        container
-        spacing={0}
-        columnGap="none"
-        direction="row"
-        xs={12}
-        md={12}
-        flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
-        order={{ xs: 'reverse' }}
-      >
-        <Grid item xs={12} md={6} justifyContent={{ xs: 'center' }}>
-          <Box padding={12}>{isLogin ? <LoginForm /> : <SignupForm />}</Box>
+      <Grid container>
+        <Grid xs={10} xsOffset={1} md={5}>
+          
+          <s.FormWrapper>
+            {isLogin ? <LoginForm emailVerified={emailVerified} passwordReset={passwordReset} invalidToken={isInvalidToken} /> : signUpForm}
+          </s.FormWrapper>
+
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Box
-            p={0}
-            component="div"
-            sx={{
-              backgroundImage: `
-              linear-gradient(to right, rgba(149, 245, 203, 0.82), rgba(149, 245, 203, 0.32)),
-              url('${LoginBackground}')`,
-              backgroundSize: 'cover'
-            }}
-            height="100%"
-            width="100%"
-            display="flex"
-            alignItems="center"
-          >
-            <Box pl={12}>
-              <Typography component="h2" variant="h2" color="secondary">
-                {isLogin ? t('New Here?') : t('Already have an account?')}
-              </Typography>
-              {isLogin && (
-                <Typography
-                  component="h4"
-                  variant="h4"
-                  color="secondary"
-                  pb={4}
-                >
-                  {t('Sign up and Start Contributing')}
+        <Grid xs={12} md={6}>
+          <s.CTAWrapper>
+            
+            {isLogin && (
+              <s.CTAMessage>
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('New Here?')}
                 </Typography>
-              )}
-              <Box>
+
+                <Typography
+                  component="p" 
+                  variant="body1"
+                  color="secondary"
+                >
+                  {t('User accounts can create playlists and lorem ipsum dolor sit amet.')}
+                </Typography>
+                
                 <Button
                   color="secondary"
-                  onClick={() => navigate(isLogin ? '/signup' : '/login')}
+                  onClick={() =>
+                    navigate('/signup?type=user')
+                  }
                 >
-                  {isLogin ? t('Sign up') : t('Login')}
+                  {t('Sign up for a User Account')}
                 </Button>
-              </Box>
-            </Box>
-          </Box>
+
+                <Typography
+                  component="p" 
+                  variant="body1"
+                  color="secondary"
+                >
+                  {t('Creator accounts can upload content and lorem ipsum dolor sit amet.')}
+                </Typography>
+                
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/signup?')
+                  }
+                >
+                  {t('Apply for a Creator Account')}
+                </Button>
+
+              </s.CTAMessage>
+            )}
+            
+            {isUserSignup && (
+              <s.CTAMessage>
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Or, become a Creator')}
+                </Typography>
+
+                <Typography
+                  component="p" 
+                  variant="body1"
+                  color="secondary"
+                >
+                  {t('Creator accounts can upload content and lorem ipsum dolor sit amet.')}
+                </Typography>
+
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/signup')
+                  }
+                >
+                  {t('Apply for a Creator Account')}
+                </Button>
+
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Already have an account?')}
+                </Typography>
+
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/login')
+                  }
+                >
+                  {t('Login')}
+                </Button>
+
+              </s.CTAMessage>
+            )}
+            
+            {isCreatorSignup && (
+              <s.CTAMessage>
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Or, become a User')}
+                </Typography>
+
+                <Typography
+                  component="p" 
+                  variant="body1"
+                  color="secondary"
+                >
+                  {t('User accounts can create playlists and lorem ipsum dolor sit amet.')}
+                </Typography>
+
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/signup?type=user')
+                  }
+                >
+                  {t('Sign up for a User Account')}
+                </Button>
+
+                <Typography component="h3" variant="h3" color="secondary">
+                  {t('Already have an account?')}
+                </Typography>
+
+                <Button
+                  color="secondary"
+                  onClick={() =>
+                    navigate('/login')
+                  }
+                >
+                  {t('Login')}
+                </Button>
+
+              </s.CTAMessage>
+            )}
+            
+          </s.CTAWrapper>
+
         </Grid>
       </Grid>
+
+      <Footer />
     </Stack>
   );
 };

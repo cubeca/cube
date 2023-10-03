@@ -2,71 +2,83 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as settings from './settings';
 
-const NIL_UUID = '00000000-0000-0000-0000-000000000000';
-
-export interface CubeJwtPayload {
+interface CubeJwtPayload {
   sub: string;
   aud: string[];
+  iss: string;
+}
+
+interface UserRequest extends Request {
+  user?: {
+    uuid: string;
+    permissionIds: string[];
+  };
 }
 
 function isCubeJwtPayload(x: any): x is CubeJwtPayload {
   return (
     'sub' in x &&
     'string' === typeof x.sub &&
+    x.sub !== '' &&
     'aud' in x &&
     Array.isArray(x.aud) &&
-    x.aud.every((x: any) => 'string' === typeof x)
+    x.aud.length > 0 &&
+    x.aud.every((x: any) => 'string' === typeof x && x !== '') &&
+    x.iss === 'CUBE'
   );
 }
 
-const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+const authenticateToken = (req: UserRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
-  let token = authHeader && authHeader.split(' ')[1];
+  const authQuery = req.query?.authorization ? String(req.query?.authorization) : undefined;
+  const token = authHeader?.split(' ')[1] || authQuery;
 
-  // For get requests
-  token ??= req.query?.authorization ? String(req.query?.authorization) : undefined;
-
-  if (token) {
-    jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
-      if (isCubeJwtPayload(data)) {
-        req.user = {
-          uuid: data.sub,
-          permissionIds: data.aud
-        };
-        next();
-      } else {
-        res.sendStatus(403);
-      }
-    });
-  } else {
-    // TODO log that we didn't find a token, even though we expected one: 'authorization header or query parameter missing or malformed'
-    req.user = {
-      uuid: NIL_UUID,
-      permissionIds: ['anonymous']
-    };
-    next();
+  if (!token) {
+    return res.status(403).send('Authorization header or query parameter missing or malformed');
   }
+
+  jwt.verify(token, settings.JWT_TOKEN_SECRET, (err, data) => {
+    if (err) {
+      return res.status(403).send('Invalid token');
+    }
+
+    if (!isCubeJwtPayload(data)) {
+      return res.status(403).send('Authorization header or query parameter is malformed');
+    }
+
+    req.user = {
+      uuid: data.sub,
+      permissionIds: data.aud
+    };
+
+    next();
+  });
 };
 
-// This *generates* a (composed) middleware which will pass control to the next
-// handler (i.e. "allow" the request) only if the JWT carries one of the listed
-// permission IDs
 export const allowIfAnyOf = (...allowList: string[]) => [
   authenticateToken,
-  (req: Request, res: Response, next: NextFunction) => {
-    const isOnAllowList = (perm: string) => allowList.includes(perm);
-    if (req.user?.permissionIds.some(isOnAllowList)) {
-      next();
-    } else {
-      res.sendStatus(403);
+  (req: UserRequest, res: Response, next: NextFunction) => {
+    const isOnAllowList = (permission: string) => allowList.includes(permission);
+    if (!req.user) {
+      return res.status(403).send('No user object found in request');
     }
+
+    if (!req.user.permissionIds || !req.user.permissionIds.some(isOnAllowList)) {
+      return res.status(403).send('User does not have sufficient permissions');
+    }
+
+    next();
   }
 ];
 
-export const extractUser = (req: Request) => {
-  if (!req?.user) {
-    throw new Error('user missing from request')
+export const extractUser = (req: UserRequest) => {
+  if (!req) {
+    throw new Error('Request object is missing');
   }
+
+  if (!req.user) {
+    throw new Error('User object is missing from request');
+  }
+
   return req.user;
 };
-

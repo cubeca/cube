@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   updateProfileLogo,
   updateProfileSection,
@@ -6,29 +6,64 @@ import {
   updateProfileAudioDescription
 } from 'api/profile';
 
-const useEditProfile = () => {
-  const updateSectionMutation = useMutation(
-    (body: { id: string; name: string; description: string }) =>
-      updateProfileSection(body.id, body.name, body.description)
-  );
+const useEditProfile = (profileTag: string) => {
+  const queryClient = useQueryClient();
 
-  const updateLogoMutation = useMutation((body: { id: string; file: File }) =>
-    updateProfileLogo(body.id, body.file)
-  );
+  const updateSectionMutation = useMutation({
+    mutationFn: (body: {
+      id: string;
+      description: string;
+      organization: string;
+      website: string;
+      budget: string;
+    }) =>
+      updateProfileSection(
+        body.id,
+        body.organization,
+        body.website,
+        body.description,
+        body.budget
+      ),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['profile_by_tag', profileTag]
+      })
+  });
 
-  const updateHeroMutation = useMutation((body: { id: string; file: File }) =>
-    updateProfileHero(body.id, body.file)
-  );
+  const updateLogoMutation = useMutation({
+    mutationFn: (body: { id: string; file: File }) =>
+      updateProfileLogo(body.id, body.file),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['profile_by_tag', profileTag]
+      })
+  });
 
-  const updateAudioMutation = useMutation((body: { id: string; file: File }) =>
-    updateProfileAudioDescription(body.id, body.file)
-  );
+  const updateHeroMutation = useMutation({
+    mutationFn: (body: { id: string; file: File }) =>
+      updateProfileHero(body.id, body.file),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['profile_by_tag', profileTag]
+      })
+  });
 
-  const updateSection = (id: string, name: string, description: string) => {
+  const updateAudioMutation = useMutation({
+    mutationFn: (body: { id: string; file: File }) =>
+      updateProfileAudioDescription(body.id, body.file),
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: ['profile_by_tag', profileTag]
+      })
+  });
+
+  const updateSection = (id: string, organization: string, website: string, description: string, budget: string) => {
     updateSectionMutation.mutate({
       id,
-      name,
-      description
+      organization,
+      website,
+      description,
+      budget
     });
   };
 

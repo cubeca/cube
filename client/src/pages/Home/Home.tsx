@@ -1,32 +1,24 @@
-import { Stack, Box, Grid } from '@mui/material';
-import CategorizedContent from './components/CategorizedContent';
-import FeaturedContent from './components/FeaturedContent';
-import HeroPanelHome from './components/HeroPanelHome';
-import ContentByMedium from '../Profile/ContentByMedium/index'
+import { Stack, Box } from '@mui/material';
 import Footer from 'components/layout/Footer';
+import AccessibilityPanel from './components/AccessibilityPanel';
+import CollaborationsPanel from './components/CollaborationsPanel';
+import CenterColumnPanel from './components/CenterColumnPanel';
+import DigitalNeighboursPanel from './components/DigitalNeighboursPanel';
+import HeroPanel from './components/HeroPanel';
+import NftsPanel from './components/NftsPanel';
+import VirtualExperiencesPanel from './components/VirtualExperiencesPanel';
 
-const Home = () => {
-  return (
-    <Grid container>
-    <Stack sx={{position: 'absolute', top: '0', bottom: '0'}}>
-      <HeroPanelHome />
-      <Grid item>
-      <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', pl: '4rem', pt: { xs: '0', md: '10rem' }, backgroundImage: 'linear-gradient(rgba(40,52,60,0),rgba(40,52,60,0.6), rgba(40,52,60,0.8), rgba(40,52,60,1),rgba(40,52,60,1), rgba(40,52,60,1))', pb: '2rem', width: '100vw'}}>
-    <ContentByMedium />
-    </Box>
-    </Grid>
-    <Grid item>
-    <Stack sx={{py: '2rem', px: '4rem', background: 'rgba(40,52,60,1)'}}>
-      <FeaturedContent />
-      <CategorizedContent />
-    </Stack>
-    </Grid>
-    <Box sx={{p: '2rem'}}>
+const About = () => (
+  <Stack>
+    <HeroPanel />
+    <CenterColumnPanel />
+    <VirtualExperiencesPanel />
+    <AccessibilityPanel />
+    {/* <CollaborationsPanel /> */}
+    {/* <NftsPanel /> */}
+    <DigitalNeighboursPanel />
     <Footer />
-    </Box>
-    </Stack>
-    </Grid>
-  );
-};
+  </Stack>
+);
 
-export default Home;
+export default About;

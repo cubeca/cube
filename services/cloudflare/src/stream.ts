@@ -1,15 +1,13 @@
 import axios from 'axios';
 
 import * as settings from './settings';
-import { makeCloudflareTusUploadMetadata, inspect } from './utils';
+import { makeCloudflareTusUploadMetadata } from './utils';
 
 const CLOUDFLARE_STREAM_BASE_URL = `https://api.cloudflare.com/client/v4/accounts/${settings.CLOUDFLARE_ACCOUNT_ID}/stream`;
 
 const cloudflareApi = axios.create({
     baseURL: CLOUDFLARE_STREAM_BASE_URL,
     timeout: 10 * 1000,
-
-    // Do not throw errors for non-2xx responses, that makes handling them easier.
     validateStatus: null
 });
 
@@ -48,7 +46,6 @@ export const getVideoDetails = async (cloudflareStreamUid: string) => {
     if (status === 200) {
         return data.result;
     } else {
-        // inspect(`getVideoDetails(${cloudflareStreamUid})`, status, data);
         return null;
     }
 }

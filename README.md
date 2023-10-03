@@ -14,8 +14,8 @@ This includes the micro-services that will be deployed to support the app
 
 - */services/cloudflare:* APIs related to uploading files to cloudflare. Specifically can retrieve a TUS upload url for media files on behalf of the client.
 - */services/content:* APIs related to storing metadata about upload files and file ids for retrieving the actual uploaded files.
-- */services/identity:* APIs related to authenticating the user and creating a user account, email verification and password resets. This service is responsible for providing an authentication jwt used to identify the user to other services.
-- */services/profile:* APIs related to authenticating the user and creating a user account, email verification and password resets. This service is responsible for providing an authentication jwt used to identify the user to other services.
+- */services/identity:* APIs related to authenticating the user and creating a user account, email verification and password resets. This service is responsible for providing an authentication jwt used to identify the user.
+- */services/profile:* APIs related to CRUD operations of a creator profile.
 
 # Quick Start
 
@@ -73,6 +73,8 @@ cp .env.example .env
 - Update the values for `PGUSER` and `PGPASSWORD` to match the admin credentials for your db
 - For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used as the other microservices.
 - The `ENCRYPT_SECRET` can be any value
+- The `BREVO_API_KEY` is for the email client to process new account registration emails, password reset emails, etc.
+- The `HOST` will determine the domain used in placeholder URLs in email templates.
 
 ```
 npm i
@@ -86,6 +88,12 @@ NOTE: A test user is created in the migration with the following credentials:
 
 username: firstuser@cubecommons.ca
 password: abc123456789***
+
+NOTE:
+1. User identities are created without permissions until they confirm their email.  Once confirmed, they receive an 'active' role.  The is_active and has_verified_email statuses are both changed from false to true at this time.
+2. Different actions like resending profile creation emails, changing an email or password will have different side effects on the profile with respect to permissions and statuses.
+3. Brevo is the email service used to send client emails with templates, they have a quota of 300 free emails per day.
+4. The permission levels to date are: active, creator and superadmin.
 
 ## 4. Start the Profile Service
 
@@ -119,7 +127,7 @@ select * from profiles
 # in the cube_identity db
 select * from users
 
-# paste the value copied above into the profileId column for "First User"
+# paste the value copied above into the profile_id column for "First User"
 # save the database to store the updated value.
 ```
 
@@ -128,7 +136,6 @@ select * from users
 ```
 cd client
 cp .env.example .env
-# make npm_link (not sure if this step is needed any more since there is now a venders directory)
 npm i
 npm run start
 ```

@@ -1,4 +1,4 @@
-import { Typography, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
@@ -6,14 +6,23 @@ import * as s from './FormFooter.styled';
 import Lottie from 'lottie-react';
 import LoadingAnimation from 'assets/animations/loading-circle.json';
 
+interface FormFooterProps {
+  isLoading: boolean;
+  screens: string[];
+  screenIndex: number;
+  onScreenIndexChange: (screen: number) => void;
+  handleSubmit: () => void;
+  isNextDisabled?: boolean;
+}
+
 const FormFooter = ({
   isLoading,
   screens,
   screenIndex,
   onScreenIndexChange,
   handleSubmit,
-  onSubmit
-}: any) => {
+  isNextDisabled
+}: FormFooterProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -35,16 +44,17 @@ const FormFooter = ({
   const nextButton =
     screenIndex == lastScreen ? (
       <Button
-        onClick={handleSubmit(onSubmit)}
+        onClick={handleSubmit}
         fullWidth={false}
-        disabled={isLoading}
+        disabled={isLoading || isNextDisabled}
       >
-        {t('Submit')}
+        {t('Accept Terms of Use and Submit')}
       </Button>
     ) : (
       <Button
         onClick={(e) => onScreenIndexChange(++screenIndex)}
         fullWidth={false}
+        disabled={isNextDisabled || isLoading}
       >
         {t('Next Step: ' + screens[screenIndex + 1])}
       </Button>

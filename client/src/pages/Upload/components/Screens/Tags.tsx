@@ -1,13 +1,42 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Typography, useTheme } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
 import { useTranslation } from 'react-i18next';
+import { useState, useEffect } from 'react';
+import { set } from 'date-fns';
+import useCollaborators from 'hooks/useCollaborators';
+import CollaboratorInput from 'components/form/CollaboratorInput';
+import { GetCollaboratorsByIdListResponseInner } from '@cubeca/bff-client-oas-axios';
 
 const Tags = ({ control }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const [otherContributors, setOtherContributors] = useState<any[]>([]);
+  const [allCollaborators, setAllCollaborators] = useState<string[]>([]);
+  const { data: collaborators, isLoading: isCollaboratorsLoading } =
+    useCollaborators();
+
+  useEffect(() => {
+    if (collaborators) {
+      setAllCollaborators(
+        collaborators.map(
+          (collaborator: GetCollaboratorsByIdListResponseInner) =>
+            collaborator.organization
+        )
+      );
+    }
+  }, [collaborators]);
+  const handleAddMore = () => {
+    setOtherContributors([
+      ...otherContributors,
+      {
+        role: `other_role_${otherContributors.length + 1}`,
+        name: `other_name_${otherContributors.length + 1}`
+      }
+    ]);
+  };
 
   return (
     <Box className={'upload__tags-screen'}>
@@ -40,10 +69,11 @@ const Tags = ({ control }: any) => {
               <li>Cultural Teaching</li>
               <li>Studio Visit</li>
               <li>Gathering</li>
-              <li>Book Launch</li>
-              <li>Subtitles</li>
+              <li>Book Reading</li>
+              <li>Subtitled</li>
               <li>Sign language</li>
               <li>Multilingual Subtitles</li>
+              <li>How-To</li>
             </Typography>
           </Grid>
           <Grid xs={12} md={4}>
@@ -51,25 +81,15 @@ const Tags = ({ control }: any) => {
               Language Tags
             </Typography>
             <Typography component="ul" variant="body2" my={theme.spacing(2)}>
-              <li>Tsleil-Waututh</li>
-              <li>kʷakʷəkʲəʔwakʷ</li>
-              <li>Sḵwx̱wúʔmesh</li>
-              <li>Anishinaabe</li>
+              <li>hən̓q̓əmin̓əm̓</li>
+              <li>Kwak̓wala</li>
+              <li>Sḵwx̱wú7mesh</li>
+              <li>Anishinaabemowin Ojibwe</li>
+              <li>普通话 Mandarin</li>
+              <li>ਗੁਰਮੁਖੀ Punjabi</li>
+              <li>જોડણી Gujarati</li>
               <li>French</li>
-              <li>Chinese</li>
-            </Typography>
-          </Grid>
-          <Grid xs={12} md={4}>
-            <Typography component="h6" variant="h6" my={theme.spacing(2)}>
-              Location Tags
-            </Typography>
-            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
-              <li>BC</li>
-              <li>Alberta</li>
-              <li>Québec</li>
-              <li>Regina</li>
-              <li>Manitoba</li>
-              <li>Toronto</li>
+              <li>English</li>
             </Typography>
           </Grid>
         </Grid>
@@ -107,6 +127,7 @@ const Tags = ({ control }: any) => {
               name="editor"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={3}>
@@ -120,6 +141,7 @@ const Tags = ({ control }: any) => {
               name="camera"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={3}>
@@ -133,36 +155,67 @@ const Tags = ({ control }: any) => {
               name="sound"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={3}>
             <TextInput
               control={control}
-              name=""
+              name="other_role"
               fullWidth
               placeholder={t('Role')}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={9}>
             <TextInput
               control={control}
-              name="sound"
+              name="other_name"
               fullWidth
               placeholder={t('Add only one contributor name here')}
+              rules={{ required: false }}
             />
           </Grid>
+          {otherContributors.length > 0 &&
+            otherContributors.map((contributor, index) => (
+              <>
+                <Grid xs={3}>
+                  <TextInput
+                    control={control}
+                    name={contributor.role}
+                    fullWidth
+                    placeholder={t('Role')}
+                    rules={{ required: false }}
+                  />
+                </Grid>
+                <Grid xs={9}>
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <TextInput
+                      control={control}
+                      name={contributor.name}
+                      fullWidth
+                      placeholder={t('Add only one contributor name here')}
+                      rules={{ required: false }}
+                    />
+                  </Stack>
+                </Grid>
+              </>
+            ))}
         </Grid>
         <Box display="flex" justifyContent="flex-end">
-          <Button variant="outlined">{t('+ add more')}</Button>
+          <Button variant="outlined" onClick={handleAddMore}>
+            {t('+ add more')}
+          </Button>
         </Box>
       </Box>
 
       <Box my={theme.spacing(5)}>
-        <TagInput
+        <CollaboratorInput
           control={control}
           name="collaborators"
           fullWidth
           placeholder={t('Collaborators')}
+          rules={{ required: false }}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(

@@ -1,5 +1,5 @@
-import { contentApi } from '.';
+import { bffApi } from '.';
 
 export const getCollaborators = async () => {
-  return await contentApi.collaboratorList();
+  return await bffApi.collaborators();
 };

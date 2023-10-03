@@ -3,12 +3,12 @@ import {
   addContent,
   CategoryType,
   ContentType,
-  NationType,
-  AddContent
+  NationType
 } from 'api/content';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { ContentQueryKeys } from 'api/enums';
+import { AddContentRequest } from '@cubeca/bff-client-oas-axios';
 
 const useContent = (list = 'videos', category?: string) => {
   const [searchParams] = useSearchParams();
@@ -42,7 +42,7 @@ const useContent = (list = 'videos', category?: string) => {
   } = useMutation(addContent);
 
   const handleAddContent = (
-    payload: AddContent,
+    payload: AddContentRequest,
     coverImageFile: File,
     mediaFile: File
   ) =>
@@ -58,7 +58,7 @@ const useContent = (list = 'videos', category?: string) => {
     isUploadLoading,
     isUploadError,
     isUploadSuccess,
-    data: data?.data.data,
+    data: undefined, // data?.data.data,
     addContent: handleAddContent
   };
 };

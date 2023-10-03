@@ -15,15 +15,14 @@ RUN apt-get update \
 COPY .env.example /work/.env.example
 
 # This Dockerfile will be run in a Docker Context of the parent directory i.e. `/services/profile/`
-COPY test/jest.config.js /work/jest.config.js
-COPY test/package.json /work/package.json
-COPY test/package-lock.json /work/package-lock.json
-COPY test/tsconfig.json /work/tsconfig.json
+COPY jest.config.js /work/jest.config.js
+COPY package.json /work/package.json
+COPY package-lock.json /work/package-lock.json
+COPY tsconfig.json /work/tsconfig.json
 
 # See https://docs.docker.com/engine/reference/builder/#copy
 # > If <src> is a directory, the entire contents of the directory are copied, including filesystem metadata.
 # > NOTE: The directory itself is not copied, just its contents.
-COPY test/scripts /work/scripts/
 COPY test/src /work/src/
 
 WORKDIR /work/

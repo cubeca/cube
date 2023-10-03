@@ -3,10 +3,9 @@ import Button from 'components/Button';
 import ContentCard from 'components/ContentCard/ContentCard';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ContentListed } from '@cubeca/bff-client-oas-axios';
 
 interface ContentListProps {
-  content: ContentListed[];
+  content: any[];
   heading?: string;
   isLoggedIn?: boolean;
   handleNewMedia?: () => void;
@@ -23,21 +22,23 @@ const ContentList: FC<ContentListProps> = ({
   return (
     <Stack>
       {heading && (
-        <Typography pb="2rem" pt="1.5rem">
+        <Typography component="h5" variant="h5" pb="2rem">
           {heading}
         </Typography>
       )}
-      <Stack direction='column'
-  spacing={{ xs: 3, sm: 3, md: 4 }}>
+      <Stack direction='column'>
         {content.map((c) => (
+          
           <ContentCard
             key={c.id}
             image={c.thumbnailUrl}
             title={c.title}
             creator={c.creator}
             url={c.url}
-            icon={c.iconUrl}
+            icon={c.icon}
+            hasSignLanguage={c.hasSignLanguage}
           />
+
         ))}
       </Stack>
     </Stack>
