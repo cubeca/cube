@@ -20,16 +20,23 @@ export const getUploadTusEndpoint = async (fileId: string): Promise<string> => {
   return url.toString();
 };
 
-const createApiInstance = async (ApiClass: any) => {
-  const configuration = new Configuration({
+const createConfiguration = () =>
+  new Configuration({
     basePath: BFF_URL,
     accessToken: async () => String(await getAuthToken())
   });
-  return new ApiClass(configuration);
-};
 
-export const authApi = createApiInstance(AuthApi);
-export const profileApi = createApiInstance(ProfileApi);
-export const contentApi = createApiInstance(ContentApi);
-export const uploadApi = createApiInstance(UploadApi);
-export const filesApi = createApiInstance(FilesApi);
+const authConfiguration = createConfiguration();
+export const authApi = new AuthApi(authConfiguration);
+
+const profileConfiguration = createConfiguration();
+export const profileApi = new ProfileApi(profileConfiguration);
+
+const contentConfiguration = createConfiguration();
+export const contentApi = new ContentApi(contentConfiguration);
+
+const uploadConfiguration = createConfiguration();
+export const uploadApi = new UploadApi(uploadConfiguration);
+
+const filesConfiguration = createConfiguration();
+export const filesApi = new FilesApi(filesConfiguration);
