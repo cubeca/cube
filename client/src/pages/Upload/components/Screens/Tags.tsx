@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import { set } from 'date-fns';
 import useCollaborators from 'hooks/useCollaborators';
 import CollaboratorInput from 'components/form/CollaboratorInput';
-import TagInputAutocomplete from 'components/form/TagInputAutocomplete';
 import { GetCollaboratorsByIdListResponseInner } from '@cubeca/bff-client-oas-axios';
 
 const Tags = ({ control }: any) => {
@@ -218,14 +217,6 @@ const Tags = ({ control }: any) => {
           placeholder={t('Collaborators')}
           rules={{ required: false }}
         />
-        {/* <TagInputAutocomplete
-          control={control}
-          name="collaborators"
-          fullWidth
-          placeholder={t('Collaborators')}
-          rules={{ required: false }}
-          options={allCollaborators}
-        /> */}
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Did you work with another organization? Include them in the credits. Separate collaborators by comma.'
