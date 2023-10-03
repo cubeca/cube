@@ -7,14 +7,11 @@ import {
   FilesApi
 } from '@cubeca/bff-client-oas-axios';
 
-import {
-  CLOUDFLARE_SERVICE_URL,
-  BFF_URL
-} from './settings';
+import { BFF_URL } from './settings';
 import { getAuthToken } from '../utils/auth';
 
 // `tus-js-client` expects to talk to this endpoint directly instead of going through our API client lib.
-export const UPLOAD_TUS_ENDPOINT = `${CLOUDFLARE_SERVICE_URL}/upload/video-tus-reservation`;
+export const UPLOAD_TUS_ENDPOINT = `${BFF_URL}/upload/video-tus-reservation`;
 
 export const getUploadTusEndpoint = async (fileId: string): Promise<string> => {
   const url = new URL(UPLOAD_TUS_ENDPOINT);
