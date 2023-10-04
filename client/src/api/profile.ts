@@ -1,4 +1,4 @@
-import { profileApi } from '.';
+import { bffApi, profileApi } from '.';
 import { upload } from './upload';
 
 export const getProfile = async (id: string) => {
@@ -6,7 +6,7 @@ export const getProfile = async (id: string) => {
 };
 
 export const getProfileByTag = async (tag: string) => {
-  return await profileApi.getProfileByTag(tag);
+  return await bffApi.getProfileByTag(tag);
 };
 
 export const updateProfileSection = async (
