@@ -4,7 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from '../Profile.styled';
 import MediaPlayer from 'components/MediaPlayer';
-
+import Lottie from 'lottie-react';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 interface ViewSectionProps {
   isLoggedIn: boolean;
   profile: any;
@@ -53,6 +54,11 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
       </s.Header>
 
       <s.Body>
+        <Lottie
+          className="loading-cubes"
+          animationData={LoadingCubes}
+          loop={true}
+        />
         <Typography component="p" variant="body2">
           {profile.description}
         </Typography>

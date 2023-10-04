@@ -202,6 +202,12 @@ export const EditProfileHeroBg = styled(Box)`
 export const Body = styled(Box)`
   width: 100%;
   padding: 30px;
+
+  .loading-cubes {
+    display: block;
+    margin: -100px auto;
+    width: 100px;
+  }
   
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 60px 30px;
