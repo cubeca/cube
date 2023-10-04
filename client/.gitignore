@@ -24,8 +24,3 @@ yarn-debug.log*
 yarn-error.log*
 
 /.vscode
-
-/vendor/@cubeca/bff-auth-client-oas-axios/node_modules/
-/vendor/@cubeca/bff-client-oas-axios/node_modules/
-
-/vendor-staging/
