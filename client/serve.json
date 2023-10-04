@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    { "source": "profile**", "destination": "/index.html" },
-    { "source": "login**", "destination": "/index.html" },
-    { "source": "about**", "destination": "/index.html" },
-    { "source": "home**", "destination": "/index.html" }
-  ]
-}

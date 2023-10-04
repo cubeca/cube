@@ -1,5 +1,15 @@
 import * as React from 'react';
-import { Stack, Box, Typography, Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton,  } from '@mui/material';
+import {
+  Stack,
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton
+} from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
@@ -13,11 +23,11 @@ import * as s from './Footer.styled';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
-    padding: theme.spacing(2),
+    padding: theme.spacing(2)
   },
   '& .MuiDialogActions-root': {
-    padding: theme.spacing(1),
-  },
+    padding: theme.spacing(1)
+  }
 }));
 
 export interface DialogTitleProps {
@@ -40,7 +50,7 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
             position: 'absolute',
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500],
+            color: (theme) => theme.palette.grey[500]
           }}
         >
           <CloseIcon />
@@ -56,12 +66,12 @@ const Footer = () => {
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => {
-    if (localStorage.getItem("beta_msg_seen") === null) {
+    if (localStorage.getItem('beta_msg_seen') === null) {
       setOpen(true);
       return;
     }
-    
-    const key = localStorage.getItem("beta_msg_seen") || '',
+
+    const key = localStorage.getItem('beta_msg_seen') || '',
       object = JSON.parse(key),
       dateString = object.timestamp,
       twentyfourhours = 86400000,
@@ -70,23 +80,20 @@ const Footer = () => {
     if (parseInt(now) - parseInt(dateString) > twentyfourhours) {
       setOpen(true);
     }
-    
   };
   const handleClose = () => {
     setOpen(false);
-    const last_seen = {timestamp: new Date().getTime()}
+    const last_seen = { timestamp: new Date().getTime() };
     localStorage.setItem('beta_msg_seen', JSON.stringify(last_seen));
   };
-  
+
   React.useEffect(() => {
     handleOpen();
   }, []);
 
   return (
     <s.Footer component="footer">
-
       <Grid container>
-
         {/* <Grid xs={10} xsOffset={1} md={4}>
           <Subscribe></Subscribe>
         </Grid>
@@ -95,7 +102,6 @@ const Footer = () => {
         <Grid xs={10} xsOffset={1} md={5}>
           <NavPanel></NavPanel>
         </Grid>
-        
       </Grid>
 
       <Grid container>
@@ -106,30 +112,30 @@ const Footer = () => {
         </Grid>
       </Grid>
 
-
       <div>
         <BootstrapDialog
           onClose={handleClose}
           aria-labelledby="customized-dialog-title"
           open={open}
         >
-          <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
+          <BootstrapDialogTitle
+            id="customized-dialog-title"
+            onClose={handleClose}
+          >
             Beta Site
           </BootstrapDialogTitle>
           <DialogContent dividers>
             <Typography gutterBottom>
-              <strong>This site is in beta and is not yet live.</strong> Feel free to look around, but be prepared for some bugs and unfinished features.
+              <strong>This site is in beta and is not yet live.</strong> Feel
+              free to look around, but be prepared for some bugs and unfinished
+              features.
             </Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>
-              Got it!
-            </Button>
+            <Button onClick={handleClose}>Got it!</Button>
           </DialogActions>
         </BootstrapDialog>
       </div>
-
-
     </s.Footer>
   );
 };
