@@ -357,3 +357,4 @@ app.get('/', async (req: Request, res: Response) => {
 app.listen(settings.PORT, async () => {
   console.log(`Listening on port ${settings.PORT}`);
 });
+

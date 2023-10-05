@@ -13,6 +13,7 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
+import useCollaborators from 'hooks/useCollaborators';
 
 const getContributors = (values: FieldValues) => {
   const contributors: string[] = [];
@@ -78,9 +79,6 @@ const Upload = () => {
   useEffect(() => {
     setFormValues(getValues());
   }, [formState]);
-
-  // const { data: collaborators, isLoading: isCollaboratorsLoading } =
-  //   useCollaborators();
 
   const handleCoverImageUpload = (files: File[]) => {
     setCoverImageFile(files[0]);

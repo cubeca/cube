@@ -27,14 +27,12 @@ down:
 clean:
 	-$(PROJECT_DOCKER_COMPOSE) rm
 	-$(DOCKER) container rm \
-		$(PROJECT_NAME)_frontend \
 		$(PROJECT_NAME)_bff \
 		$(PROJECT_NAME)_cloudflare \
 		$(PROJECT_NAME)_content \
 		$(PROJECT_NAME)_identity \
 		$(PROJECT_NAME)_profile
 	-$(DOCKER) image rm \
-		$(PROJECT_NAME)_frontend \
 		$(PROJECT_NAME)_bff \
 		$(PROJECT_NAME)_cloudflare \
 		$(PROJECT_NAME)_content \

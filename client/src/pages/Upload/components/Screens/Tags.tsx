@@ -4,20 +4,39 @@ import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { set } from 'date-fns';
+import useCollaborators from 'hooks/useCollaborators';
+import CollaboratorInput from 'components/form/CollaboratorInput';
+import { GetCollaboratorsByIdListResponseInner } from '@cubeca/bff-client-oas-axios';
 
 const Tags = ({ control }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [otherContributors, setOtherContributors] = useState<any[]>([])
+  const [otherContributors, setOtherContributors] = useState<any[]>([]);
+  const [allCollaborators, setAllCollaborators] = useState<string[]>([]);
+  const { data: collaborators, isLoading: isCollaboratorsLoading } =
+    useCollaborators();
 
+  useEffect(() => {
+    if (collaborators) {
+      setAllCollaborators(
+        collaborators.map(
+          (collaborator: GetCollaboratorsByIdListResponseInner) =>
+            collaborator.organization
+        )
+      );
+    }
+  }, [collaborators]);
   const handleAddMore = () => {
-    setOtherContributors([...otherContributors, {
-      role: `other_role_${otherContributors.length + 1}`,
-      name: `other_name_${otherContributors.length + 1}`
-    }])
-  }
+    setOtherContributors([
+      ...otherContributors,
+      {
+        role: `other_role_${otherContributors.length + 1}`,
+        name: `other_name_${otherContributors.length + 1}`
+      }
+    ]);
+  };
 
   return (
     <Box className={'upload__tags-screen'}>
@@ -108,7 +127,7 @@ const Tags = ({ control }: any) => {
               name="editor"
               fullWidth
               placeholder={t('Add only one contributor name here')}
-              rules={{ required: false}}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={3}>
@@ -122,7 +141,7 @@ const Tags = ({ control }: any) => {
               name="camera"
               fullWidth
               placeholder={t('Add only one contributor name here')}
-              rules={{ required: false}}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={3}>
@@ -136,7 +155,7 @@ const Tags = ({ control }: any) => {
               name="sound"
               fullWidth
               placeholder={t('Add only one contributor name here')}
-              rules={{ required: false}}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={3}>
@@ -145,7 +164,7 @@ const Tags = ({ control }: any) => {
               name="other_role"
               fullWidth
               placeholder={t('Role')}
-              rules={{ required: false}}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid xs={9}>
@@ -154,49 +173,49 @@ const Tags = ({ control }: any) => {
               name="other_name"
               fullWidth
               placeholder={t('Add only one contributor name here')}
-              rules={{ required: false}}
+              rules={{ required: false }}
             />
           </Grid>
-          {
-            otherContributors.length > 0 && otherContributors.map((contributor, index) => (
+          {otherContributors.length > 0 &&
+            otherContributors.map((contributor, index) => (
               <>
-              <Grid xs={3}>
-            <TextInput
-              control={control}
-              name={contributor.role}
-              fullWidth
-              placeholder={t('Role')}
-              rules={{ required: false}}
-            />
-          </Grid>
-          <Grid xs={9}>
-            <Stack direction="row" gap={2} alignItems="center">
-            <TextInput
-              control={control}
-              name={contributor.name}
-              fullWidth
-              placeholder={t('Add only one contributor name here')}
-              rules={{ required: false}}
-            />
-            </Stack>
-          </Grid>
+                <Grid xs={3}>
+                  <TextInput
+                    control={control}
+                    name={contributor.role}
+                    fullWidth
+                    placeholder={t('Role')}
+                    rules={{ required: false }}
+                  />
+                </Grid>
+                <Grid xs={9}>
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <TextInput
+                      control={control}
+                      name={contributor.name}
+                      fullWidth
+                      placeholder={t('Add only one contributor name here')}
+                      rules={{ required: false }}
+                    />
+                  </Stack>
+                </Grid>
               </>
-            ))
-          }
+            ))}
         </Grid>
         <Box display="flex" justifyContent="flex-end">
-          <Button variant="outlined" onClick={handleAddMore}>{t('+ add more')}</Button>
+          <Button variant="outlined" onClick={handleAddMore}>
+            {t('+ add more')}
+          </Button>
         </Box>
       </Box>
 
       <Box my={theme.spacing(5)}>
-        <TagInput
+        <CollaboratorInput
           control={control}
           name="collaborators"
           fullWidth
           placeholder={t('Collaborators')}
-          rules={{ required: false}}
-        
+          rules={{ required: false }}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
