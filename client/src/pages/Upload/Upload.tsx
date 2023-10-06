@@ -52,7 +52,7 @@ const getContributors = (values: FieldValues) => {
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
-  const { control, handleSubmit, formState, getValues } = useForm({
+  const { control, handleSubmit, formState, getValues, watch } = useForm({
     mode: 'onChange',
     criteriaMode: 'all'
   });
@@ -74,11 +74,9 @@ const Upload = () => {
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
-  const [formValues, setFormValues] = useState(getValues());
 
-  useEffect(() => {
-    setFormValues(getValues());
-  }, [formState]);
+  const mediaType = watch('type');
+  const mediaLink = watch('link');
 
   const handleCoverImageUpload = (files: File[]) => {
     setCoverImageFile(files[0]);
@@ -126,7 +124,7 @@ const Upload = () => {
       view: (
         <Media
           control={control}
-          uploadType={formValues.type}
+          uploadType={mediaType}
           handleMediaUpload={handleMediaUpload}
           handleCoverImageUpload={handleCoverImageUpload}
         />
@@ -137,7 +135,7 @@ const Upload = () => {
       view: (
         <Details
           control={control}
-          uploadType={formValues.type}
+          uploadType={mediaType}
           handleVTTFilesUpload={handleVTTFilesUpload}
           expiryValue={expiryValue}
           onExpriryValueChange={setExpiryValue}
@@ -161,7 +159,7 @@ const Upload = () => {
 
   useEffect(() => {
     // @ts-ignore
-    if (!['video'].includes(formValues.type)) {
+    if (!['video'].includes(mediaType)) {
       const tmpScreens = [...SCREENS_BASE];
       //remove accessibility screen
       tmpScreens.splice(2, 1);
@@ -169,7 +167,7 @@ const Upload = () => {
     } else {
       setSCREENS(SCREENS_BASE);
     }
-  }, [formValues.type]);
+  }, [mediaType]);
 
   const activeScreenView = SCREENS[screenIndex].view;
 
@@ -204,8 +202,8 @@ const Upload = () => {
         isNextDisabled={
           !formState.isValid ||
           (screenIndex === 0 && !isCoverImageSelected) ||
-          (!formValues.link && !isMediaSelected) ||
-          (screenIndex === 1 && !isVTTSelected && formValues.type === 'video')
+          (!mediaLink && !isMediaSelected) ||
+          (screenIndex === 1 && !isVTTSelected && mediaType === 'video')
         }
       />
     </Box>
