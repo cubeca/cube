@@ -4,7 +4,6 @@ import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { isUserAssociatedToProfile } from './db/queries';
-import { stringToKeyValuePairs } from './utils/utils';
 
 // Initialize Express app
 const app: Express = express();
@@ -177,7 +176,7 @@ app.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req
 app.get('/search', async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
-  const searchTerm = req.query.searchTerm as string;
+  const searchTerm = (req.query.searchTerm as string) ?? '{}';
 
   // Check if the search term is provided
   if (!searchTerm) {

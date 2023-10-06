@@ -115,27 +115,29 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
 };
 
 export const searchProfiles = async (offset: number, limit: number, searchTerm: string) => {
-  const whereClauses = [];
+  const whereClauses: string[] = [];
   const parameters = [];
 
-  // Add the general search term to the WHERE clause
   if (searchTerm) {
-    const searchCondition = `(organization ILIKE $${parameters.length + 1} 
-      OR website ILIKE $${parameters.length + 1}
-      OR tag ILIKE $${parameters.length + 1}
-      OR heroFileId ILIKE $${parameters.length + 1}
-      OR logoFileId ILIKE $${parameters.length + 1}
-      OR description ILIKE $${parameters.length + 1}
-      OR descriptionFileId ILIKE $${parameters.length + 1}
-      OR budget ILIKE $${parameters.length + 1})`;
-    whereClauses.push(searchCondition);
-    parameters.push(`%${searchTerm}%`);
+    const searchTerms = searchTerm
+      .split('&')
+      .map((term) => term.trim())
+      .filter((term) => term);
+
+    searchTerms.forEach((term, index) => {
+      const searchCondition = `
+        (organization ILIKE $${parameters.length + 1}
+        OR website ILIKE $${parameters.length + 1}
+        OR tag ILIKE $${parameters.length + 1}
+        OR description ILIKE $${parameters.length + 1})
+      `;
+      whereClauses.push(searchCondition);
+      parameters.push(`%${term}%`);
+    });
   }
 
-  // Combine all WHERE conditions
-  const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+  const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' OR ')}` : '';
 
-  // Construct the final SQL query
   const sql = `
     SELECT * 
     FROM profiles 
@@ -145,7 +147,6 @@ export const searchProfiles = async (offset: number, limit: number, searchTerm: 
     OFFSET $${parameters.length + 2}
   `;
 
-  // Add limit and offset to the parameters list
   parameters.push(limit, offset);
 
   const result = await db.queryDefault(sql, [...parameters]);

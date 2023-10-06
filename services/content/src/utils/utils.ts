@@ -1,4 +1,8 @@
 export const stringToKeyValuePairs = (str: any) => {
+  if (str === '{}') {
+    return {};
+  }
+
   const pairs = str.split('&');
   const result: any = {};
 

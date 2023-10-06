@@ -107,8 +107,17 @@ export const searchContent = async (offset: number, limit: number, filters: any,
   }
 
   if (searchTerm) {
-    parameters.push(`%${searchTerm}%`);
-    whereClauses.push(`data::text ILIKE $${parameters.length}`);
+    const searchTerms = searchTerm
+      .split('&')
+      .map((term) => term.trim())
+      .filter((term) => term);
+
+    const searchTermClauses = searchTerms.map((term, index) => {
+      const paramIndex = parameters.length + 1;
+      parameters.push(`%${term}%`);
+      return `data::text ILIKE $${paramIndex}`;
+    });
+    whereClauses.push(`(${searchTermClauses.join(' OR ')})`);
   }
 
   const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
