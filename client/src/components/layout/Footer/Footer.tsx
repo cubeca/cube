@@ -126,7 +126,7 @@ const Footer = () => {
           </BootstrapDialogTitle>
           <DialogContent dividers>
             <Typography gutterBottom>
-              <strong>This site is in beta and is not yet live!</strong> Feel
+              <strong>This site is in beta and is not yet live.</strong> Feel
               free to look around, but be prepared for some bugs and unfinished
               features.
             </Typography>

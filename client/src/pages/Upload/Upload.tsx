@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import useContent from 'hooks/useContent';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import Breadcrumb from './components/Breadcrumb';
@@ -13,6 +13,7 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
+import useCollaborators from 'hooks/useCollaborators';
 
 const getContributors = (values: FieldValues) => {
   const contributors: string[] = [];
@@ -51,7 +52,7 @@ const getContributors = (values: FieldValues) => {
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
-  const { control, handleSubmit, formState } = useForm({
+  const { control, handleSubmit, formState, getValues } = useForm({
     mode: 'onChange',
     criteriaMode: 'all'
   });
@@ -73,9 +74,11 @@ const Upload = () => {
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
+  const [formValues, setFormValues] = useState(getValues());
 
-  // const { data: collaborators, isLoading: isCollaboratorsLoading } =
-  //   useCollaborators();
+  useEffect(() => {
+    setFormValues(getValues());
+  }, [formState]);
 
   const handleCoverImageUpload = (files: File[]) => {
     setCoverImageFile(files[0]);
@@ -117,12 +120,13 @@ const Upload = () => {
     );
   };
 
-  const SCREENS = [
+  const SCREENS_BASE = [
     {
       label: 'Media',
       view: (
         <Media
           control={control}
+          uploadType={formValues.type}
           handleMediaUpload={handleMediaUpload}
           handleCoverImageUpload={handleCoverImageUpload}
         />
@@ -133,6 +137,7 @@ const Upload = () => {
       view: (
         <Details
           control={control}
+          uploadType={formValues.type}
           handleVTTFilesUpload={handleVTTFilesUpload}
           expiryValue={expiryValue}
           onExpriryValueChange={setExpiryValue}
@@ -152,6 +157,19 @@ const Upload = () => {
       view: <TOS />
     }
   ];
+  const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
+
+  useEffect(() => {
+    // @ts-ignore
+    if (!['video'].includes(formValues.type)) {
+      const tmpScreens = [...SCREENS_BASE];
+      //remove accessibility screen
+      tmpScreens.splice(2, 1);
+      setSCREENS(tmpScreens);
+    } else {
+      setSCREENS(SCREENS_BASE);
+    }
+  }, [formValues.type]);
 
   const activeScreenView = SCREENS[screenIndex].view;
 
@@ -185,8 +203,9 @@ const Upload = () => {
         handleSubmit={handleSubmit(onSubmit)}
         isNextDisabled={
           !formState.isValid ||
-          (screenIndex === 0 && (!isCoverImageSelected || !isMediaSelected)) ||
-          (screenIndex === 1 && !isVTTSelected)
+          (screenIndex === 0 && !isCoverImageSelected) ||
+          (!formValues.link && !isMediaSelected) ||
+          (screenIndex === 1 && !isVTTSelected && formValues.type === 'video')
         }
       />
     </Box>
