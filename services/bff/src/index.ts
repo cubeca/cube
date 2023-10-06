@@ -220,6 +220,74 @@ app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   res.status(status).json(result);
 });
 
+app.get('/search', async (req: Request, res: Response) => {
+  type ServiceResult = {
+    status: number | null;
+    data: any | null;
+    error: string | null;
+    meta: any;
+  };
+
+  const scope: string | undefined = req.query.scope as string | undefined;
+
+  const searchContentResult: ServiceResult = { status: null, data: null, error: null, meta: null };
+  const searchProfileResult: ServiceResult = { status: null, data: null, error: null, meta: null };
+
+  if (!scope || scope === 'content') {
+    try {
+      const contentResponse = await contentApi.get('search/', {
+        params: req.query,
+        headers: filterHeadersToForward(req, 'authorization')
+      });
+
+      searchContentResult.meta = contentResponse.data.meta;
+      searchContentResult.status = contentResponse.status;
+      searchContentResult.data = contentResponse.data.data;
+    } catch (error: any) {
+      searchContentResult.status = error.response?.status || 500;
+      searchContentResult.error = error.message;
+    }
+  }
+
+  if (!scope || scope === 'profile') {
+    try {
+      const profileResponse = await profileApi.get('search/', {
+        params: req.query,
+        headers: filterHeadersToForward(req, 'authorization')
+      });
+
+      searchProfileResult.meta = profileResponse.data.meta;
+      searchProfileResult.status = profileResponse.status;
+      searchProfileResult.data = profileResponse.data.data;
+    } catch (error: any) {
+      searchProfileResult.status = error.response?.status || 500;
+      searchProfileResult.error = error.message;
+    }
+  }
+
+  const responsePayload: any = {};
+
+  if (!scope || scope === 'content') {
+    responsePayload.contentResults = {
+      meta: searchContentResult.meta,
+      data: searchContentResult.data,
+      status: searchContentResult.status,
+      error: searchContentResult.error
+    };
+  }
+
+  if (!scope || scope === 'profile') {
+    responsePayload.profileResults = {
+      meta: searchProfileResult.meta,
+      data: searchProfileResult.data,
+      status: searchProfileResult.status,
+      error: searchProfileResult.error
+    };
+  }
+
+  res.status(200).json(responsePayload);
+});
+
 app.get('/', async (req: Request, res: Response) => {
   res.status(200).json('Service is running!');
 });
