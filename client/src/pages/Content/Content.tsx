@@ -6,27 +6,118 @@ import { getIDfromURL } from 'utils/youtubeUtils';
 import { useTranslation } from 'react-i18next';
 import useContentDetails from 'hooks/useContentDetails';
 import MoreContent from './MoreContent';
-// import Contributors from './Contributors';
+import Contributors from './Contributors';
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
 
+// Dummy interfaces for my dummy data for now, to be removed
+interface ArtContributor {
+  artists: string[];
+  cameraOperators: string[];
+  editors: string[];
+  soundTechnicians: string[];
+  carpenters: string[];
+}
+
+interface OrgContributor {
+  id: string;
+  name: string;
+  socialUrl: string;
+  artist: boolean;
+  socialHandle: string;
+  logoUrl: string;
+}
+
 const Video = () => {
+  // Eventually we'll need to get the profileId of the current playing video, and pass it to the MoreContent component,
+  // if MoreContent is to show other videos from same user.
+
+  // const [profileId, setProfileId] = useState<string>('');
+
+  // useEffect(() => {
+  //   const id = getProfileId();
+  //   setProfileId(id || '');
+  //   console.log(id);
+  // }, []);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const { data: content, isLoading } = useContentDetails();
-  const formattedCreatedDate = '';
-  // const formattedCreatedDate = content
-  //   ? new Date(content.createdDate).toLocaleDateString('en-us', {
-  //       year: 'numeric',
-  //       month: 'long',
-  //       day: 'numeric'
-  //     })
-  //   : '';
+  const createdAt = content?.createdAt;
+  const formattedCreatedDate = content
+    ? new Date(createdAt as string).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    : '';
   // const youtubeID = getIDfromURL(content?.url || '');
-  const youtubeID = getIDfromURL(
-    'https://www.youtube.com/watch?v=LWnPSkRSLys&t=257s'
-  ); // <-- test youtube state
+  const youtubeID = '';
+  //const youtubeID = getIDfromURL(
+  //  'https://www.youtube.com/watch?v=LWnPSkRSLys&t=257s'
+  //); // <-- test youtube state
+
+  const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
+  const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+
+  function getContributorRole(role: string, names?: string[]): string {
+    const roleMap: { [key: string]: string } = {
+      sound: 'Sound Technician'
+      // add more role mappings here as needed
+    };
+    const mappedRole = roleMap[role.toLowerCase()] || role;
+    const numNames = (names || []).filter(
+      (name) => name.split(':')[0] === role
+    ).length;
+    const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
+    return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
+  }
+
+  // const dummyContent: ArtContributor = {
+  //   artists: ['Billy Paintpaint', 'Gazelle Rivers', 'Juice Box'],
+  //   cameraOperators: ['Jimmy Snaps', 'Leila Lens', 'Sally Shutter'],
+  //   editors: ['Detail Dan', 'Edit Ed', 'Cutting Carl'],
+  //   soundTechnicians: [
+  //     'Audio Al',
+  //     'Sound Sam',
+  //     'Soundboard Steve',
+  //     'Soundy McSoundface'
+  //   ],
+  //   carpenters: ['Carpenter 1', 'Carpenter 2']
+  // };
+
+  // Dummy data for contributors for now, as there's an issue with getting this data from backend.  Taylor is looking into it.
+
+  const dummyContributors: OrgContributor[] = [
+    {
+      id: '1',
+      name: 'Foundation of Everything',
+      socialUrl: 'https://example.com/contributor1',
+      artist: true,
+      socialHandle: '@FOE',
+      logoUrl:
+        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
+    },
+    {
+      id: '2',
+      name: 'Art Attack',
+      socialUrl: 'https://example.com/contributor2',
+      artist: false,
+      socialHandle: '@AA2023',
+      logoUrl:
+        'https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
+    },
+    {
+      id: '3',
+      name: 'Canada Council for the Arts',
+      socialUrl: 'https://example.com/contributor3',
+      artist: true,
+      socialHandle: '@CCFA',
+      logoUrl:
+        'https://images.unsplash.com/photo-1549277513-f1b32fe1f8f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
+    }
+  ];
 
   return (
     <Box>
@@ -37,14 +128,16 @@ const Video = () => {
               <MediaPlayerLoader type="video" />
             ) : youtubeID != '' ? (
               <YouTubePlayer id={youtubeID} />
+            ) : audioUrl != null ? (
+              <MediaPlayer url={audioUrl || ''} isAudio />
             ) : (
-              <MediaPlayer url={''} />
+              <MediaPlayer url={videoUrl || ''} />
             )}
           </s.VideoWrapper>
 
           <s.ContentWrapper>
             <Typography component="h1" variant="h3">
-              {/* {content?.title} */}
+              {content?.title}
             </Typography>
 
             <s.ContentDate component="p" variant="body2">
@@ -52,7 +145,7 @@ const Video = () => {
             </s.ContentDate>
 
             <Typography component="p" variant="body1">
-              {/* {content?.description} */}
+              {content?.description}
             </Typography>
 
             {/* Testing fonts language support: <br/><br/>
@@ -74,33 +167,67 @@ const Video = () => {
               <MediaMetaDataLoader />
             ) : (
               <>
-                {/* <Contributors contributors={content?.contributors ?? ''} /> */}
-
-                <s.Seperator />
-
-                <Stack>
-                  <Typography component="h5" variant="h5">
-                    {t('Credits')}
-                  </Typography>
-                  {/* <Typography component="p" variant="body2">
-                    {content?.credits}
-                  </Typography> */}
+                <Stack sx={{ my: 2 }}>
+                  {content?.contributors &&
+                    content?.contributors.length > 0 &&
+                    content?.contributors[0] !== '' &&
+                    content?.contributors[0] !== null &&
+                    content?.contributors.map((contributor: string) => {
+                      const [role, name] = contributor.split(':');
+                      return (
+                        <div key={contributor}>
+                          <Typography
+                            component="h5"
+                            variant="h5"
+                            sx={{ pb: 0.5 }}
+                          >
+                            {t(
+                              getContributorRole(
+                                role,
+                                content?.contributors || []
+                              )
+                            )}
+                          </Typography>
+                          <Typography
+                            component="p"
+                            variant="body2"
+                            sx={{ pb: 1 }}
+                          >
+                            {name}
+                          </Typography>
+                        </div>
+                      );
+                    })}
                 </Stack>
 
                 <s.Seperator />
+                <Typography component="h5" variant="h5">
+                  {t('Collaborators')}
+                </Typography>
 
-                {/* {(content?.tags?.length || 0) > 0 && (
+                {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
+
+                <Contributors contributors={dummyContributors} />
+
+                <s.Seperator />
+
+                {/* TODO: Right now the tags are coming from backend as an array with a single string separeted by " ,".  We need to change it to an array of strings. */}
+
+                {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <Typography component="h5" variant="h5">
                       {t('Tags')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
-                      {content?.tags?.map((tag: string) => (
-                        <Chip key={tag} label={tag} sx={{ m: 0.5 }} />
-                      ))}
+                      {(content?.tags || [])
+                        .join(', ')
+                        .split(', ')
+                        .map((tag: string) => (
+                          <Chip key={tag} label={tag} sx={{ m: 0.5 }} />
+                        ))}
                     </s.Tags>
                   </Stack>
-                )} */}
+                )}
               </>
             )}
 
