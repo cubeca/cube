@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Stack, Typography, useTheme, Chip, Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
@@ -11,6 +11,7 @@ import Contributors from './Contributors';
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
+import { Content } from 'types/content';
 
 // Dummy interface for my dummy data for now, to be removed
 
@@ -38,6 +39,7 @@ const Video = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const contentRef = useRef<HTMLDivElement>(null);
+  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const { data: content, isLoading } = useContentDetails();
   const createdAt = content?.createdAt;
   const formattedCreatedDate = content
@@ -57,6 +59,7 @@ const Video = () => {
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const mediaType = content?.type;
+  const profileId = content?.profileId;
 
   useEffect(() => {
     if (contentRef.current) {
@@ -64,7 +67,7 @@ const Video = () => {
       const contentTop = contentRef.current.offsetTop - headerHeight;
       window.scrollTo({ top: contentTop, behavior: 'auto' });
     }
-  }, [contentRef.current]);
+  }, [contentRef.current, content]);
 
   function getContributorRole(role: string, names?: string[]): string {
     const roleMap: { [key: string]: string } = {
@@ -92,7 +95,7 @@ const Video = () => {
   //   carpenters: ['Carpenter 1', 'Carpenter 2']
   // };
 
-  // Dummy data for contributors for now, as there's an issue with getting this data from backend.  Taylor is looking into it.
+  // Dummy data for contributors for now, as this data is currently not coming from backend
 
   const dummyContributors: OrgContributor[] = [
     {
@@ -268,7 +271,7 @@ const Video = () => {
 
             <s.Seperator />
 
-            <MoreContent />
+            <MoreContent profileId={profileId || ''} />
           </s.Sidebar>
         </Grid>
       </Grid>
