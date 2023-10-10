@@ -160,8 +160,7 @@ export interface NonVideoPlayerInfo {
   fileType: string;
   publicUrl: string;
 }
-//allowIfAnyOf('anonymous', 'active')
-app.get('/files/:fileId', async (req: Request, res: Response) => {
+app.get('/files/:fileId',allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
 
   if (!UUID_REGEXP.test(fileId)) {
