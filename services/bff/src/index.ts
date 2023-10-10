@@ -69,7 +69,7 @@ app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
     headers: filterHeadersToForward(req, 'authorization')
   });
 
-  const transformedContent = await transformContent(data, filterHeadersToForward(req, 'authorization'));
+  const transformedContent = await transformContent(data.data, filterHeadersToForward(req, 'authorization'));
   res.status(status).json(transformedContent);
 });
 
