@@ -220,7 +220,7 @@ app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   res.status(status).json(result);
 });
 
-app.get('/search', async (req: Request, res: Response) => {
+app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   type ServiceResult = {
     status: number | null;
     data: any | null;
