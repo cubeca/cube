@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Stack, Typography, useTheme, Chip, Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
@@ -11,14 +12,7 @@ import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
 
-// Dummy interfaces for my dummy data for now, to be removed
-interface ArtContributor {
-  artists: string[];
-  cameraOperators: string[];
-  editors: string[];
-  soundTechnicians: string[];
-  carpenters: string[];
-}
+// Dummy interface for my dummy data for now, to be removed
 
 interface OrgContributor {
   id: string;
@@ -43,6 +37,7 @@ const Video = () => {
 
   const { t } = useTranslation();
   const theme = useTheme();
+  const contentRef = useRef<HTMLDivElement>(null);
   const { data: content, isLoading } = useContentDetails();
   const createdAt = content?.createdAt;
   const formattedCreatedDate = content
@@ -60,6 +55,16 @@ const Video = () => {
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const mediaType = content?.type;
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const headerHeight = document.querySelector('header')?.clientHeight || 0;
+      const contentTop = contentRef.current.offsetTop - headerHeight;
+      window.scrollTo({ top: contentTop, behavior: 'auto' });
+    }
+  }, [contentRef.current]);
 
   function getContributorRole(role: string, names?: string[]): string {
     const roleMap: { [key: string]: string } = {
@@ -119,21 +124,51 @@ const Video = () => {
     }
   ];
 
+  const youtubeContent = (
+    <s.VideoWrapper>
+      <YouTubePlayer id={youtubeID} />
+    </s.VideoWrapper>
+  );
+
+  const audioContent = (
+    <s.VideoWrapper>
+      <MediaPlayer url={audioUrl || ''} isAudio />
+    </s.VideoWrapper>
+  );
+
+  const pdfContent = (
+    <object
+      data={pdfUrl}
+      type="application/pdf"
+      width="100%"
+      height="500px"
+      aria-label={content?.description || 'PDF cannot be displayed'}
+    >
+      <p>PDF cannot be displayed</p>
+    </object>
+  );
+
+  const videoContent = (
+    <s.VideoWrapper>
+      <MediaPlayer url={videoUrl || ''} />
+    </s.VideoWrapper>
+  );
+
   return (
-    <Box>
+    <Box ref={contentRef}>
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
-          <s.VideoWrapper>
-            {isLoading ? (
-              <MediaPlayerLoader type="video" />
-            ) : youtubeID != '' ? (
-              <YouTubePlayer id={youtubeID} />
-            ) : audioUrl != null ? (
-              <MediaPlayer url={audioUrl || ''} isAudio />
-            ) : (
-              <MediaPlayer url={videoUrl || ''} />
-            )}
-          </s.VideoWrapper>
+          {isLoading ? (
+            <MediaPlayerLoader type={mediaType ? mediaType : 'video'} />
+          ) : youtubeID != '' ? (
+            youtubeContent
+          ) : audioUrl != null && content?.type === 'audio' ? (
+            audioContent
+          ) : content?.type === 'pdf' ? (
+            pdfContent
+          ) : content?.type === 'video' ? (
+            videoContent
+          ) : null}
 
           <s.ContentWrapper>
             <Typography component="h1" variant="h3">
