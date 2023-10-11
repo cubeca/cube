@@ -13,36 +13,35 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-import useCollaborators from 'hooks/useCollaborators';
 
 const getContributors = (values: FieldValues) => {
-  const contributors: string[] = [];
+  const contributors: { [key: string]: string } = {};
   const keys = Object.keys(values);
 
   keys.forEach((key) => {
     switch (key) {
       case 'artist':
-        contributors.push(`artist:${values[key]}`);
+        contributors.artist = values[key];
         break;
       case 'camera':
-        if (values[key]) contributors.push(`camera:${values[key]}`);
+        if (values[key]) contributors.camera = values[key];
         break;
       case 'sound':
-        if (values[key]) contributors.push(`sound:${values[key]}`);
+        if (values[key]) contributors.sound = values[key];
         break;
       case 'editor':
-        if (values[key]) contributors.push(`editor:${values[key]}`);
+        if (values[key]) contributors.editor = values[key];
         break;
       case 'other_role':
         if (values['other_role'] && values['other_name'])
-          contributors.push(`${values['other_role']}:${values['other_name']}`);
+          contributors[values['other_role']] = values['other_name'];
         break;
     }
 
     if (key.includes('other_role_')) {
       const index = key.split('_')[2];
       if (values[key] && values[`other_name_${index}`])
-        contributors.push(`${values[key]}:${values[`other_name_${index}`]}`);
+        contributors[values[key]] = values[`other_name_${index}`];
     }
   });
 
@@ -52,7 +51,7 @@ const getContributors = (values: FieldValues) => {
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
-  const { control, handleSubmit, formState, getValues } = useForm({
+  const { control, handleSubmit, formState, getValues, watch } = useForm({
     mode: 'onChange',
     criteriaMode: 'all'
   });
@@ -74,11 +73,9 @@ const Upload = () => {
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
-  const [formValues, setFormValues] = useState(getValues());
 
-  useEffect(() => {
-    setFormValues(getValues());
-  }, [formState]);
+  const mediaType = watch('type');
+  const mediaLink = watch('link');
 
   const handleCoverImageUpload = (files: File[]) => {
     setCoverImageFile(files[0]);
@@ -113,7 +110,7 @@ const Upload = () => {
         coverImageText: values.imageText,
         collaborators: [values.collaborators],
         contributors,
-        tags: [values.tags]
+        tags: values.tags.split(',').map((tag: string) => tag.trim())
       },
       coverImageFile!,
       mediaFile!
@@ -126,7 +123,7 @@ const Upload = () => {
       view: (
         <Media
           control={control}
-          uploadType={formValues.type}
+          uploadType={mediaType}
           handleMediaUpload={handleMediaUpload}
           handleCoverImageUpload={handleCoverImageUpload}
         />
@@ -137,7 +134,7 @@ const Upload = () => {
       view: (
         <Details
           control={control}
-          uploadType={formValues.type}
+          uploadType={mediaType}
           handleVTTFilesUpload={handleVTTFilesUpload}
           expiryValue={expiryValue}
           onExpriryValueChange={setExpiryValue}
@@ -161,7 +158,7 @@ const Upload = () => {
 
   useEffect(() => {
     // @ts-ignore
-    if (!['video'].includes(formValues.type)) {
+    if (!['video'].includes(mediaType)) {
       const tmpScreens = [...SCREENS_BASE];
       //remove accessibility screen
       tmpScreens.splice(2, 1);
@@ -169,7 +166,7 @@ const Upload = () => {
     } else {
       setSCREENS(SCREENS_BASE);
     }
-  }, [formValues.type]);
+  }, [mediaType]);
 
   const activeScreenView = SCREENS[screenIndex].view;
 
@@ -204,8 +201,8 @@ const Upload = () => {
         isNextDisabled={
           !formState.isValid ||
           (screenIndex === 0 && !isCoverImageSelected) ||
-          (!formValues.link && !isMediaSelected) ||
-          (screenIndex === 1 && !isVTTSelected && formValues.type === 'video')
+          (!mediaLink && !isMediaSelected) ||
+          (screenIndex === 1 && !isVTTSelected && mediaType === 'video')
         }
       />
     </Box>

@@ -113,3 +113,42 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
   const r = await db.queryIdentity(sql, [uuid, profileId]);
   return !!r.rows[0].exists;
 };
+
+export const searchProfiles = async (offset: number, limit: number, searchTerm: string) => {
+  const whereClauses: string[] = [];
+  const parameters = [];
+
+  if (searchTerm) {
+    const searchTerms = searchTerm
+      .split('&')
+      .map((term) => term.trim())
+      .filter((term) => term);
+
+    searchTerms.forEach((term, index) => {
+      const searchCondition = `
+        (organization ILIKE $${parameters.length + 1}
+        OR website ILIKE $${parameters.length + 1}
+        OR tag ILIKE $${parameters.length + 1}
+        OR description ILIKE $${parameters.length + 1})
+      `;
+      whereClauses.push(searchCondition);
+      parameters.push(`%${term}%`);
+    });
+  }
+
+  const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' OR ')}` : '';
+
+  const sql = `
+    SELECT * 
+    FROM profiles 
+    ${whereStatement}
+    ORDER BY organization 
+    LIMIT $${parameters.length + 1} 
+    OFFSET $${parameters.length + 2}
+  `;
+
+  parameters.push(limit, offset);
+
+  const result = await db.queryDefault(sql, [...parameters]);
+  return result.rows;
+};
