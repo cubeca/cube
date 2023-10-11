@@ -73,13 +73,6 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
       }}
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => {
-        const value = field.value;
-        const lastWord = value ? value.split(/,\s+/).pop().trim() : '';
-
-        const filteredOptions = allCollaborators.filter((option) =>
-          option.toLowerCase().startsWith(lastWord.toLowerCase())
-        );
-
         return (
           <FormControl
             className={className}
@@ -92,7 +85,7 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
           >
             <Autocomplete
               {...field}
-              options={filteredOptions}
+              options={allCollaborators}
               getOptionLabel={(option) => option.toString()}
               isOptionEqualToValue={(option, value) =>
                 option.toString() === value.toString()
@@ -103,8 +96,7 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
                 field.onChange(field.value);
               }}
               onChange={(event, value) => {
-                const selectedId = collaboratorMap[value];
-                field.onChange(selectedId);
+                field.onChange(value);
               }}
               renderInput={(params) => (
                 <MuiTextField
