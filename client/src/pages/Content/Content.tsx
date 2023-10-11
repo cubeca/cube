@@ -12,6 +12,8 @@ import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
 import { Content } from 'types/content';
+import { Document, Page } from 'react-pdf';
+import PDFReader from 'components/PDFReader';
 
 // Dummy interface for my dummy data for now, to be removed
 
@@ -60,6 +62,7 @@ const Video = () => {
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const mediaType = content?.type;
   const profileId = content?.profileId;
+  console.log(content);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -139,17 +142,19 @@ const Video = () => {
     </s.VideoWrapper>
   );
 
-  const pdfContent = (
-    <object
-      data={pdfUrl}
-      type="application/pdf"
-      width="100%"
-      height="500px"
-      aria-label={content?.description || 'PDF cannot be displayed'}
-    >
-      <p>PDF cannot be displayed</p>
-    </object>
-  );
+  const pdfContent = <PDFReader url={pdfUrl || ''} />;
+
+  // const pdfContent = (
+  //   <object
+  //     data={pdfUrl}
+  //     type="application/pdf"
+  //     width="100%"
+  //     height="500px"
+  //     aria-label={content?.description || 'PDF cannot be displayed'}
+  //   >
+  //     <p>PDF cannot be displayed</p>
+  //   </object>
+  // );
 
   const videoContent = (
     <s.VideoWrapper>
