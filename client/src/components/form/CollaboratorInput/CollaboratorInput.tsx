@@ -42,14 +42,24 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
   const { t } = useTranslation();
 
   const [allCollaborators, setAllCollaborators] = useState<string[]>([]);
+  const [collaboratorMap, setCollaboratorMap] = useState<
+    Record<string, string>
+  >({});
   const { data: collaborators, isLoading: isCollaboratorsLoading } =
     useCollaborators();
 
   useEffect(() => {
     if (collaborators) {
-      setAllCollaborators(
-        collaborators.map((collaborator) => collaborator.organization)
+      const newCollaboratorMap = collaborators.reduce(
+        (acc: Record<string, string>, collaborator) => {
+          acc[collaborator.organization] = collaborator.id;
+          return acc;
+        },
+        {}
       );
+
+      setCollaboratorMap(newCollaboratorMap);
+      setAllCollaborators(Object.keys(newCollaboratorMap));
     }
   }, [collaborators]);
 
@@ -93,8 +103,8 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
                 field.onChange(field.value);
               }}
               onChange={(event, value) => {
-                // Set the defaultValue to the selected value
-                field.onChange(value);
+                const selectedId = collaboratorMap[value];
+                field.onChange(selectedId);
               }}
               renderInput={(params) => (
                 <MuiTextField
