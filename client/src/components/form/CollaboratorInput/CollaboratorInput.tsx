@@ -52,7 +52,7 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
     if (collaborators) {
       const newCollaboratorMap = collaborators.reduce(
         (acc: Record<string, string>, collaborator) => {
-          acc[collaborator.organization] = collaborator.id;
+          acc[collaborator.id] = collaborator.organization;
           return acc;
         },
         {}
@@ -86,7 +86,9 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
             <Autocomplete
               {...field}
               options={allCollaborators}
-              getOptionLabel={(option) => option.toString()}
+              getOptionLabel={(option) =>
+                collaboratorMap[option] ? collaboratorMap[option] : ''
+              }
               isOptionEqualToValue={(option, value) =>
                 option.toString() === value.toString()
               }
