@@ -27,21 +27,9 @@ interface OrgContributor {
 }
 
 const Video = () => {
-  // Eventually we'll need to get the profileId of the current playing video, and pass it to the MoreContent component,
-  // if MoreContent is to show other videos from same user.
-
-  // const [profileId, setProfileId] = useState<string>('');
-
-  // useEffect(() => {
-  //   const id = getProfileId();
-  //   setProfileId(id || '');
-  //   console.log(id);
-  // }, []);
-
   const { t } = useTranslation();
   const theme = useTheme();
   const contentRef = useRef<HTMLDivElement>(null);
-  const [selectedContent, setSelectedContent] = useState<Content | null>(null);
   const { data: content, isLoading } = useContentDetails();
   const createdAt = content?.createdAt;
   const formattedCreatedDate = content
@@ -62,6 +50,7 @@ const Video = () => {
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const mediaType = content?.type;
   const profileId = content?.profileId;
+  const contentId = content?.id;
   console.log(content);
 
   useEffect(() => {
@@ -212,6 +201,35 @@ const Video = () => {
               <>
                 <Stack sx={{ my: 2 }}>
                   {content?.contributors &&
+                    Object.entries(content?.contributors).map(
+                      ([role, name]) => {
+                        return (
+                          <div key={role}>
+                            <Typography
+                              component="h5"
+                              variant="h5"
+                              sx={{ pb: 0.5 }}
+                            >
+                              {t(
+                                getContributorRole(
+                                  role,
+                                  Object.keys(content?.contributors)
+                                )
+                              )}
+                            </Typography>
+
+                            <Typography
+                              component="p"
+                              variant="body2"
+                              sx={{ pb: 1 }}
+                            >
+                              {name}
+                            </Typography>
+                          </div>
+                        );
+                      }
+                    )}
+                  {/* {content?.contributors &&
                     content?.contributors.length > 0 &&
                     content?.contributors[0] !== '' &&
                     content?.contributors[0] !== null &&
@@ -240,7 +258,7 @@ const Video = () => {
                           </Typography>
                         </div>
                       );
-                    })}
+                    })} */}
                 </Stack>
 
                 <s.Seperator />
@@ -253,8 +271,6 @@ const Video = () => {
                 <Contributors contributors={dummyContributors} />
 
                 <s.Seperator />
-
-                {/* TODO: Right now the tags are coming from backend as an array with a single string separeted by " ,".  We need to change it to an array of strings. */}
 
                 {(content?.tags?.length || 0) > 0 && (
                   <Stack>
@@ -276,7 +292,10 @@ const Video = () => {
 
             <s.Seperator />
 
-            <MoreContent profileId={profileId || ''} />
+            <MoreContent
+              profileId={profileId || ''}
+              excludeId={content?.id || ''}
+            />
           </s.Sidebar>
         </Grid>
       </Grid>
