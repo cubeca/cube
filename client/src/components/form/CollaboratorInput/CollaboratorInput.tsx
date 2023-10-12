@@ -42,14 +42,24 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
   const { t } = useTranslation();
 
   const [allCollaborators, setAllCollaborators] = useState<string[]>([]);
+  const [collaboratorMap, setCollaboratorMap] = useState<
+    Record<string, string>
+  >({});
   const { data: collaborators, isLoading: isCollaboratorsLoading } =
     useCollaborators();
 
   useEffect(() => {
     if (collaborators) {
-      setAllCollaborators(
-        collaborators.map((collaborator) => collaborator.organization)
+      const newCollaboratorMap = collaborators.reduce(
+        (acc: Record<string, string>, collaborator) => {
+          acc[collaborator.id] = collaborator.organization;
+          return acc;
+        },
+        {}
       );
+
+      setCollaboratorMap(newCollaboratorMap);
+      setAllCollaborators(Object.keys(newCollaboratorMap));
     }
   }, [collaborators]);
 
@@ -63,13 +73,6 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
       }}
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => {
-        const value = field.value;
-        const lastWord = value ? value.split(/,\s+/).pop().trim() : '';
-
-        const filteredOptions = allCollaborators.filter((option) =>
-          option.toLowerCase().startsWith(lastWord.toLowerCase())
-        );
-
         return (
           <FormControl
             className={className}
@@ -82,8 +85,10 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
           >
             <Autocomplete
               {...field}
-              options={filteredOptions}
-              getOptionLabel={(option) => option.toString()}
+              options={allCollaborators}
+              getOptionLabel={(option) =>
+                collaboratorMap[option] ? collaboratorMap[option] : ''
+              }
               isOptionEqualToValue={(option, value) =>
                 option.toString() === value.toString()
               }
@@ -93,7 +98,6 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
                 field.onChange(field.value);
               }}
               onChange={(event, value) => {
-                // Set the defaultValue to the selected value
                 field.onChange(value);
               }}
               renderInput={(params) => (

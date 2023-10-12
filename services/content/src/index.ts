@@ -3,6 +3,7 @@ import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
+import { stringToKeyValuePairs } from './utils/utils';
 
 // Creating an instance of Express application
 const app: Express = express();
@@ -125,6 +126,33 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
   } catch (error) {
     console.error('Error deleting content item', error);
     res.status(500).send('Could not delete content item');
+  }
+});
+
+app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const offset = parseInt(req.query.offset as string, 10) || 0;
+  const limit = parseInt(req.query.limit as string, 10) || 10;
+  const searchTerm = (req.query.searchTerm as string) || '';
+  const filters = stringToKeyValuePairs((req.query.filters as string) ?? '{}');
+
+  // Check if the search term is provided
+  if (!searchTerm) {
+    return res.status(404).send('Search term not provided.');
+  }
+
+  try {
+    const searchResult = await db.searchContent(offset, limit, filters, searchTerm);
+    res.status(200).json({
+      meta: {
+        offset,
+        limit,
+        filters
+      },
+      data: searchResult
+    });
+  } catch (error) {
+    console.error('Error searching for content', error);
+    res.status(500).send('Error searching for content');
   }
 });
 
