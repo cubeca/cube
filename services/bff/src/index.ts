@@ -240,9 +240,20 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
         headers: filterHeadersToForward(req, 'authorization')
       });
 
+      const contentToTransform = await Promise.all(
+        contentResponse.data.data.map(async (item: any) => {
+          Object.assign(item, item.data);
+          delete item.data;
+          return item;
+        })
+      );
+
       searchContentResult.meta = contentResponse.data.meta;
       searchContentResult.status = contentResponse.status;
-      searchContentResult.data = contentResponse.data.data;
+      searchContentResult.data = await transformContent(
+        contentToTransform,
+        filterHeadersToForward(req, 'authorization')
+      );
     } catch (error: any) {
       searchContentResult.status = error.response?.status || 500;
       searchContentResult.error = error.message;
