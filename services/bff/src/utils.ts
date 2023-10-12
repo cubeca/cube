@@ -89,12 +89,13 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
         }
       }
 
-      // Assuming fetchCollaboratorInfo requires the current item as an argument
-      // and it returns an object with collaborator info
-      const collaboratorInfo = await fetchCollaboratorInfo(item.collaborators);
-      newItem.collaboratorDetails = collaboratorInfo;
-      delete newItem.collaborators;
+      if (item.collaborators) {
+        const collaboratorInfo = await fetchCollaboratorInfo(item.collaborators);
+        newItem.collaboratorDetails = collaboratorInfo;
+        delete newItem.collaborators;
+      }
 
+      console.log(newItem);
       return newItem;
     })
   );
