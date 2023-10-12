@@ -51,7 +51,6 @@ const Video = () => {
   const mediaType = content?.type;
   const profileId = content?.profileId;
   const contentId = content?.id;
-  console.log(content);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -73,21 +72,6 @@ const Video = () => {
     const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
     return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
   }
-
-  // const dummyContent: ArtContributor = {
-  //   artists: ['Billy Paintpaint', 'Gazelle Rivers', 'Juice Box'],
-  //   cameraOperators: ['Jimmy Snaps', 'Leila Lens', 'Sally Shutter'],
-  //   editors: ['Detail Dan', 'Edit Ed', 'Cutting Carl'],
-  //   soundTechnicians: [
-  //     'Audio Al',
-  //     'Sound Sam',
-  //     'Soundboard Steve',
-  //     'Soundy McSoundface'
-  //   ],
-  //   carpenters: ['Carpenter 1', 'Carpenter 2']
-  // };
-
-  // Dummy data for contributors for now, as this data is currently not coming from backend
 
   const dummyContributors: OrgContributor[] = [
     {
@@ -133,18 +117,6 @@ const Video = () => {
 
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
 
-  // const pdfContent = (
-  //   <object
-  //     data={pdfUrl}
-  //     type="application/pdf"
-  //     width="100%"
-  //     height="500px"
-  //     aria-label={content?.description || 'PDF cannot be displayed'}
-  //   >
-  //     <p>PDF cannot be displayed</p>
-  //   </object>
-  // );
-
   const videoContent = (
     <s.VideoWrapper>
       <MediaPlayer url={videoUrl || ''} />
@@ -189,8 +161,6 @@ const Video = () => {
               These are hən̓q̓əmin̓əm̓ and Sḵwx̱wú7mesh Ta Nexwníw̓ n ta a Ímats, 授业 [teachings] bequethed from ancestors to children of both Indigenous and migrant Chinese families. 从祖母到孙女，这些故事代代相传。[Cóng zǔmǔ dào sūnnǚ, zhèxiē gùshì dài dài xiāngchuán.]
             </Typography>
             <br/><br/> */}
-
-            {/* <MediaPlayer url={content?.description || ''} isAudio /> */}
           </s.ContentWrapper>
         </Grid>
         <Grid xs={10} md={3}>
@@ -229,36 +199,6 @@ const Video = () => {
                         );
                       }
                     )}
-                  {/* {content?.contributors &&
-                    content?.contributors.length > 0 &&
-                    content?.contributors[0] !== '' &&
-                    content?.contributors[0] !== null &&
-                    content?.contributors.map((contributor: string) => {
-                      const [role, name] = contributor.split(':');
-                      return (
-                        <div key={contributor}>
-                          <Typography
-                            component="h5"
-                            variant="h5"
-                            sx={{ pb: 0.5 }}
-                          >
-                            {t(
-                              getContributorRole(
-                                role,
-                                content?.contributors || []
-                              )
-                            )}
-                          </Typography>
-                          <Typography
-                            component="p"
-                            variant="body2"
-                            sx={{ pb: 1 }}
-                          >
-                            {name}
-                          </Typography>
-                        </div>
-                      );
-                    })} */}
                 </Stack>
 
                 <s.Seperator />

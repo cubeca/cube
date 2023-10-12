@@ -21,12 +21,14 @@ const MoreContent = ({
   useEffect(() => {
     if (content) {
       setMoreContent(content);
-      const filteredContent = excludeId
-        ? moreContent.filter((item: any) => item.id !== excludeId)
-        : content;
-      setMoreContent(filteredContent);
+
+      // const filteredContent = moreContent.filter(
+      //   (item: any) => item.id !== excludeId
+      // );
+
+      // setMoreContent(filteredContent);
     }
-  }, [content, excludeId]);
+  }, [content]);
 
   return (
     <Stack>
