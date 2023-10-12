@@ -69,16 +69,6 @@ export const getProfileData = async (profileId: string, authHeader: AxiosHeaders
   return profile;
 };
 
-interface Collaborator {
-  logofileid?: string;
-  logoUrl?: string;
-  website?: string;
-  herofileid?: string;
-  descriptionfileid?: string;
-  description?: string;
-  budget?: string;
-}
-
 export async function transformContent(contentItems: any[], authHeader: AxiosHeaders) {
   const urlFieldNames = {
     coverImageFileId: 'coverImageUrl',
@@ -86,16 +76,6 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
     subtitlesFileId: 'subtitlesUrl',
     transcriptFileId: 'transcriptUrl'
   };
-
-  const collaboratorFieldName = {
-    collaborators: 'collaboratorDetails'
-  };
-
-  // Separated the logic to get the file from cloudflare API for reusability
-  async function getFileFromCloudflare(fileId: string) {
-    const response = await cloudflareApi.get(`files/${fileId}`, { headers: authHeader });
-    return response.data;
-  }
 
   return Promise.all(
     contentItems.map(async (item) => {
@@ -109,35 +89,52 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
         }
       }
 
-      // Process collaborator fields
-      for (const [key, value] of Object.entries(collaboratorFieldName)) {
-        if (item[key]) {
-          const getCollaboratorInfoResponse = await profileApi.post(
-            'getProfilesByIdList',
-            { profileIdList: item[key] },
-            { headers: authHeader }
-          );
-          const collaborators: Collaborator[] = Object.values(getCollaboratorInfoResponse.data);
-
-          const updatedCollaborators = await Promise.all(
-            collaborators.map(async (collaborator) => {
-              if (collaborator.logofileid) {
-                const data = await getFileFromCloudflare(collaborator.logofileid);
-                return {
-                  ...collaborator,
-                  logoUrl: data.playerInfo.publicUrl
-                };
-              }
-              return collaborator;
-            })
-          );
-
-          newItem[value] = updatedCollaborators.filter((collaborator) => collaborator.logoUrl);
-          delete newItem[key];
-        }
-      }
+      // Assuming fetchCollaboratorInfo requires the current item as an argument
+      // and it returns an object with collaborator info
+      const collaboratorInfo = await fetchCollaboratorInfo(item.collaborators);
+      newItem.collaboratorDetails = collaboratorInfo;
+      delete newItem.collaborators;
 
       return newItem;
     })
   );
+
+  // Separated the logic to get the file from cloudflare API for reusability
+  async function getFileFromCloudflare(fileId: string) {
+    const response = await cloudflareApi.get(`files/${fileId}`, { headers: authHeader });
+    return response.data;
+  }
+
+  async function fetchCollaboratorInfo(collaborators: string[]) {
+    const collaboratorInfoList = [];
+
+    for (let i = 0; i < collaborators.length; i++) {
+      const collaboratorId = collaborators[i];
+      try {
+        const getCollaboratorInfoResponse = await profileApi.post(
+          'getProfilesByIdList',
+          { profileIdList: [collaboratorId] },
+          { headers: authHeader }
+        );
+
+        const { organization, logofileid, tag } = getCollaboratorInfoResponse.data[0];
+
+        let logoUrl = null;
+        if (logofileid) {
+          try {
+            const fileResponse = await getFileFromCloudflare(logofileid);
+            logoUrl = fileResponse.playerInfo?.publicUrl;
+          } catch (fileError) {
+            console.error(`Failed to fetch file from Cloudflare for collaborator ${collaboratorId}:`, fileError);
+          }
+        }
+
+        collaboratorInfoList.push({ organization, logoUrl, tag });
+      } catch (error) {
+        console.error(`Failed to fetch info for collaborator ${collaboratorId}:`, error);
+      }
+    }
+
+    return collaboratorInfoList;
+  }
 }
