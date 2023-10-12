@@ -15,20 +15,22 @@ const MoreContent = ({
   excludeId
 }: PropsWithChildren<MoreContentProps>) => {
   const [moreContent, setMoreContent] = useState<any>([]);
+  const [allContent, setAllContent] = useState<any>([]);
   const { t } = useTranslation();
   const { data: content, isLoading } = useProfileContent(profileId);
 
   useEffect(() => {
     if (content) {
       setMoreContent(content);
-
-      // const filteredContent = moreContent.filter(
-      //   (item: any) => item.id !== excludeId
-      // );
-
-      // setMoreContent(filteredContent);
+      setAllContent(content);
     }
-  }, [content]);
+  }, [content, excludeId]);
+
+  useEffect(() => {
+    const all = [...allContent];
+    const filteredContent = all?.filter((c: any) => c.id !== excludeId);
+    setMoreContent(filteredContent);
+  }, [excludeId]);
 
   return (
     <Stack>
