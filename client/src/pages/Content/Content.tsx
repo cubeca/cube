@@ -231,11 +231,12 @@ const Video = () => {
             )}
 
             <s.Seperator />
-
-            <MoreContent
-              profileId={profileId || ''}
-              excludeId={content?.id || ''}
-            />
+            {profileId && (
+              <MoreContent
+                profileId={profileId}
+                excludeId={content?.id || ''}
+              />
+            )}
           </s.Sidebar>
         </Grid>
       </Grid>

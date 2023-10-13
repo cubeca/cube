@@ -24,7 +24,7 @@ const MoreContent = ({
       setMoreContent(content);
       setAllContent(content);
     }
-  }, [content, excludeId]);
+  }, [content, excludeId, allContent]);
 
   useEffect(() => {
     const all = [...allContent];
@@ -34,7 +34,7 @@ const MoreContent = ({
 
   return (
     <Stack>
-      {!isLoading && moreContent ? (
+      {!isLoading && moreContent.length > 0 ? (
         <ContentList
           heading={t('More Content Like This')}
           content={moreContent.slice(0, 3)}
