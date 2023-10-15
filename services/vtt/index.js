@@ -286,6 +286,8 @@ functions.cloudEvent("vtt_gen", async (event) => {
         })
         .run();
     });
+    const mp3Stats = fs.statSync(`${outputPath}/${id}-audio.mp3`);
+    console.log({ mp3Stats });
     const transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
     console.log("Transcript Generated");
     const vtt = generateVTT(transcript);
@@ -293,19 +295,19 @@ functions.cloudEvent("vtt_gen", async (event) => {
     console.log("VTT Generated");
     console.log({ vtt, transcript });
   } catch (processingError) {
-    console.log({ processingError });
+    console.error({ processingError });
   } finally {
     try {
       fs.unlinkSync(`${outputPath}/${id}-video`);
-      console.log("Video Removed");
+      console.log("Cleanup - Video Removed");
     } catch (videoCleanupError) {
-      console.log({ videoCleanupError });
+      console.error({ videoCleanupError });
     }
     try {
       fs.unlinkSync(`${outputPath}/${id}-audio.mp3`);
-      console.log("Audio Removed");
+      console.log("Cleanup - Audio Removed");
     } catch (audioCleanupError) {
-      console.log({ audioCleanupError });
+      console.error({ audioCleanupError });
     }
   }
 });
