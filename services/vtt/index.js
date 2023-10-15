@@ -1,6 +1,8 @@
 const axios = require("axios");
 const fs = require("fs");
-const ffmpeg = require("ffmpeg");
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
+const ffmpeg = require("fluent-ffmpeg");
+ffmpeg.setFfmpegPath(ffmpegPath);
 const OpenAI = require("openai");
 const functions = require("@google-cloud/functions-framework");
 const { Sequelize } = require("sequelize");
@@ -13,11 +15,19 @@ const dbPassword = process.env.PGPASSWORD;
 const dbName = process.env.PGDATABASE;
 const dbPort = process.env.PGPORT;
 const contentService = process.env.CONTENTSVC;
+const outputPath = "/tmp";
+
+const cfAPI = process.env.cfToken;
+const cfR2ID = process.env["CF-R2-ID"];
+const cfR2Secret = process.env["CF-R2-SECRET"];
+const cfBucketName = "cubecommons-dev";
+const cfBucketURL = "https://pub-3ced16ee967249a58b58e7c1ec6ca05e.r2.dev";
+const cfAccountID = "812b8374abe5aa28e1ff4b96f82e1340";
 
 console.log({ dbHost, dbUser, dbPassword, dbName, dbPort });
 
 //init sequelize -- GCP function to cloudsql postgres
-const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
+const sequelizeContent = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
   port: dbPort,
   dialect: "postgres",
@@ -25,7 +35,15 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
     timestamps: false,
   },
 });
-const vtt = sequelize.define(
+const sequelizeCF = new Sequelize("cube_cloudflare", dbUser, dbPassword, {
+  host: dbHost,
+  port: dbPort,
+  dialect: "postgres",
+  define: {
+    timestamps: false,
+  },
+});
+const vtt = sequelizeContent.define(
   "vtt",
   {
     id: {
@@ -43,7 +61,7 @@ const vtt = sequelize.define(
   }
 );
 
-const content = sequelize.define(
+const content = sequelizeContent.define(
   "content",
   {
     id: {
@@ -68,6 +86,76 @@ const content = sequelize.define(
     freezeTableName: true,
   }
 );
+const files = sequelizeCF.define(
+  "files",
+  {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4,
+      primaryKey: true,
+    },
+    storage_type: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+    created_at: {
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW,
+    },
+    updated_at: {
+      type: Sequelize.DATE,
+      defaultValue: Sequelize.NOW,
+    },
+    data: {
+      type: Sequelize.JSONB,
+      defaultValue: {},
+    },
+  },
+  {
+    freezeTableName: true,
+  }
+);
+
+const downloadCloudflareStream = async (id) => {
+  const url = `https://api.cloudflare.com/client/v4/accounts/${cfAccountID}/stream/${id}/downloads`;
+  console.log({ url });
+  console.log({ cfAPI });
+  // const response = await axios.post(url, {
+  //   headers: {
+  //     Authorization: `Bearer ${cfAPI}`,
+  //   },
+  // });
+  const response = await axios({
+    method: "post",
+    url,
+    headers: {
+      Authorization: `Bearer ${cfAPI}`,
+    },
+  });
+  const data = response.data;
+  const result = data.result;
+
+  console.log({ result });
+  const downloadURL = result.default.url;
+  let percentComplete = result.default.percentComplete;
+  console.log({ percentComplete });
+  console.log({ downloadURL });
+  while (percentComplete < 100) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const response = await axios({
+      method: "get",
+      url,
+      headers: {
+        Authorization: `Bearer ${cfAPI}`,
+      },
+    });
+    const data = response.data;
+    console.log({ data });
+    percentComplete = data.result.default.percentComplete;
+    console.log({ percentComplete });
+  }
+  return downloadURL;
+};
 
 const transcribe = async (audioPath) => {
   const openai = new OpenAI({
@@ -124,28 +212,45 @@ const generateVTT = (transcript) => {
 
 //Begin invocation
 functions.cloudEvent("vtt_gen", async (event) => {
+  const id = Date.now().toString(); //Process ID -- Used for IO Operations
   const contentID = Buffer.from(event.data.message.data, "base64").toString();
+  if (!contentID) throw new Error("No content ID provided");
   console.log({ contentID });
+
   const contentData = await content.findOne({
     where: {
       id: contentID,
     },
   });
   console.log({ contentData });
+  if (!contentData) throw new Error("No content data found");
   const mediaData = contentData.data;
   console.log({ mediaData });
   if (!mediaData) throw new Error("No media data provided");
   if (!mediaData.type in ["video", "audio"]) {
     throw new Error("Invalid media type");
   }
-  const mediaFileId = mediaData.fileId;
+  const mediaFileId = mediaData.mediaFileId;
+  console.log({ mediaFileId });
+  if (!mediaFileId) throw new Error("No media file ID provided");
+  const cfData = await files.findOne({
+    where: {
+      id: mediaFileId,
+    },
+  });
+  console.log({ cfData });
+  if (!cfData) throw new Error("No CF data found");
+  const cfFileData = cfData.data;
+  console.log({ cfFileData });
+  if (!cfFileData) throw new Error("No CF file data provided");
+  const cloudflareStreamUid = cfFileData.cloudflareStreamUid;
+  console.log({ cloudflareStreamUid });
+  if (!cloudflareStreamUid) throw new Error("No CF stream UID provided");
+  const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
+  console.log({ mediaURL });
+  if (!mediaURL) throw new Error("No media URL provided");
 
   try {
-    const mediaURL = await axios.get(`${contentService}/files/${mediaFileId}`);
-    console.log({ mediaURL });
-    if (!mediaURL) throw new Error("No media URL provided");
-    const id = Date.now().toString();
-    const outputPath = "./tmp";
     const response = await axios.get(mediaURL, { responseType: "stream" });
     const stream = response.data.pipe(
       fs.createWriteStream(`${outputPath}/${id}-video`)
@@ -162,22 +267,31 @@ functions.cloudEvent("vtt_gen", async (event) => {
     });
 
     //strip audio from video
-    const video = await new ffmpeg(`${outputPath}/${id}-video`);
     await new Promise((resolve, reject) => {
-      video.fnExtractSoundToMP3(`${outputPath}/${id}-audio`, (error) => {
-        if (error) {
+      ffmpeg(`${outputPath}/${id}-video`)
+        .noVideo()
+        .format("mp3")
+        .audioCodec("libmp3lame")
+        .audioBitrate(128)
+        .audioChannels(1)
+        .audioFrequency(16000)
+        .output(`${outputPath}/${id}-audio.mp3`)
+        .on("end", () => {
+          console.log("Audio Stripped");
+          resolve();
+        })
+        .on("error", (error) => {
           console.log({ error });
           reject(error);
-        }
-        console.log("Audio Extracted");
-        resolve();
-      });
+        })
+        .run();
     });
     const transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
     console.log("Transcript Generated");
     const vtt = generateVTT(transcript);
     fs.writeFileSync(`${outputPath}/${id}.vtt`, vtt);
     console.log("VTT Generated");
+    console.log({ vtt, transcript });
   } catch (processingError) {
     console.log({ processingError });
   } finally {
