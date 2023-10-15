@@ -25,7 +25,6 @@ interface UserContentProps {
 }
 
 const UserContent = ({ content }: UserContentProps) => {
-  console.log(content, ' content')
   return (
     <s.UserContentWrapper>
       <UserContentFilter />
