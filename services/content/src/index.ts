@@ -129,7 +129,7 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
   }
 });
 
-app.get('/search', async (req: Request, res: Response) => {
+app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = (req.query.searchTerm as string) || '';

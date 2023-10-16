@@ -13,36 +13,35 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-import useCollaborators from 'hooks/useCollaborators';
 
 const getContributors = (values: FieldValues) => {
-  const contributors: string[] = [];
+  const contributors: { [key: string]: string } = {};
   const keys = Object.keys(values);
 
   keys.forEach((key) => {
     switch (key) {
       case 'artist':
-        contributors.push(`artist:${values[key]}`);
+        contributors.artist = values[key];
         break;
       case 'camera':
-        if (values[key]) contributors.push(`camera:${values[key]}`);
+        if (values[key]) contributors.camera = values[key];
         break;
       case 'sound':
-        if (values[key]) contributors.push(`sound:${values[key]}`);
+        if (values[key]) contributors.sound = values[key];
         break;
       case 'editor':
-        if (values[key]) contributors.push(`editor:${values[key]}`);
+        if (values[key]) contributors.editor = values[key];
         break;
       case 'other_role':
         if (values['other_role'] && values['other_name'])
-          contributors.push(`${values['other_role']}:${values['other_name']}`);
+          contributors[values['other_role']] = values['other_name'];
         break;
     }
 
     if (key.includes('other_role_')) {
       const index = key.split('_')[2];
       if (values[key] && values[`other_name_${index}`])
-        contributors.push(`${values[key]}:${values[`other_name_${index}`]}`);
+        contributors[values[key]] = values[`other_name_${index}`];
     }
   });
 
@@ -111,7 +110,7 @@ const Upload = () => {
         coverImageText: values.imageText,
         collaborators: [values.collaborators],
         contributors,
-        tags: [values.tags]
+        tags: values.tags.split(',').map((tag: string) => tag.trim())
       },
       coverImageFile!,
       mediaFile!

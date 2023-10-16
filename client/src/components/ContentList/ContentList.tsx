@@ -26,19 +26,17 @@ const ContentList: FC<ContentListProps> = ({
           {heading}
         </Typography>
       )}
-      <Stack direction='column'>
+      <Stack direction="column">
         {content.map((c) => (
-          
           <ContentCard
             key={c.id}
-            image={c.thumbnailUrl}
+            image={c.coverImageUrl?.playerInfo?.publicUrl || ''}
             title={c.title}
             creator={c.creator}
-            url={c.url}
+            url={`/content/${c.id}`}
             icon={c.icon}
             hasSignLanguage={c.hasSignLanguage}
           />
-
         ))}
       </Stack>
     </Stack>
