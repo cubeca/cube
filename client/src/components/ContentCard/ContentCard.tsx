@@ -23,7 +23,7 @@ const ContentCard: FC<ContentCardProps> = ({
   hasSignLanguage
 }) => {
   return (
-    <s.ContentCard>
+    <s.ContentCard className="content-card">
       <Link to={url}>
         <s.Thumbnail
           sx={{

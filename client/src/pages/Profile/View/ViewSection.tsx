@@ -1,11 +1,11 @@
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
-import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from '../Profile.styled';
 import MediaPlayer from 'components/MediaPlayer';
 import Lottie from 'lottie-react';
-import LoadingCubes from 'assets/animations/loading-cubes.json';
+import LoadingCircle from 'assets/animations/loading-circle.json';
+
 interface ViewSectionProps {
   isLoggedIn: boolean;
   profile: any;
@@ -27,10 +27,14 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             target="_blank"
             style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
           >
-            <img
-              src={profile.logoUrl || FPOProfileUrl}
-              alt="profile thumbnail"
-            />
+            {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
+            {!profile.logoUrl && <Lottie
+              className="loading-circle"
+              animationData={LoadingCircle}
+              loop={true}
+              autoplay={true}
+            />}
+
           </s.ImageInner>
           {isLoggedIn && (
             <s.EditWrapper>
@@ -43,7 +47,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
 
         <Typography component="h5" variant="h5">
           <a href={getUrl(profile?.website)} title={profile!.organization} target="_blank" rel="noreferrer">
-            {profile!.organization}
+            {profile!.organization || ''}
           </a>
           <small>
             {profile!.tag && (
@@ -54,11 +58,6 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
       </s.Header>
 
       <s.Body>
-        <Lottie
-          className="loading-cubes"
-          animationData={LoadingCubes}
-          loop={true}
-        />
         <Typography component="p" variant="body2">
           {profile.description}
         </Typography>
