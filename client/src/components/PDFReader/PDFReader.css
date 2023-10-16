@@ -1,12 +1,22 @@
 .pdfDocument {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .pdfPage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 auto;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+  /* width: 80%; */
+}
+
+.pdfControls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
