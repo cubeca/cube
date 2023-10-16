@@ -1,19 +1,44 @@
 import { Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ContentList from 'components/ContentList';
-import useContent from 'hooks/useContent';
 import { ContentLoader } from 'components/Loaders';
+import { PropsWithChildren, useEffect, useState } from 'react';
+import useProfileContent from 'hooks/useProfileContent';
 
-const MoreContent = () => {
+interface MoreContentProps {
+  profileId: string;
+  excludeId: string;
+}
+
+const MoreContent = ({
+  profileId,
+  excludeId
+}: PropsWithChildren<MoreContentProps>) => {
+  const [moreContent, setMoreContent] = useState<any>([]);
+  const [allContent, setAllContent] = useState<any>([]);
   const { t } = useTranslation();
-  const { data, isLoading } = useContent();
+  const { data: content, isLoading } = useProfileContent(profileId);
 
-  const content = data ?? [];
+  useEffect(() => {
+    if (content) {
+      setMoreContent(content);
+      setAllContent(content);
+    }
+  }, [content, excludeId, allContent]);
+
+  useEffect(() => {
+    const all = [...allContent];
+    const filteredContent = all?.filter((c: any) => c.id !== excludeId);
+    setMoreContent(filteredContent);
+  }, [excludeId]);
 
   return (
     <Stack>
-      {!isLoading ? (
-        <ContentList heading={t('More Content Like This')} content={content.slice(0, 3)} />
+      {!isLoading && moreContent.length > 0 ? (
+        <ContentList
+          heading={t('More Content Like This')}
+          content={moreContent.slice(0, 3)}
+        />
       ) : (
         <Stack direction="column" spacing={2}>
           <ContentLoader size={1} />
