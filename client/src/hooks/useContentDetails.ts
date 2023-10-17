@@ -10,6 +10,7 @@ interface ContentDetailsResponse {
 }
 interface ExtendedContentDetailsResponse extends ContentDetailsResponse {
   data?: ContentStorage & {
+    collaboratorDetails?: [];
     createdAt?: string;
     coverImageUrl?: {
       playerInfo?: {

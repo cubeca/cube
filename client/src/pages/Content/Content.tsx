@@ -15,17 +15,6 @@ import { Content } from 'types/content';
 import { Document, Page } from 'react-pdf';
 import PDFReader from 'components/PDFReader';
 
-// Dummy interface for my dummy data for now, to be removed
-
-interface OrgContributor {
-  id: string;
-  name: string;
-  socialUrl: string;
-  artist: boolean;
-  socialHandle: string;
-  logoUrl: string;
-}
-
 const Video = () => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -72,36 +61,6 @@ const Video = () => {
     const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
     return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
   }
-
-  const dummyContributors: OrgContributor[] = [
-    {
-      id: '1',
-      name: 'Foundation of Everything',
-      socialUrl: 'https://example.com/contributor1',
-      artist: true,
-      socialHandle: '@FOE',
-      logoUrl:
-        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
-    },
-    {
-      id: '2',
-      name: 'Art Attack',
-      socialUrl: 'https://example.com/contributor2',
-      artist: false,
-      socialHandle: '@AA2023',
-      logoUrl:
-        'https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
-    },
-    {
-      id: '3',
-      name: 'Canada Council for the Arts',
-      socialUrl: 'https://example.com/contributor3',
-      artist: true,
-      socialHandle: '@CCFA',
-      logoUrl:
-        'https://images.unsplash.com/photo-1549277513-f1b32fe1f8f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
-    }
-  ];
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -208,7 +167,9 @@ const Video = () => {
 
                 {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
 
-                <Contributors contributors={dummyContributors} />
+                <Contributors
+                  contributors={content?.collaboratorDetails || []}
+                />
 
                 <s.Seperator />
 
