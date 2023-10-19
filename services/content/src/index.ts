@@ -4,6 +4,7 @@ import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { stringToKeyValuePairs } from './utils/utils';
+import { sendReportAbuseEmail } from './email';
 
 // Creating an instance of Express application
 const app: Express = express();
@@ -153,6 +154,19 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   } catch (error) {
     console.error('Error searching for content', error);
     res.status(500).send('Error searching for content');
+  }
+});
+
+// API endpoint for reporting a content item
+app.post('/content/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { disputedUrl, requestType, contactName, contactEmail, issueDesc } = req.body;
+
+  try {
+    await sendReportAbuseEmail(disputedUrl, requestType, contactName, contactEmail, issueDesc);
+    res.status(200).json('OK');
+  } catch (error) {
+    console.error('Error sending content report', error);
+    res.status(500).send('Error sending content report');
   }
 });
 
