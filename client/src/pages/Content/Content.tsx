@@ -11,7 +11,7 @@ import Contributors from './Contributors';
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
-import { Content } from 'types/content';
+import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import { Document, Page } from 'react-pdf';
 import PDFReader from 'components/PDFReader';
 
@@ -40,6 +40,7 @@ const Video = () => {
   const mediaType = content?.type;
   const profileId = content?.profileId;
   const contentId = content?.id;
+  console.log(content);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -159,16 +160,21 @@ const Video = () => {
                       }
                     )}
                 </Stack>
-
-                <s.Seperator />
-                <Typography component="h5" variant="h5">
-                  {t('Collaborators')}
-                </Typography>
+                {content?.collaboratorDetails &&
+                  content?.collaboratorDetails[0]?.logoUrl !== null && (
+                    <>
+                      <s.Seperator />
+                      <Typography component="h5" variant="h5">
+                        {t('Collaborators')}
+                      </Typography>
+                    </>
+                  )}
 
                 {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
-
                 <Contributors
-                  contributors={content?.collaboratorDetails || []}
+                  contributors={
+                    content?.collaboratorDetails as CollaboratorDetails[]
+                  }
                 />
 
                 <s.Seperator />
