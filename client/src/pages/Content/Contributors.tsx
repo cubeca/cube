@@ -11,7 +11,6 @@ const Contributors = ({
 }: {
   contributors: CollaboratorDetails[];
 }) => {
-  console.log(contributors);
   return (
     <>
       {/* <div>Contributors</div> */}
