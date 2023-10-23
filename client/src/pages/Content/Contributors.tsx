@@ -24,15 +24,20 @@ const Contributors = ({
               <Stack>
                 <s.ContributorName component="p" variant="h5">
                   {c?.socialUrl ? (
-                    <Link to={`${c.socialUrl.toString()}`}>{c.name}</Link>
+                    <Link to={`/profile/${c.tag.toString().toLowerCase()}`}>
+                      {c.name}
+                    </Link>
                   ) : (
+                    // <Link to={`${c.socialUrl.toString()}`}>{c.name}</Link>
                     c.organization
                   )}
                 </s.ContributorName>
 
                 {c.tag && (
-                  <s.ContributorSocial href={c.socialUrl}>
-                    @{c.tag}
+                  <s.ContributorSocial
+                    href={`/profile/${c.tag.toString().toLowerCase()}`}
+                  >
+                    {c.tag}
                   </s.ContributorSocial>
                 )}
               </Stack>
