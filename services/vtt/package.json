@@ -1,0 +1,16 @@
+{
+  "name": "vtt_gen",
+  "version": "1.0.0",
+  "description": "A google cloud function that can be queued to generate VTT files using whipser.",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "axios": "^1.5.1",
+    "ffmpeg": "^0.0.4",
+    "openai": "^4.11.1",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.33.0"
+  }
+}

@@ -11,10 +11,17 @@ export const UserContent = styled(Box)`
     display: flex;
     flex-flow: row wrap;
     margin: -15px;
+    min-height: 600px;
 
-    > * {
+    .content-card {
       flex: 0 0 calc(33.3333% - 30px);
       margin: 15px;
+    }
+
+    .loading-cubes {
+      display: block;
+      margin: 0 auto;
+      width: 100px;
     }
   }
 `;

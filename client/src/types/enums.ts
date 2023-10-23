@@ -9,6 +9,7 @@ export enum ContentCategories {
   Audio = 'audio',
   ActivityBook = 'activity-book',
   DigitalPublication = 'digital-publication',
+  Link = 'link',
   Collaboration = 'collaboration'
 }
 
