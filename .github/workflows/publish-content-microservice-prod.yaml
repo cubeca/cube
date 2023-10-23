@@ -3,27 +3,27 @@ name: Publish content microservice PROD
 run-name: Publish content microservice PROD @ ${{ github.sha }}
 
 on:
-  push:
-    branches:
-      - deploy-production
-    paths:
-      - 'services/content/**'
+    push:
+        branches:
+            - deploy-production
+        paths:
+            - "services/content/**"
 
-      # This helps with debugging GHAs:
-      - '.github/workflows/publish-content-microservice-prod.yaml'
-      - '.github/workflows/publish-reusable.yaml'
+            # This helps with debugging GHAs:
+            - ".github/workflows/publish-content-microservice-prod.yaml"
+            - ".github/workflows/publish-reusable.yaml"
 
 jobs:
-  publish-service:
-    uses: ./.github/workflows/publish-reusable.yaml
-    with:
-      CODE_BASE_DIR: services/content
-      GCP_PROJECT: cubecommons-prod
-      GCP_REGION: northamerica-northeast2
-      GCP_RUN_APPNAME: content
-      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
-      GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
+    publish-service:
+        uses: ./.github/workflows/publish-reusable.yaml
+        with:
+            CODE_BASE_DIR: services/content
+            GCP_PROJECT: cubecommons-prod
+            GCP_REGION: northamerica-northeast2
+            GCP_RUN_APPNAME: content
+            GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
+            GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
 
-      GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-prod:northamerica-northeast2:prod
-      GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-prod:northamerica-northeast2:prod,PGDATABASE=cube_content,PGUSER=postgres
-      GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,PGPASSWORD=prod-db-password:latest
+            GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-prod:northamerica-northeast2:prod
+            GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-prod:northamerica-northeast2:prod,PGDATABASE=cube_content,PGUSER=postgres
+            GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,PGPASSWORD=prod-db-password:latest,BREVO_API_KEY=prod-brevo-api-key:latest,,REPORT_ABUSE_EMAIL=prod-report-abuse-email:latest
