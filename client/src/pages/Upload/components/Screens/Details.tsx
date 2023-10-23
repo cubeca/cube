@@ -27,7 +27,7 @@ const Details = ({
   const showField = (field: string) => {
     const reqMap = {
       video: ['description', 'vtt', 'kidsContent', 'expiry'],
-      audio: ['description', 'expiry'],
+      audio: ['description', 'vtt', 'expiry'],
       pdf: ['description', 'expiry'],
       link: ['description', 'expiry']
     };

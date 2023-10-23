@@ -158,7 +158,7 @@ const Upload = () => {
 
   useEffect(() => {
     // @ts-ignore
-    if (!['video'].includes(mediaType)) {
+    if (!['video', 'audio'].includes(mediaType)) {
       const tmpScreens = [...SCREENS_BASE];
       //remove accessibility screen
       tmpScreens.splice(2, 1);
@@ -202,7 +202,9 @@ const Upload = () => {
           !formState.isValid ||
           (screenIndex === 0 && !isCoverImageSelected) ||
           (!mediaLink && !isMediaSelected) ||
-          (screenIndex === 1 && !isVTTSelected && mediaType === 'video')
+          (screenIndex === 1 &&
+            !isVTTSelected &&
+            mediaType in ['video', 'audio'])
         }
       />
     </Box>
