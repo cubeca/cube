@@ -158,8 +158,13 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 });
 
 // API endpoint for reporting a content item
-app.post('/content/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+app.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { disputedUrl, requestType, contactName, contactEmail, issueDesc } = req.body;
+
+  // Check if any of the parameters are missing or falsy
+  if (!disputedUrl || !requestType || !contactName || !contactEmail || !issueDesc) {
+    return res.status(400).send('Missing required parameters');
+  }
 
   try {
     await sendReportAbuseEmail(disputedUrl, requestType, contactName, contactEmail, issueDesc);

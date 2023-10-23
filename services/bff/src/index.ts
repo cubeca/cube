@@ -83,8 +83,8 @@ app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: 
   res.status(status).json(transformedContent[0]);
 });
 
-app.post('/content/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { status, data } = await contentApi.post('content/report', req.body, {
+app.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.post('report', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
   });
   res.status(status).json(data);
