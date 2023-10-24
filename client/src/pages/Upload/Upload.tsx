@@ -15,39 +15,49 @@ import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
 
 const getContributors = (values: FieldValues) => {
-  const contributors: { [key: string]: string } = {};
+  const contributors: { type: string; contributors: string[] }[] = [];
   const keys = Object.keys(values);
 
   keys.forEach((key) => {
-    switch (key) {
-      case 'artist':
-        contributors.artist = values[key];
-        break;
-      case 'camera':
-        if (values[key]) contributors.camera = values[key];
-        break;
-      case 'sound':
-        if (values[key]) contributors.sound = values[key];
-        break;
-      case 'editor':
-        if (values[key]) contributors.editor = values[key];
-        break;
-      case 'other_role':
-        if (values['other_role'] && values['other_name'])
-          contributors[values['other_role']] = values['other_name'];
-        break;
-    }
-
-    if (key.includes('other_role_')) {
+    if (key === 'other_role') {
+      if (values['other_role'] && values['other_name']) {
+        contributors.push({
+          type: values['other_role'],
+          contributors: [values['other_name']]
+        });
+      }
+    } else if (key.includes('other_role_')) {
       const index = key.split('_')[2];
-      if (values[key] && values[`other_name_${index}`])
-        contributors[values[key]] = values[`other_name_${index}`];
+      if (values[key] && values[`other_name_${index}`]) {
+        contributors.push({
+          type: values[key],
+          contributors: [values[`other_name_${index}`]]
+        });
+      }
+    } else if (key in contributors) {
+      if (values[key]) {
+        const valuesArray = values[key]
+          .split(',')
+          .map((value: string) => value.trim());
+        contributors.push({ type: key, contributors: valuesArray });
+      }
+    } else if (
+      key === 'artist' ||
+      key === 'camera' ||
+      key === 'editor' ||
+      key === 'sound'
+    ) {
+      if (values[key]) {
+        const valuesArray = values[key]
+          .split(',')
+          .map((value: string) => value.trim());
+        contributors.push({ type: key, contributors: valuesArray });
+      }
     }
   });
 
   return contributors;
 };
-
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
@@ -100,6 +110,18 @@ const Upload = () => {
   const onSubmit = (values: FieldValues) => {
     console.log(values);
     const contributors = getContributors(values);
+    const contributorsObject: { [key: string]: string[] } = {};
+    contributors.forEach(({ type, contributors }) => {
+      contributorsObject[type] = contributors;
+    });
+
+    const formattedContributors: { [key: string]: string[] } = {};
+    Object.entries(contributorsObject).forEach(([key, value]) => {
+      formattedContributors[key] = value
+        .join(',')
+        .split(',')
+        .map((contributor: string) => contributor.trim());
+    });
     addContent(
       {
         profileId: profileId!,
@@ -109,7 +131,7 @@ const Upload = () => {
         description: values.description,
         coverImageText: values.imageText,
         collaborators: [values.collaborators],
-        contributors,
+        contributors: formattedContributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim())
       },
       coverImageFile!,
