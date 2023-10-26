@@ -135,7 +135,7 @@ const Video = () => {
               <MediaMetaDataLoader />
             ) : (
               <>
-                <Stack sx={{}}>
+                <Stack>
                   <Typography component="h5" variant="h5">
                     {t('Contributors')}
                   </Typography>
@@ -189,9 +189,6 @@ const Video = () => {
                   content?.collaboratorDetails[0]?.logoUrl !== null && (
                     <>
                       <s.Seperator />
-                      {/* <Typography component="h5" variant="h5">
-                        {t('Collaborators')}
-                      </Typography> */}
                     </>
                   )}
 
@@ -215,36 +212,17 @@ const Video = () => {
                         .split(', ')
                         .map((tag: string, index: number, array: string[]) => (
                           <React.Fragment key={tag}>
-                            <Typography
+                            <s.Tag
                               component="span"
                               variant="body2"
-                              sx={{
-                                display: 'inline',
-                                wordWrap: 'break-word',
-                                fontSize: '16px',
-                                color: theme.palette.secondary.light,
-                                fontWeight: '400',
-                                lineHeight: '21px',
-                                textDecoration: 'underline'
-                              }}
+                              underline={true}
                             >
                               {tag}
-                            </Typography>
+                            </s.Tag>
                             {index < array.length - 1 && (
-                              <Typography
-                                component="span"
-                                variant="body2"
-                                sx={{
-                                  display: 'inline',
-                                  fontSize: '16px',
-                                  color: theme.palette.secondary.light,
-                                  fontWeight: '400',
-                                  lineHeight: '21px',
-                                  textDecoration: 'none'
-                                }}
-                              >
+                              <s.Tag component="span" variant="body2">
                                 ,&nbsp;
-                              </Typography>
+                              </s.Tag>
                             )}
                           </React.Fragment>
                         ))}
