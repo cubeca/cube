@@ -9,6 +9,7 @@ import {
   Close
 } from '@mui/icons-material';
 import { IconButton, Box } from '@mui/material';
+import * as s from './PDFReader.styled';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
@@ -57,45 +58,19 @@ const PDFModal = ({
   }
 
   return (
-    <Box
-      className="pdf-modal"
-      sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: 'rgba(0, 0, 0, 0.9)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        zIndex: 9999
-      }}
-      onClick={handleClose}
-    >
-      <IconButton
+    <s.FullscreenModalContainer onClick={handleClose}>
+      <s.StyledAbsoluteIconButton
         aria-label="Close"
         onClick={handleClose}
         sx={{
-          position: 'absolute',
-          top: '10px',
-          right: '10px',
           color: 'primary.main'
         }}
       >
         <Close />
-      </IconButton>
+      </s.StyledAbsoluteIconButton>
 
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          width: '100%',
-          marginBottom: '20px'
-        }}
-      >
-        <IconButton
+      <s.ModalPageContainer>
+        <s.ArrowIconButton
           aria-label="Previous Page"
           onClick={goToPreviousPage}
           disabled={currentPage === 1}
@@ -109,7 +84,7 @@ const PDFModal = ({
           }}
         >
           <KeyboardArrowLeft />
-        </IconButton>
+        </s.ArrowIconButton>
         <Box onClick={(event) => event.stopPropagation()}>
           <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
             <Page
@@ -120,7 +95,7 @@ const PDFModal = ({
             />
           </Document>
         </Box>
-        <IconButton
+        <s.ArrowIconButton
           aria-label="Next Page"
           onClick={goToNextPage}
           disabled={currentPage === numPages}
@@ -134,9 +109,9 @@ const PDFModal = ({
           }}
         >
           <KeyboardArrowRight />
-        </IconButton>
-      </Box>
-    </Box>
+        </s.ArrowIconButton>
+      </s.ModalPageContainer>
+    </s.FullscreenModalContainer>
   );
 };
 
