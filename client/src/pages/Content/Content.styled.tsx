@@ -1,4 +1,10 @@
-import { Box, Stack, Divider, Typography, Link as MuiLink } from '@mui/material';
+import {
+  Box,
+  Stack,
+  Divider,
+  Typography,
+  Link as MuiLink
+} from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const VideoWrapper = styled(Box)`
@@ -7,7 +13,7 @@ export const VideoWrapper = styled(Box)`
   padding-top: 56.25%;
 
   & > div,
-  video, 
+  video,
   iframe {
     position: absolute;
     top: 0;
@@ -19,8 +25,8 @@ export const VideoWrapper = styled(Box)`
 
 export const ContentWrapper = styled(Box)`
   padding: 30px 8.333333333333333%;
-  
-  ${props => props.theme.breakpoints.up("md")} {
+
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: 60px 11.111111111111111%;
   }
 `;
@@ -32,8 +38,8 @@ export const ContentDate = styled(Typography)`
 
 export const Sidebar = styled(Stack)`
   padding: 30px 0;
-  
-  ${props => props.theme.breakpoints.up("md")} {
+
+  ${(props) => props.theme.breakpoints.up('md')} {
     padding: 30px;
   }
 
@@ -49,7 +55,6 @@ export const Seperator = styled(Divider)`
 `;
 
 export const Contributor = styled(Stack)`
-  
   &:not(:first-child) {
     margin-top: 16px;
   }
@@ -75,7 +80,7 @@ export const ContributorName = styled(Typography)`
   a {
     color: inherit;
     text-decoration: none;
-    
+
     &:hover {
       text-decoration: underline;
     }
@@ -94,5 +99,16 @@ export const ContributorSocial = styled(MuiLink)`
 `;
 
 export const Tags = styled(Box)`
-  margin: 8px -4px 0;
+  margin: 8px 0 0;
+  // margin: 8px -4px 0;
+`;
+
+export const Tag = styled(Typography)`
+  display: inline;
+  word-wrap: break-word;
+  font-size: 16px;
+  color: theme.palette.secondary.light;
+  font-weight: 400;
+  line-height: 21px;
+  text-decoration: ${(props) => (props.underline ? 'underline' : 'none')};
 `;
