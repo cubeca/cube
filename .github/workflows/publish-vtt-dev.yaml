@@ -1,0 +1,20 @@
+name: Publish VTT Dev
+
+run-name: Publish VTT Dev @ ${{ github.sha }}
+
+on:
+  push:
+    branches:
+      - deploy-dev
+    paths:
+      - "services/profile/**"
+      - ".github/workflows/publish-profile-microservice-dev.yaml"
+      - ".github/workflows/publish-reusable.yaml"
+
+jobs:
+  publish-service:
+    uses: ./.github/workflows/publish-reusable.yaml
+    with:
+      GCP_PROJECT: cubecommons-dev
+      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
+      GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
