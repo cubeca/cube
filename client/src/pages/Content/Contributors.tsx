@@ -6,43 +6,37 @@ import * as s from './Content.styled';
 // import useMediaQuery from '@mui/material';
 
 // const matches = useMediaQuery('(min-width:600px)');
-const Contributors: FC<{ contributors: string[] }> = ({ contributors }) => {
+const Contributors: FC<{ contributors: Contributor[] }> = ({
+  contributors
+}) => {
   return (
     <>
-      {contributors.map((contributor, i) => (
-        <div key={i}>Contributors</div>
-        // <s.Contributor key={`${contributor.name}-${i}`}>
-        //   <Stack direction="row" alignItems="center">
+      {/* <div>Contributors</div> */}
+      {Array.isArray(contributors) &&
+        contributors.map((c: Contributor, i: number) => (
+          <s.Contributor key={`${c}-${i}`}>
+            <Stack direction="row" alignItems="center">
+              <s.ContributorThumb>
+                {c.logoUrl && <img src={c.logoUrl} alt="" width="40" />}
+              </s.ContributorThumb>
+              <Stack>
+                <s.ContributorName component="p" variant="h5">
+                  {c?.socialUrl ? (
+                    <Link to={`${c.socialUrl.toString()}`}>{c.name}</Link>
+                  ) : (
+                    c
+                  )}
+                </s.ContributorName>
 
-        //     <s.ContributorThumb>
-        //       {contributor.logoUrl && (
-        //         <img
-        //         src={contributor.logoUrl}
-        //         alt=""
-        //         width="40"
-        //         />
-        //       )}
-        //     </s.ContributorThumb>
-        //     <Stack>
-        //       <s.ContributorName component="p" variant="h5">
-        //         {contributor.link ? (
-        //           <Link to={contributor.link} >
-        //             {contributor.name}
-        //           </Link>
-        //         ) : (
-        //           contributor.name
-        //         )}
-        //       </s.ContributorName>
-
-        //       {contributor.socialUrl && (
-        //         <s.ContributorSocial href={contributor.socialUrl}>
-        //           {contributor.socialHandle}
-        //         </s.ContributorSocial>
-        //       )}
-        //     </Stack>
-        //   </Stack>
-        // </s.Contributor>
-      ))}
+                {c.socialUrl && (
+                  <s.ContributorSocial href={c.socialUrl}>
+                    {c.socialHandle}
+                  </s.ContributorSocial>
+                )}
+              </Stack>
+            </Stack>
+          </s.Contributor>
+        ))}
     </>
   );
 };

@@ -30,6 +30,10 @@ export const getContentDetails = async (id: string) => {
   return await contentApi.getContent(id);
 };
 
+export const getContentByProfileId = async (profileId: string) => {
+  return await contentApi.getContentByProfileid(0, 10, profileId);
+}
+
 export const addContent = async ({
   payload,
   coverImageFile,

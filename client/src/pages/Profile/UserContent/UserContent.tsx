@@ -31,16 +31,20 @@ const UserContent = ({ content }: UserContentProps) => {
 
       <s.UserContent>
         {
+          content ? (
           content?.map((c: any) => (
             <ContentCard
               key={c.id}
-              image={c.coverImageUrl.playerInfo.publicUrl}
+              image={c.coverImageUrl?.playerInfo?.publicUrl || ''}
               title={c.title}
               creator={c.creator}
               url={`/content/${c.id}`}
               icon={c.iconUrl}
             />
-          ))}
+          ))) : (
+            <ContentLoader size={10} />
+          )
+}
       </s.UserContent>
     </s.UserContentWrapper>
   );

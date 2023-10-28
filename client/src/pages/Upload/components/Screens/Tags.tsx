@@ -4,30 +4,13 @@ import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect } from 'react';
-import { set } from 'date-fns';
-import useCollaborators from 'hooks/useCollaborators';
+import { useState } from 'react';
 import CollaboratorInput from 'components/form/CollaboratorInput';
-import { GetCollaboratorsByIdListResponseInner } from '@cubeca/bff-client-oas-axios';
 
 const Tags = ({ control }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [otherContributors, setOtherContributors] = useState<any[]>([]);
-  const [allCollaborators, setAllCollaborators] = useState<string[]>([]);
-  const { data: collaborators, isLoading: isCollaboratorsLoading } =
-    useCollaborators();
-
-  useEffect(() => {
-    if (collaborators) {
-      setAllCollaborators(
-        collaborators.map(
-          (collaborator: GetCollaboratorsByIdListResponseInner) =>
-            collaborator.organization
-        )
-      );
-    }
-  }, [collaborators]);
   const handleAddMore = () => {
     setOtherContributors([
       ...otherContributors,
@@ -219,7 +202,7 @@ const Tags = ({ control }: any) => {
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Did you work with another organization? Include them in the credits. Separate collaborators by comma.'
+            'Did you work with another organization? Include them in the credits.'
           )}
         </Typography>
       </Box>
