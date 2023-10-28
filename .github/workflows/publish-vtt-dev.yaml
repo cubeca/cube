@@ -7,9 +7,9 @@ on:
     branches:
       - deploy-dev
     paths:
-      - "services/profile/**"
-      - ".github/workflows/publish-profile-microservice-dev.yaml"
-      - ".github/workflows/publish-reusable.yaml"
+      - "services/vtt/**"
+      - ".github/workflows/publish-vtt-dev.yaml"
+      - ".github/workflows/publish-vtt-reusable.yaml"
 
 jobs:
   publish-service:
