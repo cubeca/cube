@@ -45,6 +45,7 @@ jobs:
 
       - name: Deploy VTT Transcribe
         run: |
+          cd services/vtt/
           gcloud functions deploy vtt_transcribe \
            --runtime nodejs18 \
            --trigger-topic vtt_transcribe \
@@ -58,6 +59,7 @@ jobs:
            --ingress-settings=internal-only
       - name: Deploy VTT Transcribe
         run: |
+          cd services/vtt/
           gcloud functions deploy vtt_upload \
            --runtime nodejs18 \
            --trigger-topic vtt_upload \
