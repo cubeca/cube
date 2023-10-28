@@ -13,7 +13,7 @@ on:
 
 jobs:
   publish-service:
-    uses: ./.github/workflows/publish-reusable.yaml
+    uses: ./.github/workflows/publish-vtt-reusable.yaml
     with:
       GCP_PROJECT: cubecommons-dev
       GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
