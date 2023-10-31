@@ -11,23 +11,21 @@ on:
       GCP_SERVICE_ACCOUNT:
         required: true
         type: string
-      GCP_PROJECT:
+      ENV_NAME:
         required: true
         type: string
-
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 env:
   GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ inputs.GCP_WORKLOAD_IDENTITY_PROVIDER }}
   GCP_SERVICE_ACCOUNT: ${{ inputs.GCP_SERVICE_ACCOUNT }}
-  GCP_PROJECT: ${{ inputs.GCP_PROJECT }}
+  ENV_NAME: ${{ inputs.ENV_NAME }}
 jobs:
   publish_vtt:
     runs-on: ubuntu-22.04
-    name: Publish VT
+    name: Publish VTT
     permissions:
       contents: read
       id-token: write
-
     steps:
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v3
@@ -45,26 +43,29 @@ jobs:
 
       - name: Deploy VTT Transcribe
         run: |
+          cd services/vtt/
           gcloud functions deploy vtt_transcribe \
            --runtime nodejs18 \
            --trigger-topic vtt_transcribe \
            --gen2 \
            --region=northamerica-northeast2 \
            --timeout=540 \
-           --project=${{ env.GCP_PROJECT }} \
+           --project=cubecommons-${{ env.ENV_NAME }} \
            --memory=2GB \
-           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-dev:northamerica-northeast2:dev,PGDATABASE=cube_content,PGPORT=5432 \
-           --set-secrets PGPASSWORD=dev-db-password:latest,OPENAI=dev-openai:latest,cfToken=dev-cloudflare-api-token:latest,CF-R2-ID=dev-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=dev-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=dev-cloudflare-account-id:latest \
+           --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
+           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432 \
            --ingress-settings=internal-only
-      - name: Deploy VTT Transcribe
+      - name: Deploy VTT Upload
         run: |
+          cd services/vtt/
           gcloud functions deploy vtt_upload \
            --runtime nodejs18 \
            --trigger-topic vtt_upload \
-           --gen2 --region=northamerica-northeast2 \
+           --gen2 \
+           --region=northamerica-northeast2 \
            --timeout=120 \
-           --project=${{ env.GCP_PROJECT }} \
+           --project=cubecommons-${{ env.ENV_NAME }} \
            --memory=256MB \
-           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-dev:northamerica-northeast2:dev,PGDATABASE=cube_content,PGPORT=5432 \
-           --set-secrets PGPASSWORD=dev-db-password:latest,OPENAI=dev-openai:latest,cfToken=dev-cloudflare-api-token:latest,CF-R2-ID=dev-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=dev-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=dev-cloudflare-account-id:latest \
+           --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
+           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432 \
            --ingress-settings=internal-only

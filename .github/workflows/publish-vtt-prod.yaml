@@ -5,16 +5,16 @@ run-name: Publish VTT Dev @ ${{ github.sha }}
 on:
   push:
     branches:
-      - deploy-dev
+      - deploy-production
     paths:
       - "services/vtt/**"
-      - ".github/workflows/publish-vtt-dev.yaml"
+      - ".github/workflows/publish-vtt-prod.yaml"
       - ".github/workflows/publish-vtt-reusable.yaml"
 
 jobs:
   publish-service:
     uses: ./.github/workflows/publish-vtt-reusable.yaml
     with:
-      ENV_NAME: dev
-      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-dev/providers/github-actions
+      ENV_NAME: prod
+      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
       GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
