@@ -14,6 +14,7 @@ import * as s from './Content.styled';
 import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import { Document, Page } from 'react-pdf';
 import PDFReader from 'components/PDFReader';
+import LinkPlayer from 'components/LinkPlayer';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -37,6 +38,8 @@ const Video = () => {
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const cover = content?.coverImageUrl?.playerInfo?.publicUrl;
+  const desc = content?.description;
   const mediaType = content?.type;
   const profileId = content?.profileId;
   const contentId = content?.id;
@@ -76,11 +79,27 @@ const Video = () => {
   );
 
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
-
+  // const pdfContent = (
+  //   <LinkPlayer url={'http://google.ca'} alt={desc || ''} cover={cover || ''} />
+  // );
   const videoContent = (
     <s.VideoWrapper>
       <MediaPlayer url={videoUrl || ''} />
     </s.VideoWrapper>
+  );
+
+  const linkContent = (
+    <s.LinkWrapper>
+      {/* <LinkPlayer url={'test.pdf'} cover={cover || ''} /> */}
+      <LinkPlayer
+        url={
+          'https://cors-anywhere.herokuapp.com/https://github.com/microsoft/vscode'
+        }
+        // url={'test.pdf'}
+        cover={cover || ''}
+        title={content?.title || ''}
+      />
+    </s.LinkWrapper>
   );
 
   return (
@@ -91,12 +110,14 @@ const Video = () => {
             <MediaPlayerLoader type={mediaType ? mediaType : 'video'} />
           ) : youtubeID != '' ? (
             youtubeContent
-          ) : audioUrl != null && content?.type === 'audio' ? (
+          ) : content?.type === 'audio' ? (
             audioContent
           ) : content?.type === 'pdf' ? (
             pdfContent
           ) : content?.type === 'video' ? (
             videoContent
+          ) : content?.type === 'link' ? (
+            linkContent
           ) : null}
 
           <s.ContentWrapper>
