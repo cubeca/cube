@@ -56,13 +56,13 @@ jobs:
            --set-env-vars PGUSER=postgres,
               PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},
               PGDATABASE=cube_content,
-              PGPORT=5432 
+              PGPORT=5432 \
            --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,
               OPENAI=${{ env.ENV_NAME }}-openai:latest,
               cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,
               CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,
               CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,
-              CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest 
+              CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
            --ingress-settings=internal-only
       - name: Deploy VTT Transcribe
         run: |
@@ -78,11 +78,11 @@ jobs:
            --set-env-vars PGUSER=postgres,
               PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},
               PGDATABASE=cube_content,
-              PGPORT=5432 
+              PGPORT=5432 \
            --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,
               OPENAI=${{ env.ENV_NAME }}-openai:latest,
               cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,
               CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,
               CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,
-              CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest 
+              CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
            --ingress-settings=internal-only
