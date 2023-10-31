@@ -24,15 +24,10 @@ const downloadCloudflareStream = async (id) => {
       Authorization: `Bearer ${cfAPI}`,
     },
   });
-  console.log({ response });
   const data = response.data;
   const result = data.result;
-
-  console.log({ result });
   const downloadURL = result.default.url;
   let percentComplete = result.default.percentComplete;
-  console.log({ percentComplete });
-  console.log({ downloadURL });
   while (percentComplete < 100) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const response = await axios({
@@ -43,7 +38,6 @@ const downloadCloudflareStream = async (id) => {
       },
     });
     const data = response.data;
-    console.log({ data });
     percentComplete = data.result.default.percentComplete;
     console.log({ percentComplete });
   }
@@ -86,7 +80,6 @@ const downloadR2 = async (filePathInBucket, outputPath, fileName) => {
     throw err;
   }
   //list contents of tmp
-  console.log("Contents of tmp:");
   const contents = fs.readdirSync(outputPath);
   console.log(contents);
 };

@@ -22,7 +22,6 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
   console.log({ contentID });
 
   const contentData = await content.findOne({
-    //Fetch content data
     where: {
       id: contentID,
     },
