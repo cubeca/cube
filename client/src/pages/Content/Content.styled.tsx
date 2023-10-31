@@ -103,5 +103,15 @@ export const ContributorSocial = styled(MuiLink)`
 `;
 
 export const Tags = styled(Box)`
-  margin: 8px -4px 0;
+  margin: 8px 0 0;
+`;
+
+export const Tag = styled(Typography)`
+  display: inline;
+  word-wrap: break-word;
+  font-size: 16px;
+  color: theme.palette.secondary.light;
+  font-weight: 400;
+  line-height: 21px;
+  text-decoration: ${(props) => (props.underline ? 'underline' : 'none')};
 `;
