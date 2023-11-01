@@ -28,7 +28,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
           >
             {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
-            {!profile.logoUrl && <Lottie
+            {!profile && <Lottie
               className="loading-circle"
               animationData={LoadingCircle}
               loop={true}
