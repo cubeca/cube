@@ -22,8 +22,8 @@ export const ContentLoader: React.FC<{ size: number }> = ({
 };
 
 export const MediaPlayerLoader: React.FC<{
-  type: 'audio' | 'video' | 'pdf';
-}> = ({ type }: { type: 'audio' | 'video' | 'pdf' }) => (
+  type: 'audio' | 'video' | 'pdf' | 'link';
+}> = ({ type }: { type: 'audio' | 'video' | 'pdf' | 'link' }) => (
   <Skeleton
     width="100%"
     height={type === 'audio' ? '40px' : '400px'}
@@ -35,7 +35,6 @@ export const MediaMetaDataLoader: React.FC = () => (
   <Stack>
     <Skeleton width="100%" height={40} animation="wave" />
     <Skeleton width="100%" height={40} animation="wave" />
-    {/* <Skeleton width="100%" height={100} variant="rounded" animation="wave" /> */}
     <Skeleton width="100%" height={40} animation="wave" />
     <Skeleton width="100%" height={40} animation="wave" />
   </Stack>

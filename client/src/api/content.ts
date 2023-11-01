@@ -11,9 +11,10 @@ export type CategoryType =
   | 'digital-publications'
   | 'talks'
   | 'performances'
+  | 'link'
   | 'cultural-teachings';
 
-export type ContentType = 'video' | 'audio' | 'pdf';
+export type ContentType = 'video' | 'audio' | 'pdf' | 'link';
 
 export type NationType = 'CA';
 
@@ -32,7 +33,7 @@ export const getContentDetails = async (id: string) => {
 
 export const getContentByProfileId = async (profileId: string) => {
   return await contentApi.getContentByProfileid(0, 10, profileId);
-}
+};
 
 export const addContent = async ({
   payload,
