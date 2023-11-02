@@ -24,27 +24,25 @@ const ContentCard: FC<ContentCardProps> = ({
 }) => {
   return (
     <s.ContentCard className="content-card">
-      <Link to={url}>
-        <s.Thumbnail
-          sx={{
+      <Link to={url} title={title}>
+        <s.Thumbnail sx={{
             backgroundImage: `url('${image}')`
-          }}
-        >
+          }} >
+        </s.Thumbnail>
+
+        <s.Data direction="row" alignItems="space-between">
+          <Typography component="div" className="title">
+            {title}
+          </Typography>
+          { /* creator && (
+            <Typography component="span" className="creator">
+              {creator}
+            </Typography>
+          ) */ }
           <div className='types'>
             {icon}
             {hasSignLanguage && <SignLanguageIcon fontSize="small" />}
           </div>
-        </s.Thumbnail>
-
-        <s.Data direction="row" alignItems="space-between">
-          <Typography component="span" className="title">
-            {title}
-          </Typography>
-          {creator && (
-            <Typography component="span" className="creator">
-              {creator}
-            </Typography>
-          )}
         </s.Data>
       </Link>
     </s.ContentCard>

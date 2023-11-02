@@ -122,6 +122,7 @@ const Upload = () => {
         .split(',')
         .map((contributor: string) => contributor.trim());
     });
+
     addContent(
       {
         profileId: profileId!,
@@ -132,7 +133,8 @@ const Upload = () => {
         coverImageText: values.imageText,
         collaborators: [values.collaborators],
         contributors: formattedContributors,
-        tags: values.tags.split(',').map((tag: string) => tag.trim())
+        tags: values.tags.split(',').map((tag: string) => tag.trim()),
+        externalUrl: values.link ? values.link : null
       },
       coverImageFile!,
       mediaFile!

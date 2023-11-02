@@ -1,155 +1,62 @@
+const functions = require("@google-cloud/functions-framework");
+const { PubSub } = require("@google-cloud/pubsub");
+
 const axios = require("axios");
 const fs = require("fs");
-const ffmpeg = require("ffmpeg");
-const OpenAI = require("openai");
-const functions = require("@google-cloud/functions-framework");
-const { Sequelize } = require("sequelize");
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
+const ffmpeg = require("fluent-ffmpeg");
+const uuid = require("uuid").v4;
+ffmpeg.setFfmpegPath(ffmpegPath);
 
-const maxNoSpeechConfidence = 0.6;
-const openaiKey = process.env.OPENAI;
-const dbHost = process.env.PGHOST;
-const dbUser = process.env.PGUSER;
-const dbPassword = process.env.PGPASSWORD;
-const dbName = process.env.PGDATABASE;
-const dbPort = process.env.PGPORT;
-const contentService = process.env.CONTENTSVC;
+const { content, files, vtt } = require("./db.js");
+const { downloadCloudflareStream, uploadFile, downloadR2 } = require("./cf.js");
+const { transcribe } = require("./ai.js");
+const { generateVTT } = require("./vtt.js");
 
-console.log({ dbHost, dbUser, dbPassword, dbName, dbPort });
+const outputPath = "/tmp";
 
-//init sequelize -- GCP function to cloudsql postgres
-const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
-  host: dbHost,
-  port: dbPort,
-  dialect: "postgres",
-  define: {
-    timestamps: false,
-  },
-});
-const vtt = sequelize.define(
-  "vtt",
-  {
-    id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      primaryKey: true,
-    },
-    transcript: {
-      type: Sequelize.JSONB,
-      defaultValue: {},
-    },
-  },
-  {
-    freezeTableName: true,
-  }
-);
-
-const content = sequelize.define(
-  "content",
-  {
-    id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      primaryKey: true,
-    },
-    data: {
-      type: Sequelize.JSONB,
-      defaultValue: {},
-    },
-    created_at: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-    updated_at: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-  },
-  {
-    freezeTableName: true,
-  }
-);
-
-const transcribe = async (audioPath) => {
-  const openai = new OpenAI({
-    apiKey: openaiKey,
-  });
-  const readStream = fs.createReadStream(audioPath);
-  const response = await openai.audio.transcriptions.create({
-    file: readStream,
-    model: "whisper-1",
-    response_format: "verbose_json",
-    language: "en",
-  });
-  // @ts-ignore
-  const segments = response.segments;
-  const finalResponse = {};
-  for (const seg of segments) {
-    if (seg.no_speech_prob < maxNoSpeechConfidence) {
-      const { text, start, end } = seg;
-      // @ts-ignore
-      finalResponse[start] = {
-        text,
-        start,
-        end,
-      };
-    }
-  }
-  return finalResponse;
-};
-
-const generateVTT = (transcript) => {
-  let vtt = "WEBVTT\n\n";
-  for (const key in transcript) {
-    const { text, start, end } = transcript[key];
-    //convert start and end (which are in seconds from media start) to HH:MM:SS.MS
-    //H,M,S, are all 2 digits
-
-    const formatTime = (time) => {
-      const hours = String(Math.floor(time / 3600)).padStart(2, "0");
-      const minutes = String(Math.floor((time % 3600) / 60)).padStart(2, "0");
-      const seconds = String(Math.floor((time % 3600) % 60)).padStart(2, "0");
-      const milliseconds = String(Math.floor((time % 1) * 1000)).padStart(
-        3,
-        "0"
-      );
-      return `${hours}:${minutes}:${seconds}.${milliseconds}`;
-    };
-    const startFormatted = formatTime(start);
-    const endFormatted = formatTime(end);
-    vtt += `${startFormatted} --> ${endFormatted}\n`;
-    vtt += `${text}\n\n`;
-  }
-  return vtt;
-};
-
-//Begin invocation
-functions.cloudEvent("vtt_gen", async (event) => {
-  const contentID = Buffer.from(event.data.message.data, "base64").toString();
+functions.cloudEvent("vtt_transcribe", async (event) => {
+  const id = Date.now().toString(); //Process ID -- Used for IO Operations
+  const contentID = Buffer.from(event.data.message.data, "base64").toString(); //Decode event message
+  if (!contentID) throw new Error("No content ID provided");
   console.log({ contentID });
+
   const contentData = await content.findOne({
     where: {
       id: contentID,
     },
   });
-  console.log({ contentData });
+
+  if (!contentData) throw new Error("No content data found");
   const mediaData = contentData.data;
-  console.log({ mediaData });
   if (!mediaData) throw new Error("No media data provided");
   if (!mediaData.type in ["video", "audio"]) {
     throw new Error("Invalid media type");
   }
-  const mediaFileId = mediaData.fileId;
 
-  try {
-    const mediaURL = await axios.get(`${contentService}/files/${mediaFileId}`);
+  const mediaFileId = mediaData.mediaFileId;
+  if (!mediaFileId) throw new Error("No media file ID provided");
+  const cfData = await files.findOne({
+    where: {
+      id: mediaFileId,
+    },
+  });
+
+  if (!cfData) throw new Error("No CF data found");
+  if (mediaData.type === "video") {
+    console.log("Video File Detected");
+    const cfFileData = cfData.data;
+    const cloudflareStreamUid = cfFileData.cloudflareStreamUid;
+    console.log({ cloudflareStreamUid });
+    const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
     console.log({ mediaURL });
     if (!mediaURL) throw new Error("No media URL provided");
-    const id = Date.now().toString();
-    const outputPath = "./tmp";
+
     const response = await axios.get(mediaURL, { responseType: "stream" });
     const stream = response.data.pipe(
       fs.createWriteStream(`${outputPath}/${id}-video`)
     );
+
     await new Promise((resolve, reject) => {
       stream.on("finish", () => {
         console.log("File Downloaded");
@@ -157,41 +64,185 @@ functions.cloudEvent("vtt_gen", async (event) => {
       });
       stream.on("error", (error) => {
         console.log({ error });
-        reject(error);
+        throw new Error(error);
       });
     });
 
-    //strip audio from video
-    const video = await new ffmpeg(`${outputPath}/${id}-video`);
     await new Promise((resolve, reject) => {
-      video.fnExtractSoundToMP3(`${outputPath}/${id}-audio`, (error) => {
-        if (error) {
+      ffmpeg(`${outputPath}/${id}-video`)
+        .noVideo()
+        .format("mp3")
+        .audioCodec("libmp3lame")
+        .audioBitrate(64)
+        .audioChannels(1)
+        .audioFrequency(8000)
+        .output(`${outputPath}/${id}-audio.mp3`)
+        .on("end", () => {
+          console.log("Audio Stripped");
+          resolve();
+        })
+        .on("error", (error) => {
           console.log({ error });
-          reject(error);
-        }
-        console.log("Audio Extracted");
-        resolve();
-      });
+          throw new Error(error);
+        })
+        .run();
     });
+  } else if (mediaData.type === "audio") {
+    console.log("Audio File Detected");
+    await downloadR2(cfData.data.filePathInBucket, outputPath, `${id}-audio`);
+    await new Promise((resolve, reject) => {
+      ffmpeg(`${outputPath}/${id}-audio`)
+        .format("mp3")
+        .audioCodec("libmp3lame")
+        .audioBitrate(64)
+        .audioChannels(1)
+        .audioFrequency(8000)
+        .output(`${outputPath}/${id}-audio.mp3`)
+        .on("end", () => {
+          console.log("Audio Transcoded");
+          resolve();
+        })
+        .on("error", (error) => {
+          console.log({ error });
+          throw new Error(error);
+        })
+        .run();
+    });
+  }
+
+  try {
+    const mp3Stats = fs.statSync(`${outputPath}/${id}-audio.mp3`);
+    const mp3Size = Math.round((mp3Stats.size / 1024 / 1024) * 100) / 100; //size in megabytes, rounded to 2 decimal places
+    console.log({ mp3Size }); //For debugging, whisper has a 25MB limit
+
+    if (mp3Size > 25) {
+      throw new Error("MP3 Size too large"); //place holder until audio splitting
+    }
+
     const transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
     console.log("Transcript Generated");
-    const vtt = generateVTT(transcript);
-    fs.writeFileSync(`${outputPath}/${id}.vtt`, vtt);
-    console.log("VTT Generated");
-  } catch (processingError) {
-    console.log({ processingError });
-  } finally {
-    try {
-      fs.unlinkSync(`${outputPath}/${id}-video`);
-      console.log("Video Removed");
-    } catch (videoCleanupError) {
-      console.log({ videoCleanupError });
+
+    const vttText = generateVTT(transcript);
+    fs.writeFileSync(`${outputPath}/${id}.vtt`, vttText);
+    console.log("vttText Generated");
+    //try to fetch existing vtt, if not create
+    const existingVTT = await vtt.findOne({
+      where: {
+        id: contentID,
+      },
+    });
+    if (existingVTT) {
+      await existingVTT.update({
+        transcript,
+      });
+    } else {
+      await vtt.create({
+        id: contentID,
+        transcript,
+      });
     }
+    console.log("VTT JSON Saved");
+    //publish message to vtt_upload
+    const pubSubClient = new PubSub();
+
+    try {
+      const dataBuffer = Buffer.from(contentID);
+      const messageId = await pubSubClient
+        .topic("vtt_upload")
+        .publishMessage({ data: dataBuffer });
+      console.log(`Message ${messageId} published.`);
+    } catch (error) {
+      console.error(`Received error while publishing: ${error.message}`);
+      throw new Error(error);
+    }
+  } catch (processingError) {
+    console.error({ processingError });
+  } finally {
+    if (mediaData.type === "video") {
+      try {
+        fs.unlinkSync(`${outputPath}/${id}-video`);
+        console.log("Cleanup - Video Removed");
+      } catch (videoCleanupError) {
+        console.log("Unable to remove video");
+      }
+    }
+    if (mediaData.type === "audio") {
+      try {
+        fs.unlinkSync(`${outputPath}/${id}-audio`);
+        console.log("Cleanup - Audio Removed");
+      } catch (audioCleanupError) {
+        console.log("Unable to remove raw audio");
+      }
+    }
+    //Always remove processed audio
     try {
       fs.unlinkSync(`${outputPath}/${id}-audio.mp3`);
-      console.log("Audio Removed");
+      console.log("Cleanup - Audio Removed");
     } catch (audioCleanupError) {
-      console.log({ audioCleanupError });
+      console.log("Unable to remove processed audio");
     }
+  }
+});
+
+functions.cloudEvent("vtt_upload", async (event) => {
+  const id = Date.now().toString(); //Process ID -- Used for IO Operations
+
+  const contentID = Buffer.from(event.data.message.data, "base64").toString();
+  if (!contentID) throw new Error("No content ID provided");
+  console.log({ contentID });
+
+  const contentData = await content.findOne({
+    where: {
+      id: contentID,
+    },
+  });
+  if (!contentData) throw new Error("No content data found");
+  const vttData = await vtt.findOne({
+    where: {
+      id: contentID,
+    },
+  });
+  if (!vttData) throw new Error("No VTT data found");
+  const vttJSON = vttData.transcript;
+  console.log({ vttJSON });
+  const vttText = generateVTT(vttJSON);
+  console.log({ vttText });
+  if (contentData.data.vttFileId) {
+    await uploadFile(contentData.data.vttFileId, vttText);
+    console.log("VTT File Updated");
+  } else {
+    const cloudflareRecordID = uuid(); //ID needs to be generated before the record is created to determine the file path
+    console.log({ cloudflareRecordID });
+    await uploadFile(cloudflareRecordID, vttText);
+    const contentData = await content.findOne({
+      where: {
+        id: contentID,
+      },
+    });
+    console.log({ contentData });
+    await files.create({
+      id: cloudflareRecordID,
+      storage_type: "cloudflareR2",
+      data: {
+        status: "uploaded",
+        upload: {
+          fileName: "vtt.vtt",
+          fileSizeBytes: vttText.length,
+          mimeType: "text/vtt",
+          userId: contentData.data.userId,
+        },
+        profileId: contentData.profileId,
+        filePathInBucket: `${cloudflareRecordID}/vtt.vtt`,
+      },
+    });
+
+    console.log({ data: contentData.data });
+    await contentData.update({
+      data: {
+        ...contentData.data,
+        vttFileId: cloudflareRecordID,
+      },
+    });
+    console.log("Content Record Updated with VTT File ID");
   }
 });

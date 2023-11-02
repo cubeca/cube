@@ -6,6 +6,12 @@ export const ContentCard = styled(Box)`
     display: block;
     color: ${(props) => props.theme.palette.primary.light};
     text-decoration: none;
+
+    &:hover {
+      .types {
+        color: ${(props) => props.theme.palette.primary.main};
+      }
+    }
   }
 `;
 
@@ -13,36 +19,33 @@ export const Thumbnail = styled(Box)`
   position: relative;
   padding-bottom: 100%;
   background: no-repeat center/cover;
-  
-  .types{
-    position: absolute;
-    left: 8px;
-    bottom: 8px;
-    width: calc(100% - 16px);
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-
-    ${(props) => props.theme.breakpoints.up('md')} {
-      left: 16px;
-      bottom: 16px;
-      width: calc(100% - 32px);
-    }
-  }
 `;
 
 export const Data = styled(Stack)`
   justify-content: space-between;
   margin-top: 8px;
 
-  span {
+  .title {
     font-size: 16px;
+    line-height: 24px;
+    height: 24px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+  }
 
-    &.title {
-      font-weight: 600;
-    }
+  .creator {
+  }
+  
+  .types{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    color: ${(props) => props.theme.palette.secondary.dark};
 
-    &.creator {
+    ${(props) => props.theme.breakpoints.up('md')} {
     }
   }
+  
 `;
