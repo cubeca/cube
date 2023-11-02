@@ -35,7 +35,7 @@ const Profile = () => {
     <Box>
       <s.UserHeroBg>
         {profile.heroUrl && <img src={profile!.heroUrl} alt='user profile hero' />}
-        {!profile.heroUrl && <Lottie
+        {!profile && <Lottie
           className="loading-circle"
           animationData={LoadingCircle}
           loop={true}
