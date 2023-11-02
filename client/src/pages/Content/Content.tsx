@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Stack, Typography, useTheme, Chip, Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
@@ -11,20 +11,9 @@ import Contributors from './Contributors';
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
-import { Content } from 'types/content';
+import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import { Document, Page } from 'react-pdf';
 import PDFReader from 'components/PDFReader';
-
-// Dummy interface for my dummy data for now, to be removed
-
-interface OrgContributor {
-  id: string;
-  name: string;
-  socialUrl: string;
-  artist: boolean;
-  socialHandle: string;
-  logoUrl: string;
-}
 
 const Video = () => {
   const { t } = useTranslation();
@@ -62,46 +51,23 @@ const Video = () => {
 
   function getContributorRole(role: string, names?: string[]): string {
     const roleMap: { [key: string]: string } = {
-      sound: 'Sound Technician'
+      sound: 'Sound Technician',
+      camera: 'Camera Operator',
+      editor: 'Editor',
+      artist: 'Artist'
       // add more role mappings here as needed
     };
     const mappedRole = roleMap[role.toLowerCase()] || role;
-    const numNames = (names || []).filter(
-      (name) => name.split(':')[0] === role
-    ).length;
+
+    if (typeof names === 'string') {
+      return 'Data has been changed';
+    }
+
+    // pluralize role if there are multiple names
+    const numNames = (names || []).length;
     const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
     return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
   }
-
-  const dummyContributors: OrgContributor[] = [
-    {
-      id: '1',
-      name: 'Foundation of Everything',
-      socialUrl: 'https://example.com/contributor1',
-      artist: true,
-      socialHandle: '@FOE',
-      logoUrl:
-        'https://images.unsplash.com/photo-1558591710-4b4a1ae0f04d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
-    },
-    {
-      id: '2',
-      name: 'Art Attack',
-      socialUrl: 'https://example.com/contributor2',
-      artist: false,
-      socialHandle: '@AA2023',
-      logoUrl:
-        'https://images.unsplash.com/photo-1484589065579-248aad0d8b13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
-    },
-    {
-      id: '3',
-      name: 'Canada Council for the Arts',
-      socialUrl: 'https://example.com/contributor3',
-      artist: true,
-      socialHandle: '@CCFA',
-      logoUrl:
-        'https://images.unsplash.com/photo-1549277513-f1b32fe1f8f5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80'
-    }
-  ];
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -169,46 +135,69 @@ const Video = () => {
               <MediaMetaDataLoader />
             ) : (
               <>
-                <Stack sx={{ my: 2 }}>
+                <Stack>
+                  <Typography component="h5" variant="h5">
+                    {t('Contributors')}
+                  </Typography>
                   {content?.contributors &&
-                    Object.entries(content?.contributors).map(
-                      ([role, name]) => {
+                    Object.entries(content?.contributors)
+                      .sort(([roleA], [roleB]) => {
+                        if (roleA === 'artist') {
+                          return -1;
+                        } else if (roleB === 'artist') {
+                          return 1;
+                        } else {
+                          return roleA.localeCompare(roleB);
+                        }
+                      })
+                      .map(([role, names]) => {
                         return (
                           <div key={role}>
                             <Typography
-                              component="h5"
-                              variant="h5"
-                              sx={{ pb: 0.5 }}
-                            >
-                              {t(
-                                getContributorRole(
-                                  role,
-                                  Object.keys(content?.contributors)
-                                )
-                              )}
-                            </Typography>
-
-                            <Typography
-                              component="p"
+                              component="span"
                               variant="body2"
-                              sx={{ pb: 1 }}
+                              sx={{
+                                display: 'inline',
+                                wordWrap: 'break-word',
+                                fontSize: '16px',
+                                color: theme.palette.primary.main
+                              }}
                             >
-                              {name}
+                              {t(getContributorRole(role, names))}:&nbsp;
+                            </Typography>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{
+                                display: 'inline',
+                                wordWrap: 'break-word',
+                                fontWeight: '700',
+                                lineHeight: '32px'
+                              }}
+                            >
+                              {/* {names.join(', ')} */}
+                              {/* error handling to deal with old data that doesn't have an array of names */}
+                              {Array.isArray(names)
+                                ? names.join(', ')
+                                : 'Data has been changed'}
                             </Typography>
                           </div>
                         );
-                      }
-                    )}
+                      })}
                 </Stack>
-
-                <s.Seperator />
-                <Typography component="h5" variant="h5">
-                  {t('Collaborators')}
-                </Typography>
+                {content?.collaboratorDetails &&
+                  content?.collaboratorDetails[0]?.logoUrl !== null && (
+                    <>
+                      <s.Seperator />
+                    </>
+                  )}
 
                 {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
-
-                <Contributors contributors={dummyContributors} />
+                <Contributors
+                  contributors={
+                    content?.collaboratorDetails as CollaboratorDetails[]
+                  }
+                />
 
                 <s.Seperator />
 
@@ -221,8 +210,21 @@ const Video = () => {
                       {(content?.tags || [])
                         .join(', ')
                         .split(', ')
-                        .map((tag: string) => (
-                          <Chip key={tag} label={tag} sx={{ m: 0.5 }} />
+                        .map((tag: string, index: number, array: string[]) => (
+                          <React.Fragment key={tag}>
+                            <s.Tag
+                              component="span"
+                              variant="body2"
+                              underline="true"
+                            >
+                              {tag}
+                            </s.Tag>
+                            {index < array.length - 1 && (
+                              <s.Tag component="span" variant="body2">
+                                ,&nbsp;
+                              </s.Tag>
+                            )}
+                          </React.Fragment>
                         ))}
                     </s.Tags>
                   </Stack>

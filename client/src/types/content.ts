@@ -43,6 +43,12 @@ export interface Contributor {
   logoUrl?: string;
 }
 
+export interface CollaboratorDetails {
+  organization: string;
+  logoUrl: string;
+  tag: string;
+}
+
 export interface ContentDetailsAPIResponse {
   data: ContentDetails;
 }

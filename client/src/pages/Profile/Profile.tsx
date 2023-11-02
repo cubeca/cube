@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import Button from 'components/Button';
 import UserContent from './UserContent';
 import Footer from 'components/layout/Footer';
-import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
+import Lottie from 'lottie-react';
+import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './Profile.styled';
 import useAuth from 'hooks/useAuth';
 import EditDialog from './Edit/EditDialog';
@@ -22,11 +23,9 @@ const Profile = () => {
 
   const handleNewMedia = () => {
     if (profile) {
-      // navigate(`/profile/${profile!.id}/upload`);
       navigate(`upload`);
     }
   };
-  // backgroundImage: `url('${profile!.heroUrl}')`,
 
   if (isLoading) {
     // return <div>Loading...</div>;
@@ -35,7 +34,13 @@ const Profile = () => {
   return (
     <Box>
       <s.UserHeroBg>
-        <img src={profile.heroUrl || profileHeroUrl} alt="user profile hero" />
+        {profile.heroUrl && <img src={profile!.heroUrl} alt='user profile hero' />}
+        {!profile && <Lottie
+          className="loading-circle"
+          animationData={LoadingCircle}
+          loop={true}
+          autoplay={true}
+        />}
       </s.UserHeroBg>
 
       <s.UserProfile>

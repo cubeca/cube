@@ -13,3 +13,7 @@ export const stringToKeyValuePairs = (str: any) => {
 
   return result;
 };
+
+export const brevoTemplateIdMapping = {
+  REPORT_ABUSE_TEMPLATE: 12
+};

@@ -3,7 +3,7 @@ import * as CryptoJS from 'crypto-js';
 import * as settings from './settings';
 import { body } from 'express-validator';
 import { AxiosHeaders } from 'axios';
-import { Request } from 'express'
+import { Request } from 'express';
 
 export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
 export const comparePassword = async (password: string, hash: string) => await bcrypt.compare(password, hash);
@@ -12,6 +12,12 @@ export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-
 
 export const decryptString = (hash: string) =>
   CryptoJS.AES.decrypt(hash, settings.ENCRYPT_SECRET).toString(CryptoJS.enc.Utf8);
+
+export const brevoTemplateIdMapping = {
+  SEND_VERIFICATION_EMAIL: 2,
+  PASSWORD_CHANGE_CONFIRMATION: 3,
+  PASSWORD_RESET_EMAIL: 4
+};
 
 export const validateUserCreateInput = [
   body('name').notEmpty().trim().escape().withMessage('Name is required.'),

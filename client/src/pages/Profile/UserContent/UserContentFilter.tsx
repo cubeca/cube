@@ -38,6 +38,7 @@ const UserContentFilter = () => {
         <MenuItem.li value={ContentCategories.Audio}>{t('Audio')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.ActivityBook}>{t('Activity Book')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.DigitalPublication}>{t('Digital Publication')}</MenuItem.li>
+        <MenuItem.li value={ContentCategories.Link}>{t('Link')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.Collaboration}>{t('Collaboration')}</MenuItem.li>
         <MenuItem.li value={'artist 1'}>{t('By Artist')}</MenuItem.li>
         <MenuItem.li value={'organization 1'}>{t('By Organization')}</MenuItem.li>

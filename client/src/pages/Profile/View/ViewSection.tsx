@@ -1,9 +1,10 @@
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
-import FPOProfileUrl from 'assets/images/profile-user-image.png';
 import * as s from '../Profile.styled';
 import MediaPlayer from 'components/MediaPlayer';
+import Lottie from 'lottie-react';
+import LoadingCircle from 'assets/animations/loading-circle.json';
 
 interface ViewSectionProps {
   isLoggedIn: boolean;
@@ -26,10 +27,14 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             target="_blank"
             style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
           >
-            <img
-              src={profile.logoUrl || FPOProfileUrl}
-              alt="profile thumbnail"
-            />
+            {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
+            {!profile && <Lottie
+              className="loading-circle"
+              animationData={LoadingCircle}
+              loop={true}
+              autoplay={true}
+            />}
+
           </s.ImageInner>
           {isLoggedIn && (
             <s.EditWrapper>
@@ -42,7 +47,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
 
         <Typography component="h5" variant="h5">
           <a href={getUrl(profile?.website)} title={profile!.organization} target="_blank" rel="noreferrer">
-            {profile!.organization}
+            {profile!.organization || ''}
           </a>
           <small>
             {profile!.tag && (

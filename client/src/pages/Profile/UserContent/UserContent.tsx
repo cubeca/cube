@@ -1,8 +1,7 @@
-import useContent from 'hooks/useContent';
 import ContentCard from 'components/ContentCard';
-import { ContentLoader } from 'components/Loaders';
 import UserContentFilter from './UserContentFilter';
-import { ContentLists } from 'types/enums';
+import Lottie from 'lottie-react';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
 
 import collaboration from 'assets/icons/type-collaboration.svg';
@@ -30,10 +29,16 @@ const UserContent = ({ content }: UserContentProps) => {
       <UserContentFilter />
 
       <s.UserContent>
+        {!content && (
+          <Lottie
+            className="loading-cubes"
+            animationData={LoadingCubes}
+            loop={true}
+          />
+        )}
         {
-          content ? (
-          content?.map((c: any) => (
-            <ContentCard
+        content?.map((c: any) => (
+          <ContentCard
               key={c.id}
               image={c.coverImageUrl?.playerInfo?.publicUrl || ''}
               title={c.title}
@@ -41,10 +46,7 @@ const UserContent = ({ content }: UserContentProps) => {
               url={`/content/${c.id}`}
               icon={c.iconUrl}
             />
-          ))) : (
-            <ContentLoader size={10} />
-          )
-}
+        ))}
       </s.UserContent>
     </s.UserContentWrapper>
   );
