@@ -215,7 +215,7 @@ const Video = () => {
                             <s.Tag
                               component="span"
                               variant="body2"
-                              underline={true}
+                              underline="true"
                             >
                               {tag}
                             </s.Tag>
