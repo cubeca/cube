@@ -1,14 +1,25 @@
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import { useState } from 'react';
 import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import './PDFReader.css';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
 import { Button } from 'components/Button/Button.styled';
-import { KeyboardArrowLeft, KeyboardArrowRight } from '@mui/icons-material';
-import { IconButton, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import {
+  Fullscreen,
+  KeyboardArrowLeft,
+  KeyboardArrowRight
+} from '@mui/icons-material';
+import {
+  Box,
+  IconButton,
+  ToggleButton,
+  ToggleButtonGroup
+} from '@mui/material';
 import { ContentLoader } from 'components/Loaders';
+import Grid from '@mui/system/Unstable_Grid';
+import PDFModal from './FullscreenModal';
+import * as s from './PDFReader.styled';
 
 const options = {
   cMapUrl: '/cmaps/',
@@ -19,19 +30,43 @@ interface PDFReaderProps {
   url: string;
 }
 
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   'pdfjs-dist/build/pdf.worker.min.js',
-//   import.meta.url
-// ).toString();
-
-// testing if switching to unpkg.com fixes the issue,
-// otherwise will need to copy worker to project's output folder
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const PDFReader = ({ url }: PDFReaderProps) => {
   const [numPages, setNumPages] = useState<number>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [displayMode, setDisplayMode] = useState<'single' | 'all'>('single');
+  const [screenWidth, setScreenWidth] = useState<number>(window.innerWidth);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [pageToReturnTo, setPageToReturnTo] = useState<number>(1);
+
+  function handleFullscreenClick(): void {
+    setIsFullscreen(true);
+    if (displayMode === 'single') {
+      setCurrentPage(currentPage);
+    } else if (displayMode === 'all') {
+      setCurrentPage(1);
+    }
+  }
+
+  function handleCloseModal(): void {
+    setIsFullscreen(false);
+    setCurrentPage(currentPage);
+  }
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(pageToReturnTo);
+  }, [pageToReturnTo]);
 
   function onDocumentLoadSuccess({
     numPages: nextNumPages
@@ -55,95 +90,126 @@ const PDFReader = ({ url }: PDFReaderProps) => {
     event: React.MouseEvent<HTMLElement>,
     newDisplayMode: 'single' | 'all' | null
   ) {
+    console.log('clicked');
     if (newDisplayMode !== null && newDisplayMode !== displayMode) {
       setDisplayMode(newDisplayMode);
     }
   }
 
   return (
-    <div className="pdfReader">
-      <div className="pdfControls">
-        {/* <Button onClick={goToPreviousPage} disabled={currentPage === 1}>
-          Previous Page
-        </Button>
-        <Button onClick={goToNextPage} disabled={currentPage === numPages}>
-          Next Page
-        </Button> */}
-        <ToggleButtonGroup
-          value={displayMode}
-          exclusive
-          onChange={handleDisplayModeChange}
-          aria-label="Display mode"
-        >
-          <ToggleButton
-            value="single"
-            aria-label="Single page"
-            sx={{
-              color: 'primary.main',
-              textTransform: 'none',
-              borderRadius: '4px',
-              padding: '8px',
-              minWidth: 'auto'
-            }}
+    <s.PDFReaderContainer>
+      <Grid>
+        <s.ButtonContainer>
+          <s.StyledToggleButtonGroup
+            value={displayMode}
+            exclusive
+            onChange={handleDisplayModeChange}
+            aria-label="Display mode"
           >
-            Single
-          </ToggleButton>
-          <ToggleButton
-            value="all"
-            aria-label="All pages"
-            sx={{
-              color: 'primary.main',
-              textTransform: 'none',
-              borderRadius: '4px',
-              padding: '8px',
-              minWidth: 'auto'
-            }}
+            <s.StyledToggleButton value="single" aria-label="Single page">
+              Single
+            </s.StyledToggleButton>
+            <s.StyledToggleButton value="all" aria-label="All pages">
+              All Pages
+            </s.StyledToggleButton>
+          </s.StyledToggleButtonGroup>
+          <s.StyledAbsoluteIconButton
+            aria-label="Fullscreen"
+            onClick={handleFullscreenClick}
           >
-            All Pages
-          </ToggleButton>
-        </ToggleButtonGroup>
-      </div>
-      <div className="pdfDocument">
-        {displayMode === 'single' && (
-          <>
-            <IconButton
-              aria-label="Previous Page"
-              onClick={goToPreviousPage}
-              disabled={currentPage === 1}
-              sx={{ color: 'primary.main' }}
+            <Fullscreen fontSize="large" />
+          </s.StyledAbsoluteIconButton>
+        </s.ButtonContainer>
+        <Grid>
+          {displayMode === 'single' && (
+            <>
+              <s.SinglePageContainer>
+                <s.ArrowIconButton
+                  sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
+                  aria-label="Previous Page"
+                  onClick={goToPreviousPage}
+                  disabled={currentPage === 1}
+                >
+                  <KeyboardArrowLeft />
+                </s.ArrowIconButton>
+
+                <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
+                  <Page
+                    pageNumber={currentPage}
+                    width={screenWidth < 1000 ? screenWidth : undefined}
+                    loading={null}
+                  />
+                </Document>
+
+                <s.ArrowIconButton
+                  sx={{ display: { xs: 'none', sm: 'none', md: 'flex' } }}
+                  aria-label="Next Page"
+                  onClick={goToNextPage}
+                  disabled={currentPage === numPages}
+                >
+                  <KeyboardArrowRight />
+                </s.ArrowIconButton>
+              </s.SinglePageContainer>
+              <s.MobileButtonContainer>
+                <s.ArrowIconButton
+                  aria-label="Previous Page"
+                  onClick={goToPreviousPage}
+                  disabled={currentPage === 1}
+                  size="3rem"
+                  height="80px"
+                >
+                  <KeyboardArrowLeft />
+                </s.ArrowIconButton>
+
+                <s.ArrowIconButton
+                  aria-label="Next Page"
+                  onClick={goToNextPage}
+                  disabled={currentPage === numPages}
+                  size="3rem"
+                  height="80px"
+                >
+                  <KeyboardArrowRight />
+                </s.ArrowIconButton>
+              </s.MobileButtonContainer>
+            </>
+          )}
+          {displayMode === 'all' && (
+            <s.AllPagesContainer
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
             >
-              <KeyboardArrowLeft />
-            </IconButton>
-            <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
-              <Page className="pdfPage" pageNumber={currentPage} height={800} />
-            </Document>
-            <IconButton
-              aria-label="Next Page"
-              onClick={goToNextPage}
-              disabled={currentPage === numPages}
-              sx={{ color: 'primary.main' }}
-            >
-              <KeyboardArrowRight />
-            </IconButton>
-          </>
-        )}
-        {displayMode === 'all' && (
-          <Document
-            file={url}
-            loading={<ContentLoader size={10} />}
-            onLoadSuccess={onDocumentLoadSuccess}
-          >
-            {Array.from(new Array(numPages), (el, index) => (
-              <Page
-                key={`page_${index + 1}`}
-                className="pdfPage"
-                pageNumber={index + 1}
-              />
-            ))}
-          </Document>
-        )}
-      </div>
-    </div>
+              <Document
+                file={url}
+                loading={<ContentLoader size={10} />}
+                onLoadSuccess={onDocumentLoadSuccess}
+              >
+                {Array.from(new Array(numPages), (el, index) => (
+                  <s.PageContainer key={`page_${index + 1}`}>
+                    <Page
+                      key={`page_${index + 1}`}
+                      pageNumber={index + 1}
+                      width={screenWidth < 1000 ? screenWidth : undefined}
+                    />
+                  </s.PageContainer>
+                ))}
+              </Document>
+            </s.AllPagesContainer>
+          )}
+        </Grid>
+      </Grid>
+      {isFullscreen && (
+        <PDFModal
+          url={url}
+          onClose={handleCloseModal}
+          displayMode={displayMode}
+          pageToOpen={currentPage}
+          setPageToReturnTo={setPageToReturnTo}
+        />
+      )}
+    </s.PDFReaderContainer>
   );
 };
 

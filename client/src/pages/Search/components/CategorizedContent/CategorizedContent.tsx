@@ -40,7 +40,7 @@ const CategorizedContent = () => {
     {
       id: 0,
       thumbnailUrl: FPOThumb1,
-      title: 'Video Title',
+      title: 'Lorem ipsum dolor sit amet consectetur adipiscing elit',
       url: 'https://www.example.com',
       icon: <PlayArrowIcon fontSize="small" />,
       hasSignLanguage: true

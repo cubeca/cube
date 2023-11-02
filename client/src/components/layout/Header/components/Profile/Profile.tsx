@@ -66,7 +66,7 @@ const Profile = () => {
           <s.ImageWrapper>
             <s.ImageInner>
               {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
-              {!profile.logoUrl && <Lottie
+              {!profile && <Lottie
                 className="loading-circle"
                 animationData={LoadingCircle}
                 loop={true}

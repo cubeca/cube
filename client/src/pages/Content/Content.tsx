@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Stack, Typography, useTheme, Chip, Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
@@ -40,7 +40,6 @@ const Video = () => {
   const mediaType = content?.type;
   const profileId = content?.profileId;
   const contentId = content?.id;
-  console.log(content);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -52,13 +51,20 @@ const Video = () => {
 
   function getContributorRole(role: string, names?: string[]): string {
     const roleMap: { [key: string]: string } = {
-      sound: 'Sound Technician'
+      sound: 'Sound Technician',
+      camera: 'Camera Operator',
+      editor: 'Editor',
+      artist: 'Artist'
       // add more role mappings here as needed
     };
     const mappedRole = roleMap[role.toLowerCase()] || role;
-    const numNames = (names || []).filter(
-      (name) => name.split(':')[0] === role
-    ).length;
+
+    if (typeof names === 'string') {
+      return 'Data has been changed';
+    }
+
+    // pluralize role if there are multiple names
+    const numNames = (names || []).length;
     const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
     return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
   }
@@ -129,44 +135,60 @@ const Video = () => {
               <MediaMetaDataLoader />
             ) : (
               <>
-                <Stack sx={{ my: 2 }}>
+                <Stack>
+                  <Typography component="h5" variant="h5">
+                    {t('Contributors')}
+                  </Typography>
                   {content?.contributors &&
-                    Object.entries(content?.contributors).map(
-                      ([role, name]) => {
+                    Object.entries(content?.contributors)
+                      .sort(([roleA], [roleB]) => {
+                        if (roleA === 'artist') {
+                          return -1;
+                        } else if (roleB === 'artist') {
+                          return 1;
+                        } else {
+                          return roleA.localeCompare(roleB);
+                        }
+                      })
+                      .map(([role, names]) => {
                         return (
                           <div key={role}>
                             <Typography
-                              component="h5"
-                              variant="h5"
-                              sx={{ pb: 0.5 }}
-                            >
-                              {t(
-                                getContributorRole(
-                                  role,
-                                  Object.keys(content?.contributors)
-                                )
-                              )}
-                            </Typography>
-
-                            <Typography
-                              component="p"
+                              component="span"
                               variant="body2"
-                              sx={{ pb: 1 }}
+                              sx={{
+                                display: 'inline',
+                                wordWrap: 'break-word',
+                                fontSize: '16px',
+                                color: theme.palette.primary.main
+                              }}
                             >
-                              {name}
+                              {t(getContributorRole(role, names))}:&nbsp;
+                            </Typography>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{
+                                display: 'inline',
+                                wordWrap: 'break-word',
+                                fontWeight: '700',
+                                lineHeight: '32px'
+                              }}
+                            >
+                              {/* {names.join(', ')} */}
+                              {/* error handling to deal with old data that doesn't have an array of names */}
+                              {Array.isArray(names)
+                                ? names.join(', ')
+                                : 'Data has been changed'}
                             </Typography>
                           </div>
                         );
-                      }
-                    )}
+                      })}
                 </Stack>
                 {content?.collaboratorDetails &&
                   content?.collaboratorDetails[0]?.logoUrl !== null && (
                     <>
                       <s.Seperator />
-                      <Typography component="h5" variant="h5">
-                        {t('Collaborators')}
-                      </Typography>
                     </>
                   )}
 
@@ -188,8 +210,21 @@ const Video = () => {
                       {(content?.tags || [])
                         .join(', ')
                         .split(', ')
-                        .map((tag: string) => (
-                          <Chip key={tag} label={tag} sx={{ m: 0.5 }} />
+                        .map((tag: string, index: number, array: string[]) => (
+                          <React.Fragment key={tag}>
+                            <s.Tag
+                              component="span"
+                              variant="body2"
+                              underline="true"
+                            >
+                              {tag}
+                            </s.Tag>
+                            {index < array.length - 1 && (
+                              <s.Tag component="span" variant="body2">
+                                ,&nbsp;
+                              </s.Tag>
+                            )}
+                          </React.Fragment>
                         ))}
                     </s.Tags>
                   </Stack>
