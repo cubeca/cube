@@ -14,21 +14,20 @@ const UserContentFilter = () => {
   const { setFilter } = useFilterContent();
   return (
     <s.Filters>
-
       <TextInput
         id="searchFilter"
         name="searchFilter"
-        className='searchFilter'
+        className="searchFilter"
         control={control}
         variant="standard"
         fullWidth
-        placeholder='Search'
+        placeholder="Search!"
         sx={{ fontSize: '2rem' }}
       />
 
       <Select
         label={t('Filter Results')}
-        className='typeFilter'
+        className="typeFilter"
         onChange={(value: string | number) =>
           setFilter(ContentQueryKeys.Type, value as string)
         }
@@ -36,12 +35,22 @@ const UserContentFilter = () => {
         <MenuItem.li value={ContentCategories.All}>{t('All')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.Video}>{t('Video')}</MenuItem.li>
         <MenuItem.li value={ContentCategories.Audio}>{t('Audio')}</MenuItem.li>
-        <MenuItem.li value={ContentCategories.ActivityBook}>{t('Activity Book')}</MenuItem.li>
-        <MenuItem.li value={ContentCategories.DigitalPublication}>{t('Digital Publication')}</MenuItem.li>
-        <MenuItem.li value={ContentCategories.Collaboration}>{t('Collaboration')}</MenuItem.li>
+        <MenuItem.li value={ContentCategories.ActivityBook}>
+          {t('Activity Book')}
+        </MenuItem.li>
+        <MenuItem.li value={ContentCategories.DigitalPublication}>
+          {t('Digital Publication')}
+        </MenuItem.li>
+        <MenuItem.li value={ContentCategories.Collaboration}>
+          {t('Collaboration')}
+        </MenuItem.li>
         <MenuItem.li value={'artist 1'}>{t('By Artist')}</MenuItem.li>
-        <MenuItem.li value={'organization 1'}>{t('By Organization')}</MenuItem.li>
-        <MenuItem.li value={ContentQueryKeys.SignLanguage}>{t('Has Sign Language')}</MenuItem.li>
+        <MenuItem.li value={'organization 1'}>
+          {t('By Organization')}
+        </MenuItem.li>
+        <MenuItem.li value={ContentQueryKeys.SignLanguage}>
+          {t('Has Sign Language')}
+        </MenuItem.li>
       </Select>
     </s.Filters>
   );
