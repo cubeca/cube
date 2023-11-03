@@ -75,7 +75,8 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
     mediaFileId: 'mediaUrl',
     subtitlesFileId: 'subtitlesUrl',
     transcriptFileId: 'transcriptUrl',
-    vttFileId: 'vttFileUrl'
+    vttFileId: 'vttFileUrl',
+    bannerImageFileId: 'bannerImageUrl'
   };
 
   return Promise.all(
