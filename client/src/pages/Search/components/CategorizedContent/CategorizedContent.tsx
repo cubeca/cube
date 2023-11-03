@@ -20,23 +20,39 @@ const CategorizedContent = () => {
   const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
-  let isLoading = false;
+  const [isLoading, setIsLoading] = useState(false);
 
   const doSearch = async () => {
     return await searchContent(searchTerm, 0, 0);
   };
 
   useEffect(() => {
+    let debounceTimer: any = null;
+
     const fetchSearchResults = async () => {
-      if (searchTerm.trim() !== '') {
-        const searchResults = await doSearch();
-        setContentResults(searchResults);
+      setIsLoading(true);
+
+      try {
+        if (searchTerm.trim() !== '') {
+          const searchResults = await doSearch();
+          console.log(searchResults);
+          setContentResults(searchResults);
+        }
+      } catch (error) {
+        console.error('An error occurred during the search:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    isLoading = true;
-    fetchSearchResults();
-    isLoading = false;
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      fetchSearchResults();
+    }, 1000);
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
   }, [searchTerm]);
 
   return (

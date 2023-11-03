@@ -16,7 +16,7 @@ interface CategorizedContentFilterProps {
 const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
   setSearchTerm
 }) => {
-  const { control } = useForm();
+  const { control, handleSubmit } = useForm();
   const { t } = useTranslation();
   const { setFilter } = useFilterContent();
 
