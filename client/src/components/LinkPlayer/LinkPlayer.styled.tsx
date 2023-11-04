@@ -1,6 +1,16 @@
 import { Box, Stack } from '@mui/material';
 import { styled } from 'theme/utils';
 
+export const Container = styled(Box)`
+  width: 100%;
+  height: auto;
+`;
+
+export const SubContainer = styled(Box)`
+  display: flex;
+  flex-direction: column;
+`;
+
 export const ImageBox = styled(Box)`
   width: 100%;
 

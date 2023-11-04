@@ -38,11 +38,11 @@ const Video = () => {
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
-  const cover = content?.coverImageUrl?.playerInfo?.publicUrl;
-  const desc = content?.description;
+  const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
+  const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
-  const contentId = content?.id;
+  const linkUrl = content?.externalUrl;
 
   useEffect(() => {
     if (contentRef.current) {
@@ -85,9 +85,7 @@ const Video = () => {
   );
 
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
-  // const pdfContent = (
-  //   <LinkPlayer url={'http://google.ca'} alt={desc || ''} cover={cover || ''} />
-  // );
+
   const videoContent = (
     <s.VideoWrapper>
       <MediaPlayer url={videoUrl || ''} />
@@ -96,14 +94,10 @@ const Video = () => {
 
   const linkContent = (
     <s.LinkWrapper>
-      {/* <LinkPlayer url={'test.pdf'} cover={cover || ''} /> */}
       <LinkPlayer
-        url={
-          'https://cors-anywhere.herokuapp.com/https://github.com/microsoft/vscode'
-        }
-        // url={'test.pdf'}
-        cover={cover || ''}
-        title={content?.title || ''}
+        url={linkUrl || ''}
+        cover={bannerImage || ''}
+        title={linkTitle || ''}
       />
     </s.LinkWrapper>
   );
