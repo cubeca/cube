@@ -105,7 +105,7 @@ const LinkPlayer = ({ url, cover, title }: LinkPlayerProps) => {
                 <Typography component="p" variant="body2">
                   {/* leaving this here for now because i'm expecting design changes */}
                   {/* {!isFile && new URL(url).hostname} */}
-                  {!isFile && url}
+                  {url}
                 </Typography>
                 {/* leaving this here for now because i'm expecting design changes */}
                 {/* <Typography variant="h4">{!isFile ? title : url}</Typography> */}
