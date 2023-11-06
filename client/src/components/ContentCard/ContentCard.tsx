@@ -25,8 +25,8 @@ const ContentCard: FC<ContentCardProps> = ({
   hasSignLanguage
 }) => {
   return (
-    <s.ContentCard>
-      <Link to={url}>
+    <s.ContentCard className="content-card">
+      <Link to={url} title={title}>
         <s.Thumbnail
           sx={{
             backgroundImage: `url('${image}')`
@@ -49,7 +49,7 @@ const ContentCard: FC<ContentCardProps> = ({
         </s.Thumbnail>
 
         <s.Data direction="row" alignItems="space-between">
-          <Typography component="span" className="title">
+          <Typography component="div" className="title">
             {title}
           </Typography>
         </s.Data>

@@ -7,8 +7,6 @@ import CameraIcon from '@mui/icons-material/LocalSee';
 import TextInput from 'components/form/TextInput';
 import * as s from './EditProfileForm.styled';
 import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
-import FPOProfileUrl from 'assets/images/profile-user-image.png';
-import profileHeroUrl from 'assets/images/profile-hero-bg.jpg';
 import UploadInput from 'components/form/UploadInput';
 import { useState } from 'react';
 
@@ -60,10 +58,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
     <Stack direction="column">
       <s.EditProfileImagesWrapper>
         <s.EditProfileHeroBg>
-          <img
-            src={profile.heroUrl || profileHeroUrl}
-            alt="user profile hero"
-          />
+          {profile.heroUrl && <img src={profile!.heroUrl} alt='user profile hero' />}
           <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
             <CameraIcon />
             <Typography>Upload</Typography>
@@ -77,10 +72,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         </s.EditProfileHeroBg>
         <s.ImageWrapper>
           <s.ImageInner>
-            <img
-              src={profile.logoUrl || FPOProfileUrl}
-              alt="profile thumbnail"
-            />
+            {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
           </s.ImageInner>
           <s.EditWrapper>
             <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>

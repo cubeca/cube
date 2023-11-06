@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from 'react';
 import { Stack, Typography, useTheme, Chip, Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
@@ -6,45 +7,107 @@ import { getIDfromURL } from 'utils/youtubeUtils';
 import { useTranslation } from 'react-i18next';
 import useContentDetails from 'hooks/useContentDetails';
 import MoreContent from './MoreContent';
-// import Contributors from './Contributors';
+import Contributors from './Contributors';
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
+import { CollaboratorDetails, Content, Contributor } from 'types/content';
+import { Document, Page } from 'react-pdf';
+import PDFReader from 'components/PDFReader';
 
 const Video = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const contentRef = useRef<HTMLDivElement>(null);
   const { data: content, isLoading } = useContentDetails();
-  const formattedCreatedDate = '';
-  // const formattedCreatedDate = content
-  //   ? new Date(content.createdDate).toLocaleDateString('en-us', {
-  //       year: 'numeric',
-  //       month: 'long',
-  //       day: 'numeric'
-  //     })
-  //   : '';
+  const createdAt = content?.createdAt;
+  const formattedCreatedDate = content
+    ? new Date(createdAt as string).toLocaleDateString('en-us', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    : '';
   // const youtubeID = getIDfromURL(content?.url || '');
-  const youtubeID = getIDfromURL(
-    'https://www.youtube.com/watch?v=LWnPSkRSLys&t=257s'
-  ); // <-- test youtube state
+  const youtubeID = '';
+  //const youtubeID = getIDfromURL(
+  //  'https://www.youtube.com/watch?v=LWnPSkRSLys&t=257s'
+  //); // <-- test youtube state
+
+  const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
+  const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const mediaType = content?.type;
+  const profileId = content?.profileId;
+  const contentId = content?.id;
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const headerHeight = document.querySelector('header')?.clientHeight || 0;
+      const contentTop = contentRef.current.offsetTop - headerHeight;
+      window.scrollTo({ top: contentTop, behavior: 'auto' });
+    }
+  }, [contentRef.current, content]);
+
+  function getContributorRole(role: string, names?: string[]): string {
+    const roleMap: { [key: string]: string } = {
+      sound: 'Sound Technician',
+      camera: 'Camera Operator',
+      editor: 'Editor',
+      artist: 'Artist'
+      // add more role mappings here as needed
+    };
+    const mappedRole = roleMap[role.toLowerCase()] || role;
+
+    if (typeof names === 'string') {
+      return 'Data has been changed';
+    }
+
+    // pluralize role if there are multiple names
+    const numNames = (names || []).length;
+    const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
+    return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
+  }
+
+  const youtubeContent = (
+    <s.VideoWrapper>
+      <YouTubePlayer id={youtubeID} />
+    </s.VideoWrapper>
+  );
+
+  const audioContent = (
+    <s.VideoWrapper>
+      <MediaPlayer url={audioUrl || ''} isAudio />
+    </s.VideoWrapper>
+  );
+
+  const pdfContent = <PDFReader url={pdfUrl || ''} />;
+
+  const videoContent = (
+    <s.VideoWrapper>
+      <MediaPlayer url={videoUrl || ''} />
+    </s.VideoWrapper>
+  );
 
   return (
-    <Box>
+    <Box ref={contentRef}>
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
-          <s.VideoWrapper>
-            {isLoading ? (
-              <MediaPlayerLoader type="video" />
-            ) : youtubeID != '' ? (
-              <YouTubePlayer id={youtubeID} />
-            ) : (
-              <MediaPlayer url={''} />
-            )}
-          </s.VideoWrapper>
+          {isLoading ? (
+            <MediaPlayerLoader type={mediaType ? mediaType : 'video'} />
+          ) : youtubeID != '' ? (
+            youtubeContent
+          ) : audioUrl != null && content?.type === 'audio' ? (
+            audioContent
+          ) : content?.type === 'pdf' ? (
+            pdfContent
+          ) : content?.type === 'video' ? (
+            videoContent
+          ) : null}
 
           <s.ContentWrapper>
             <Typography component="h1" variant="h3">
-              {/* {content?.title} */}
+              {content?.title}
             </Typography>
 
             <s.ContentDate component="p" variant="body2">
@@ -52,7 +115,7 @@ const Video = () => {
             </s.ContentDate>
 
             <Typography component="p" variant="body1">
-              {/* {content?.description} */}
+              {content?.description}
             </Typography>
 
             {/* Testing fonts language support: <br/><br/>
@@ -64,8 +127,6 @@ const Video = () => {
               These are hən̓q̓əmin̓əm̓ and Sḵwx̱wú7mesh Ta Nexwníw̓ n ta a Ímats, 授业 [teachings] bequethed from ancestors to children of both Indigenous and migrant Chinese families. 从祖母到孙女，这些故事代代相传。[Cóng zǔmǔ dào sūnnǚ, zhèxiē gùshì dài dài xiāngchuán.]
             </Typography>
             <br/><br/> */}
-
-            {/* <MediaPlayer url={content?.description || ''} isAudio /> */}
           </s.ContentWrapper>
         </Grid>
         <Grid xs={10} md={3}>
@@ -74,39 +135,110 @@ const Video = () => {
               <MediaMetaDataLoader />
             ) : (
               <>
-                {/* <Contributors contributors={content?.contributors ?? ''} /> */}
-
-                <s.Seperator />
-
                 <Stack>
                   <Typography component="h5" variant="h5">
-                    {t('Credits')}
+                    {t('Contributors')}
                   </Typography>
-                  {/* <Typography component="p" variant="body2">
-                    {content?.credits}
-                  </Typography> */}
+                  {content?.contributors &&
+                    Object.entries(content?.contributors)
+                      .sort(([roleA], [roleB]) => {
+                        if (roleA === 'artist') {
+                          return -1;
+                        } else if (roleB === 'artist') {
+                          return 1;
+                        } else {
+                          return roleA.localeCompare(roleB);
+                        }
+                      })
+                      .map(([role, names]) => {
+                        return (
+                          <div key={role}>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{
+                                display: 'inline',
+                                wordWrap: 'break-word',
+                                fontSize: '16px',
+                                color: theme.palette.primary.main
+                              }}
+                            >
+                              {t(getContributorRole(role, names))}:&nbsp;
+                            </Typography>
+                            <Typography
+                              component="span"
+                              variant="body2"
+                              sx={{
+                                display: 'inline',
+                                wordWrap: 'break-word',
+                                fontWeight: '700',
+                                lineHeight: '32px'
+                              }}
+                            >
+                              {/* {names.join(', ')} */}
+                              {/* error handling to deal with old data that doesn't have an array of names */}
+                              {Array.isArray(names)
+                                ? names.join(', ')
+                                : 'Data has been changed'}
+                            </Typography>
+                          </div>
+                        );
+                      })}
                 </Stack>
+                {content?.collaboratorDetails &&
+                  content?.collaboratorDetails[0]?.logoUrl !== null && (
+                    <>
+                      <s.Seperator />
+                    </>
+                  )}
+
+                {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
+                <Contributors
+                  contributors={
+                    content?.collaboratorDetails as CollaboratorDetails[]
+                  }
+                />
 
                 <s.Seperator />
 
-                {/* {(content?.tags?.length || 0) > 0 && (
+                {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <Typography component="h5" variant="h5">
                       {t('Tags')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
-                      {content?.tags?.map((tag: string) => (
-                        <Chip key={tag} label={tag} sx={{ m: 0.5 }} />
-                      ))}
+                      {(content?.tags || [])
+                        .join(', ')
+                        .split(', ')
+                        .map((tag: string, index: number, array: string[]) => (
+                          <React.Fragment key={tag}>
+                            <s.Tag
+                              component="span"
+                              variant="body2"
+                              underline="true"
+                            >
+                              {tag}
+                            </s.Tag>
+                            {index < array.length - 1 && (
+                              <s.Tag component="span" variant="body2">
+                                ,&nbsp;
+                              </s.Tag>
+                            )}
+                          </React.Fragment>
+                        ))}
                     </s.Tags>
                   </Stack>
-                )} */}
+                )}
               </>
             )}
 
             <s.Seperator />
-
-            <MoreContent />
+            {profileId && (
+              <MoreContent
+                profileId={profileId}
+                excludeId={content?.id || ''}
+              />
+            )}
           </s.Sidebar>
         </Grid>
       </Grid>

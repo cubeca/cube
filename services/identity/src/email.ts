@@ -10,11 +10,14 @@ import * as db from './db/queries';
 import * as jwt from 'jsonwebtoken';
 import * as settings from './settings';
 
+import { brevoTemplateIdMapping } from './utils';
+
 /**
  * Send a verification email using the preconfigured Brevo template #2.
  */
 export const sendVerificationEmail = async (name: string, email: string, token: string) => {
-  if (!email || !token) { //name isn't required as the Brevo template can have default values
+  if (!email || !token) {
+    //name isn't required as the Brevo template can have default values
     throw new Error('Invalid parameters');
   }
 
@@ -29,8 +32,8 @@ export const sendVerificationEmail = async (name: string, email: string, token: 
     email: 'donotreply@cubecommons.ca'
   };
 
-  sendSmtpEmail.to = [{ name: (name? name : 'CubeCommons User'), email: email }];
-  sendSmtpEmail.templateId = 2;
+  sendSmtpEmail.to = [{ name: name ? name : 'CubeCommons User', email: email }];
+  sendSmtpEmail.templateId = brevoTemplateIdMapping.SEND_VERIFICATION_EMAIL;
   sendSmtpEmail.params = {
     NAME: `${name}`,
     EMAIL_VERIFICATION_URL: `${process.env.BFF_HOST}/auth/email/verify/${token}`
@@ -68,7 +71,7 @@ export const sendPasswordChangeConfirmation = async (uuid: string) => {
   const user = r.rows[0];
 
   sendSmtpEmail.to = [{ name: user.name, email: user.email }];
-  sendSmtpEmail.templateId = 3;
+  sendSmtpEmail.templateId = brevoTemplateIdMapping.PASSWORD_CHANGE_CONFIRMATION;
   sendSmtpEmail.params = {
     NAME: `${user.name}`
   };
@@ -119,7 +122,7 @@ export const sendPasswordResetEmail = async (email: string) => {
   };
 
   sendSmtpEmail.to = [{ name: user.name, email: user.email }];
-  sendSmtpEmail.templateId = 4;
+  sendSmtpEmail.templateId = brevoTemplateIdMapping.PASSWORD_RESET_EMAIL;
   sendSmtpEmail.params = {
     NAME: `${user.name}`,
     PASSWORD_CHANGE_URL: `${process.env.HOST}/reset-password/${token}`

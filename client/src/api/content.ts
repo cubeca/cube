@@ -11,9 +11,10 @@ export type CategoryType =
   | 'digital-publications'
   | 'talks'
   | 'performances'
+  | 'link'
   | 'cultural-teachings';
 
-export type ContentType = 'video' | 'audio' | 'pdf';
+export type ContentType = 'video' | 'audio' | 'pdf' | 'link';
 
 export type NationType = 'CA';
 
@@ -30,15 +31,21 @@ export const getContentDetails = async (id: string) => {
   return await contentApi.getContent(id);
 };
 
+export const getContentByProfileId = async (profileId: string) => {
+  return await contentApi.getContentByProfileid(0, 10, profileId);
+};
+
 export const addContent = async ({
   payload,
   coverImageFile,
+  bannerImageFile,
   mediaFile,
   subtitlesFile,
   transcriptFile
 }: {
   payload: AddContentRequest;
   coverImageFile?: File;
+  bannerImageFile?: File;
   mediaFile?: File;
   subtitlesFile?: File;
   transcriptFile?: File;
@@ -47,6 +54,12 @@ export const addContent = async ({
     const fileId = await upload(coverImageFile, payload.profileId);
     if (fileId) {
       payload.coverImageFileId = fileId;
+    }
+  }
+  if (bannerImageFile) {
+    const fileId = await upload(bannerImageFile, payload.profileId);
+    if (fileId) {
+      payload.bannerImageFileId = fileId;
     }
   }
 

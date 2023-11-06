@@ -13,42 +13,51 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-import useCollaborators from 'hooks/useCollaborators';
 
 const getContributors = (values: FieldValues) => {
-  const contributors: string[] = [];
+  const contributors: { type: string; contributors: string[] }[] = [];
   const keys = Object.keys(values);
 
   keys.forEach((key) => {
-    switch (key) {
-      case 'artist':
-        contributors.push(`artist:${values[key]}`);
-        break;
-      case 'camera':
-        if (values[key]) contributors.push(`camera:${values[key]}`);
-        break;
-      case 'sound':
-        if (values[key]) contributors.push(`sound:${values[key]}`);
-        break;
-      case 'editor':
-        if (values[key]) contributors.push(`editor:${values[key]}`);
-        break;
-      case 'other_role':
-        if (values['other_role'] && values['other_name'])
-          contributors.push(`${values['other_role']}:${values['other_name']}`);
-        break;
-    }
-
-    if (key.includes('other_role_')) {
+    if (key === 'other_role') {
+      if (values['other_role'] && values['other_name']) {
+        contributors.push({
+          type: values['other_role'],
+          contributors: [values['other_name']]
+        });
+      }
+    } else if (key.includes('other_role_')) {
       const index = key.split('_')[2];
-      if (values[key] && values[`other_name_${index}`])
-        contributors.push(`${values[key]}:${values[`other_name_${index}`]}`);
+      if (values[key] && values[`other_name_${index}`]) {
+        contributors.push({
+          type: values[key],
+          contributors: [values[`other_name_${index}`]]
+        });
+      }
+    } else if (key in contributors) {
+      if (values[key]) {
+        const valuesArray = values[key]
+          .split(',')
+          .map((value: string) => value.trim());
+        contributors.push({ type: key, contributors: valuesArray });
+      }
+    } else if (
+      key === 'artist' ||
+      key === 'camera' ||
+      key === 'editor' ||
+      key === 'sound'
+    ) {
+      if (values[key]) {
+        const valuesArray = values[key]
+          .split(',')
+          .map((value: string) => value.trim());
+        contributors.push({ type: key, contributors: valuesArray });
+      }
     }
   });
 
   return contributors;
 };
-
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
@@ -68,10 +77,12 @@ const Upload = () => {
 
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
+  const [bannerImageFile, setBannerImageFile] = useState<File>();
   const [expiryValue, setExpiryValue] = useState<dateFns | null>(null);
   const [VTTFiles, setVTTFiles] = useState<File[]>([]);
   const [screenIndex, setScreenIndex] = useState(0);
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
+  const [isBannerImageSelected, setIsBannerImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
 
@@ -88,6 +99,11 @@ const Upload = () => {
     setIsMediaSelected(true);
   };
 
+  const handleBannerImageUpload = (files: File[]) => {
+    setBannerImageFile(files[0]);
+    setIsBannerImageSelected(true);
+  };
+
   const handleVTTFilesUpload = (files: File[]) => {
     setVTTFiles(files);
     setIsVTTSelected(true);
@@ -101,6 +117,19 @@ const Upload = () => {
   const onSubmit = (values: FieldValues) => {
     console.log(values);
     const contributors = getContributors(values);
+    const contributorsObject: { [key: string]: string[] } = {};
+    contributors.forEach(({ type, contributors }) => {
+      contributorsObject[type] = contributors;
+    });
+
+    const formattedContributors: { [key: string]: string[] } = {};
+    Object.entries(contributorsObject).forEach(([key, value]) => {
+      formattedContributors[key] = value
+        .join(',')
+        .split(',')
+        .map((contributor: string) => contributor.trim());
+    });
+
     addContent(
       {
         profileId: profileId!,
@@ -110,11 +139,14 @@ const Upload = () => {
         description: values.description,
         coverImageText: values.imageText,
         collaborators: [values.collaborators],
-        contributors,
-        tags: [values.tags]
+        contributors: formattedContributors,
+        tags: values.tags.split(',').map((tag: string) => tag.trim()),
+        externalUrl: values.link ? values.link : null,
+        isSuitableForChildren: values.audience === 'yeskids'
       },
       coverImageFile!,
-      mediaFile!
+      mediaFile!,
+      bannerImageFile!
     );
   };
 
@@ -127,6 +159,7 @@ const Upload = () => {
           uploadType={mediaType}
           handleMediaUpload={handleMediaUpload}
           handleCoverImageUpload={handleCoverImageUpload}
+          handleBannerImageUpload={handleBannerImageUpload}
         />
       )
     },
@@ -159,7 +192,7 @@ const Upload = () => {
 
   useEffect(() => {
     // @ts-ignore
-    if (!['video'].includes(mediaType)) {
+    if (!['video', 'audio'].includes(mediaType)) {
       const tmpScreens = [...SCREENS_BASE];
       //remove accessibility screen
       tmpScreens.splice(2, 1);
@@ -203,7 +236,9 @@ const Upload = () => {
           !formState.isValid ||
           (screenIndex === 0 && !isCoverImageSelected) ||
           (!mediaLink && !isMediaSelected) ||
-          (screenIndex === 1 && !isVTTSelected && mediaType === 'video')
+          (screenIndex === 1 &&
+            !isVTTSelected &&
+            mediaType in ['video', 'audio'])
         }
       />
     </Box>

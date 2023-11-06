@@ -7,9 +7,25 @@ export const UserHeroBg = styled(Box)`
   position: relative;
   width: 100%;
   height: 184px;
+  background-color: ${(props) => props.theme.palette.background.paper};
+  overflow: hidden;
+
+  .loading-circle {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 37.5%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+  }
 
   ${(props) => props.theme.breakpoints.up('md')} {
     height: 360px;
+
+    .loading-circle {
+      opacity: 0.35;
+    }
   }
 
   img {
@@ -135,9 +151,20 @@ export const ImageInner = styled('a')`
   width: 160px;
   height: 160px;
   border: 4px solid ${(props) => props.theme.palette.primary.dark};
+  background-color: ${(props) => props.theme.palette.primary.dark};
   border-radius: 80px;
   text-decoration: none;
   overflow: hidden;
+
+  .loading-circle {
+    opacity: 0.35;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    transform: translate(-50%, -50%);
+  }
 
   img {
     display: block;

@@ -44,12 +44,14 @@ const useContent = (list = 'videos', category?: string) => {
   const handleAddContent = (
     payload: AddContentRequest,
     coverImageFile: File,
-    mediaFile: File
+    mediaFile: File,
+    bannerImageFile?: File
   ) =>
     mutate({
       payload,
       coverImageFile,
-      mediaFile
+      mediaFile,
+      bannerImageFile
     });
 
   return {

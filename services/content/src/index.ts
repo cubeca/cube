@@ -4,6 +4,7 @@ import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { stringToKeyValuePairs } from './utils/utils';
+import { sendReportAbuseEmail } from './email';
 
 // Creating an instance of Express application
 const app: Express = express();
@@ -129,7 +130,7 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
   }
 });
 
-app.get('/search', async (req: Request, res: Response) => {
+app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = (req.query.searchTerm as string) || '';
@@ -153,6 +154,24 @@ app.get('/search', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error searching for content', error);
     res.status(500).send('Error searching for content');
+  }
+});
+
+// API endpoint for reporting a content item
+app.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  const { disputedUrl, requestType, contactName, contactEmail, issueDesc } = req.body;
+
+  // Check if any of the parameters are missing or falsy
+  if (!disputedUrl || !requestType || !contactName || !contactEmail || !issueDesc) {
+    return res.status(400).send('Missing required parameters');
+  }
+
+  try {
+    await sendReportAbuseEmail(disputedUrl, requestType, contactName, contactEmail, issueDesc);
+    res.status(200).json('OK');
+  } catch (error) {
+    console.error('Error sending content report', error);
+    res.status(500).send('Error sending content report');
   }
 });
 

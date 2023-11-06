@@ -8,8 +8,29 @@ interface ContentDetailsResponse {
   isError: boolean;
   data?: ContentStorage;
 }
-
-const useContentDetails = (): ContentDetailsResponse => {
+interface ExtendedContentDetailsResponse extends ContentDetailsResponse {
+  data?: ContentStorage & {
+    collaboratorDetails?: {
+      logoUrl?: string;
+      organization?: string;
+      tag?: string;
+    }[];
+    createdAt?: string;
+    coverImageUrl?: {
+      playerInfo?: {
+        publicUrl?: string;
+        hlsUrl?: string;
+      };
+    };
+    mediaUrl?: {
+      playerInfo?: {
+        publicUrl?: string;
+        hlsUrl?: string;
+      };
+    };
+  };
+}
+const useContentDetails = (): ExtendedContentDetailsResponse => {
   const { id } = useParams();
 
   const { isLoading, isError, data } = useQuery(

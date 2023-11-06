@@ -3,7 +3,8 @@ import { Box } from '@mui/system';
 import ProfileMenu from './ProfileMenu';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import FPOProfileUrl from 'assets/images/profile-user-image.png';
+import Lottie from 'lottie-react';
+import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './Profile.styled';
 import { UserContext } from 'providers/UserProvider';
 import { getProfileId } from 'utils/auth';
@@ -64,10 +65,13 @@ const Profile = () => {
         <Box display="flex" justifyContent="center" alignItems="center">
           <s.ImageWrapper>
             <s.ImageInner>
-              <img
-                src={profile?.logoUrl || FPOProfileUrl}
-                alt="profile thumbnail"
-              />
+              {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
+              {!profile && <Lottie
+                className="loading-circle"
+                animationData={LoadingCircle}
+                loop={true}
+                autoplay={true}
+              />}
             </s.ImageInner>
           </s.ImageWrapper>
           <Box component="span" pl="10px">
