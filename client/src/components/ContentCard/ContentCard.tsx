@@ -18,7 +18,6 @@ export interface ContentCardProps {
 }
 
 const ContentCard: FC<ContentCardProps> = ({
-  creator,
   title,
   image,
   icon,
@@ -53,11 +52,6 @@ const ContentCard: FC<ContentCardProps> = ({
           <Typography component="span" className="title">
             {title}
           </Typography>
-          {creator && (
-            <Typography component="span" className="creator">
-              {creator}
-            </Typography>
-          )}
         </s.Data>
       </Link>
     </s.ContentCard>
