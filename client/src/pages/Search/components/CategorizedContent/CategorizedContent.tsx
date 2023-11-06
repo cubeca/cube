@@ -69,7 +69,6 @@ const CategorizedContent = () => {
                   key={key.id}
                   image={key.coverImageUrl?.playerInfo?.publicUrl}
                   title={key.title}
-                  // creator={key.profileId}
                   url={`${pathnameWithoutSearch}/content/${key.id}`}
                   icon={key.type}
                   hasSignLanguage={key.hasSignLanguage}

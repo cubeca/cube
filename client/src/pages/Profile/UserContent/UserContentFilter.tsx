@@ -21,7 +21,7 @@ const UserContentFilter = () => {
         control={control}
         variant="standard"
         fullWidth
-        placeholder="Search!"
+        placeholder="Search"
         sx={{ fontSize: '2rem' }}
       />
 
