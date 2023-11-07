@@ -240,6 +240,17 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   const searchContentResult: ServiceResult = { status: null, data: null, error: null, meta: null };
   const searchProfileResult: ServiceResult = { status: null, data: null, error: null, meta: null };
 
+  const filters: any = {};
+  Object.keys(req.query).forEach((key) => {
+    if (key.startsWith('filters.')) {
+      const filterKey = key.substring('filters.'.length);
+      filters[filterKey] = req.query[key];
+      delete req.query[key];
+    }
+  });
+
+  req.query.filters = filters;
+
   if (!scope || scope === 'content') {
     try {
       const contentResponse = await contentApi.get('search/', {

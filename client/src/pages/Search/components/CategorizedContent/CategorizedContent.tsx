@@ -4,12 +4,11 @@ import * as s from './CategorizedContent.styled';
 import { useEffect, useState } from 'react';
 import { ContentLoader } from 'components/Loaders';
 import ContentFilter from './CategorizedContentFilter';
-import { useLocation } from 'react-router-dom';
 import { searchContent } from 'api/search';
 import { ContentStorage } from '@cubeca/bff-client-oas-axios';
 import { ContentCategories } from 'types/enums';
 const CategorizedContent = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('profileId');
   const [searchFilterType, setSearchFilterType] = useState(
     ContentCategories.All
   );
@@ -20,9 +19,6 @@ const CategorizedContent = () => {
     return await searchContent(searchTerm, 0, 0);
   };
 
-  const location = useLocation();
-  const pathnameWithoutSearch = location.pathname.replace('/search', '');
-
   useEffect(() => {
     let debounceTimer: any = null;
 
@@ -32,7 +28,6 @@ const CategorizedContent = () => {
       try {
         if (searchTerm.trim() !== '') {
           const searchResults = await doSearch();
-          console.log(searchResults);
           setContentResults(searchResults);
         }
       } catch (error) {
@@ -64,12 +59,12 @@ const CategorizedContent = () => {
 
           <s.Content>
             {!isLoading ? (
-              contentResults.map((key: any) => (
+              contentResults?.map((key: any) => (
                 <ContentCard
                   key={key.id}
-                  image={key.coverImageUrl?.playerInfo?.publicUrl}
+                  image={key.coverImageUrl?.playerInfo?.publicUrl || ''}
                   title={key.title}
-                  url={`${pathnameWithoutSearch}/content/${key.id}`}
+                  url={`/content/${key.id}`}
                   icon={key.type}
                   hasSignLanguage={key.hasSignLanguage}
                 />

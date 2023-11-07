@@ -3,50 +3,92 @@ import UserContentFilter from './UserContentFilter';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
-
-import collaboration from 'assets/icons/type-collaboration.svg';
-import video from 'assets/icons/type-video.svg';
-import audio from 'assets/icons/type-audio.svg';
-import book from 'assets/icons/type-book.svg';
-import publication from 'assets/icons/type-publication.svg';
-
-import FPOThumb1 from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
-import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
-import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
-import FPOThumb4 from 'assets/images/fpo/ryan-stefan-5K98ScREEUY-unsplash-thumb.png';
-import FPOThumb5 from 'assets/images/fpo/filip-zrnzevic-QsWG0kjPQRY-unsplash-thumb.png';
-import FPOThumb6 from 'assets/images/fpo/coline-beulin-oLWGI-Q76Yc-unsplash-thumb.png';
-import FPOThumb7 from 'assets/images/fpo/abi-baurer-2xbcFBRGsZo-unsplash-thumb.png';
-import FPOThumb8 from 'assets/images/fpo/eldar-nazarov-gnYfMrL0rck-unsplash-thumb.png';
+import { searchContent } from 'api/search';
+import { useEffect, useState } from 'react';
+import { ContentCategories } from 'types/enums';
+import { SearchFilters } from '@cubeca/bff-client-oas-axios';
 
 interface UserContentProps {
-  content?: any;
+  profile?: any;
 }
 
-const UserContent = ({ content }: UserContentProps) => {
+const UserContent = ({ profile }: UserContentProps) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchFilterType, setSearchFilterType] = useState(
+    ContentCategories.All
+  );
+  const [searchContentResults, setSearchContentResults] = useState(
+    profile.content
+  );
+  const [isLoading, setIsLoading] = useState(false);
+
+  const doSearch = async () => {
+    const searchFilters: SearchFilters = {
+      profileId: profile.id
+    };
+
+    return await searchContent(searchTerm, 0, 0, searchFilters);
+  };
+
+  useEffect(() => {
+    let debounceTimer: any = null;
+
+    const fetchSearchResults = async () => {
+      if (searchTerm.trim() !== '') {
+        setIsLoading(true);
+
+        try {
+          const results = await doSearch();
+          console.log(results);
+          setSearchContentResults(results);
+        } catch (error) {
+          console.error('An error occurred during the search:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      fetchSearchResults();
+    }, 1000);
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [searchTerm, searchFilterType]);
+
+  const displayContent =
+    searchTerm.trim() !== '' ? searchContentResults : profile.content;
+
   return (
     <s.UserContentWrapper>
-      <UserContentFilter />
+      <UserContentFilter
+        setSearchTerm={setSearchTerm}
+        searchFilterType={searchFilterType}
+        setSearchFilterType={setSearchFilterType}
+      />
 
       <s.UserContent>
-        {!content && (
+        {!isLoading ? (
+          displayContent?.map((item: any) => (
+            <ContentCard
+              key={item.id}
+              image={item.coverImageUrl?.playerInfo?.publicUrl || ''}
+              title={item.title}
+              url={`/content/${item.id}`}
+              icon={item.type}
+              hasSignLanguage={item.hasSignLanguage}
+            />
+          ))
+        ) : (
           <Lottie
             className="loading-cubes"
             animationData={LoadingCubes}
             loop={true}
           />
         )}
-        {
-        content?.map((c: any) => (
-          <ContentCard
-              key={c.id}
-              image={c.coverImageUrl?.playerInfo?.publicUrl || ''}
-              title={c.title}
-              creator={c.creator}
-              url={`/content/${c.id}`}
-              icon={c.iconUrl}
-            />
-        ))}
       </s.UserContent>
     </s.UserContentWrapper>
   );

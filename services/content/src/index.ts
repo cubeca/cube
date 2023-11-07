@@ -3,7 +3,6 @@ import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-import { stringToKeyValuePairs } from './utils/utils';
 import { sendReportAbuseEmail } from './email';
 
 // Creating an instance of Express application
@@ -51,7 +50,7 @@ app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = req.query.profileId as string;
-  const filters = JSON.parse((req.query.filters as string) ?? '{}');
+  const filters = req.query.filters ?? {};
 
   const dbResult = await db.listContentByProfileId(offset, limit, filters, profileId);
 
@@ -134,7 +133,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = (req.query.searchTerm as string) || '';
-  const filters = stringToKeyValuePairs((req.query.filters as string) ?? '{}');
+  const filters = req.query.filters ?? {};
 
   // Check if the search term is provided
   if (!searchTerm) {

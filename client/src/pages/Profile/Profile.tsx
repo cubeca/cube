@@ -27,20 +27,20 @@ const Profile = () => {
     }
   };
 
-  if (isLoading) {
-    // return <div>Loading...</div>;
-  }
-
   return (
     <Box>
       <s.UserHeroBg>
-        {profile.heroUrl && <img src={profile!.heroUrl} alt='user profile hero' />}
-        {!profile && <Lottie
-          className="loading-circle"
-          animationData={LoadingCircle}
-          loop={true}
-          autoplay={true}
-        />}
+        {profile.heroUrl && (
+          <img src={profile!.heroUrl} alt="user profile hero" />
+        )}
+        {!profile && (
+          <Lottie
+            className="loading-circle"
+            animationData={LoadingCircle}
+            loop={true}
+            autoplay={true}
+          />
+        )}
       </s.UserHeroBg>
 
       <s.UserProfile>
@@ -69,7 +69,7 @@ const Profile = () => {
             </s.UserContentHeader>
           )}
 
-          <UserContent content={profile?.content}/>
+          <UserContent profile={profile} />
         </Grid>
       </Grid>
       <EditDialog
