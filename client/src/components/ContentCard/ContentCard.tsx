@@ -27,12 +27,19 @@ const ContentCard: FC<ContentCardProps> = ({
   return (
     <s.ContentCard className="content-card">
       <Link to={url} title={title}>
-        <s.Thumbnail
-          sx={{
+        <s.Thumbnail sx={{
             backgroundImage: `url('${image}')`
-          }}
-        >
+          }} >
+        </s.Thumbnail>
           <div className="types">
+            
+          </div>
+
+        <s.Data direction="row" alignItems="space-between">
+          <Typography component="div" className="title">
+            {title}
+          </Typography>
+          <div className='types'>
             {icon === 'video' ? (
               <PlayArrowIcon fontSize="small" />
             ) : icon === 'audio' ? (
@@ -46,14 +53,9 @@ const ContentCard: FC<ContentCardProps> = ({
             )}
             {hasSignLanguage && <SignLanguageIcon fontSize="small" />}
           </div>
-        </s.Thumbnail>
-
-        <s.Data direction="row" alignItems="space-between">
-          <Typography component="div" className="title">
-            {title}
-          </Typography>
         </s.Data>
       </Link>
+
     </s.ContentCard>
   );
 };
