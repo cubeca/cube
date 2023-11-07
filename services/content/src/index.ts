@@ -38,6 +38,7 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 
     // Insert content into database
     const dbResult = await db.insertContent({ profileId, ...contentData });
+
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error creating the content item', error);
@@ -91,6 +92,9 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
 
     // Update content in the database
     const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
+
+    const recordID = dbResult.id;
+
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error updating the content item', error);

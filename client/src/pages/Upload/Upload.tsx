@@ -78,7 +78,7 @@ const Upload = () => {
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
   const [expiryValue, setExpiryValue] = useState<dateFns | null>(null);
-  const [VTTFiles, setVTTFiles] = useState<File[]>([]);
+  const [vttFile, setVTTFile] = useState<File>();
   const [screenIndex, setScreenIndex] = useState(0);
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
@@ -98,7 +98,7 @@ const Upload = () => {
   };
 
   const handleVTTFilesUpload = (files: File[]) => {
-    setVTTFiles(files);
+    setVTTFile(files[0]);
     setIsVTTSelected(true);
   };
 
@@ -137,7 +137,8 @@ const Upload = () => {
         externalUrl: values.link ? values.link : null
       },
       coverImageFile!,
-      mediaFile!
+      mediaFile!,
+      vttFile!
     );
   };
 
