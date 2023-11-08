@@ -13,6 +13,7 @@ import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
 import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import { Document, Page } from 'react-pdf';
+import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 
@@ -29,6 +30,7 @@ const Video = () => {
         day: 'numeric'
       })
     : '';
+  const [isModalOpen, setIsModalOpen] = useState(true);
   // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
   //const youtubeID = getIDfromURL(
@@ -51,6 +53,14 @@ const Video = () => {
       window.scrollTo({ top: contentTop, behavior: 'auto' });
     }
   }, [contentRef.current, content]);
+
+  useEffect(() => {
+    setIsModalOpen(content?.isSuitableForChildren === false);
+  }, [content?.isSuitableForChildren]);
+
+  function handleClose() {
+    setIsModalOpen(false);
+  }
 
   function getContributorRole(role: string, names?: string[]): string {
     const roleMap: { [key: string]: string } = {
@@ -104,6 +114,8 @@ const Video = () => {
 
   return (
     <Box ref={contentRef}>
+      <AgeCheckModal isOpen={isModalOpen} onClose={handleClose} />
+
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
           {isLoading ? (
