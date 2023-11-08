@@ -14,6 +14,7 @@ import * as s from './Content.styled';
 import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import { Document, Page } from 'react-pdf';
 import PDFReader from 'components/PDFReader';
+import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -37,9 +38,11 @@ const Video = () => {
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
+  const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
-  const contentId = content?.id;
+  const linkUrl = content?.externalUrl;
 
   useEffect(() => {
     if (contentRef.current) {
@@ -89,6 +92,16 @@ const Video = () => {
     </s.VideoWrapper>
   );
 
+  const linkContent = (
+    <s.LinkWrapper>
+      <LinkPlayer
+        url={linkUrl || ''}
+        cover={bannerImage || ''}
+        title={linkTitle || ''}
+      />
+    </s.LinkWrapper>
+  );
+
   return (
     <Box ref={contentRef}>
       <Grid container justifyContent="center">
@@ -97,12 +110,14 @@ const Video = () => {
             <MediaPlayerLoader type={mediaType ? mediaType : 'video'} />
           ) : youtubeID != '' ? (
             youtubeContent
-          ) : audioUrl != null && content?.type === 'audio' ? (
+          ) : content?.type === 'audio' ? (
             audioContent
           ) : content?.type === 'pdf' ? (
             pdfContent
           ) : content?.type === 'video' ? (
             videoContent
+          ) : content?.type === 'link' ? (
+            linkContent
           ) : null}
 
           <s.ContentWrapper>
