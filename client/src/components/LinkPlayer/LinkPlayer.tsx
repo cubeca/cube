@@ -2,61 +2,7 @@ import { Box, Typography, Grid } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import * as s from './LinkPlayer.styled';
-
-// function to get Open Graph data for URL - abandoned for now
-async function getOpenGraphData(url: string) {
-  if (url.startsWith('https://')) {
-    // only run if URL is https and not http or file://
-
-    const response = await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer'
-    });
-    let html;
-    try {
-      html = await response.text();
-    } catch (error) {
-      console.error('Failed to fetch html: ', error);
-      return { title: '', description: '', image: '' };
-    }
-
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
-
-    const titleElement =
-      doc.querySelector('meta[property="og:title"]') ||
-      doc.querySelector('title');
-    const title = titleElement
-      ? titleElement.getAttribute('content') || titleElement.textContent
-      : '';
-
-    const descriptionElement =
-      doc.querySelector('meta[property="og:description"]') ||
-      doc.querySelector('meta[name="description"]');
-    const description = descriptionElement
-      ? descriptionElement.getAttribute('content')
-      : '';
-
-    const imageElement =
-      doc.querySelector('meta[property="og:image"]') ||
-      doc.querySelector('link[rel="shortcut icon"]');
-    const image = imageElement
-      ? imageElement.getAttribute('content') ||
-        imageElement.getAttribute('href')
-      : '';
-
-    return { title, description, image };
-  } else {
-    return { title: '', description: '', image: '' };
-  }
-}
+import { getOpenGraphData } from 'utils/openGraphUtils';
 
 interface LinkPlayerProps {
   url: string;
