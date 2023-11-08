@@ -93,40 +93,44 @@ const LinkPlayer = ({ url, cover, title }: LinkPlayerProps) => {
 
   return (
     <s.Container>
-      <Grid container justifyContent="center">
-        <Grid xs={12} md={9.25}>
-          {!isFile && (
-            <s.ImageBox
-              sx={{
-                height: {
-                  xs: '200px',
-                  md: '400px'
-                },
-                backgroundImage: `url(${cover})`
-              }}
-            ></s.ImageBox>
-          )}
-          <s.UrlInfoBox>
-            <s.LeftContainer>
-              {isFile && <InsertDriveFileIcon sx={{ marginRight: '10px' }} />}
-              <s.SubContainer>
-                <Typography component="p" variant="body2">
-                  {/* leaving this here for now because i'm expecting design changes */}
-                  {/* {!isFile && new URL(url).hostname} */}
-                  {url}
-                </Typography>
-                {/* leaving this here for now because i'm expecting design changes */}
-                <Typography variant="h4">{!isFile ? title : url}</Typography>
-              </s.SubContainer>
-            </s.LeftContainer>
-            <a href={url} target="_blank" rel="noopener noreferrer">
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        <Grid container justifyContent="center">
+          <Grid xs={12} md={9.25}>
+            {!isFile && (
+              <s.ImageBox
+                sx={{
+                  height: {
+                    xs: '200px',
+                    md: '400px'
+                  },
+                  backgroundImage: `url(${cover})`
+                }}
+              ></s.ImageBox>
+            )}
+            <s.UrlInfoBox>
+              <s.LeftContainer>
+                {isFile && (
+                  <InsertDriveFileIcon
+                    sx={{ marginRight: '10px', fontSize: 48, color: '#57838B' }}
+                  />
+                )}
+                <s.SubContainer>
+                  <Typography component="p" variant="body2">
+                    {isFile ? new URL(url).pathname.split('/').pop() : url}
+                  </Typography>
+                  <s.ContentTitleText variant="h3">{title}</s.ContentTitleText>
+                </s.SubContainer>
+              </s.LeftContainer>
               <OpenInNewIcon
-                sx={{ color: (theme) => theme.palette.primary.main }}
+                sx={{
+                  color: (theme) => theme.palette.primary.main,
+                  fontSize: 32
+                }}
               />
-            </a>
-          </s.UrlInfoBox>
+            </s.UrlInfoBox>
+          </Grid>
         </Grid>
-      </Grid>
+      </a>
     </s.Container>
   );
 };

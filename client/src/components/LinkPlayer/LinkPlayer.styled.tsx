@@ -1,9 +1,13 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const Container = styled(Box)`
   width: 100%;
   height: auto;
+  && a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;
 
 export const SubContainer = styled(Box)`
@@ -27,4 +31,14 @@ export const UrlInfoBox = styled(Box)`
 
 export const LeftContainer = styled(Box)`
   display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const ContentTitleText = styled(Typography)`
+  color: #95f5cb;
+  font-family: Rubik;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 `;

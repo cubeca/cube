@@ -14,7 +14,7 @@ import * as s from './Content.styled';
 import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import { Document, Page } from 'react-pdf';
 import PDFReader from 'components/PDFReader';
-import LinkPlayer from 'components/LinkPlayer';
+import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 
 const Video = () => {
   const { t } = useTranslation();
