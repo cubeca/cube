@@ -1,33 +1,34 @@
-import { ContentQueryKeys } from 'api/enums';
 import Select from 'components/form/Select';
 import TextInput from 'components/form/TextInput';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ContentCategories } from 'types/enums';
+import { SearchFiltersCategoryEnum } from '@cubeca/bff-client-oas-axios';
 import * as s from './UserContentFilter.styled';
 import * as MenuItem from '../../../components/form/Select/MenuItem.styled';
 import { FC } from 'react';
 
 interface UserContentFilterProps {
   setSearchTerm: any;
-  searchFilterType: any;
-  setSearchFilterType: any;
+  categoryFilter: any;
+  setCategoryFilter: any;
 }
 
 const UserContentFilter: FC<UserContentFilterProps> = ({
   setSearchTerm,
-  searchFilterType,
-  setSearchFilterType
+  categoryFilter,
+  setCategoryFilter
 }) => {
-  const { control, handleSubmit } = useForm();
+  const { control } = useForm();
   const { t } = useTranslation();
+
+  categoryFilter = categoryFilter ? categoryFilter : 'all';
 
   const handleSearchTermChange = async (e: any) => {
     const rawValue = e.target.value;
     const sanitizedValue = rawValue
       .split(',')
       .map((part: any) => part.trim())
-      .filter((part: any) => part !== '') // Remove empty parts
+      .filter((part: any) => part !== '')
       .join('&');
 
     setSearchTerm(sanitizedValue);
@@ -49,30 +50,26 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
         <Select
           label={t('Filter by content type')}
           className="typeFilter"
-          value={searchFilterType}
-          onChange={(e) => setSearchFilterType(e)}
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e)}
         >
-          <MenuItem.li value={ContentCategories.All}>{t('All')}</MenuItem.li>
-          <MenuItem.li value={ContentCategories.Video}>
+          <MenuItem.li value={'all'}>{t('All')}</MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
             {t('Video')}
           </MenuItem.li>
-          <MenuItem.li value={ContentCategories.Audio}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Audio}>
             {t('Audio')}
           </MenuItem.li>
-          <MenuItem.li value={ContentCategories.ActivityBook}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.ActivityBook}>
             {t('Activity Book')}
           </MenuItem.li>
-          <MenuItem.li value={ContentCategories.DigitalPublication}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.DigitalPublications}>
             {t('Digital Publication')}
           </MenuItem.li>
-          <MenuItem.li value={ContentCategories.Collaboration}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Collaborations}>
             {t('Collaboration')}
           </MenuItem.li>
-          <MenuItem.li value={'artist 1'}>{t('By Artist')}</MenuItem.li>
-          <MenuItem.li value={'organization 1'}>
-            {t('By Organization')}
-          </MenuItem.li>
-          <MenuItem.li value={ContentQueryKeys.SignLanguage}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
             {t('Has Sign Language')}
           </MenuItem.li>
         </Select>

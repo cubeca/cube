@@ -99,10 +99,15 @@ export const searchContent = async (offset: number, limit: number, filters: any,
   const whereClauses = [];
   const parameters = [];
 
-  if (filters && Object.keys(filters).length > 0) {
-    Object.keys(filters).forEach((key, index) => {
-      whereClauses.push(`data->>'${key}' = $${index + 1}`);
-      parameters.push(filters[key]);
+  if (filters) {
+    Object.keys(filters).forEach((key, i) => {
+      if (key === 'tags') {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE ANY (ARRAY[ $${i + 1} ])`);
+        parameters.push(filters[key].map((tag: any) => `%${tag}%`));
+      } else {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE '%' || $${i + 1} || '%'`);
+        parameters.push(filters[key]);
+      }
     });
   }
 

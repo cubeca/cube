@@ -10,7 +10,8 @@ export enum ContentCategories {
   ActivityBook = 'activity-book',
   DigitalPublication = 'digital-publication',
   Link = 'link',
-  Collaboration = 'collaboration'
+  Collaboration = 'collaboration',
+  SignLanguage = 'sign-language'
 }
 
 export enum ContentTypes {
