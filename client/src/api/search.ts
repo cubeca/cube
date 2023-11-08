@@ -21,7 +21,13 @@ export const searchContent = async (
   limit: number,
   filters?: SearchFilters
 ) => {
-  const data = await bffApi.search(searchTerm, offset, limit, filters);
+  const data = await bffApi.search(
+    searchTerm,
+    offset,
+    limit,
+    filters,
+    'content'
+  );
   const search: BFFSearchResponse = data.data;
   return search.contentResults.data;
 };

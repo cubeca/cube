@@ -2,13 +2,14 @@ import Grid from '@mui/system/Unstable_Grid';
 import ContentCard from 'components/ContentCard';
 import * as s from './CategorizedContent.styled';
 import { useEffect, useState } from 'react';
-import { ContentLoader } from 'components/Loaders';
+import Lottie from 'lottie-react';
 import ContentFilter from './CategorizedContentFilter';
 import { searchContent } from 'api/search';
 import { ContentStorage } from '@cubeca/bff-client-oas-axios';
 import { ContentCategories } from 'types/enums';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 const CategorizedContent = () => {
-  const [searchTerm, setSearchTerm] = useState('profileId');
+  const [searchTerm, setSearchTerm] = useState('profileId'); //this will load the most recent results
   const [searchFilterType, setSearchFilterType] = useState(
     ContentCategories.All
   );
@@ -29,6 +30,8 @@ const CategorizedContent = () => {
         if (searchTerm.trim() !== '') {
           const searchResults = await doSearch();
           setContentResults(searchResults);
+        } else {
+          setSearchTerm('profileId');
         }
       } catch (error) {
         console.error('An error occurred during the search:', error);
@@ -70,7 +73,11 @@ const CategorizedContent = () => {
                 />
               ))
             ) : (
-              <ContentLoader size={4} />
+              <Lottie
+                className="loading-cubes"
+                animationData={LoadingCubes}
+                loop={true}
+              />
             )}
           </s.Content>
         </Grid>

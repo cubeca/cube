@@ -24,6 +24,7 @@ const UserContent = ({ profile }: UserContentProps) => {
 
   const doSearch = async () => {
     const searchFilters: SearchFilters = {
+      // type: searchFilterType,
       profileId: profile.id
     };
 

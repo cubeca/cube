@@ -20,7 +20,7 @@ export const Content = styled(Box)`
     flex: 0 0 calc(50% - 20px);
     margin: 10px;
   }
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     margin: -15px;
 
@@ -28,5 +28,11 @@ export const Content = styled(Box)`
       flex: 0 0 calc(25% - 30px);
       margin: 15px;
     }
+  }
+
+  .loading-cubes {
+    display: block;
+    margin: 0 auto;
+    width: 100px;
   }
 `;

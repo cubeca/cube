@@ -3,6 +3,7 @@ import { styled } from 'theme/utils';
 
 export const Filters = styled(Stack)`
   margin-bottom: 32px;
+
   display: flex;
   flex-flow: column nowrap;
 

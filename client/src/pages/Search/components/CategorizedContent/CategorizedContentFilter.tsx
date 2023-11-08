@@ -46,7 +46,7 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
         />
 
         <Select
-          label={t('Filter Results')}
+          label={t('Filter by content type')}
           className="typeFilter"
           value={searchFilterType}
           onChange={(e) => setSearchFilterType(e)}
