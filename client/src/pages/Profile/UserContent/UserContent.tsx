@@ -34,9 +34,9 @@ const UserContent = ({ profile }: UserContentProps) => {
           };
 
           const results = await searchContent(
-            debouncedSearchTerm,
+            debouncedSearchTerm.trim(),
             0,
-            0,
+            12,
             searchFilters
           );
           setSearchContentResults(results);

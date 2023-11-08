@@ -5,50 +5,47 @@ import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import ContentFilter from './CategorizedContentFilter';
 import { searchContent } from 'api/search';
-import { ContentStorage } from '@cubeca/bff-client-oas-axios';
-import { ContentCategories } from 'types/enums';
+import { ContentStorage, SearchFilters } from '@cubeca/bff-client-oas-axios';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
+import useDebounce from '../../../../hooks/useDebounce';
+
 const CategorizedContent = () => {
   const [searchTerm, setSearchTerm] = useState('profileId'); //this will load the most recent results
-  const [searchFilterType, setSearchFilterType] = useState(
-    ContentCategories.All
-  );
+  const [categoryFilter, setCategoryFilter] = useState();
   const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const doSearch = async () => {
-    return await searchContent(searchTerm, 0, 0);
-  };
+  const debouncedSearchTerm = useDebounce(searchTerm, 1000, 'profileId');
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let debounceTimer: any = null;
-
-    const fetchSearchResults = async () => {
+    if (debouncedSearchTerm) {
       setIsLoading(true);
+      const fetchSearchResults = async () => {
+        try {
+          const searchFilters: SearchFilters = {
+            category: categoryFilter === 'all' ? undefined : categoryFilter
+          };
 
-      try {
-        if (searchTerm.trim() !== '') {
-          const searchResults = await doSearch();
-          setContentResults(searchResults);
-        } else {
-          setSearchTerm('profileId');
+          const results = await searchContent(
+            debouncedSearchTerm.trim(),
+            0,
+            12,
+            searchFilters
+          );
+
+          console.log(debouncedSearchTerm);
+          setContentResults(results);
+        } catch (error) {
+          console.error('An error occurred during the search:', error);
+          setError('Failed to load search results');
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.error('An error occurred during the search:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      };
 
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
       fetchSearchResults();
-    }, 1000);
-
-    return () => {
-      clearTimeout(debounceTimer);
-    };
-  }, [searchTerm, searchFilterType]);
+    }
+  }, [debouncedSearchTerm, categoryFilter]);
 
   return (
     <s.ContentWrapper>
@@ -56,12 +53,20 @@ const CategorizedContent = () => {
         <Grid xs={10} xsOffset={1}>
           <ContentFilter
             setSearchTerm={setSearchTerm}
-            searchFilterType={searchFilterType}
-            setSearchFilterType={setSearchFilterType}
+            categoryFilter={categoryFilter}
+            setCategoryFilter={setCategoryFilter}
           />
 
           <s.Content>
-            {!isLoading ? (
+            {isLoading ? (
+              <Lottie
+                className="loading-cubes"
+                animationData={LoadingCubes}
+                loop={true}
+              />
+            ) : error ? (
+              <p>{error}</p>
+            ) : (
               contentResults?.map((key: any) => (
                 <ContentCard
                   key={key.id}
@@ -72,12 +77,6 @@ const CategorizedContent = () => {
                   hasSignLanguage={key.hasSignLanguage}
                 />
               ))
-            ) : (
-              <Lottie
-                className="loading-cubes"
-                animationData={LoadingCubes}
-                loop={true}
-              />
             )}
           </s.Content>
         </Grid>
