@@ -58,13 +58,13 @@ const CategorizedContent = () => {
           />
 
           <s.Content>
-            {/* {isLoading ? ( */}
+            {isLoading ? (
               <Lottie
                 className="loading-cubes"
                 animationData={LoadingCubes}
                 loop={true}
               />
-            {/* ) : error ? (
+            ) : error ? (
               <p>{error}</p>
             ) : (
               contentResults?.map((key: any) => (
@@ -77,7 +77,7 @@ const CategorizedContent = () => {
                   hasSignLanguage={key.hasSignLanguage}
                 />
               ))
-            )} */}
+            )}
           </s.Content>
         </Grid>
       </Grid>
