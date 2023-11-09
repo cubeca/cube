@@ -3,10 +3,12 @@ import UserContentFilter from './UserContentFilter';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
-import { searchContent } from 'api/search';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SearchFilters } from '@cubeca/bff-client-oas-axios';
 import useDebounce from '../../../hooks/useDebounce';
+import Button from 'components/Button';
+import { useTranslation } from 'react-i18next';
+import { searchContent } from 'api/search';
 
 interface UserContentProps {
   profile?: any;
@@ -20,40 +22,52 @@ const UserContent = ({ profile }: UserContentProps) => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [offset, setOffset] = useState<number>(0);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
+  const { t } = useTranslation();
+  const [limit, setLimit] = useState<number>(1);
+
+  const fetchContent = useCallback(
+    async (newOffset: number) => {
+      setIsLoading(true);
+      try {
+        const searchFilters: SearchFilters = {
+          category: categoryFilter === 'all' ? undefined : categoryFilter,
+          profileId: profile?.id
+        };
+
+        const results = await searchContent(
+          debouncedSearchTerm.trim(),
+          newOffset,
+          limit,
+          searchFilters
+        );
+        if (newOffset === 0) {
+          setSearchContentResults(results);
+        } else {
+          setSearchContentResults((prevResults: any) => [
+            ...prevResults,
+            ...results
+          ]);
+        }
+        setOffset(newOffset + limit);
+      } catch (error) {
+        console.error('An error occurred during the search:', error);
+        setError('Failed to load search results');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [debouncedSearchTerm, categoryFilter, limit]
+  );
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      setIsLoading(true);
-      const fetchSearchResults = async () => {
-        try {
-          const searchFilters: SearchFilters = {
-            category: categoryFilter === 'all' ? undefined : categoryFilter,
-            profileId: profile?.id
-          };
+    fetchContent(0); // Fetch initial content with offset 0
+  }, [fetchContent]);
 
-          const results = await searchContent(
-            debouncedSearchTerm.trim(),
-            0,
-            12,
-            searchFilters
-          );
-          setSearchContentResults(results);
-        } catch (error) {
-          console.error('An error occurred during the search:', error);
-          setError('Failed to load search results');
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      fetchSearchResults();
-    } else {
-      // If searchTerm is empty, reset to the default profile content
-      setSearchContentResults(profile?.content || []);
-    }
-  }, [debouncedSearchTerm, categoryFilter]);
+  const handleLoadMore = () => {
+    fetchContent(offset);
+  };
 
   const displayContent =
     searchTerm.trim() !== '' ? searchContentResults : profile.content;
@@ -68,11 +82,7 @@ const UserContent = ({ profile }: UserContentProps) => {
 
       <s.UserContent>
         {isLoading ? (
-          <Lottie
-            className="loading-cubes"
-            animationData={LoadingCubes}
-            loop={true}
-          />
+          <Lottie animationData={LoadingCubes} loop={true} />
         ) : error ? (
           <p>{error}</p>
         ) : (
@@ -86,6 +96,9 @@ const UserContent = ({ profile }: UserContentProps) => {
               hasSignLanguage={item.hasSignLanguage}
             />
           ))
+        )}
+        {!isLoading && debouncedSearchTerm && (
+          <Button onClick={handleLoadMore}>{t('Load More')}</Button>
         )}
       </s.UserContent>
     </s.UserContentWrapper>
