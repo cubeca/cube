@@ -31,8 +31,18 @@ export const Content = styled(Box)`
   }
 
   .loading-cubes {
+    position: relative;
     display: block;
-    margin: 0 auto;
-    width: 100px;
+    margin: -32px auto 0;
+    width: 64px !important;
+    height: 192px !important;
+
+    svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
   }
 `;
