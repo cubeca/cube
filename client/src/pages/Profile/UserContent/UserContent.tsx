@@ -26,6 +26,7 @@ const UserContent = ({ profile }: UserContentProps) => {
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const { t } = useTranslation();
   const [limit, setLimit] = useState<number>(1);
+  const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
   const fetchContent = useCallback(
     async (newOffset: number) => {
@@ -42,14 +43,23 @@ const UserContent = ({ profile }: UserContentProps) => {
           limit,
           searchFilters
         );
+
+        const newResults = Array.isArray(results) ? results : [];
+
         if (newOffset === 0) {
-          setSearchContentResults(results);
+          setSearchContentResults(newResults);
         } else {
           setSearchContentResults((prevResults: any) => [
             ...prevResults,
-            ...results
+            ...newResults
           ]);
+
+          if (newResults.length === 0) {
+            setHasMoreToLoad(false);
+          }
         }
+
+        console.log(hasMoreToLoad, newResults.length);
         setOffset(newOffset + limit);
       } catch (error) {
         console.error('An error occurred during the search:', error);
@@ -97,8 +107,10 @@ const UserContent = ({ profile }: UserContentProps) => {
             />
           ))
         )}
-        {!isLoading && debouncedSearchTerm && (
-          <Button onClick={handleLoadMore}>{t('Load More')}</Button>
+        {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
+          <Button onClick={handleLoadMore} fullWidth={false}>
+            {t('Load More')}
+          </Button>
         )}
       </s.UserContent>
     </s.UserContentWrapper>

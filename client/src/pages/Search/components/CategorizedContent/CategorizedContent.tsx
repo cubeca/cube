@@ -21,6 +21,7 @@ const CategorizedContent = () => {
   const { t } = useTranslation();
   const [offset, setOffset] = useState<number>(0);
   const [limit, setLimit] = useState<number>(1);
+  const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
   // Refactored fetch function to be used by both useEffect and handleLoadMore
   const fetchContent = useCallback(
@@ -36,10 +37,17 @@ const CategorizedContent = () => {
           limit,
           searchFilters
         );
+
+        const newResults = Array.isArray(results) ? results : [];
+
         if (newOffset === 0) {
           setContentResults(results);
         } else {
           setContentResults((prevResults) => [...prevResults, ...results]);
+
+          if (newResults.length === 0) {
+            setHasMoreToLoad(false);
+          }
         }
         setOffset(newOffset + limit);
       } catch (error) {
@@ -92,7 +100,7 @@ const CategorizedContent = () => {
               ))
             )}
           </s.Content>
-          {!isLoading && (
+          {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
             <Button onClick={handleLoadMore} fullWidth={false}>
               {t('Load More')}
             </Button>
