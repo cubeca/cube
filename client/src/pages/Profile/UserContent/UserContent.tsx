@@ -25,7 +25,7 @@ const UserContent = ({ profile }: UserContentProps) => {
   const [offset, setOffset] = useState<number>(0);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const { t } = useTranslation();
-  const [limit, setLimit] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(12);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
   const fetchContent = useCallback(

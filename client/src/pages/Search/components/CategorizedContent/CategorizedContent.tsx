@@ -20,7 +20,7 @@ const CategorizedContent = () => {
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
   const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(1);
+  const [limit, setLimit] = useState<number>(12);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
   // Refactored fetch function to be used by both useEffect and handleLoadMore
