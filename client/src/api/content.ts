@@ -38,26 +38,20 @@ export const getContentByProfileId = async (profileId: string) => {
 export const addContent = async ({
   payload,
   coverImageFile,
-  bannerImageFile,
   mediaFile,
-  vttFile
+  subtitlesFile,
+  transcriptFile
 }: {
   payload: AddContentRequest;
   coverImageFile?: File;
-  bannerImageFile?: File;
   mediaFile?: File;
-  vttFile?: File;
+  subtitlesFile?: File;
+  transcriptFile?: File;
 }) => {
   if (coverImageFile) {
     const fileId = await upload(coverImageFile, payload.profileId);
     if (fileId) {
       payload.coverImageFileId = fileId;
-    }
-  }
-  if (bannerImageFile) {
-    const fileId = await upload(bannerImageFile, payload.profileId);
-    if (fileId) {
-      payload.bannerImageFileId = fileId;
     }
   }
 
@@ -68,10 +62,17 @@ export const addContent = async ({
     }
   }
 
-  if (vttFile) {
-    const fileId = await upload(vttFile, payload.profileId);
+  if (subtitlesFile) {
+    const fileId = await upload(subtitlesFile, payload.profileId);
     if (fileId) {
-      payload.vttFileId = fileId;
+      payload.subtitlesFileId = fileId;
+    }
+  }
+
+  if (transcriptFile) {
+    const fileId = await upload(transcriptFile, payload.profileId);
+    if (fileId) {
+      payload.transcriptFileId = fileId;
     }
   }
 

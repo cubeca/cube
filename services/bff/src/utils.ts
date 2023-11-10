@@ -73,7 +73,8 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
   const urlFieldNames = {
     coverImageFileId: 'coverImageUrl',
     mediaFileId: 'mediaUrl',
-    vttFileId: 'subtitlesUrl',
+    subtitlesFileId: 'subtitlesUrl',
+    transcriptFileId: 'transcriptUrl',
     vttFileId: 'vttFileUrl',
     bannerImageFileId: 'bannerImageUrl'
   };

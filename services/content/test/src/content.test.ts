@@ -86,7 +86,8 @@ describe('content test suite', () => {
       contributors: ['still a string?'],
       collaborators: ['still a string?'],
       coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
-      vttFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
       coverImageText: 'Someone laying on table'
     };
 
@@ -120,7 +121,8 @@ describe('content test suite', () => {
       contributors: ['still a string?'],
       collaborators: ['still a string?'],
       coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
-      vttFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
       coverImageText: 'Someone saying something'
     };
 
@@ -170,7 +172,8 @@ describe('content test suite', () => {
       contributors: ['still a string?'],
       collaborators: ['still a string?'],
       coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
-      vttFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
       coverImageText: 'Someone saying something'
     };
 
@@ -193,7 +196,8 @@ describe('content test suite', () => {
       contributors: ['still a string?'],
       collaborators: ['still a string?'],
       coverImageFileId: 'e0821a87-caef-472f-affd-a657692850ab',
-      vttFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      subtitlesFileId: '213961d0-6804-4b4a-8164-961b7208b8c0',
+      transcriptFileId: '5e090213-b892-478a-901b-5f0317937fc6',
       coverImageText: 'Someone saying something'
     };
 

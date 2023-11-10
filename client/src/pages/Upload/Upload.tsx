@@ -77,12 +77,10 @@ const Upload = () => {
 
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
-  const [bannerImageFile, setBannerImageFile] = useState<File>();
   const [expiryValue, setExpiryValue] = useState<dateFns | null>(null);
-  const [vttFile, setVTTFile] = useState<File>();
+  const [VTTFiles, setVTTFiles] = useState<File[]>([]);
   const [screenIndex, setScreenIndex] = useState(0);
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
-  const [isBannerImageSelected, setIsBannerImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
 
@@ -99,13 +97,8 @@ const Upload = () => {
     setIsMediaSelected(true);
   };
 
-  const handleBannerImageUpload = (files: File[]) => {
-    setBannerImageFile(files[0]);
-    setIsBannerImageSelected(true);
-  };
-
   const handleVTTFilesUpload = (files: File[]) => {
-    setVTTFile(files[0]);
+    setVTTFiles(files);
     setIsVTTSelected(true);
   };
 
@@ -141,13 +134,10 @@ const Upload = () => {
         collaborators: [values.collaborators],
         contributors: formattedContributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),
-        externalUrl: values.link ? values.link : null,
-        isSuitableForChildren: values.audience === 'yeskids'
+        externalUrl: values.link ? values.link : null
       },
       coverImageFile!,
-      mediaFile!,
-      vttFile!,
-      bannerImageFile!
+      mediaFile!
     );
   };
 
@@ -160,7 +150,6 @@ const Upload = () => {
           uploadType={mediaType}
           handleMediaUpload={handleMediaUpload}
           handleCoverImageUpload={handleCoverImageUpload}
-          handleBannerImageUpload={handleBannerImageUpload}
         />
       )
     },

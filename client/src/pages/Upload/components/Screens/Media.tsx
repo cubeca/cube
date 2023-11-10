@@ -11,7 +11,6 @@ const Media = ({
   control,
   handleMediaUpload,
   handleCoverImageUpload,
-  handleBannerImageUpload,
   uploadType
 }: any) => {
   const { t } = useTranslation();
@@ -19,7 +18,6 @@ const Media = ({
 
   const [isMediaUploadReady, setIsMediaUploadReady] = useState(false);
   const [isThumbUploadReady, setIsThumbUploadReady] = useState(false);
-  const [isBannerUploadReady, setIsBannerUploadReady] = useState(false);
 
   const handleMediaOnDrop = (files: File[]) => {
     handleMediaUpload(files);
@@ -29,11 +27,6 @@ const Media = ({
   const handleThumbnailOnDrop = (files: File[]) => {
     handleCoverImageUpload(files);
     setIsThumbUploadReady(true);
-  };
-
-  const handleBannerOnDrop = (files: File[]) => {
-    handleBannerImageUpload(files);
-    setIsBannerUploadReady(true);
   };
 
   // const [isDragOver, setIsDragOver] = useState(false);
@@ -151,28 +144,10 @@ const Media = ({
       ) : null}
       {showField('link') ? (
         <Box my={theme.spacing(5)}>
-          <UploadInput
-            text={t('Banner image (required)')}
-            onDrop={handleBannerOnDrop}
-            maxFiles={1}
-            isUploadReady={isBannerUploadReady}
-            // onDragOver={handleDragOver}
-            // onDragLeave={handleDragLeave}
-            // style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
-          />
-          <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-            {t(
-              'Upload a Banner Image to allow users to preview your link. For best results, we recommend images dimensions are 1280px by 720px. File size should not exceed 500 kb.'
-            )}
-          </Typography>
-        </Box>
-      ) : null}
-      {showField('link') ? (
-        <Box my={theme.spacing(5)}>
           <TextInput
             control={control}
             name="link"
-            placeholder={t('Link to content (required)')}
+            placeholder={t('Link to content. (required)')}
             fullWidth
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>

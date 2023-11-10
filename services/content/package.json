@@ -23,7 +23,6 @@
   "license": "ISC",
   "dependencies": {
     "@getbrevo/brevo": "^1.0.1",
-    "@google-cloud/pubsub": "^4.0.7",
     "@types/mime": "^3.0.1",
     "axios": "^1.2.3",
     "cors": "^2.8.5",

@@ -1,7 +1,4 @@
 import express, { Express, Request, Response } from 'express';
-const { PubSub } = require('@google-cloud/pubsub');
-const pubsub = new PubSub();
-
 import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
@@ -26,7 +23,7 @@ const getApiResultFromDbRow = (r: any) => ({
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
-    const { profileId, vttFileId, type, ...contentData } = req.body;
+    const { profileId, ...contentData } = req.body;
 
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
@@ -41,17 +38,6 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 
     // Insert content into database
     const dbResult = await db.insertContent({ profileId, ...contentData });
-
-    if (!vttFileId && (type === 'video' || type === 'audio')) {
-      // Publish a message to Google Pub/Sub
-      const topicName = 'vtt_transcribe'; // Replace with your actual topic name
-      const message = dbResult.id.toString(); // Assuming dbResult.id is the ID you want to publish
-
-      await pubsub.topic(topicName).publish(Buffer.from(message));
-
-      console.log('Queued VTT');
-    }
-
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error creating the content item', error);
@@ -105,9 +91,6 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
 
     // Update content in the database
     const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
-
-    const recordID = dbResult.id;
-
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error updating the content item', error);

@@ -22,10 +22,6 @@ export const VideoWrapper = styled(Box)`
     height: 100% !important;
   }
 `;
-export const LinkWrapper = styled(Box)`
-  position: relative;
-  width: 100%;
-`;
 
 export const ContentWrapper = styled(Box)`
   padding: 30px 8.333333333333333%;
@@ -104,6 +100,7 @@ export const ContributorSocial = styled(MuiLink)`
 
 export const Tags = styled(Box)`
   margin: 8px 0 0;
+  // margin: 8px -4px 0;
 `;
 
 export const Tag = styled(Typography)`
