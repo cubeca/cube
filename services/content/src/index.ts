@@ -135,9 +135,9 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   const searchTerm = (req.query.searchTerm as string) || '';
   const filters = req.query.filters ?? {};
 
-  // Check if the search term is provided
-  if (!searchTerm) {
-    return res.status(404).send('Search term not provided.');
+  //  Check if the search term is provided
+  if (!searchTerm && !filters) {
+    return res.status(404).send('Search term or a filter is not provided.');
   }
 
   try {

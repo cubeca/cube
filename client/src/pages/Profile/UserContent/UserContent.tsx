@@ -79,7 +79,9 @@ const UserContent = ({ profile }: UserContentProps) => {
   };
 
   const displayContent =
-    searchTerm.trim() !== '' ? searchContentResults : profile.content;
+    searchTerm.trim() !== '' || categoryFilter
+      ? searchContentResults
+      : profile.content;
 
   return (
     <s.UserContentWrapper>
