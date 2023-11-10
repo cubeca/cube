@@ -74,6 +74,8 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
     coverImageFileId: 'coverImageUrl',
     mediaFileId: 'mediaUrl',
     vttFileId: 'subtitlesUrl',
+    vttFileId: 'vttFileUrl',
+    bannerImageFileId: 'bannerImageUrl'
   };
 
   return Promise.all(
@@ -94,7 +96,6 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
         delete newItem.collaborators;
       }
 
-      console.log(newItem);
       return newItem;
     })
   );
