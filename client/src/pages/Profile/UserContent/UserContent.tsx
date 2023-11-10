@@ -59,7 +59,6 @@ const UserContent = ({ profile }: UserContentProps) => {
           }
         }
 
-        console.log(hasMoreToLoad, newResults.length);
         setOffset(newOffset + limit);
       } catch (error) {
         console.error('An error occurred during the search:', error);
