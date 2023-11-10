@@ -41,18 +41,17 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 
     // Insert content into database
     const dbResult = await db.insertContent({ profileId, ...contentData });
-
+    const response = { ...dbResult };
     if (!vttFileId && (type === 'video' || type === 'audio')) {
       // Publish a message to Google Pub/Sub
       const topicName = 'vtt_transcribe'; // Replace with your actual topic name
       const message = dbResult.id.toString(); // Assuming dbResult.id is the ID you want to publish
-
       await pubsub.topic(topicName).publish(Buffer.from(message));
-
       console.log('Queued VTT');
+      response.vttQueued = true;
     }
 
-    return res.status(201).json(getApiResultFromDbRow(dbResult));
+    return res.status(201).json(getApiResultFromDbRow(response));
   } catch (error) {
     console.error('Error creating the content item', error);
     res.status(500).send('Error creating the content item');
