@@ -192,14 +192,7 @@ const Tags = ({ control }: any) => {
         </Typography>
 
         {artists.map((_, index) => (
-          <Grid
-            key={index}
-            container
-            columnSpacing={2}
-            rowSpacing={4}
-            // alignItems="center"
-            // justifyContent="center"
-          >
+          <Grid key={index} container columnSpacing={2} rowSpacing={4}>
             {index === 0 ? (
               <Grid xs={12} sm={2}>
                 <Typography
@@ -207,7 +200,7 @@ const Tags = ({ control }: any) => {
                   variant="h6"
                   sx={{
                     mt: {
-                      xs: theme.spacing(0), // Adjust as needed
+                      xs: theme.spacing(0),
                       sm: theme.spacing(3)
                     }
                   }}
@@ -238,7 +231,8 @@ const Tags = ({ control }: any) => {
                 rules={{ required: false }}
               />
             </Grid>
-            {index === artists.length - 1 && ( // Only show the button on the last row
+
+            {index === artists.length - 1 && (
               <Grid xs={12} sm={2}>
                 <s.StyledButton
                   sx={{ marginTop: '14px', height: '58px' }}
@@ -251,6 +245,17 @@ const Tags = ({ control }: any) => {
             )}
           </Grid>
         ))}
+        <Typography
+          component="p"
+          variant="body2"
+          my={theme.spacing(2.5)}
+          sx={{ paddingBottom: '20px' }}
+        >
+          {t(
+            'Credit all artists who contributed to the creation of this content and include a URL to their website so we can hyperlink their name and increase their discoverability.'
+          )}
+        </Typography>
+
         {editors.map((_, index) => (
           <Grid key={index} container columnSpacing={2} rowSpacing={4}>
             {index === 0 ? (
@@ -384,6 +389,16 @@ const Tags = ({ control }: any) => {
             )}
           </Grid>
         ))}
+        <Typography
+          component="p"
+          variant="body2"
+          my={theme.spacing(2.5)}
+          sx={{ paddingBottom: '10px' }}
+        >
+          {t(
+            'Credit all individuals who contributed to creating this content. Use the + button to add more than one contributor per role, or to include roles not listed.'
+          )}
+        </Typography>
       </Box>
 
       <Box my={theme.spacing(5)}>
