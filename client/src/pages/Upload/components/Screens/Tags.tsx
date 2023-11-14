@@ -219,7 +219,7 @@ const Tags = ({ control }: any) => {
                 control={control}
                 name={`artistName${index}`}
                 fullWidth
-                placeholder={t('Artist name')}
+                placeholder={t('Name (required)')}
               />
             </Grid>
             <Grid xs={12} sm={4}>
@@ -272,7 +272,7 @@ const Tags = ({ control }: any) => {
                 control={control}
                 name={`editorName${index}`}
                 fullWidth
-                placeholder={t('Add only one contributor name here')}
+                placeholder={t('Name')}
                 rules={{ required: false }}
               />
             </Grid>
@@ -305,7 +305,7 @@ const Tags = ({ control }: any) => {
                 control={control}
                 name={`cameraOperatorName${index}`}
                 fullWidth
-                placeholder={t('Add only one contributor name here')}
+                placeholder={t('Name')}
                 rules={{ required: false }}
               />
             </Grid>
@@ -338,7 +338,7 @@ const Tags = ({ control }: any) => {
                 control={control}
                 name={`soundTechnicianName${index}`}
                 fullWidth
-                placeholder={t('Add only one contributor name here')}
+                placeholder={t('Name')}
                 rules={{ required: false }}
               />
             </Grid>
