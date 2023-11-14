@@ -12,7 +12,9 @@ import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
 import { CollaboratorDetails, Content, Contributor } from 'types/content';
+import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
+import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -27,6 +29,7 @@ const Video = () => {
         day: 'numeric'
       })
     : '';
+  const [isModalOpen, setIsModalOpen] = useState(true);
   // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
   //const youtubeID = getIDfromURL(
@@ -36,9 +39,11 @@ const Video = () => {
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
+  const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
-  const contentId = content?.id;
+  const linkUrl = content?.externalUrl;
 
   useEffect(() => {
     if (contentRef.current) {
@@ -47,6 +52,18 @@ const Video = () => {
       window.scrollTo({ top: contentTop, behavior: 'auto' });
     }
   }, [contentRef.current, content]);
+
+  useEffect(() => {
+    setIsModalOpen(content?.isSuitableForChildren === false);
+  }, [content?.isSuitableForChildren]);
+
+  function handleClose() {
+    setIsModalOpen(false);
+  }
+
+  useEffect(() => {
+    setIsModalOpen(content?.isSuitableForChildren === false);
+  }, [content?.isSuitableForChildren]);
 
   function getContributorRole(role: string, count: number): string {
     let roleStr = '';
@@ -91,20 +108,34 @@ const Video = () => {
     </s.VideoWrapper>
   );
 
+  const linkContent = (
+    <s.LinkWrapper>
+      <LinkPlayer
+        url={linkUrl || ''}
+        cover={bannerImage || ''}
+        title={linkTitle || ''}
+      />
+    </s.LinkWrapper>
+  );
+
   return (
     <Box ref={contentRef}>
+      <AgeCheckModal isOpen={isModalOpen} onClose={handleClose} />
+
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
           {isLoading ? (
             <MediaPlayerLoader type={mediaType ? mediaType : 'video'} />
           ) : youtubeID != '' ? (
             youtubeContent
-          ) : audioUrl != null && content?.type === 'audio' ? (
+          ) : content?.type === 'audio' ? (
             audioContent
           ) : content?.type === 'pdf' ? (
             pdfContent
           ) : content?.type === 'video' ? (
             videoContent
+          ) : content?.type === 'link' ? (
+            linkContent
           ) : null}
 
           <s.ContentWrapper>

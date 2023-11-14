@@ -19,18 +19,16 @@ const HeroPanel = () => {
               {t('Discover')}
             </Typography>
             <Typography component="p" variant="body1">
-              {t(
-                'heroText'
-              )}
+              {t('heroText')}
             </Typography>
-            <Button href="/search" variant="contained" size='large'>
-              {t('Start Watching')}
+            <Button href="/search" variant="contained" size="large">
+              {t('Search Content')}
             </Button>
           </s.ContentMain>
         </Grid>
 
         <Grid xs={10} xsOffset={1} md={4} mdOffset={2}>
-          <HeroCTA 
+          <HeroCTA
             title="Create"
             text={t('becomeCreatorText')}
             video="https://vimeo.com/243556536"
@@ -62,7 +60,6 @@ const HeroPanel = () => {
             />
           </s.ContentCTA>
         </Grid> */}
-        
       </s.Content>
     </s.Hero>
   );
