@@ -7,7 +7,6 @@ import {
   useTheme
 } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
-import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
 import { useTranslation } from 'react-i18next';
@@ -89,18 +88,6 @@ const Tags = ({ control }: any) => {
       </Typography>
 
       <Box my={theme.spacing(5)}>
-        <TagInput
-          control={control}
-          name="tags"
-          fullWidth
-          placeholder={t('Content Tags')}
-        />
-
-        <Typography component="p" variant="body2" mt={theme.spacing(2.5)}>
-          {t(
-            'Separate tags by comma. Tags are our way of expanding the terms by which users can search content. They also contribute to your govenance token holdings by expressing how inclusive and accessible your content is. If you want content to be bundled under an exhibition name please create that tag:'
-          )}
-        </Typography>
         <Controller
           name="categories"
           control={control}
@@ -111,14 +98,58 @@ const Tags = ({ control }: any) => {
               value={field.value}
               onChange={(_, newValue) => field.onChange(newValue)}
               renderInput={(params) => (
-                <TextField {...params} variant="outlined" label="" />
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label=""
+                  placeholder="Content Tags (required)"
+                />
               )}
             />
           )}
         />
+        <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
+          {t(
+            'Separate tags by comma. Content tags are how users search on the main page by media type or accessability.'
+          )}
+        </Typography>
+        <s.StyledList>
+          <s.StyledListItem component="li">Video</s.StyledListItem>
+          <s.StyledListItem component="li">Audio</s.StyledListItem>
+          <s.StyledListItem component="li">
+            Activity Books{' '}
+            <s.StyledListSpan>
+              are PDFs created for public programming.
+            </s.StyledListSpan>
+          </s.StyledListItem>
+          <s.StyledListItem component="li">
+            Digital Publications
+          </s.StyledListItem>
+          <s.StyledListItem component="li">Link</s.StyledListItem>
+          <s.StyledListItem component="li">
+            Collaborations
+            <s.StyledListSpan>
+              {' '}
+              are content traveling between multiple organizations or links to
+              content outside of Cube.
+            </s.StyledListSpan>
+          </s.StyledListItem>
+          <s.StyledListItem component="li">Sign Language</s.StyledListItem>
+        </s.StyledList>
+        <TagInput
+          control={control}
+          name="tags"
+          fullWidth
+          placeholder={t('Connection Tags')}
+        />
+        <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
+          {t(
+            'Separate tags by comma. Connection tags allow your content to build wider and deeper connections to other cultural and community knowledges. By adding languages and community terms as tags, you make it easier for people to discover this content and content like it. They also contribute to your governance token holdings by expressing how inclusive and accessible your content is. If you want content to be bundled under an exhibition name please create that tag. Some examples of tags:'
+          )}
+        </Typography>
         <Grid container>
           <Grid xs={12} md={4}>
-            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
+            <Typography component="ul" variant="body2" my={theme.spacing(4)}>
               <li>Live Performance</li>
               <li>Workshop</li>
               <li>Kids workshop</li>
@@ -135,7 +166,7 @@ const Tags = ({ control }: any) => {
             </Typography>
           </Grid>
           <Grid xs={12} md={4}>
-            <Typography component="h6" variant="h6" my={theme.spacing(2)}>
+            <Typography component="h6" variant="h6" my={theme.spacing(4)}>
               Language Tags
             </Typography>
             <Typography component="ul" variant="body2" my={theme.spacing(2)}>
@@ -170,11 +201,16 @@ const Tags = ({ control }: any) => {
             // justifyContent="center"
           >
             {index === 0 ? (
-              <Grid xs={2}>
+              <Grid xs={12} sm={2}>
                 <Typography
                   component="h6"
                   variant="h6"
-                  mt={theme.spacing(3)}
+                  sx={{
+                    mt: {
+                      xs: theme.spacing(0), // Adjust as needed
+                      sm: theme.spacing(3)
+                    }
+                  }}
                   justifyContent="center"
                   alignItems="center"
                 >
@@ -184,7 +220,7 @@ const Tags = ({ control }: any) => {
             ) : (
               <Grid xs={2} />
             )}
-            <Grid xs={4}>
+            <Grid xs={12} sm={4}>
               <TextInput
                 variant={'outlined'}
                 control={control}
@@ -193,16 +229,17 @@ const Tags = ({ control }: any) => {
                 placeholder={t('Artist name')}
               />
             </Grid>
-            <Grid xs={4}>
+            <Grid xs={12} sm={4}>
               <TextInput
                 control={control}
                 name={`artistUrl${index}`}
                 fullWidth
                 placeholder={t('URL')}
+                rules={{ required: false }}
               />
             </Grid>
             {index === artists.length - 1 && ( // Only show the button on the last row
-              <Grid xs={2}>
+              <Grid xs={12} sm={2}>
                 <s.StyledButton
                   sx={{ marginTop: '14px', height: '58px' }}
                   variant="outlined"
@@ -217,15 +254,15 @@ const Tags = ({ control }: any) => {
         {editors.map((_, index) => (
           <Grid key={index} container columnSpacing={2} rowSpacing={4}>
             {index === 0 ? (
-              <Grid xs={2}>
-                <Typography component="h6" variant="h6" mt={theme.spacing(1)}>
+              <Grid xs={12} sm={2}>
+                <Typography component="h6" variant="h6" mt={theme.spacing(3)}>
                   Editor:
                 </Typography>
               </Grid>
             ) : (
               <Grid xs={2} />
             )}
-            <Grid xs={8}>
+            <Grid xs={12} sm={8}>
               <TextInput
                 control={control}
                 name={`editorName${index}`}
@@ -234,8 +271,8 @@ const Tags = ({ control }: any) => {
                 rules={{ required: false }}
               />
             </Grid>
-            {index === editors.length - 1 && ( // Only show the button on the last row
-              <Grid xs={2}>
+            {index === editors.length - 1 && (
+              <Grid xs={12} sm={2}>
                 <s.StyledButton
                   variant="outlined"
                   onClick={() => handleAddMore('editor')}
@@ -250,15 +287,15 @@ const Tags = ({ control }: any) => {
         {cameraOperators.map((_, index) => (
           <Grid key={index} container columnSpacing={2} rowSpacing={4}>
             {index === 0 ? (
-              <Grid xs={2}>
-                <Typography component="h6" variant="h6" mt={theme.spacing(1)}>
+              <Grid xs={12} sm={2}>
+                <Typography component="h6" variant="h6" mt={theme.spacing(2)}>
                   Camera Operator:
                 </Typography>
               </Grid>
             ) : (
               <Grid xs={2} />
             )}
-            <Grid xs={8}>
+            <Grid xs={12} sm={8}>
               <TextInput
                 control={control}
                 name={`cameraOperatorName${index}`}
@@ -268,7 +305,7 @@ const Tags = ({ control }: any) => {
               />
             </Grid>
             {index === cameraOperators.length - 1 && (
-              <Grid xs={2}>
+              <Grid xs={12} sm={2}>
                 <s.StyledButton
                   variant="outlined"
                   onClick={() => handleAddMore('camera_operator')}
@@ -283,15 +320,15 @@ const Tags = ({ control }: any) => {
         {soundTechnicians.map((_, index) => (
           <Grid key={index} container columnSpacing={2} rowSpacing={4}>
             {index === 0 ? (
-              <Grid xs={2}>
-                <Typography component="h6" variant="h6" mt={theme.spacing(1)}>
+              <Grid xs={12} sm={2}>
+                <Typography component="h6" variant="h6" mt={theme.spacing(2)}>
                   Sound Technician:
                 </Typography>
               </Grid>
             ) : (
               <Grid xs={2} />
             )}
-            <Grid xs={8}>
+            <Grid xs={12} sm={8}>
               <TextInput
                 control={control}
                 name={`soundTechnicianName${index}`}
@@ -301,7 +338,7 @@ const Tags = ({ control }: any) => {
               />
             </Grid>
             {index === soundTechnicians.length - 1 && (
-              <Grid xs={2}>
+              <Grid xs={12} sm={2}>
                 <s.StyledButton
                   variant="outlined"
                   onClick={() => handleAddMore('sound_technician')}
@@ -314,33 +351,28 @@ const Tags = ({ control }: any) => {
         ))}
 
         {otherContributors.map((_, index) => (
-          <Grid
-            key={index}
-            container
-            columnSpacing={2}
-            rowSpacing={4}
-            // alignItems="center"
-            // justifyContent="center"
-          >
-            <Grid xs={2}>
+          <Grid key={index} container columnSpacing={2} rowSpacing={4}>
+            <Grid xs={12} sm={2}>
               <TextInput
                 variant={'outlined'}
                 control={control}
                 name={`other_role_${index}`}
                 fullWidth
                 placeholder={t('Role')}
+                rules={{ required: false }}
               />
             </Grid>
-            <Grid xs={8}>
+            <Grid xs={12} sm={8}>
               <TextInput
                 control={control}
                 name={`other_name_${index}`}
                 fullWidth
                 placeholder={t('Name')}
+                rules={{ required: false }}
               />
             </Grid>
-            {index === otherContributors.length - 1 && ( // Only show the button on the last row
-              <Grid xs={2}>
+            {index === otherContributors.length - 1 && (
+              <Grid xs={12} sm={2}>
                 <s.StyledButton
                   sx={{ marginTop: '14px', height: '58px' }}
                   variant="outlined"
