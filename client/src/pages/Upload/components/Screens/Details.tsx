@@ -62,14 +62,14 @@ const Details = ({
       {showField('vtt') ? (
         <Box my={theme.spacing(5)}>
           <UploadInput
-            text={t('VTT File')}
+            text={t('Subtitle File')}
             onDrop={handleVTTOnDrop}
             maxFiles={1}
             isUploadReady={isVTTUploadReady}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              "Upload VTT File For Subtitles. If you don't have one, don't worry. VTT will be automatically generated for you in the event on one is not provided. Please stick around to confirm their content."
+              "Upload File For Subtitles. If you don't have one, don't worry. Subtitle will be automatically generated for you in the event on one is not provided. Please stick around to confirm their content."
             )}
             <br />
             <br />

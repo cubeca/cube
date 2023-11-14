@@ -108,6 +108,10 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
         })
         .run();
     });
+  } else {
+    console.error("Invalid media type");
+    console.log({ mediaData });
+    throw new Error("Invalid media type");
   }
 
   try {
