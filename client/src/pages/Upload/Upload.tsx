@@ -159,9 +159,7 @@ const Upload = () => {
   };
 
   const onSubmit = (values: FieldValues) => {
-    console.log(values);
     const contributors = getContributors(values);
-    console.log(contributors);
 
     addContent(
       {
