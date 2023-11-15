@@ -72,12 +72,6 @@ const Details = ({
               "Upload File For Subtitles. If you don't have one, don't worry. Subtitle will be automatically generated for you in the event on one is not provided. Please stick around to confirm their content."
             )}
             <br />
-            <br />
-            {t(
-              'DVTT files ensure your content has subtitles.  Closed captions can include information about background sounds and speaker changes. Subtitles assume the viewer hears the audio and as a result does not contain background information. Please format the file to have this code at the top to ensure it adapts to various screen sizes.'
-            )}
-            <br />
-            {t('Code')}: XXX
           </Typography>
         </Box>
       ) : null}

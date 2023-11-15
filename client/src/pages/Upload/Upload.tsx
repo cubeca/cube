@@ -129,7 +129,7 @@ const Upload = () => {
         .split(',')
         .map((contributor: string) => contributor.trim());
     });
-
+    console.log({ type: values.type });
     addContent(
       {
         profileId: profileId!,

@@ -26,8 +26,9 @@ const getApiResultFromDbRow = (r: any) => ({
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
-    const { profileId, vttFileId, type, ...contentData } = req.body;
-
+    const { profileId, vttFileId, ...contentData } = req.body;
+    const { type } = contentData;
+    console.log({ type });
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
       return res.status(400).send('Invalid request body');
