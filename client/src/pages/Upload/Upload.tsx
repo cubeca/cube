@@ -34,10 +34,15 @@ const getContributors = (values: FieldValues) => {
     if (!contributorsObject['editor']) {
       contributorsObject['editor'] = [];
     }
-    contributorsObject['editor'].push({
-      name: values[`editorName${i}`],
-      url: values[`editorUrl${i}`]
-    });
+    if (values[`editorName${i}`] !== '' && values[`editorUrl${i}`] !== '') {
+      contributorsObject['editor'].push({
+        name: values[`editorName${i}`],
+        url: values[`editorUrl${i}`]
+      });
+    }
+  }
+  if (contributorsObject['editor'].length === 0) {
+    delete contributorsObject['editor'];
   }
 
   // Handle 'camera_operator' role
@@ -45,10 +50,18 @@ const getContributors = (values: FieldValues) => {
     if (!contributorsObject['camera_operator']) {
       contributorsObject['camera_operator'] = [];
     }
-    contributorsObject['camera_operator'].push({
-      name: values[`cameraOperatorName${i}`],
-      url: values[`cameraOperatorUrl${i}`]
-    });
+    if (
+      values[`cameraOperatorName${i}`] !== '' &&
+      values[`cameraOperatorUrl${i}`] !== ''
+    ) {
+      contributorsObject['camera_operator'].push({
+        name: values[`cameraOperatorName${i}`],
+        url: values[`cameraOperatorUrl${i}`]
+      });
+    }
+  }
+  if (contributorsObject['camera_operator'].length === 0) {
+    delete contributorsObject['camera_operator'];
   }
 
   // Handle 'sound_technician' role
@@ -56,10 +69,18 @@ const getContributors = (values: FieldValues) => {
     if (!contributorsObject['sound_technician']) {
       contributorsObject['sound_technician'] = [];
     }
-    contributorsObject['sound_technician'].push({
-      name: values[`soundTechnicianName${i}`],
-      url: values[`soundTechnicianUrl${i}`]
-    });
+    if (
+      values[`soundTechnicianName${i}`] !== '' &&
+      values[`soundTechnicianUrl${i}`] !== ''
+    ) {
+      contributorsObject['sound_technician'].push({
+        name: values[`soundTechnicianName${i}`],
+        url: values[`soundTechnicianUrl${i}`]
+      });
+    }
+  }
+  if (contributorsObject['sound_technician'].length === 0) {
+    delete contributorsObject['sound_technician'];
   }
 
   // Handle 'other' roles
@@ -68,8 +89,15 @@ const getContributors = (values: FieldValues) => {
     if (!contributorsObject[role]) {
       contributorsObject[role] = [];
     }
-    contributorsObject[role].push({ name: values[`other_name_${i}`] });
+    if (values[`other_name_${i}`] !== '' && values[`other_role_${i}`] !== '') {
+      contributorsObject[role].push({ name: values[`other_name_${i}`] });
+    }
   }
+  Object.keys(contributorsObject).forEach((key) => {
+    if (contributorsObject[key].length === 0) {
+      delete contributorsObject[key];
+    }
+  });
 
   return contributorsObject;
 };
