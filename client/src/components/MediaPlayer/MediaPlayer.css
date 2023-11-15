@@ -1,0 +1,25 @@
+/* styling for subtitles */
+video::cue {
+  position: fixed;
+  height: 1000px;
+  margin-bottom: 100px;
+  padding-bottom: 200px;
+  font-size: larger;
+  -webkit-transform: translateY(10%) !important;
+  transform: translateY(10%) !important;
+}
+
+video::-webkit-media-text-track-display {
+  overflow: visible !important;
+  -webkit-box-sizing: border-box;
+  background: black;
+  padding: 8px;
+  border-radius: 16px;
+}
+
+video::-webkit-media-text-track-container {
+  overflow: visible !important;
+  -webkit-transform: translateY(-10%) !important;
+  transform: translateY(-10%) !important;
+  position: relative;
+}
