@@ -46,7 +46,7 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
     if (!vttFileId && (type === 'video' || type === 'audio')) {
       // Publish a message to Google Pub/Sub
       const topicName = 'vtt_transcribe'; // Replace with your actual topic name
-      const message = dbResult.id.toString(); // Assuming dbResult.id is the ID you want to publish
+      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
       await pubsub.topic(topicName).publish(Buffer.from(message));
       console.log('Queued VTT');
       response.vttQueued = true;
@@ -105,8 +105,6 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
 
     // Update content in the database
     const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
-
-    const recordID = dbResult.id;
 
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {

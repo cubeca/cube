@@ -6,6 +6,7 @@ const fs = require("fs");
 const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 const ffmpeg = require("fluent-ffmpeg");
 const uuid = require("uuid").v4;
+const pubSubClient = new PubSub();
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 const { content, files, vtt } = require("./db.js");
@@ -15,11 +16,28 @@ const { generateVTT } = require("./vtt.js");
 
 const outputPath = "/tmp";
 
+const retry = async (contentID, tries) => {
+  const dataBuffer = Buffer.from(
+    JSON.stringify({ contentID, tries: tries + 1 })
+  );
+  let sleepTime = 7 * Math.pow(2, tries);
+  console.log(`Sleeping for ${sleepTime} seconds`);
+  await new Promise((resolve) => setTimeout(resolve, sleepTime * 1000));
+
+  await new Promise((resolve) => setTimeout(resolve, 15000));
+  await pubSubClient
+    .topic("vtt_transcribe")
+    .publishMessage({ data: dataBuffer });
+  console.log(`Requeud Message ID ${contentID}`);
+};
+
 functions.cloudEvent("vtt_transcribe", async (event) => {
   const id = Date.now().toString(); //Process ID -- Used for IO Operations
-  const contentID = Buffer.from(event.data.message.data, "base64").toString(); //Decode event message
+  const { contentID, tries } = JSON.parse(
+    Buffer.from(event.data.message.data, "base64").toString()
+  ); //Decode event message
   if (!contentID) throw new Error("No content ID provided");
-  console.log({ contentID });
+  console.log({ contentID, tries });
 
   const contentData = await content.findOne({
     where: {
@@ -43,75 +61,85 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
   });
 
   if (!cfData) throw new Error("No CF data found");
-  if (mediaData.type === "video") {
-    console.log("Video File Detected");
-    const cfFileData = cfData.data;
-    const cloudflareStreamUid = cfFileData.cloudflareStreamUid;
-    console.log({ cloudflareStreamUid });
-    const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
-    console.log({ mediaURL });
-    if (!mediaURL) throw new Error("No media URL provided");
+  try {
+    if (mediaData.type === "video") {
+      console.log("Video File Detected");
+      const cfFileData = cfData.data;
+      const cloudflareStreamUid = cfFileData.cloudflareStreamUid;
+      console.log({ cloudflareStreamUid });
+      const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
+      console.log({ mediaURL });
+      if (!mediaURL) throw new Error("No media URL provided");
 
-    const response = await axios.get(mediaURL, { responseType: "stream" });
-    const stream = response.data.pipe(
-      fs.createWriteStream(`${outputPath}/${id}-video`)
-    );
+      const response = await axios.get(mediaURL, { responseType: "stream" });
+      const stream = response.data.pipe(
+        fs.createWriteStream(`${outputPath}/${id}-video`)
+      );
 
-    await new Promise((resolve, reject) => {
-      stream.on("finish", () => {
-        console.log("File Downloaded");
-        resolve();
-      });
-      stream.on("error", (error) => {
-        console.log({ error });
-        throw new Error(error);
-      });
-    });
-
-    await new Promise((resolve, reject) => {
-      ffmpeg(`${outputPath}/${id}-video`)
-        .noVideo()
-        .format("mp3")
-        .audioCodec("libmp3lame")
-        .audioBitrate(64)
-        .audioChannels(1)
-        .audioFrequency(8000)
-        .output(`${outputPath}/${id}-audio.mp3`)
-        .on("end", () => {
-          console.log("Audio Stripped");
+      await new Promise((resolve, reject) => {
+        stream.on("finish", () => {
+          console.log("File Downloaded");
           resolve();
-        })
-        .on("error", (error) => {
+        });
+        stream.on("error", (error) => {
           console.log({ error });
           throw new Error(error);
-        })
-        .run();
-    });
-  } else if (mediaData.type === "audio") {
-    console.log("Audio File Detected");
-    await downloadR2(cfData.data.filePathInBucket, outputPath, `${id}-audio`);
-    await new Promise((resolve, reject) => {
-      ffmpeg(`${outputPath}/${id}-audio`)
-        .format("mp3")
-        .audioCodec("libmp3lame")
-        .audioBitrate(64)
-        .audioChannels(1)
-        .audioFrequency(8000)
-        .output(`${outputPath}/${id}-audio.mp3`)
-        .on("end", () => {
-          console.log("Audio Transcoded");
-          resolve();
-        })
-        .on("error", (error) => {
-          console.log({ error });
-          throw new Error(error);
-        })
-        .run();
-    });
-  } else {
-    console.error("Invalid media type");
-    console.log({ mediaData });
-    throw new Error("Invalid media type");
+        });
+      });
+
+      await new Promise((resolve, reject) => {
+        ffmpeg(`${outputPath}/${id}-video`)
+          .noVideo()
+          .format("mp3")
+          .audioCodec("libmp3lame")
+          .audioBitrate(64)
+          .audioChannels(1)
+          .audioFrequency(8000)
+          .output(`${outputPath}/${id}-audio.mp3`)
+          .on("end", () => {
+            console.log("Audio Stripped");
+            resolve();
+          })
+          .on("error", (error) => {
+            console.log({ error });
+            throw new Error(error);
+          })
+          .run();
+      });
+    } else if (mediaData.type === "audio") {
+      console.log("Audio File Detected");
+      await downloadR2(cfData.data.filePathInBucket, outputPath, `${id}-audio`);
+      await new Promise((resolve, reject) => {
+        ffmpeg(`${outputPath}/${id}-audio`)
+          .format("mp3")
+          .audioCodec("libmp3lame")
+          .audioBitrate(64)
+          .audioChannels(1)
+          .audioFrequency(8000)
+          .output(`${outputPath}/${id}-audio.mp3`)
+          .on("end", () => {
+            console.log("Audio Transcoded");
+            resolve();
+          })
+          .on("error", (error) => {
+            console.log({ error });
+            throw new Error(error);
+          })
+          .run();
+      });
+    } else {
+      console.error("Invalid media type");
+      console.log({ mediaData });
+      throw new Error("Invalid media type");
+    }
+  } catch (error) {
+    console.log({ error });
+    if (tries < 3) {
+      await retry(contentID, tries);
+      return;
+    } else {
+      throw new Error("Too many retries");
+    }
   }
 
   try {
@@ -147,7 +175,6 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
     }
     console.log("VTT JSON Saved");
     //publish message to vtt_upload
-    const pubSubClient = new PubSub();
 
     try {
       const dataBuffer = Buffer.from(contentID);
