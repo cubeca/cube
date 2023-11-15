@@ -175,7 +175,9 @@ const Upload = () => {
         contributors: contributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),
         externalUrl: values.link ? values.link : null,
-        isSuitableForChildren: values.audience === 'yeskids'
+        isSuitableForChildren: values.audience
+          ? values.audience === 'yeskids'
+          : false
       },
       coverImageFile!,
       mediaFile!,
