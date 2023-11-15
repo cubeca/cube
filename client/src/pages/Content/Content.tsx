@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Stack, Typography, useTheme, Chip, Box } from '@mui/material';
+import { Stack, Typography, useTheme, Chip, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import MediaPlayer from 'components/MediaPlayer';
 import YouTubePlayer from 'components/YouTubePlayer';
@@ -12,7 +12,6 @@ import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
 import * as s from './Content.styled';
 import { CollaboratorDetails, Content, Contributor } from 'types/content';
-import { Document, Page } from 'react-pdf';
 import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
@@ -62,24 +61,31 @@ const Video = () => {
     setIsModalOpen(false);
   }
 
-  function getContributorRole(role: string, names?: string[]): string {
-    const roleMap: { [key: string]: string } = {
-      sound: 'Sound Technician',
-      camera: 'Camera Operator',
-      editor: 'Editor',
-      artist: 'Artist'
-      // add more role mappings here as needed
-    };
-    const mappedRole = roleMap[role.toLowerCase()] || role;
+  useEffect(() => {
+    setIsModalOpen(content?.isSuitableForChildren === false);
+  }, [content?.isSuitableForChildren]);
 
-    if (typeof names === 'string') {
-      return 'Data has been changed';
+  function getContributorRole(role: string, count: number): string {
+    let roleStr = '';
+    switch (role) {
+      case 'artist':
+        roleStr = 'Artist';
+        break;
+      case 'editor':
+        roleStr = 'Editor';
+        break;
+      case 'camera_operator':
+        roleStr = 'Camera Operator';
+        break;
+      case 'sound_technician':
+        roleStr = 'Sound Technician';
+        break;
+      // Add more roles as needed
+      default: // capitalize first letter of role
+        roleStr = role.charAt(0).toUpperCase() + role.slice(1);
     }
-
-    // pluralize role if there are multiple names
-    const numNames = (names || []).length;
-    const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
-    return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
+    // Add 's' to role if there are multiple contributors
+    return count > 1 ? roleStr + 's' : roleStr;
   }
 
   const youtubeContent = (
@@ -177,7 +183,7 @@ const Video = () => {
                           return roleA.localeCompare(roleB);
                         }
                       })
-                      .map(([role, names]) => {
+                      .map(([role, contributors]) => {
                         return (
                           <div key={role}>
                             <Typography
@@ -190,8 +196,10 @@ const Video = () => {
                                 color: theme.palette.primary.main
                               }}
                             >
-                              {t(getContributorRole(role, names))}:&nbsp;
+                              {t(getContributorRole(role, contributors.length))}
+                              :&nbsp;
                             </Typography>
+
                             <Typography
                               component="span"
                               variant="body2"
@@ -202,11 +210,23 @@ const Video = () => {
                                 lineHeight: '32px'
                               }}
                             >
-                              {/* {names.join(', ')} */}
-                              {/* error handling to deal with old data that doesn't have an array of names */}
-                              {Array.isArray(names)
-                                ? names.join(', ')
-                                : 'Data has been changed'}
+                              {(contributors as Contributor[]).map(
+                                (contributor, i) => (
+                                  <span key={i}>
+                                    {role === 'artist' && contributor.url ? (
+                                      <Link
+                                        href={contributor.url}
+                                        sx={{ color: 'inherit' }}
+                                      >
+                                        {contributor.name}
+                                      </Link>
+                                    ) : (
+                                      contributor.name
+                                    )}
+                                    {i < contributors.length - 1 ? ', ' : ''}
+                                  </span>
+                                )
+                              )}
                             </Typography>
                           </div>
                         );

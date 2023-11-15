@@ -36,6 +36,7 @@ export interface ContentDetails {
 export interface Contributor {
   id: string;
   link?: string;
+  url?: string;
   name: string;
   socialUrl?: string;
   artist?: boolean;
