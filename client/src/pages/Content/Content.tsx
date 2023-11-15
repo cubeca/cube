@@ -30,7 +30,6 @@ const Video = () => {
       })
     : '';
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [isSafari, setIsSafari] = useState(false);
   // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
   //const youtubeID = getIDfromURL(
@@ -51,14 +50,8 @@ const Video = () => {
 
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
-  useEffect(() => {
-    const isUserRunningSafari = /^((?!chrome|android).)*safari/i.test(
-      navigator.userAgent
-    );
-    if (isUserRunningSafari) {
-      setIsSafari(true);
-    }
-  }, []);
+
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   useEffect(() => {
     if (contentRef.current) {

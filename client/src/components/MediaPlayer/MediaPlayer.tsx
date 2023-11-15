@@ -1,6 +1,4 @@
-import { FC } from 'react';
-import ReactPlayer from 'react-player';
-import './MediaPlayer.css';
+import * as s from './MediaPlayer.styled';
 
 interface MediaPlayerProps {
   url: string;
@@ -18,38 +16,34 @@ const MediaPlayer = ({
   isSafari
 }: MediaPlayerProps) => {
   return (
-    <ReactPlayer
-      url={url}
-      style={{
-        backgroundImage: isSafari ? `url('${coverArtUrl}')` : undefined,
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        zIndex: 1,
-        height: '100%'
-      }}
-      config={{
-        file: {
-          attributes: {
-            poster: coverArtUrl,
-            controls: true
-          },
-          forceVideo: true,
-          tracks: [
-            {
-              src: subtitleUrl || '',
-              kind: 'subtitles',
-              srcLang: 'en',
-              default: true,
-              label: 'English'
-            }
-          ]
-        }
-      }}
-      controls
-      width={'100%'}
-      height={'auto'}
-    />
+    <>
+      <s.StyledPlayer
+        isSafari={isSafari}
+        coverArtUrl={coverArtUrl || ''}
+        url={url}
+        config={{
+          file: {
+            attributes: {
+              poster: coverArtUrl,
+              controls: true
+            },
+            forceVideo: true,
+            tracks: [
+              {
+                src: subtitleUrl || '',
+                kind: 'subtitles',
+                srcLang: 'en',
+                default: true,
+                label: 'English'
+              }
+            ]
+          }
+        }}
+        controls
+        width={'100%'}
+        height={'auto'}
+      />
+    </>
   );
 };
 
