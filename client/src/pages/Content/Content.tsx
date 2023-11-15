@@ -38,12 +38,20 @@ const Video = () => {
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
   const linkUrl = content?.externalUrl;
+  // actual subtitle data coming soon!
+  const subtitleUrl = '';
+
+  // check if user is running Safari - Safari won't display the poster for the audio player component.
+  // workaround is to show the poster as a background image if isSafari is true
+
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -95,9 +103,14 @@ const Video = () => {
   );
 
   const audioContent = (
-    <s.VideoWrapper>
-      <MediaPlayer url={audioUrl || ''} isAudio />
-    </s.VideoWrapper>
+    <s.AudioWrapper>
+      <MediaPlayer
+        url={audioUrl || ''}
+        coverArtUrl={coverArtUrl}
+        subtitleUrl={subtitleUrl}
+        isSafari={isSafari}
+      />
+    </s.AudioWrapper>
   );
 
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
