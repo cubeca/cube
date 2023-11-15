@@ -26,7 +26,21 @@ export const LinkWrapper = styled(Box)`
   position: relative;
   width: 100%;
 `;
+export const AudioWrapper = styled(Box)`
+  position: relative;
+  width: 100%;
+  padding-top: 46.25%;
 
+  & > div,
+  video,
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important;
+  }
+`;
 export const ContentWrapper = styled(Box)`
   padding: 30px 8.333333333333333%;
 
