@@ -66,9 +66,9 @@ const EmbedModal = ({ onClose, isOpen, embedContentType }: EmbedModalProps) => {
       />
 
       <Stack direction="row" justifyContent="right">
-        <Button onClick={copyToClipboard} color="secondary">
+        <s.ModalButton onClick={copyToClipboard} color="secondary">
           {copyCodeButtonText}
-        </Button>
+        </s.ModalButton>
       </Stack>
     </Dialog>
   ) : null;
