@@ -1,21 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Stack, Typography, useTheme, Chip, Box } from '@mui/material';
-import Grid from '@mui/system/Unstable_Grid';
-import MediaPlayer from 'components/MediaPlayer';
-import YouTubePlayer from 'components/YouTubePlayer';
-import { getIDfromURL } from 'utils/youtubeUtils';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+
+import { Stack, Typography, useTheme, Box } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
+import CodeIcon from '@mui/icons-material/Code';
+
 import useContentDetails from 'hooks/useContentDetails';
+
 import MoreContent from './MoreContent';
 import Contributors from './Contributors';
+import * as s from './Content.styled';
+
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
-import * as s from './Content.styled';
-import { CollaboratorDetails, Content, Contributor } from 'types/content';
-import { Document, Page } from 'react-pdf';
+import MediaPlayer from 'components/MediaPlayer';
+import YouTubePlayer from 'components/YouTubePlayer';
+import { CollaboratorDetails } from 'types/content';
 import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
+import EmbedModal from 'components/EmbedModal';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -30,21 +35,19 @@ const Video = () => {
         day: 'numeric'
       })
     : '';
-  const [isModalOpen, setIsModalOpen] = useState(true);
-  // const youtubeID = getIDfromURL(content?.url || '');
+  const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
+    useState(true);
+  const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
   const youtubeID = '';
-  //const youtubeID = getIDfromURL(
-  //  'https://www.youtube.com/watch?v=LWnPSkRSLys&t=257s'
-  //); // <-- test youtube state
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
+  const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
-  const linkUrl = content?.externalUrl;
 
   useEffect(() => {
     if (contentRef.current) {
@@ -55,11 +58,12 @@ const Video = () => {
   }, [contentRef.current, content]);
 
   useEffect(() => {
-    setIsModalOpen(content?.isSuitableForChildren === false);
+    setIsSuitableForChildrenModalOpen(content?.isSuitableForChildren === false);
   }, [content?.isSuitableForChildren]);
 
   function handleClose() {
-    setIsModalOpen(false);
+    setIsSuitableForChildrenModalOpen(false);
+    setIsEmbedModalOpen(false);
   }
 
   function getContributorRole(role: string, names?: string[]): string {
@@ -81,6 +85,10 @@ const Video = () => {
     const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
     return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
   }
+
+  const openEmbedModal = () => {
+    setIsEmbedModalOpen(true);
+  };
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -114,7 +122,15 @@ const Video = () => {
 
   return (
     <Box ref={contentRef}>
-      <AgeCheckModal isOpen={isModalOpen} onClose={handleClose} />
+      <AgeCheckModal
+        isOpen={isSuitableForChildrenModalOpen}
+        onClose={handleClose}
+      />
+      <EmbedModal
+        isOpen={isEmbedModalOpen}
+        onClose={handleClose}
+        embedContent={content?.mediaUrl?.playerInfo?.publicUrl || ''}
+      />
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
@@ -141,19 +157,18 @@ const Video = () => {
               {formattedCreatedDate}
             </s.ContentDate>
 
+            <Stack direction="row" justifyContent="left">
+              <Typography component="p" variant="body1">
+                <CodeIcon />
+                <Link to={''} onClick={openEmbedModal}>
+                  Embed
+                </Link>
+              </Typography>
+            </Stack>
+
             <Typography component="p" variant="body1">
               {content?.description}
             </Typography>
-
-            {/* Testing fonts language support: <br/><br/>
-            <Typography component="h1" variant="h3">
-              hən̓q̓əmin̓əm̓ and Sḵwx̱wú7mesh Ta Nexwníw̓ n ta a Ímats, 授业
-            </Typography>
-            <br/>
-            <Typography component="p" variant="body2">
-              These are hən̓q̓əmin̓əm̓ and Sḵwx̱wú7mesh Ta Nexwníw̓ n ta a Ímats, 授业 [teachings] bequethed from ancestors to children of both Indigenous and migrant Chinese families. 从祖母到孙女，这些故事代代相传。[Cóng zǔmǔ dào sūnnǚ, zhèxiē gùshì dài dài xiāngchuán.]
-            </Typography>
-            <br/><br/> */}
           </s.ContentWrapper>
         </Grid>
         <Grid xs={10} md={3}>
@@ -202,7 +217,6 @@ const Video = () => {
                                 lineHeight: '32px'
                               }}
                             >
-                              {/* {names.join(', ')} */}
                               {/* error handling to deal with old data that doesn't have an array of names */}
                               {Array.isArray(names)
                                 ? names.join(', ')
