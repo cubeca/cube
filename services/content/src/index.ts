@@ -28,7 +28,6 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
     const user = extractUser(req);
     const { profileId, vttFileId, ...contentData } = req.body;
     const { type } = contentData;
-    console.log({ type });
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
       return res.status(400).send('Invalid request body');
