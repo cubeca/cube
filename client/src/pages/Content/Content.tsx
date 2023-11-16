@@ -15,6 +15,7 @@ import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
+import { OVER_18 } from 'constants/localStorage';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -30,8 +31,8 @@ const Video = () => {
       })
     : '';
   const [isModalOpen, setIsModalOpen] = useState(() => {
-    const ageConfirmation = localStorage.getItem('ageConfirmation');
-    return ageConfirmation !== 'over18';
+    const isOver18 = localStorage.getItem(OVER_18);
+    return isOver18 !== 'true';
   });
   // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
@@ -57,12 +58,12 @@ const Video = () => {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const onOver18Click = () => {
-    localStorage.setItem('ageConfirmation', 'over18');
+    localStorage.setItem(OVER_18, 'true');
     setIsModalOpen(false);
   };
 
   const onUnder18Click = () => {
-    localStorage.setItem('ageConfirmation', 'under18');
+    localStorage.setItem(OVER_18, 'false');
     setIsModalOpen(false);
   };
 
@@ -75,11 +76,8 @@ const Video = () => {
   }, [contentRef.current, content]);
 
   useEffect(() => {
-    const ageConfirmation = localStorage.getItem('ageConfirmation');
-    if (
-      content?.isSuitableForChildren === false &&
-      (ageConfirmation === 'under18' || ageConfirmation === null)
-    ) {
+    const isOver18 = localStorage.getItem(OVER_18);
+    if (content?.isSuitableForChildren === false && isOver18 !== 'true') {
       setIsModalOpen(true);
     }
   }, [content?.isSuitableForChildren]);
