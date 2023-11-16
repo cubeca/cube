@@ -41,7 +41,7 @@ const LinkPlayer = ({ url, cover, title }: LinkPlayerProps) => {
     <s.Container>
       <a href={url} target="_blank" rel="noopener noreferrer">
         <Grid container justifyContent="center">
-          <Grid xs={12} md={9.25}>
+          <Grid item xs={12} md={9.25}>
             {!isFile && (
               <s.ImageBox
                 sx={{

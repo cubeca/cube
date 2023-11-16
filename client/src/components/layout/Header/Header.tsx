@@ -10,7 +10,8 @@ const Header = () => {
   return !location.pathname.startsWith(excludeHeaderOn) ? (
     <s.Header component="header" direction="row">
       <s.HomeLink to="/" />
-      <PrimaryNav />
+      {/* leaving this here in case changes go in another direction */}
+      {/* <PrimaryNav /> */}
       <AuxiliaryNav />
     </s.Header>
   ) : null;

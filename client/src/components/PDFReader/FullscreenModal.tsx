@@ -89,7 +89,7 @@ const PDFModal = ({
           <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
             <Page
               pageNumber={currentPage}
-              width={screenWidth < 1200 ? screenWidth : undefined}
+              width={screenWidth < 1000 ? screenWidth : undefined}
               height={window.innerHeight}
               loading={null}
             />

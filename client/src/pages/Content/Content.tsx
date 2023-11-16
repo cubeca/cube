@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import MediaPlayer from 'components/MediaPlayer';
+import YouTubePlayer from 'components/YouTubePlayer';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 
-import { Stack, Typography, useTheme, Box } from '@mui/material';
+import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
 
@@ -10,16 +12,15 @@ import useContentDetails from 'hooks/useContentDetails';
 
 import MoreContent from './MoreContent';
 import Contributors from './Contributors';
-import * as s from './Content.styled';
 
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
-import MediaPlayer from 'components/MediaPlayer';
-import YouTubePlayer from 'components/YouTubePlayer';
-import { CollaboratorDetails } from 'types/content';
+import * as s from './Content.styled';
+import { CollaboratorDetails, Contributor } from 'types/content';
 import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
+import { OVER_18 } from 'constants/localStorage';
 import EmbedModal from 'components/EmbedModal';
 
 const Video = () => {
@@ -36,18 +37,41 @@ const Video = () => {
       })
     : '';
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
-    useState(true);
+    useState(() => {
+      const isOver18 = localStorage.getItem(OVER_18);
+      return isOver18 !== 'true';
+    });
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
+
+  // actual subtitle data coming soon!
+  const subtitleUrl = '';
+
+  // check if user is running Safari - Safari won't display the poster for the audio player component.
+  // workaround is to show the poster as a background image if isSafari is true
+
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+  const onOver18Click = () => {
+    localStorage.setItem(OVER_18, 'true');
+    setIsSuitableForChildrenModalOpen(false);
+  };
+
+  const onUnder18Click = () => {
+    localStorage.setItem(OVER_18, 'false');
+    setIsSuitableForChildrenModalOpen(false);
+  };
 
   useEffect(() => {
     if (contentRef.current) {
@@ -58,7 +82,10 @@ const Video = () => {
   }, [contentRef.current, content]);
 
   useEffect(() => {
-    setIsSuitableForChildrenModalOpen(content?.isSuitableForChildren === false);
+    const isOver18 = localStorage.getItem(OVER_18);
+    if (content?.isSuitableForChildren === false && isOver18 !== 'true') {
+      setIsSuitableForChildrenModalOpen(true);
+    }
   }, [content?.isSuitableForChildren]);
 
   function handleClose() {
@@ -66,29 +93,32 @@ const Video = () => {
     setIsEmbedModalOpen(false);
   }
 
-  function getContributorRole(role: string, names?: string[]): string {
-    const roleMap: { [key: string]: string } = {
-      sound: 'Sound Technician',
-      camera: 'Camera Operator',
-      editor: 'Editor',
-      artist: 'Artist'
-      // add more role mappings here as needed
-    };
-    const mappedRole = roleMap[role.toLowerCase()] || role;
-
-    if (typeof names === 'string') {
-      return 'Data has been changed';
-    }
-
-    // pluralize role if there are multiple names
-    const numNames = (names || []).length;
-    const pluralizedRole = numNames > 1 ? `${mappedRole}s` : mappedRole;
-    return pluralizedRole.charAt(0).toUpperCase() + pluralizedRole.slice(1);
-  }
-
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
   };
+
+  function getContributorRole(role: string, count: number): string {
+    let roleStr = '';
+    switch (role) {
+      case 'artist':
+        roleStr = 'Artist';
+        break;
+      case 'editor':
+        roleStr = 'Editor';
+        break;
+      case 'camera_operator':
+        roleStr = 'Camera Operator';
+        break;
+      case 'sound_technician':
+        roleStr = 'Sound Technician';
+        break;
+      // Add more roles as needed
+      default: // capitalize first letter of role
+        roleStr = role.charAt(0).toUpperCase() + role.slice(1);
+    }
+    // Add 's' to role if there are multiple contributors
+    return count > 1 ? roleStr + 's' : roleStr;
+  }
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -97,9 +127,14 @@ const Video = () => {
   );
 
   const audioContent = (
-    <s.VideoWrapper>
-      <MediaPlayer url={audioUrl || ''} isAudio />
-    </s.VideoWrapper>
+    <s.AudioWrapper>
+      <MediaPlayer
+        url={audioUrl || ''}
+        coverArtUrl={coverArtUrl}
+        subtitleUrl={subtitleUrl}
+        isSafari={isSafari}
+      />
+    </s.AudioWrapper>
   );
 
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
@@ -125,6 +160,8 @@ const Video = () => {
       <AgeCheckModal
         isOpen={isSuitableForChildrenModalOpen}
         onClose={handleClose}
+        onOver18Click={onOver18Click}
+        onUnder18Click={onUnder18Click}
       />
       <EmbedModal
         isOpen={isEmbedModalOpen}
@@ -160,9 +197,9 @@ const Video = () => {
             <Stack direction="row" justifyContent="left">
               <Typography component="p" variant="body1">
                 <CodeIcon />
-                <Link to={''} onClick={openEmbedModal}>
+                <RouterLink to={''} onClick={openEmbedModal}>
                   Embed
-                </Link>
+                </RouterLink>
               </Typography>
             </Stack>
 
@@ -192,7 +229,7 @@ const Video = () => {
                           return roleA.localeCompare(roleB);
                         }
                       })
-                      .map(([role, names]) => {
+                      .map(([role, contributors]) => {
                         return (
                           <div key={role}>
                             <Typography
@@ -205,8 +242,10 @@ const Video = () => {
                                 color: theme.palette.primary.main
                               }}
                             >
-                              {t(getContributorRole(role, names))}:&nbsp;
+                              {t(getContributorRole(role, contributors.length))}
+                              :&nbsp;
                             </Typography>
+
                             <Typography
                               component="span"
                               variant="body2"
@@ -217,10 +256,23 @@ const Video = () => {
                                 lineHeight: '32px'
                               }}
                             >
-                              {/* error handling to deal with old data that doesn't have an array of names */}
-                              {Array.isArray(names)
-                                ? names.join(', ')
-                                : 'Data has been changed'}
+                              {(contributors as Contributor[]).map(
+                                (contributor, i) => (
+                                  <span key={i}>
+                                    {role === 'artist' && contributor.url ? (
+                                      <Link
+                                        href={contributor.url}
+                                        sx={{ color: 'inherit' }}
+                                      >
+                                        {contributor.name}
+                                      </Link>
+                                    ) : (
+                                      contributor.name
+                                    )}
+                                    {i < contributors.length - 1 ? ', ' : ''}
+                                  </span>
+                                )
+                              )}
                             </Typography>
                           </div>
                         );

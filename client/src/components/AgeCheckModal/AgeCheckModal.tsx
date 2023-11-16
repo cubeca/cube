@@ -4,9 +4,16 @@ import * as s from './AgeCheckModal.styled';
 interface AgeCheckModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOver18Click: () => void;
+  onUnder18Click: () => void;
 }
 
-const AgeCheckModal = ({ onClose, isOpen }: AgeCheckModalProps) => {
+const AgeCheckModal = ({
+  onClose,
+  isOpen,
+  onOver18Click,
+  onUnder18Click
+}: AgeCheckModalProps) => {
   return isOpen ? (
     <s.FullscreenModalContainer onClick={onClose}>
       <s.ModalPageContainer>
@@ -32,12 +39,13 @@ const AgeCheckModal = ({ onClose, isOpen }: AgeCheckModalProps) => {
               justifyContent: 'space-evenly'
             }}
           >
-            <s.ModalButton variant="contained" onClick={onClose}>
+            <s.ModalButton variant="contained" onClick={onOver18Click}>
               I&apos;m 18+
             </s.ModalButton>
             <s.ModalButton
               variant="outlined"
               onClick={() => {
+                onUnder18Click();
                 history.back();
                 onClose();
               }}
