@@ -13,51 +13,95 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-
 const getContributors = (values: FieldValues) => {
-  const contributors: { type: string; contributors: string[] }[] = [];
-  const keys = Object.keys(values);
+  const contributorsObject: {
+    [key: string]: { name: string; url?: string }[];
+  } = {};
 
-  keys.forEach((key) => {
-    if (key === 'other_role') {
-      if (values['other_role'] && values['other_name']) {
-        contributors.push({
-          type: values['other_role'],
-          contributors: [values['other_name']]
-        });
-      }
-    } else if (key.includes('other_role_')) {
-      const index = key.split('_')[2];
-      if (values[key] && values[`other_name_${index}`]) {
-        contributors.push({
-          type: values[key],
-          contributors: [values[`other_name_${index}`]]
-        });
-      }
-    } else if (key in contributors) {
-      if (values[key]) {
-        const valuesArray = values[key]
-          .split(',')
-          .map((value: string) => value.trim());
-        contributors.push({ type: key, contributors: valuesArray });
-      }
-    } else if (
-      key === 'artist' ||
-      key === 'camera' ||
-      key === 'editor' ||
-      key === 'sound'
+  // Handle 'artist' role
+  for (let i = 0; values[`artistName${i}`] !== undefined; i++) {
+    if (!contributorsObject['artist']) {
+      contributorsObject['artist'] = [];
+    }
+    contributorsObject['artist'].push({
+      name: values[`artistName${i}`],
+      url: values[`artistUrl${i}`]
+    });
+  }
+
+  // Handle 'editor' role
+  for (let i = 0; values[`editorName${i}`] !== undefined; i++) {
+    if (!contributorsObject['editor']) {
+      contributorsObject['editor'] = [];
+    }
+    if (values[`editorName${i}`] !== '' && values[`editorUrl${i}`] !== '') {
+      contributorsObject['editor'].push({
+        name: values[`editorName${i}`],
+        url: values[`editorUrl${i}`]
+      });
+    }
+  }
+  if (contributorsObject['editor'].length === 0) {
+    delete contributorsObject['editor'];
+  }
+
+  // Handle 'camera_operator' role
+  for (let i = 0; values[`cameraOperatorName${i}`] !== undefined; i++) {
+    if (!contributorsObject['camera_operator']) {
+      contributorsObject['camera_operator'] = [];
+    }
+    if (
+      values[`cameraOperatorName${i}`] !== '' &&
+      values[`cameraOperatorUrl${i}`] !== ''
     ) {
-      if (values[key]) {
-        const valuesArray = values[key]
-          .split(',')
-          .map((value: string) => value.trim());
-        contributors.push({ type: key, contributors: valuesArray });
-      }
+      contributorsObject['camera_operator'].push({
+        name: values[`cameraOperatorName${i}`],
+        url: values[`cameraOperatorUrl${i}`]
+      });
+    }
+  }
+  if (contributorsObject['camera_operator'].length === 0) {
+    delete contributorsObject['camera_operator'];
+  }
+
+  // Handle 'sound_technician' role
+  for (let i = 0; values[`soundTechnicianName${i}`] !== undefined; i++) {
+    if (!contributorsObject['sound_technician']) {
+      contributorsObject['sound_technician'] = [];
+    }
+    if (
+      values[`soundTechnicianName${i}`] !== '' &&
+      values[`soundTechnicianUrl${i}`] !== ''
+    ) {
+      contributorsObject['sound_technician'].push({
+        name: values[`soundTechnicianName${i}`],
+        url: values[`soundTechnicianUrl${i}`]
+      });
+    }
+  }
+  if (contributorsObject['sound_technician'].length === 0) {
+    delete contributorsObject['sound_technician'];
+  }
+
+  // Handle 'other' roles
+  for (let i = 0; values[`other_name_${i}`] !== undefined; i++) {
+    const role = values[`other_role_${i}`] || 'other';
+    if (!contributorsObject[role]) {
+      contributorsObject[role] = [];
+    }
+    if (values[`other_name_${i}`] !== '' && values[`other_role_${i}`] !== '') {
+      contributorsObject[role].push({ name: values[`other_name_${i}`] });
+    }
+  }
+  Object.keys(contributorsObject).forEach((key) => {
+    if (contributorsObject[key].length === 0) {
+      delete contributorsObject[key];
     }
   });
 
-  return contributors;
+  return contributorsObject;
 };
+
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
@@ -115,21 +159,7 @@ const Upload = () => {
   };
 
   const onSubmit = (values: FieldValues) => {
-    console.log(values);
     const contributors = getContributors(values);
-    const contributorsObject: { [key: string]: string[] } = {};
-    contributors.forEach(({ type, contributors }) => {
-      contributorsObject[type] = contributors;
-    });
-
-    const formattedContributors: { [key: string]: string[] } = {};
-    Object.entries(contributorsObject).forEach(([key, value]) => {
-      formattedContributors[key] = value
-        .join(',')
-        .split(',')
-        .map((contributor: string) => contributor.trim());
-    });
-    console.log({ type: values.type });
     addContent(
       {
         profileId: profileId!,
@@ -139,10 +169,12 @@ const Upload = () => {
         description: values.description,
         coverImageText: values.imageText,
         collaborators: [values.collaborators],
-        contributors: formattedContributors,
+        contributors: contributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),
         externalUrl: values.link ? values.link : null,
-        isSuitableForChildren: values.audience === 'yeskids'
+        isSuitableForChildren: values.audience
+          ? values.audience === 'yeskids'
+          : false
       },
       coverImageFile!,
       mediaFile!,
