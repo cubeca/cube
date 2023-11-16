@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 
@@ -8,41 +8,26 @@ import * as s from './EmbeddedContent.styled';
 import { MediaPlayerLoader } from 'components/Loaders';
 import MediaPlayer from 'components/MediaPlayer';
 import YouTubePlayer from 'components/YouTubePlayer';
-import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 
 const Video = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const { data: content, isLoading } = useContentDetails();
-
-  const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
-    useState(true);
   const youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-  useEffect(() => {
-    if (contentRef.current) {
-      const headerHeight = document.querySelector('header')?.clientHeight || 0;
-      const contentTop = contentRef.current.offsetTop - headerHeight;
-      window.scrollTo({ top: contentTop, behavior: 'auto' });
-    }
-  }, [contentRef.current, content]);
-
-  useEffect(() => {
-    setIsSuitableForChildrenModalOpen(content?.isSuitableForChildren === false);
-  }, [content?.isSuitableForChildren]);
-
-  function handleClose() {
-    setIsSuitableForChildrenModalOpen(false);
-  }
+  // actual subtitle data coming soon!
+  const subtitleUrl = '';
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -51,9 +36,14 @@ const Video = () => {
   );
 
   const audioContent = (
-    <s.VideoWrapper>
-      <MediaPlayer url={audioUrl || ''} isAudio />
-    </s.VideoWrapper>
+    <s.AudioWrapper>
+      <MediaPlayer
+        url={audioUrl || ''}
+        coverArtUrl={coverArtUrl}
+        subtitleUrl={subtitleUrl}
+        isSafari={isSafari}
+      />
+    </s.AudioWrapper>
   );
 
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
@@ -76,11 +66,6 @@ const Video = () => {
 
   return (
     <Box ref={contentRef}>
-      <AgeCheckModal
-        isOpen={isSuitableForChildrenModalOpen}
-        onClose={handleClose}
-      />
-
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
           {isLoading ? (

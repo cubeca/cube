@@ -36,13 +36,13 @@ const Video = () => {
         day: 'numeric'
       })
     : '';
+
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(() => {
       const isOver18 = localStorage.getItem(OVER_18);
       return isOver18 !== 'true';
     });
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
-  // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
@@ -166,7 +166,7 @@ const Video = () => {
       <EmbedModal
         isOpen={isEmbedModalOpen}
         onClose={handleClose}
-        embedContent={content?.mediaUrl?.playerInfo?.publicUrl || ''}
+        embedContentType={content?.type || ''}
       />
 
       <Grid container justifyContent="center">
