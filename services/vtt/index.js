@@ -16,11 +16,12 @@ const { generateVTT } = require("./vtt.js");
 
 const outputPath = "/tmp";
 
-const retry = async (contentID, tries) => {
+const retry = async (contentID, currentTries) => {
+  let tries = currentTries + 1;
   const dataBuffer = Buffer.from(
     JSON.stringify({ contentID, tries: tries + 1 })
   );
-  let sleepTime = 7 * Math.pow(2, tries);
+  let sleepTime = 10 * tries;
   console.log(`Sleeping for ${sleepTime} seconds`);
   await new Promise((resolve) => setTimeout(resolve, sleepTime * 1000));
 
@@ -134,7 +135,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
     }
   } catch (error) {
     console.log({ error });
-    if (tries < 3) {
+    if (tries <= 10) {
       await retry(contentID, tries);
       return;
     } else {
