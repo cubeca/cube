@@ -72,8 +72,8 @@ export const StyledAbsoluteIconButton = styled(IconButton)`
 `;
 
 export const SinglePageContainer = styled(Box)`
-  ${(props) => props.theme.breakpoints.up('md')} {
-    height: 85vh;
+  ${(props) => props.theme.breakpoints.up('lg')} {
+    height: 100vh;
   }
   max-height: 100%;
   display: flex;
