@@ -1,10 +1,24 @@
 import { styled } from 'theme/utils';
 import { Stack } from '@mui/material';
 import Button from 'components/Button';
+import HomeIcon from '@mui/icons-material/Home';
+import { Link } from 'react-router-dom';
+
+export const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+`;
+
+export const StyledHomeIcon = styled(HomeIcon)`
+  height: 30px;
+  width: 30px;
+  color: ${(props) => props.theme.palette.primary.main};
+  margin-right: 30px;
+`;
 
 export const Aux = styled(Stack)`
   position: relative;
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     top: 4px;
   }
@@ -20,7 +34,7 @@ export const AuxMenuTrigger = styled('button')`
   width: 40px;
   height: 40px;
   position: relative;
-  
+
   svg {
     position: absolute;
     top: 0;
