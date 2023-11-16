@@ -29,7 +29,10 @@ const Video = () => {
         day: 'numeric'
       })
     : '';
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(() => {
+    const ageConfirmation = localStorage.getItem('ageConfirmation');
+    return ageConfirmation !== 'over18';
+  });
   // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
   //const youtubeID = getIDfromURL(
@@ -53,6 +56,16 @@ const Video = () => {
 
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+  const onOver18Click = () => {
+    localStorage.setItem('ageConfirmation', 'over18');
+    setIsModalOpen(false);
+  };
+
+  const onUnder18Click = () => {
+    localStorage.setItem('ageConfirmation', 'under18');
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     if (contentRef.current) {
       const headerHeight = document.querySelector('header')?.clientHeight || 0;
@@ -62,16 +75,18 @@ const Video = () => {
   }, [contentRef.current, content]);
 
   useEffect(() => {
-    setIsModalOpen(content?.isSuitableForChildren === false);
+    const ageConfirmation = localStorage.getItem('ageConfirmation');
+    if (
+      content?.isSuitableForChildren === false &&
+      (ageConfirmation === 'under18' || ageConfirmation === null)
+    ) {
+      setIsModalOpen(true);
+    }
   }, [content?.isSuitableForChildren]);
 
   function handleClose() {
     setIsModalOpen(false);
   }
-
-  useEffect(() => {
-    setIsModalOpen(content?.isSuitableForChildren === false);
-  }, [content?.isSuitableForChildren]);
 
   function getContributorRole(role: string, count: number): string {
     let roleStr = '';
@@ -133,7 +148,12 @@ const Video = () => {
 
   return (
     <Box ref={contentRef}>
-      <AgeCheckModal isOpen={isModalOpen} onClose={handleClose} />
+      <AgeCheckModal
+        isOpen={isModalOpen}
+        onClose={handleClose}
+        onOver18Click={onOver18Click}
+        onUnder18Click={onUnder18Click}
+      />
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
