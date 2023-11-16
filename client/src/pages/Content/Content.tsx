@@ -15,6 +15,7 @@ import { CollaboratorDetails, Content, Contributor } from 'types/content';
 import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
+import { OVER_18 } from 'constants/localStorage';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -29,7 +30,10 @@ const Video = () => {
         day: 'numeric'
       })
     : '';
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(() => {
+    const isOver18 = localStorage.getItem(OVER_18);
+    return isOver18 !== 'true';
+  });
   // const youtubeID = getIDfromURL(content?.url || '');
   const youtubeID = '';
   //const youtubeID = getIDfromURL(
@@ -53,6 +57,16 @@ const Video = () => {
 
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+  const onOver18Click = () => {
+    localStorage.setItem(OVER_18, 'true');
+    setIsModalOpen(false);
+  };
+
+  const onUnder18Click = () => {
+    localStorage.setItem(OVER_18, 'false');
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     if (contentRef.current) {
       const headerHeight = document.querySelector('header')?.clientHeight || 0;
@@ -62,16 +76,15 @@ const Video = () => {
   }, [contentRef.current, content]);
 
   useEffect(() => {
-    setIsModalOpen(content?.isSuitableForChildren === false);
+    const isOver18 = localStorage.getItem(OVER_18);
+    if (content?.isSuitableForChildren === false && isOver18 !== 'true') {
+      setIsModalOpen(true);
+    }
   }, [content?.isSuitableForChildren]);
 
   function handleClose() {
     setIsModalOpen(false);
   }
-
-  useEffect(() => {
-    setIsModalOpen(content?.isSuitableForChildren === false);
-  }, [content?.isSuitableForChildren]);
 
   function getContributorRole(role: string, count: number): string {
     let roleStr = '';
@@ -133,7 +146,12 @@ const Video = () => {
 
   return (
     <Box ref={contentRef}>
-      <AgeCheckModal isOpen={isModalOpen} onClose={handleClose} />
+      <AgeCheckModal
+        isOpen={isModalOpen}
+        onClose={handleClose}
+        onOver18Click={onOver18Click}
+        onUnder18Click={onUnder18Click}
+      />
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
