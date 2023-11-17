@@ -5,6 +5,7 @@ import {
   Typography,
   Link as MuiLink
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { styled } from 'theme/utils';
 
 export const VideoWrapper = styled(Box)`
@@ -143,6 +144,20 @@ export const ContributorSocial = styled(MuiLink)`
 
   &:hover {
     text-decoration: underline;
+  }
+`;
+
+export const Embed = styled(Link)`
+  color: ${(props) => props.theme.palette.primary.light} !important;
+  font-weight: 500;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 `;
 

@@ -197,9 +197,9 @@ const Video = () => {
             <Stack direction="row" justifyContent="left">
               <Typography component="p" variant="body1">
                 <CodeIcon />
-                <RouterLink to={''} onClick={openEmbedModal}>
+                <s.Embed to={''} onClick={openEmbedModal}>
                   Embed
-                </RouterLink>
+                </s.Embed>
               </Typography>
             </Stack>
 
