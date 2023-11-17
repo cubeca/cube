@@ -20,10 +20,9 @@ const CategorizedContent = () => {
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
   const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(12);
+  const [limit, setLimit] = useState<number>(11);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
-  // Refactored fetch function to be used by both useEffect and handleLoadMore
   const fetchContent = useCallback(
     async (newOffset: number) => {
       setIsLoading(true);
@@ -65,6 +64,7 @@ const CategorizedContent = () => {
   }, [fetchContent]);
 
   const handleLoadMore = () => {
+    setLimit(12); // Initial load requires 11 tiles + the load more. After we need 12 results per load.
     fetchContent(offset); // Fetch more content with the current offset
   };
 

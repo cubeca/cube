@@ -25,7 +25,7 @@ const UserContent = ({ profile }: UserContentProps) => {
   const [offset, setOffset] = useState<number>(0);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const { t } = useTranslation();
-  const [limit, setLimit] = useState<number>(12);
+  const [limit, setLimit] = useState<number>(11);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
   const fetchContent = useCallback(
@@ -75,6 +75,7 @@ const UserContent = ({ profile }: UserContentProps) => {
   }, [fetchContent]);
 
   const handleLoadMore = () => {
+    setLimit(12); // Initial load requires 11 tiles + the load more. After we need 12 results per load.
     fetchContent(offset);
   };
 
