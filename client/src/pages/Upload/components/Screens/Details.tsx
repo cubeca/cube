@@ -59,32 +59,19 @@ const Details = ({
           </Typography>
         </Box>
       ) : null}
-
-      {/* <Box my={theme.spacing(5)}>
-        <UploadInput
-          text={t('Audio description (required)')}
-          onDrop={handleVTTFilesUpload}
-          maxFiles={1}
-        />
-        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-          {t('Upload an audio file describing the information above')}
-        </Typography>
-      </Box> */}
-      {/* // @ashlee we are not currently including audio description upload because we hope to auto generate it. But not sure why we were using the VTTFilesUpload  */}
       {showField('vtt') ? (
         <Box my={theme.spacing(5)}>
           <UploadInput
-            text={t('VTT file (required)')}
+            text={t('Subtitle File')}
             onDrop={handleVTTOnDrop}
             maxFiles={1}
             isUploadReady={isVTTUploadReady}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Upload VTT File For Subtitles. VTT files ensure your content has subtitles. Closed captions include information about background sounds and speaker changes. Subtitles assume the viewer hears the audio and as a result does not contain background information. Please format the file to have this code at the top to ensure it adapts to various screen sizes'
+              "Upload File For Subtitles. If you don't have one, don't worry. Subtitle will be automatically generated for you in the event on one is not provided. Please stick around to confirm their content."
             )}
             <br />
-            {t('Code')}: XXX
           </Typography>
         </Box>
       ) : null}
