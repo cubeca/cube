@@ -123,7 +123,7 @@ const Upload = () => {
   const [mediaFile, setMediaFile] = useState<File>();
   const [bannerImageFile, setBannerImageFile] = useState<File>();
   const [expiryValue, setExpiryValue] = useState<dateFns | null>(null);
-  const [VTTFiles, setVTTFiles] = useState<File[]>([]);
+  const [vttFile, setVTTFile] = useState<File>();
   const [screenIndex, setScreenIndex] = useState(0);
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
   const [isBannerImageSelected, setIsBannerImageSelected] = useState(false);
@@ -149,7 +149,7 @@ const Upload = () => {
   };
 
   const handleVTTFilesUpload = (files: File[]) => {
-    setVTTFiles(files);
+    setVTTFile(files[0]);
     setIsVTTSelected(true);
   };
 
@@ -160,7 +160,6 @@ const Upload = () => {
 
   const onSubmit = (values: FieldValues) => {
     const contributors = getContributors(values);
-
     addContent(
       {
         profileId: profileId!,
@@ -179,6 +178,7 @@ const Upload = () => {
       },
       coverImageFile!,
       mediaFile!,
+      vttFile!,
       bannerImageFile!
     );
   };

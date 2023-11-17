@@ -1,4 +1,7 @@
 import express, { Express, Request, Response } from 'express';
+const { PubSub } = require('@google-cloud/pubsub');
+const pubsub = new PubSub();
+
 import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
@@ -23,8 +26,8 @@ const getApiResultFromDbRow = (r: any) => ({
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
-    const { profileId, ...contentData } = req.body;
-
+    const { profileId, vttFileId, ...contentData } = req.body;
+    const { type } = contentData;
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
       return res.status(400).send('Invalid request body');
@@ -38,7 +41,17 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 
     // Insert content into database
     const dbResult = await db.insertContent({ profileId, ...contentData });
-    return res.status(201).json(getApiResultFromDbRow(dbResult));
+    const response = { ...dbResult };
+    if (!vttFileId && (type === 'video' || type === 'audio')) {
+      // Publish a message to Google Pub/Sub
+      const topicName = 'vtt_transcribe'; // Replace with your actual topic name
+      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
+      await pubsub.topic(topicName).publish(Buffer.from(message));
+      console.log('Queued VTT');
+      response.vttQueued = true;
+    }
+
+    return res.status(201).json(getApiResultFromDbRow(response));
   } catch (error) {
     console.error('Error creating the content item', error);
     res.status(500).send('Error creating the content item');
@@ -91,6 +104,7 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
 
     // Update content in the database
     const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
+
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error updating the content item', error);
