@@ -1,8 +1,8 @@
 import { styled } from 'theme/utils';
 import { Stack } from '@mui/material';
 import Button from 'components/Button';
-import HomeIcon from '@mui/icons-material/Home';
 import { Link } from 'react-router-dom';
+import { ReactComponent as HomeIcon } from '../../../../../assets/icons/home.svg';
 
 export const StyledLink = styled(Link)`
   display: flex;
@@ -13,7 +13,7 @@ export const StyledHomeIcon = styled(HomeIcon)`
   height: 30px;
   width: 30px;
   color: ${(props) => props.theme.palette.primary.main};
-  margin-right: 30px;
+  margin-right: 32px;
 `;
 
 export const Aux = styled(Stack)`
