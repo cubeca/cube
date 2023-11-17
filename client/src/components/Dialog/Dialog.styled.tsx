@@ -19,7 +19,7 @@ export const Title = styled(DialogTitle)`
   }
 
   * {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${(props) => props.theme.palette.background.default} !important;
   }
 `;
 
