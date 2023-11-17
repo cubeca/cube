@@ -150,6 +150,7 @@ export const ContributorSocial = styled(MuiLink)`
 export const Embed = styled(Link)`
   color: ${(props) => props.theme.palette.primary.light} !important;
   font-weight: 500;
+  margin-left: 0.5rem;
 
   a {
     color: inherit;
@@ -159,6 +160,13 @@ export const Embed = styled(Link)`
       text-decoration: underline;
     }
   }
+`;
+
+export const EmbedWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
 `;
 
 export const Tags = styled(Box)`

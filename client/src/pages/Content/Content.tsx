@@ -195,12 +195,12 @@ const Video = () => {
             </s.ContentDate>
 
             <Stack direction="row" justifyContent="left">
-              <Typography component="p" variant="body1">
+              <s.EmbedWrapper>
                 <CodeIcon />
                 <s.Embed to={''} onClick={openEmbedModal}>
                   Embed
                 </s.Embed>
-              </Typography>
+              </s.EmbedWrapper>
             </Stack>
 
             <Typography component="p" variant="body1">

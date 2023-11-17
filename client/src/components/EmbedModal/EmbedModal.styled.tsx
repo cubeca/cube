@@ -5,6 +5,7 @@ import {
   Dialog as MuiDialog,
   DialogTitle,
   IconButton,
+  TextField,
   Typography
 } from '@mui/material';
 
@@ -19,15 +20,13 @@ export const Close = styled(IconButton)`
   color: ${(props) => props.theme.palette.background.default};
 `;
 
-export const Title = styled(DialogTitle)`
-  width: 600px;
-  max-width: 100%;
-  background-color: ${(props) => props.theme.palette.primary.main};
-
-  ${(props) => props.theme.breakpoints.up('sm')} {
-  }
-
-  * {
+export const EmbedTextField = styled(TextField)`
+  & label {
     color: ${(props) => props.theme.palette.background.default};
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    font-weight: 600;
   }
 `;

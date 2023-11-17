@@ -48,7 +48,10 @@ const EmbedModal = ({ onClose, isOpen, embedContentType }: EmbedModalProps) => {
 
   const location = useLocation().pathname.replace('content', 'embed');
   const hostname = window.location.hostname;
-  const embedCode = generateEmbedCode(embedContentType, hostname + location);
+  const embedCode = generateEmbedCode(
+    embedContentType,
+    'https://' + hostname + location
+  );
 
   return isOpen ? (
     <Dialog
@@ -57,12 +60,16 @@ const EmbedModal = ({ onClose, isOpen, embedContentType }: EmbedModalProps) => {
       onClose={onClose}
       open={isOpen}
     >
-      <TextField
+      <s.EmbedTextField
+        className="dark"
+        name="embedContent"
         id="embed-content"
-        label="Embed Content"
-        value={embedCode}
         multiline
         rows={4}
+        fullWidth
+        value={embedCode}
+        variant="outlined"
+        label="Embedded Content"
       />
 
       <Stack direction="row" justifyContent="right">
