@@ -40,15 +40,13 @@ export const addContent = async ({
   coverImageFile,
   bannerImageFile,
   mediaFile,
-  vttFile,
-  transcriptFile
+  vttFile
 }: {
   payload: AddContentRequest;
   coverImageFile?: File;
   bannerImageFile?: File;
   mediaFile?: File;
   vttFile?: File;
-  transcriptFile?: File;
 }) => {
   if (coverImageFile) {
     const fileId = await upload(coverImageFile, payload.profileId);
@@ -76,13 +74,6 @@ export const addContent = async ({
       payload.vttFileId = fileId;
     }
   }
-
-  // if (transcriptFile) {
-  //   const fileId = await upload(transcriptFile, payload.profileId);
-  //   if (fileId) {
-  //     payload.transcriptFileId = fileId;
-  //   }
-  // }
 
   return await contentApi.addContent(payload);
 };
