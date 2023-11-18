@@ -74,8 +74,9 @@ const UserContent = ({ profile }: UserContentProps) => {
     fetchContent(0); // Fetch initial content with offset 0
   }, [fetchContent]);
 
-  const handleLoadMore = () => {
-    setLimit(12); // Initial load requires 11 tiles + the load more. After we need 12 results per load.
+  const handleLoadMore = async () => {
+    // Update the limit to 12 before fetching more content
+    await setLimit(12);
     fetchContent(offset);
   };
 
