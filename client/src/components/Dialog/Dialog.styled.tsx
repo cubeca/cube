@@ -13,12 +13,13 @@ export const Title = styled(DialogTitle)`
   width: 600px;
   max-width: 100%;
   background-color: ${(props) => props.theme.palette.primary.main};
+  color: ${(props) => props.theme.palette.background.default};
   
   ${(props) => props.theme.breakpoints.up('sm')} {
   }
 
   * {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${(props) => props.theme.palette.background.default} !important;
   }
 `;
 
