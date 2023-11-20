@@ -10,9 +10,11 @@ import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
 import Accessibility from './components/Screens/Accessibility';
 import TOS from './components/Screens/TOS';
+import VTTEditor from './components/VTT/VTTEditor';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
+import { getContentDetails } from '../../api/content';
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
     [key: string]: { name: string; url?: string }[];
@@ -105,7 +107,7 @@ const getContributors = (values: FieldValues) => {
 const Upload = () => {
   const { tag } = useParams();
   const navigate = useNavigate();
-  const { control, handleSubmit, formState, getValues, watch } = useForm({
+  const { control, handleSubmit, formState, watch } = useForm({
     mode: 'onChange',
     criteriaMode: 'all'
   });
@@ -114,7 +116,8 @@ const Upload = () => {
     addContent,
     isUploadLoading: isLoading,
     isUploadError: isError,
-    isUploadSuccess: isSuccess
+    isUploadSuccess: isSuccess,
+    response
   } = useContent();
   const profileId = getProfileId();
   const topRef = useRef(null);
@@ -129,6 +132,7 @@ const Upload = () => {
   const [isBannerImageSelected, setIsBannerImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
+  const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -219,7 +223,8 @@ const Upload = () => {
     {
       label: 'Terms of Service',
       view: <TOS />
-    }
+    },
+
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
 
@@ -238,7 +243,24 @@ const Upload = () => {
   const activeScreenView = SCREENS[screenIndex].view;
 
   if (isSuccess) {
-    navigate(`/profile/${tag}`);
+    //@ts-ignore - idk why this is not working - we can see in the node_modules it is part of the spec....
+    if (response?.data?.vttQueued && !vttEditorLaunched) { 
+      console.log('VTT Queued');
+      SCREENS_BASE.push({
+      label: 'Subtitle Editor',
+      view: (
+        <VTTEditor
+          content={response?.data}
+
+        />
+      )
+    })
+    setSCREENS(SCREENS_BASE);
+    setVTTEditorLaunched(true);
+    setScreenIndex(screenIndex + 1);
+    } else if (!vttEditorLaunched) {
+      navigate(`/profile/${tag}`);
+    }
   }
 
   if (isError) {
@@ -255,10 +277,13 @@ const Upload = () => {
         isNextDisabled={
           !formState.isValid ||
           (screenIndex === 0 && (!isCoverImageSelected || !isMediaSelected)) ||
-          (screenIndex === 1 && !isVTTSelected)
+          (screenIndex === 1 && !isVTTSelected) ||
+          vttEditorLaunched 
         }
       />
       <Screens screen={activeScreenView} />
+      {
+        vttEditorLaunched ? null : 
       <FormFooter
         isLoading={isLoading}
         screens={SCREENS.map((x) => x.label)}
@@ -271,9 +296,11 @@ const Upload = () => {
           (!mediaLink && !isMediaSelected) ||
           (screenIndex === 1 &&
             !isVTTSelected &&
-            mediaType in ['video', 'audio'])
+            mediaType in ['video', 'audio']) 
         }
+
       />
+}
     </Box>
   );
 };
