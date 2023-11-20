@@ -45,10 +45,10 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   };
 
   const onChangeAudioDescription = (files: File[]) => {
-    setIsAudioUploadComplete(false)
+    setIsAudioUploadComplete(false);
     const file = files[0];
     updateAudioDescription(profile.id, file);
-    setIsAudioUploadComplete(true)
+    setIsAudioUploadComplete(true);
   };
 
   const logoIdUpload = 'logo-upload';
@@ -58,7 +58,9 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
     <Stack direction="column">
       <s.EditProfileImagesWrapper>
         <s.EditProfileHeroBg>
-          {profile.heroUrl && <img src={profile!.heroUrl} alt='user profile hero' />}
+          {profile.heroUrl && (
+            <img src={profile!.heroUrl} alt="user profile hero" />
+          )}
           <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
             <CameraIcon />
             <Typography>Upload</Typography>
@@ -72,7 +74,9 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         </s.EditProfileHeroBg>
         <s.ImageWrapper>
           <s.ImageInner>
-            {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
+            {profile.logoUrl && (
+              <img src={profile!.logoUrl} alt="user profile thumbnail" />
+            )}
           </s.ImageInner>
           <s.EditWrapper>
             <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
@@ -91,7 +95,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
 
       <s.EditFieldsWrapper>
         <TextInput
-          className="dark"
+          colorMode="dark"
           defaultValue={profile.organization}
           name="organization"
           id="organization"
@@ -101,7 +105,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           label={t('Organization Name')}
         />
         <TextInput
-          className="dark"
+          colorMode="dark"
           defaultValue={profile.website}
           name="website"
           id="website"
@@ -111,7 +115,7 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
           label={t('Organization URL')}
         />
         <TextInput
-          className="dark"
+          colorMode="dark"
           defaultValue={profile.description}
           name="profileDescription"
           id="profileDescription"

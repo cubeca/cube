@@ -4,7 +4,6 @@ import { InputProps as MuiInputProps } from '../types';
 import { Controller } from 'react-hook-form';
 import * as s from './TextInput.styled';
 
-
 interface TextInputProps extends MuiInputProps {
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
@@ -12,6 +11,7 @@ interface TextInputProps extends MuiInputProps {
   rows?: string | number;
   InputProps?: any;
   multiline?: boolean;
+  colorMode?: 'light' | 'dark';
 }
 
 const defaultRules = {
@@ -35,10 +35,10 @@ const TextInput: FC<TextInputProps> = ({
   variant = 'outlined',
   rows,
   InputProps,
-  multiline
+  multiline,
+  colorMode = 'light'
 }) => {
   return (
-    
     <Controller
       name={name}
       control={control}
@@ -70,6 +70,7 @@ const TextInput: FC<TextInputProps> = ({
               multiline={multiline}
               rows={rows}
               InputProps={InputProps}
+              colorMode={colorMode}
               {...field}
             />
           </FormControl>

@@ -1,9 +1,13 @@
 import { styled } from 'theme/utils';
 import EmailInput from './EmailInput';
+import { alpha } from '@mui/material/styles';
 
-export const DarkEmailInput = styled(EmailInput)`
+export const StyledEmailInput = styled(EmailInput)`
   & label {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${(props) =>
+      props.colorMode === 'dark'
+        ? props.theme.palette.background.default
+        : alpha('#D9FFEE', 0.5)};
     display: block;
     font-size: 1rem;
     font-weight: 500;
@@ -17,12 +21,17 @@ export const DarkEmailInput = styled(EmailInput)`
   & input:active + fieldset,
   & input:hover + fieldset {
     border-color: ${(props) =>
-      props.theme.palette.background.default} !important;
+      props.colorMode === 'dark'
+        ? props.theme.palette.background.default
+        : 'inherit'} !important;
   }
 
   & input,
   & textarea {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${(props) =>
+      props.colorMode === 'dark'
+        ? props.theme.palette.background.default
+        : 'inherit'};
   }
 
   & .MuiInputBase-formControl {

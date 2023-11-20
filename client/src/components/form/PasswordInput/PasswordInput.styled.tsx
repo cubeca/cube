@@ -1,9 +1,15 @@
 import { styled } from 'theme/utils';
 import PasswordInput from './PasswordInput';
-
-export const DarkPasswordInput = styled(PasswordInput)`
+import { alpha } from '@mui/material/styles';
+interface AdornmentProps {
+  colorMode?: 'light' | 'dark';
+}
+export const StyledPasswordInput = styled(PasswordInput)`
   & label {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${(props) =>
+      props.colorMode === 'dark'
+        ? props.theme.palette.background.default
+        : alpha('#D9FFEE', 0.5)};
     display: block;
     font-size: 1rem;
     font-weight: 500;
@@ -17,15 +23,27 @@ export const DarkPasswordInput = styled(PasswordInput)`
   & input:active + fieldset,
   & input:hover + fieldset {
     border-color: ${(props) =>
-      props.theme.palette.background.default} !important;
+      props.colorMode === 'dark'
+        ? props.theme.palette.background.default
+        : 'inherit'} !important;
   }
 
   & input,
   & textarea {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${(props) =>
+      props.colorMode === 'dark'
+        ? props.theme.palette.background.default
+        : 'inherit'};
   }
 
   & .MuiInputBase-formControl {
     margin-bottom: 24px;
+  }
+
+  & .MuiInputLabel-root {
+    color: ${(props) =>
+      props.colorMode === 'dark'
+        ? alpha('#D9FFEE', 0.5)
+        : props.theme.palette.background.default};
   }
 `;
