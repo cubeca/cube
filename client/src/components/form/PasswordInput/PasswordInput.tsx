@@ -7,10 +7,9 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { alpha } from '@mui/material/styles';
 import { useTheme } from '@mui/system';
-
 import TextInput from '../TextInput';
 import { TextInputProps } from '../TextInput/types';
-import * as s from './PasswordInput.styled';
+
 const PasswordInput: FC<TextInputProps> = (props) => {
   const { t } = useTranslation();
   const theme = useTheme();

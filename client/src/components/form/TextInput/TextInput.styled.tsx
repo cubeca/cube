@@ -1,8 +1,4 @@
-import {
-  InputAdornment,
-  TextField as MuiTextField,
-  alpha
-} from '@mui/material';
+import { TextField as MuiTextField, alpha } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const TextInput = styled(MuiTextField)`
@@ -11,18 +7,18 @@ export const TextInput = styled(MuiTextField)`
   & input:focus + fieldset,
   & input:active + fieldset,
   & input:hover + fieldset {
-    border-color: ${(props) =>
-      props.colorMode === 'dark'
-        ? props.theme.palette.background.default
-        : props.theme.palette.primary.main} !important;
+    border-color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? theme.palette.background.default
+        : theme.palette.primary.main} !important;
   }
 
   & input,
   & textarea {
-    color: ${(props) =>
-      props.colorMode === 'dark'
-        ? props.theme.palette.background.default
-        : props.theme.palette.primary.light};
+    color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? theme.palette.background.default
+        : theme.palette.primary.light};
   }
 
   & .MuiInputBase-input {
@@ -33,11 +29,11 @@ export const TextInput = styled(MuiTextField)`
     margin-bottom: 24px;
   }
 
-  && .MuiFormLabel-root.MuiFormLabel-colorPrimary {
-    color: ${(props) =>
-      props.colorMode === 'dark'
-        ? `${props.theme.palette.background.default} !important`
-        : `${alpha('#D9FFEE', 0.5)} !important`};
+  & label {
+    color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? `${theme.palette.background.default} !important`
+        : `${theme.palette.primary.light} !important`};
     display: block;
     font-size: 1rem;
     font-weight: 500;
