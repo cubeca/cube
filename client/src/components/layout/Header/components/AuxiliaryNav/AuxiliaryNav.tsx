@@ -16,7 +16,7 @@ const AuxiliaryNav = () => {
   const open = Boolean(anchorEl);
 
   const handleLogin = () => {
-    if(location.pathname.includes('/login')) {
+    if (location.pathname.includes('/login')) {
       // If on login page, force refresh to reset state
       navigate(0);
     } else {
@@ -36,6 +36,11 @@ const AuxiliaryNav = () => {
 
   return (
     <s.Aux component="nav" direction="row" alignItems="center" spacing={2}>
+      {!isLoggedIn && (
+        <s.StyledLink to="/search">
+          <s.StyledHomeIcon />
+        </s.StyledLink>
+      )}
       {isLoggedIn ? (
         <Profile />
       ) : (
@@ -43,7 +48,7 @@ const AuxiliaryNav = () => {
           {t('Login')}
         </s.AuxButton>
       )}
-      
+
       <s.AuxMenuTrigger
         onClick={handleMenuOpen}
         aria-controls={open ? menuId : undefined}

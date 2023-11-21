@@ -40,15 +40,13 @@ export const addContent = async ({
   coverImageFile,
   bannerImageFile,
   mediaFile,
-  subtitlesFile,
-  transcriptFile
+  vttFile
 }: {
   payload: AddContentRequest;
   coverImageFile?: File;
   bannerImageFile?: File;
   mediaFile?: File;
-  subtitlesFile?: File;
-  transcriptFile?: File;
+  vttFile?: File;
 }) => {
   if (coverImageFile) {
     const fileId = await upload(coverImageFile, payload.profileId);
@@ -70,17 +68,10 @@ export const addContent = async ({
     }
   }
 
-  if (subtitlesFile) {
-    const fileId = await upload(subtitlesFile, payload.profileId);
+  if (vttFile) {
+    const fileId = await upload(vttFile, payload.profileId);
     if (fileId) {
-      payload.subtitlesFileId = fileId;
-    }
-  }
-
-  if (transcriptFile) {
-    const fileId = await upload(transcriptFile, payload.profileId);
-    if (fileId) {
-      payload.transcriptFileId = fileId;
+      payload.vttFileId = fileId;
     }
   }
 

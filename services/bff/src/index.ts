@@ -83,6 +83,20 @@ app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: 
   res.status(status).json(transformedContent[0]);
 });
 
+app.get('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.get('vtt/' + req.params.id, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+  res.status(status).json(data);
+});
+
+app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.put('vtt/' + req.params.id, req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+  res.status(status).json(data);
+});
+
 app.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { status, data } = await contentApi.post('report', req.body, {
     headers: filterHeadersToForward(req, 'authorization')

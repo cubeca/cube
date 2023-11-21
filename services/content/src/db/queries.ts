@@ -140,3 +140,24 @@ export const searchContent = async (offset: number, limit: number, filters: any,
   const result = await db.queryDefault(sql, ...parameters);
   return result.rows;
 };
+
+
+export const getVTTById = async (id: string) => {
+  //table name is vtt
+  const sql = `SELECT * FROM vtt WHERE id = $1`;
+  return await db.querySingleDefault(sql, id);
+}
+
+export const updateVTT = async (id: string, transcript: any) => {
+  const sql = `
+    UPDATE
+      vtt
+    SET 
+      transcript = $1
+    WHERE
+      id = $2
+    RETURNING *
+  `;
+
+  return await db.querySingleDefault(sql, transcript, id);
+}

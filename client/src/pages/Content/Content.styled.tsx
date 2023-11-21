@@ -5,12 +5,28 @@ import {
   Typography,
   Link as MuiLink
 } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { styled } from 'theme/utils';
 
 export const VideoWrapper = styled(Box)`
   position: relative;
   width: 100%;
   padding-top: 56.25%;
+
+  & video::-webkit-media-text-track-display {
+    overflow: visible !important;
+    -webkit-box-sizing: border-box;
+    background: black;
+    padding: 8px;
+    borderradius: 16px;
+  }
+
+  & video::-webkit-media-text-track-container {
+    overflow: visible !important;
+    -webkit-transform: translateY(-10%) !important;
+    transform: translateY(-10%) !important;
+    position: relative;
+  }
 
   & > div,
   video,
@@ -22,7 +38,40 @@ export const VideoWrapper = styled(Box)`
     height: 100% !important;
   }
 `;
+export const LinkWrapper = styled(Box)`
+  position: relative;
+  width: 100%;
+`;
+export const AudioWrapper = styled(Box)`
+  position: relative;
+  width: 100%;
+  padding-top: 46.25%;
 
+  & video::-webkit-media-text-track-display {
+    overflow: visible !important;
+    -webkit-box-sizing: border-box;
+    background: black;
+    padding: 8px;
+    borderradius: 16px;
+  }
+
+  & video::-webkit-media-text-track-container {
+    overflow: visible !important;
+    -webkit-transform: translateY(-10%) !important;
+    transform: translateY(-10%) !important;
+    position: relative;
+  }
+
+  & > div,
+  video,
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important;
+  }
+`;
 export const ContentWrapper = styled(Box)`
   padding: 30px 8.333333333333333%;
 
@@ -98,9 +147,30 @@ export const ContributorSocial = styled(MuiLink)`
   }
 `;
 
+export const Embed = styled(Link)`
+  color: ${(props) => props.theme.palette.primary.light} !important;
+  font-weight: 500;
+  margin-left: 0.5rem;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+export const EmbedWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+`;
+
 export const Tags = styled(Box)`
   margin: 8px 0 0;
-  // margin: 8px -4px 0;
 `;
 
 export const Tag = styled(Typography)`

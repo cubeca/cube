@@ -1,4 +1,7 @@
 import express, { Express, Request, Response } from 'express';
+const { PubSub } = require('@google-cloud/pubsub');
+const pubsub = new PubSub();
+
 import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
@@ -22,8 +25,8 @@ const getApiResultFromDbRow = (r: any) => ({
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
-    const { profileId, ...contentData } = req.body;
-
+    const { profileId, vttFileId, ...contentData } = req.body;
+    const { type } = contentData;
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
       return res.status(400).send('Invalid request body');
@@ -37,7 +40,17 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
 
     // Insert content into database
     const dbResult = await db.insertContent({ profileId, ...contentData });
-    return res.status(201).json(getApiResultFromDbRow(dbResult));
+    const response = { ...dbResult };
+    if (!vttFileId && (type === 'video' || type === 'audio')) {
+      // Publish a message to Google Pub/Sub
+      const topicName = 'vtt_transcribe'; // Replace with your actual topic name
+      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
+      await pubsub.topic(topicName).publish(Buffer.from(message));
+      console.log('Queued VTT');
+      response.data.vttQueued = true;
+    }
+
+    return res.status(201).json(getApiResultFromDbRow(response));
   } catch (error) {
     console.error('Error creating the content item', error);
     res.status(500).send('Error creating the content item');
@@ -90,6 +103,7 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
 
     // Update content in the database
     const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
+
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error updating the content item', error);
@@ -182,6 +196,35 @@ app.get('/', async (req: Request, res: Response) => {
     res.status(500).send('Internal server error');
   }
 });
+
+app.get('/vtt/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await db.getVTTById(id);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error getting VTT', error);
+    res.status(500).send('Error getting VTT');
+  }
+});
+
+app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { transcript } = req.body;
+    const user = extractUser(req); 
+    const content = await db.getContentById(id);
+    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, content.data.profileId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to update content for this profile');
+    }
+    const result = await db.updateVTT(id, transcript);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error updating VTT', error);
+    res.status(500).send('Error updating VTT');
+  }
+})
 
 // Starting the server
 app.listen(settings.PORT, async () => {
