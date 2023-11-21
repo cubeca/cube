@@ -100,12 +100,14 @@ const CategorizedContent = () => {
                 />
               ))
             )}
+
+            {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
+              <s.LoadMore onClick={handleLoadMore}>
+                <span className="inner"><span className="label">{t('Load More Results')}</span></span>
+              </s.LoadMore>
+            )}
           </s.Content>
-          {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
-            <Button onClick={handleLoadMore} fullWidth={false}>
-              {t('Load More')}
-            </Button>
-          )}
+          
         </Grid>
       </Grid>
     </s.ContentWrapper>

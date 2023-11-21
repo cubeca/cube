@@ -95,7 +95,11 @@ const UserContent = ({ profile }: UserContentProps) => {
 
       <s.UserContent>
         {isLoading ? (
-          <Lottie animationData={LoadingCubes} loop={true} />
+          <Lottie
+          className="loading-cubes"
+            animationData={LoadingCubes}
+            loop={true}
+          />
         ) : error ? (
           <p>{error}</p>
         ) : (
@@ -111,9 +115,9 @@ const UserContent = ({ profile }: UserContentProps) => {
           ))
         )}
         {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
-          <Button onClick={handleLoadMore} fullWidth={false}>
-            {t('Load More')}
-          </Button>
+          <s.LoadMore onClick={handleLoadMore}>
+            <span className="inner"><span className="label">{t('Load More Results')}</span></span>
+          </s.LoadMore>
         )}
       </s.UserContent>
     </s.UserContentWrapper>
