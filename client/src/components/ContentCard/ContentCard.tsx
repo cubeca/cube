@@ -1,7 +1,10 @@
-import { Box, Card, Stack, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { ReactComponent as PlayButton } from 'assets/icons/play.svg';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LinkIcon from '@mui/icons-material/Link';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import * as s from './ContentCard.styled';
 
@@ -15,7 +18,6 @@ export interface ContentCardProps {
 }
 
 const ContentCard: FC<ContentCardProps> = ({
-  creator,
   title,
   image,
   icon,
@@ -29,22 +31,31 @@ const ContentCard: FC<ContentCardProps> = ({
             backgroundImage: `url('${image}')`
           }} >
         </s.Thumbnail>
+          <div className="types">
+            
+          </div>
 
         <s.Data direction="row" alignItems="space-between">
           <Typography component="div" className="title">
             {title}
           </Typography>
-          { /* creator && (
-            <Typography component="span" className="creator">
-              {creator}
-            </Typography>
-          ) */ }
           <div className='types'>
-            {icon}
+            {icon === 'video' ? (
+              <PlayArrowIcon fontSize="small" />
+            ) : icon === 'audio' ? (
+              <VolumeUpIcon fontSize="small" />
+            ) : icon === 'pdf' ? (
+              <MenuBookIcon fontSize="small" />
+            ) : icon === 'link' ? (
+              <LinkIcon fontSize="small" />
+            ) : (
+              <></>
+            )}
             {hasSignLanguage && <SignLanguageIcon fontSize="small" />}
           </div>
         </s.Data>
       </Link>
+
     </s.ContentCard>
   );
 };

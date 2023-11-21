@@ -3,50 +3,126 @@ import UserContentFilter from './UserContentFilter';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
-
-import collaboration from 'assets/icons/type-collaboration.svg';
-import video from 'assets/icons/type-video.svg';
-import audio from 'assets/icons/type-audio.svg';
-import book from 'assets/icons/type-book.svg';
-import publication from 'assets/icons/type-publication.svg';
-
-import FPOThumb1 from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
-import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
-import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
-import FPOThumb4 from 'assets/images/fpo/ryan-stefan-5K98ScREEUY-unsplash-thumb.png';
-import FPOThumb5 from 'assets/images/fpo/filip-zrnzevic-QsWG0kjPQRY-unsplash-thumb.png';
-import FPOThumb6 from 'assets/images/fpo/coline-beulin-oLWGI-Q76Yc-unsplash-thumb.png';
-import FPOThumb7 from 'assets/images/fpo/abi-baurer-2xbcFBRGsZo-unsplash-thumb.png';
-import FPOThumb8 from 'assets/images/fpo/eldar-nazarov-gnYfMrL0rck-unsplash-thumb.png';
+import { useCallback, useEffect, useState, useRef } from 'react';
+import { SearchFilters } from '@cubeca/bff-client-oas-axios';
+import useDebounce from '../../../hooks/useDebounce';
+import { useTranslation } from 'react-i18next';
+import { searchContent } from 'api/search';
 
 interface UserContentProps {
-  content?: any;
+  profile?: any;
 }
 
-const UserContent = ({ content }: UserContentProps) => {
+const UserContent = ({ profile }: UserContentProps) => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [categoryFilter, setCategoryFilter] = useState();
+  const [searchContentResults, setSearchContentResults] = useState(
+    profile.content
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [offset, setOffset] = useState<number>(0);
+  const debouncedSearchTerm = useDebounce(searchTerm, 1000);
+  const { t } = useTranslation();
+  const [limit, setLimit] = useState<number>(12);
+  const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
+  const isInitialMount = useRef(true);
+
+  const fetchContent = useCallback(
+    async (newOffset: number) => {
+      console.log('iamhere');
+      setIsLoading(true);
+      try {
+        const searchFilters: SearchFilters = {
+          category: categoryFilter === 'all' ? undefined : categoryFilter,
+          profileId: profile?.id
+        };
+
+        const results = await searchContent(
+          debouncedSearchTerm.trim(),
+          newOffset,
+          limit,
+          searchFilters
+        );
+
+        const newResults = Array.isArray(results) ? results : [];
+        if (newResults.length <= 12) {
+          setHasMoreToLoad(false);
+        }
+
+        if (newOffset === 0) {
+          setSearchContentResults(newResults);
+        } else {
+          setSearchContentResults((prevResults: any) => [
+            ...prevResults,
+            ...newResults
+          ]);
+        }
+
+        setOffset(newOffset + limit);
+      } catch (error) {
+        console.error('An error occurred during the search:', error);
+        setError('Failed to load search results');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [debouncedSearchTerm, categoryFilter]
+  );
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      fetchContent(0);
+    }
+  }, [fetchContent, debouncedSearchTerm]);
+
+  const handleLoadMore = () => {
+    fetchContent(offset);
+  };
+
+  const displayContent =
+    searchTerm.trim() !== '' || categoryFilter
+      ? searchContentResults
+      : profile.content;
+
   return (
     <s.UserContentWrapper>
-      <UserContentFilter />
+      <UserContentFilter
+        setSearchTerm={setSearchTerm}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+      />
 
       <s.UserContent>
-        {!content && (
+        {isLoading ? (
           <Lottie
             className="loading-cubes"
             animationData={LoadingCubes}
             loop={true}
           />
-        )}
-        {
-        content?.map((c: any) => (
-          <ContentCard
-              key={c.id}
-              image={c.coverImageUrl?.playerInfo?.publicUrl || ''}
-              title={c.title}
-              creator={c.creator}
-              url={`/content/${c.id}`}
-              icon={c.iconUrl}
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          displayContent?.map((item: any) => (
+            <ContentCard
+              key={item.id}
+              image={item.coverImageUrl?.playerInfo?.publicUrl || ''}
+              title={item.title}
+              url={`/content/${item.id}`}
+              icon={item.type}
+              hasSignLanguage={item.hasSignLanguage}
             />
-        ))}
+          ))
+        )}
+        {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
+          <s.LoadMore onClick={handleLoadMore}>
+            <span className="inner">
+              <span className="label">{t('Load More Results')}</span>
+            </span>
+          </s.LoadMore>
+        )}
       </s.UserContent>
     </s.UserContentWrapper>
   );
