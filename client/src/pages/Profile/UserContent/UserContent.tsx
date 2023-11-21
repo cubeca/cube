@@ -3,10 +3,9 @@ import UserContentFilter from './UserContentFilter';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { SearchFilters } from '@cubeca/bff-client-oas-axios';
 import useDebounce from '../../../hooks/useDebounce';
-import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
 import { searchContent } from 'api/search';
 
@@ -25,11 +24,13 @@ const UserContent = ({ profile }: UserContentProps) => {
   const [offset, setOffset] = useState<number>(0);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const { t } = useTranslation();
-  const [limit, setLimit] = useState<number>(11);
+  const [limit, setLimit] = useState<number>(12);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
+  const isInitialMount = useRef(true);
 
   const fetchContent = useCallback(
     async (newOffset: number) => {
+      console.log('iamhere');
       setIsLoading(true);
       try {
         const searchFilters: SearchFilters = {
@@ -45,6 +46,9 @@ const UserContent = ({ profile }: UserContentProps) => {
         );
 
         const newResults = Array.isArray(results) ? results : [];
+        if (newResults.length <= 12) {
+          setHasMoreToLoad(false);
+        }
 
         if (newOffset === 0) {
           setSearchContentResults(newResults);
@@ -53,10 +57,6 @@ const UserContent = ({ profile }: UserContentProps) => {
             ...prevResults,
             ...newResults
           ]);
-
-          if (newResults.length === 0) {
-            setHasMoreToLoad(false);
-          }
         }
 
         setOffset(newOffset + limit);
@@ -67,16 +67,18 @@ const UserContent = ({ profile }: UserContentProps) => {
         setIsLoading(false);
       }
     },
-    [debouncedSearchTerm, categoryFilter, limit]
+    [debouncedSearchTerm, categoryFilter]
   );
 
   useEffect(() => {
-    fetchContent(0); // Fetch initial content with offset 0
-  }, [fetchContent]);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      fetchContent(0);
+    }
+  }, [fetchContent, debouncedSearchTerm]);
 
-  const handleLoadMore = async () => {
-    // Update the limit to 12 before fetching more content
-    await setLimit(12);
+  const handleLoadMore = () => {
     fetchContent(offset);
   };
 
@@ -96,7 +98,7 @@ const UserContent = ({ profile }: UserContentProps) => {
       <s.UserContent>
         {isLoading ? (
           <Lottie
-          className="loading-cubes"
+            className="loading-cubes"
             animationData={LoadingCubes}
             loop={true}
           />
@@ -116,7 +118,9 @@ const UserContent = ({ profile }: UserContentProps) => {
         )}
         {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
           <s.LoadMore onClick={handleLoadMore}>
-            <span className="inner"><span className="label">{t('Load More Results')}</span></span>
+            <span className="inner">
+              <span className="label">{t('Load More Results')}</span>
+            </span>
           </s.LoadMore>
         )}
       </s.UserContent>

@@ -8,7 +8,6 @@ import { searchContent } from 'api/search';
 import { ContentStorage, SearchFilters } from '@cubeca/bff-client-oas-axios';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import useDebounce from '../../../../hooks/useDebounce';
-import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
 
 const CategorizedContent = () => {
@@ -20,7 +19,7 @@ const CategorizedContent = () => {
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
   const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(11);
+  const [limit, setLimit] = useState<number>(12);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
 
   const fetchContent = useCallback(
@@ -30,10 +29,11 @@ const CategorizedContent = () => {
         const searchFilters: SearchFilters = {
           category: categoryFilter === 'all' ? undefined : categoryFilter
         };
+
         const results = await searchContent(
           debouncedSearchTerm.trim(),
           newOffset,
-          limit,
+          newOffset === 0 ? 11 : limit,
           searchFilters
         );
 
@@ -44,11 +44,11 @@ const CategorizedContent = () => {
         } else {
           setContentResults((prevResults) => [...prevResults, ...results]);
 
-          if (newResults.length === 0) {
+          if (newResults.length <= 0) {
             setHasMoreToLoad(false);
           }
         }
-        setOffset(newOffset + limit);
+        setOffset(newOffset + (newOffset === 0 ? 11 : limit));
       } catch (error) {
         console.error('An error occurred during the search:', error);
         setError('Failed to load search results');
@@ -56,16 +56,14 @@ const CategorizedContent = () => {
         setIsLoading(false);
       }
     },
-    [debouncedSearchTerm, categoryFilter, limit]
+    [debouncedSearchTerm, categoryFilter]
   );
 
   useEffect(() => {
     fetchContent(0); // Fetch initial content with offset 0
   }, [fetchContent]);
 
-  const handleLoadMore = async () => {
-    // Update the limit to 12 before fetching more content
-    await setLimit(12);
+  const handleLoadMore = () => {
     fetchContent(offset);
   };
 
@@ -101,13 +99,16 @@ const CategorizedContent = () => {
               ))
             )}
 
-            {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
-              <s.LoadMore onClick={handleLoadMore}>
-                <span className="inner"><span className="label">{t('Load More Results')}</span></span>
-              </s.LoadMore>
-            )}
+            {!isLoading &&
+              debouncedSearchTerm.trim() !== '' &&
+              hasMoreToLoad && (
+                <s.LoadMore onClick={handleLoadMore}>
+                  <span className="inner">
+                    <span className="label">{t('Load More Results')}</span>
+                  </span>
+                </s.LoadMore>
+              )}
           </s.Content>
-          
         </Grid>
       </Grid>
     </s.ContentWrapper>
