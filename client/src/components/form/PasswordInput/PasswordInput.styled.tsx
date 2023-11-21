@@ -5,11 +5,11 @@ interface AdornmentProps {
   colorMode?: 'light' | 'dark';
 }
 export const StyledPasswordInput = styled(PasswordInput)`
-  && label {
+  & label {
     color: ${({ theme, colorMode }) =>
       colorMode === 'dark'
         ? `${theme.palette.background.default} !important`
-        : theme.palette.primary.light}
+        : theme.palette.primary.light};
     display: block;
     font-size: 1rem;
     font-weight: 500;
@@ -38,12 +38,5 @@ export const StyledPasswordInput = styled(PasswordInput)`
 
   & .MuiInputBase-formControl {
     margin-bottom: 24px;
-  }
-
-  & .MuiInputLabel-root {
-    color: ${({ theme, colorMode }) =>
-      colorMode === 'dark'
-        ? theme.palette.primary.light
-        : theme.palette.background.default};
   }
 `;
