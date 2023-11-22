@@ -23,7 +23,7 @@ export const StyledEmailInput = styled(EmailInput)`
     border-color: ${({ theme, colorMode }) =>
       colorMode === 'dark'
         ? theme.palette.background.default
-        : theme.palette.primary.light} !important;
+        : theme.palette.primary.light};
   }
 
   & input,

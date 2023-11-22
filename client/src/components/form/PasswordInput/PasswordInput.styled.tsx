@@ -8,7 +8,7 @@ export const StyledPasswordInput = styled(PasswordInput)`
   & label {
     color: ${({ theme, colorMode }) =>
       colorMode === 'dark'
-        ? `${theme.palette.background.default} !important`
+        ? `${theme.palette.background.default}`
         : theme.palette.primary.light};
     display: block;
     font-size: 1rem;
@@ -25,7 +25,7 @@ export const StyledPasswordInput = styled(PasswordInput)`
     border-color: ${({ theme, colorMode }) =>
       colorMode === 'dark'
         ? theme.palette.background.default
-        : theme.palette.primary.light} !important;
+        : theme.palette.primary.light};
   }
 
   & input,

@@ -1,16 +1,7 @@
-import { TextField as MuiTextField, alpha } from '@mui/material';
+import { Box, TextField as MuiTextField, alpha } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const TextInput = styled(MuiTextField)`
-  & label {
-    color: ${({ theme, colorMode }) =>
-      colorMode === 'dark' ? `red !important` : theme.palette.primary.light};
-    display: block;
-    font-size: 1rem;
-    font-weight: 500;
-    margin-bottom: 0;
-    font-weight: 600;
-  }
   & input,
   & fieldset,
   & input:focus + fieldset,
@@ -19,7 +10,7 @@ export const TextInput = styled(MuiTextField)`
     border-color: ${({ theme, colorMode }) =>
       colorMode === 'dark'
         ? theme.palette.background.default
-        : theme.palette.primary.main} !important;
+        : theme.palette.primary.main};
   }
 
   & input,
@@ -36,5 +27,19 @@ export const TextInput = styled(MuiTextField)`
 
   & .MuiInputBase-formControl {
     margin-bottom: 24px;
+  }
+`;
+
+export const FieldWrapper = styled(Box)`
+  & label {
+    color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? `${theme.palette.background.default}`
+        : theme.palette.primary.light};
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    font-weight: 600;
   }
 `;
