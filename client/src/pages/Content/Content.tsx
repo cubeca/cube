@@ -27,7 +27,6 @@ import DeleteContentButton from 'components/DeleteContentButton';
 import { getProfileId } from 'utils/auth';
 import EmbedModal from 'components/EmbedModal';
 
-
 const Video = () => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -59,7 +58,6 @@ const Video = () => {
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
-  const linkUrl = content?.externalUrl;
   const loggedInProfileId = getProfileId();
 
   // actual subtitle data coming soon!
