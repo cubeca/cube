@@ -38,10 +38,7 @@ const Video = () => {
     : '';
 
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
-    useState(() => {
-      const isOver18 = localStorage.getItem(OVER_18);
-      return isOver18 !== 'true';
-    });
+    useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
   const youtubeID = '';
 
@@ -64,12 +61,10 @@ const Video = () => {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const onOver18Click = () => {
-    localStorage.setItem(OVER_18, 'true');
     setIsSuitableForChildrenModalOpen(false);
   };
 
   const onUnder18Click = () => {
-    localStorage.setItem(OVER_18, 'false');
     setIsSuitableForChildrenModalOpen(false);
   };
 
@@ -82,8 +77,7 @@ const Video = () => {
   }, [contentRef.current, content]);
 
   useEffect(() => {
-    const isOver18 = localStorage.getItem(OVER_18);
-    if (content?.isSuitableForChildren === false && isOver18 !== 'true') {
+    if (content?.isSuitableForChildren === false) {
       setIsSuitableForChildrenModalOpen(true);
     }
   }, [content?.isSuitableForChildren]);
