@@ -16,6 +16,9 @@ import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 import { OVER_18 } from 'constants/localStorage';
+import useDeleteContent from 'hooks/useDeleteContent';
+import DeleteContentButton from 'components/DeleteContentButton';
+import { getProfileId } from 'utils/auth';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -49,6 +52,7 @@ const Video = () => {
   const mediaType = content?.type;
   const profileId = content?.profileId;
   const linkUrl = content?.externalUrl;
+  const loggedInProfileId = getProfileId();
   // actual subtitle data coming soon!
   const subtitleUrl = '';
 
@@ -170,10 +174,17 @@ const Video = () => {
           ) : null}
 
           <s.ContentWrapper>
-            <Typography component="h1" variant="h3">
-              {content?.title}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography component="h1" variant="h3">
+                {content?.title}
+              </Typography>
 
+              {loggedInProfileId === profileId && (
+                <Box sx={{ marginLeft: 'auto' }}>
+                  <DeleteContentButton contentId={content?.id || ''} />
+                </Box>
+              )}
+            </Box>
             <s.ContentDate component="p" variant="body2">
               {formattedCreatedDate}
             </s.ContentDate>
