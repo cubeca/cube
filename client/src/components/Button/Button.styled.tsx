@@ -2,7 +2,7 @@ import { Button as MuiButton, ButtonProps } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const Button = styled(MuiButton)`
-  font-size: 1rem; 
+  font-size: 1rem;
   margin-top: 1rem;
 
   &.MuiButton-containedPrimary {
@@ -26,5 +26,26 @@ export const Button = styled(MuiButton)`
 
   &.MuiButton-sizeLarge {
     font-size: 1.25rem;
+  }
+`;
+
+export const DeleteButton = styled(Button)`
+  background-color: #ffb7c4;
+  color: #28343c;
+  height: 45px;
+  width: 110px;
+  margin-top: 0px;
+  margin-right: 0px;
+
+  &:hover {
+    background-color: #ffa3b1;
+  }
+
+  &.MuiButton-containedPrimary {
+    color: #28343c;
+  }
+
+  &.MuiButton-containedSecondary {
+    color: #28343c;
   }
 `;
