@@ -1,4 +1,15 @@
-import { Home, Search, NotFound, Profile, Content, Upload, Login, ResetPassword, ForgotPassword } from 'pages';
+import {
+  Home,
+  Search,
+  NotFound,
+  Profile,
+  Content,
+  Upload,
+  Login,
+  ResetPassword,
+  ForgotPassword,
+  EmbeddedContent
+} from 'pages';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -13,14 +24,12 @@ const Router = () => {
       <Route path="/profile/:tag" element={<Profile />} />
       <Route path="/profile/:tag/upload" element={<Upload />} />
       <Route path="/content/:id" element={<Content />} />
+      <Route path="/embed/:id" element={<EmbeddedContent />} />
       <Route
         path="/verified"
         element={<Navigate to="/login?verified=true" />}
       />
-      <Route
-        path="/reset-password/:token"
-        element={<ResetPassword />}
-      />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );

@@ -8,5 +8,6 @@ export enum ContentQueryKeys {
   Type = 'type',
   Nation = 'nation',
   Creator = 'creator',
-  SignLanguage = 'signlanguage'
+  SignLanguage = 'signlanguage',
+  SearchTerm = 'searchTerm'
 }

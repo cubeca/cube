@@ -83,6 +83,20 @@ app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: 
   res.status(status).json(transformedContent[0]);
 });
 
+app.get('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.get('vtt/' + req.params.id, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+  res.status(status).json(data);
+});
+
+app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  const { status, data } = await contentApi.put('vtt/' + req.params.id, req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+  res.status(status).json(data);
+});
+
 app.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { status, data } = await contentApi.post('report', req.body, {
     headers: filterHeadersToForward(req, 'authorization')
@@ -239,6 +253,17 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
   const searchContentResult: ServiceResult = { status: null, data: null, error: null, meta: null };
   const searchProfileResult: ServiceResult = { status: null, data: null, error: null, meta: null };
+
+  const filters: any = {};
+  Object.keys(req.query).forEach((key) => {
+    if (key.startsWith('filters.')) {
+      const filterKey = key.substring('filters.'.length);
+      filters[filterKey] = req.query[key];
+      delete req.query[key];
+    }
+  });
+
+  req.query.filters = filters;
 
   if (!scope || scope === 'content') {
     try {

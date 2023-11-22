@@ -99,10 +99,15 @@ export const searchContent = async (offset: number, limit: number, filters: any,
   const whereClauses = [];
   const parameters = [];
 
-  if (filters && Object.keys(filters).length > 0) {
-    Object.keys(filters).forEach((key, index) => {
-      whereClauses.push(`data->>'${key}' = $${index + 1}`);
-      parameters.push(filters[key]);
+  if (filters) {
+    Object.keys(filters).forEach((key, i) => {
+      if (key === 'tags') {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE ANY (ARRAY[ $${i + 1} ])`);
+        parameters.push(filters[key].map((tag: any) => `%${tag}%`));
+      } else {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE '%' || $${i + 1} || '%'`);
+        parameters.push(filters[key]);
+      }
     });
   }
 
@@ -135,3 +140,24 @@ export const searchContent = async (offset: number, limit: number, filters: any,
   const result = await db.queryDefault(sql, ...parameters);
   return result.rows;
 };
+
+
+export const getVTTById = async (id: string) => {
+  //table name is vtt
+  const sql = `SELECT * FROM vtt WHERE id = $1`;
+  return await db.querySingleDefault(sql, id);
+}
+
+export const updateVTT = async (id: string, transcript: any) => {
+  const sql = `
+    UPDATE
+      vtt
+    SET 
+      transcript = $1
+    WHERE
+      id = $2
+    RETURNING *
+  `;
+
+  return await db.querySingleDefault(sql, transcript, id);
+}

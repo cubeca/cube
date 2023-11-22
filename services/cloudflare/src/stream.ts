@@ -6,46 +6,51 @@ import { makeCloudflareTusUploadMetadata } from './utils';
 const CLOUDFLARE_STREAM_BASE_URL = `https://api.cloudflare.com/client/v4/accounts/${settings.CLOUDFLARE_ACCOUNT_ID}/stream`;
 
 const cloudflareApi = axios.create({
-    baseURL: CLOUDFLARE_STREAM_BASE_URL,
-    timeout: 10 * 1000,
-    validateStatus: null
+  baseURL: CLOUDFLARE_STREAM_BASE_URL,
+  timeout: 10 * 1000,
+  validateStatus: null
 });
 
-export interface Headers { [k: string]: string };
+export interface Headers {
+  [k: string]: string;
+}
 
 const authHeader: Headers = {
-    Authorization: `bearer ${settings.CLOUDFLARE_API_TOKEN}`,
-}
+  Authorization: `bearer ${settings.CLOUDFLARE_API_TOKEN}`
+};
 
-export const getTusUploadUrl = async (fileId: string, fileSizeBytes: number, reserveDurationSeconds: number, urlValidDurationSeconds: number, userId: string) => {
-    const requestHeaders: Headers = {
-        ...authHeader,
-        'Tus-Resumable': '1.0.0',
-        'Upload-Creator': `file:${fileId}`,
-        'Upload-Length': String(fileSizeBytes),
-        'Upload-Metadata': makeCloudflareTusUploadMetadata({
-            reserveDurationSeconds,
-            isPrivate: false,
-            urlValidDurationSeconds,
-            uploadingUserId: userId
-        })
-    };
+export const getTusUploadUrl = async (
+  fileId: string,
+  fileSizeBytes: number,
+  reserveDurationSeconds: number,
+  urlValidDurationSeconds: number,
+  userId: string
+) => {
+  const requestHeaders: Headers = {
+    ...authHeader,
+    'Tus-Resumable': '1.0.0',
+    'Upload-Creator': `file:${fileId}`,
+    'Upload-Length': String(fileSizeBytes),
+    'Upload-Metadata': makeCloudflareTusUploadMetadata({
+      reserveDurationSeconds,
+      isPrivate: false,
+      urlValidDurationSeconds,
+      uploadingUserId: userId
+    })
+  };
 
-    const { status, statusText, headers, data } = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
-    console.log(`response from Cloudflare TUS endpoint for fileId ${fileId}`);
-    console.dir({ fileId, status, statusText, headers, data }, { depth: null, color: false});
+  const { headers } = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
+  const tusUploadUrl = headers['location'];
+  const cloudflareStreamUid = headers['stream-media-id'];
 
-    const tusUploadUrl = headers['location'];
-    const cloudflareStreamUid = headers['stream-media-id'];
-
-    return { tusUploadUrl, cloudflareStreamUid };
-}
+  return { tusUploadUrl, cloudflareStreamUid };
+};
 
 export const getVideoDetails = async (cloudflareStreamUid: string) => {
-    const { status, data } = await cloudflareApi.get(`/${cloudflareStreamUid}`, { headers: authHeader });
-    if (status === 200) {
-        return data.result;
-    } else {
-        return null;
-    }
-}
+  const { status, data } = await cloudflareApi.get(`/${cloudflareStreamUid}`, { headers: authHeader });
+  if (status === 200) {
+    return data.result;
+  } else {
+    return null;
+  }
+};

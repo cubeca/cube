@@ -6,7 +6,6 @@ import cors from 'cors';
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-import { stringToKeyValuePairs } from './utils/utils';
 import { sendReportAbuseEmail } from './email';
 
 // Creating an instance of Express application
@@ -48,7 +47,7 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
       const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
       await pubsub.topic(topicName).publish(Buffer.from(message));
       console.log('Queued VTT');
-      response.vttQueued = true;
+      response.data.vttQueued = true;
     }
 
     return res.status(201).json(getApiResultFromDbRow(response));
@@ -64,7 +63,7 @@ app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = req.query.profileId as string;
-  const filters = JSON.parse((req.query.filters as string) ?? '{}');
+  const filters = req.query.filters ?? {};
 
   const dbResult = await db.listContentByProfileId(offset, limit, filters, profileId);
 
@@ -148,11 +147,11 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = (req.query.searchTerm as string) || '';
-  const filters = stringToKeyValuePairs((req.query.filters as string) ?? '{}');
+  const filters = req.query.filters ?? {};
 
-  // Check if the search term is provided
-  if (!searchTerm) {
-    return res.status(404).send('Search term not provided.');
+  //  Check if the search term is provided
+  if (!searchTerm && !filters) {
+    return res.status(404).send('Search term or a filter is not provided.');
   }
 
   try {
@@ -197,6 +196,35 @@ app.get('/', async (req: Request, res: Response) => {
     res.status(500).send('Internal server error');
   }
 });
+
+app.get('/vtt/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const result = await db.getVTTById(id);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error getting VTT', error);
+    res.status(500).send('Error getting VTT');
+  }
+});
+
+app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { transcript } = req.body;
+    const user = extractUser(req); 
+    const content = await db.getContentById(id);
+    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, content.data.profileId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to update content for this profile');
+    }
+    const result = await db.updateVTT(id, transcript);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error('Error updating VTT', error);
+    res.status(500).send('Error updating VTT');
+  }
+})
 
 // Starting the server
 app.listen(settings.PORT, async () => {
