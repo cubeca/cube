@@ -1,6 +1,5 @@
 import { styled } from 'theme/utils';
 import EmailInput from './EmailInput';
-import { alpha } from '@mui/material/styles';
 
 export const StyledEmailInput = styled(EmailInput)`
   & label {

@@ -61,11 +61,6 @@ const TextInput: FC<TextInputProps> = ({
               fullWidth={fullWidth}
             >
               <s.TextInput
-                InputLabelProps={{
-                  style: {
-                    color: colorMode === 'dark' ? 'red !important' : 'blue'
-                  }
-                }}
                 sx={sx}
                 className={className}
                 placeholder={placeholder}

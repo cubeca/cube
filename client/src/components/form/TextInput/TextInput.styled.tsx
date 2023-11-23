@@ -1,4 +1,4 @@
-import { Box, TextField as MuiTextField, alpha } from '@mui/material';
+import { Box, TextField as MuiTextField } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const TextInput = styled(MuiTextField)`
