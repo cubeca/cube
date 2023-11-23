@@ -171,6 +171,21 @@ const Media = ({
         <Box my={theme.spacing(5)}>
           <TextInput
             control={control}
+            name="bannerImageText"
+            placeholder={t('Banner Image alt text (required)')}
+            fullWidth
+          />
+          <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+            {t(
+              'Alt text should describe who or what is in the picture, atmospheric or prop details and any vibrant colours or important design elements or symbols'
+            )}
+          </Typography>
+        </Box>
+      ) : null}
+      {showField('link') ? (
+        <Box my={theme.spacing(5)}>
+          <TextInput
+            control={control}
             name="link"
             placeholder={t('Link to content (required)')}
             fullWidth
