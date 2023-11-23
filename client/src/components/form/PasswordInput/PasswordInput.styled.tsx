@@ -1,9 +1,14 @@
 import { styled } from 'theme/utils';
 import PasswordInput from './PasswordInput';
-
-export const DarkPasswordInput = styled(PasswordInput)`
+interface AdornmentProps {
+  colorMode?: 'light' | 'dark';
+}
+export const StyledPasswordInput = styled(PasswordInput)`
   & label {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? `${theme.palette.background.default}`
+        : theme.palette.primary.light};
     display: block;
     font-size: 1rem;
     font-weight: 500;
@@ -16,13 +21,18 @@ export const DarkPasswordInput = styled(PasswordInput)`
   & input:focus + fieldset,
   & input:active + fieldset,
   & input:hover + fieldset {
-    border-color: ${(props) =>
-      props.theme.palette.background.default} !important;
+    border-color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? theme.palette.background.default
+        : theme.palette.primary.light};
   }
 
   & input,
   & textarea {
-    color: ${(props) => props.theme.palette.background.default};
+    color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? theme.palette.background.default
+        : theme.palette.primary.light};
   }
 
   & .MuiInputBase-formControl {
