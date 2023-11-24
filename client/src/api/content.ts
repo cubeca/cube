@@ -77,3 +77,7 @@ export const addContent = async ({
 
   return await contentApi.addContent(payload);
 };
+
+export const deleteContent = async (contentId: string) => {
+  return await contentApi.deleteContent(contentId);
+};
