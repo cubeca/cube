@@ -45,7 +45,8 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
     tag,
     password,
     hasAcceptedNewsletter = false,
-    hasAcceptedTerms = false
+    hasAcceptedTerms = false,
+    isOver18
   } = req.body;
 
   try {
@@ -80,7 +81,8 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
       encryptedPassword,
       permissionIds,
       hasAcceptedNewsletter,
-      hasAcceptedTerms
+      hasAcceptedTerms,
+      isOver18
     );
 
     const user = r.rows[0];
@@ -146,7 +148,8 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
       is_active: user.is_active,
       has_verified_email: user.has_verified_email,
       has_accepted_terms: user.has_accepted_terms,
-      profile_id: user.profile_id
+      profile_id: user.profile_id,
+      isOver18: user.is_over_18
     };
 
     res.json({ jwt: token, user: userReturnObj });
@@ -357,4 +360,3 @@ app.get('/', async (req: Request, res: Response) => {
 app.listen(settings.PORT, async () => {
   console.log(`Listening on port ${settings.PORT}`);
 });
-
