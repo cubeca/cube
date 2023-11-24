@@ -168,6 +168,7 @@ const Upload = () => {
         expiry: values.expiry,
         description: values.description,
         coverImageText: values.imageText,
+        bannerImageText: values.bannerImageText,
         collaborators: [values.collaborators],
         contributors: contributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),

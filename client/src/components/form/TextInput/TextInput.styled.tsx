@@ -1,20 +1,24 @@
-import { TextField as MuiTextField } from '@mui/material';
+import { Box, TextField as MuiTextField } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const TextInput = styled(MuiTextField)`
-
   & input,
   & fieldset,
   & input:focus + fieldset,
   & input:active + fieldset,
   & input:hover + fieldset {
-    border-color: ${(props) =>
-      props.theme.palette.primary.main} !important;
+    border-color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? theme.palette.background.default
+        : theme.palette.primary.main};
   }
 
   & input,
   & textarea {
-    color: ${(props) => props.theme.palette.primary.light};
+    color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? theme.palette.background.default
+        : theme.palette.primary.light};
   }
 
   & .MuiInputBase-input {
@@ -24,22 +28,18 @@ export const TextInput = styled(MuiTextField)`
   & .MuiInputBase-formControl {
     margin-bottom: 24px;
   }
+`;
 
-  &.dark {
-
-    & input,
-    & fieldset,
-    & input:focus + fieldset,
-    & input:active + fieldset,
-    & input:hover + fieldset {
-      border-color: ${(props) =>
-        props.theme.palette.background.default} !important;
-    }
-
-    & input,
-    & textarea {
-      color: ${(props) => props.theme.palette.background.default};
-    }
-
+export const FieldWrapper = styled(Box)`
+  & label {
+    color: ${({ theme, colorMode }) =>
+      colorMode === 'dark'
+        ? `${theme.palette.background.default}`
+        : theme.palette.primary.light};
+    display: block;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0;
+    font-weight: 600;
   }
 `;
