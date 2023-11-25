@@ -70,14 +70,14 @@ const CenterColumnPanel = () => {
                 'Cube, unlike other streaming platforms, does not sell your data. The art organizations here are dedicated to sustainable online ecosystems, that engage with audiences and creators in equitable ways.'
               )}
             </Typography>
-            <Button href="https://www.example.com" variant="contained">
+            {/* <Button href="https://www.example.com" variant="contained">
               Browse Our DAO Documentation
-            </Button>
+            </Button> */}
           </s.CenterColumnTextSection>
         </Grid>
         <Grid xs={10} xsOffset={1} md={3}></Grid>
         <Grid xs={10} xsOffset={1} md={2}></Grid>
-        <Grid xs={12} md={3} mdOffset={1}  order={{ md: 2 }}>
+        <Grid xs={12} md={3} mdOffset={1} order={{ md: 2 }}>
           <ThumbnailGrid
             thumbs={btmThumbGrid}
             alignment={'bottom'}
