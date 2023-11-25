@@ -24,7 +24,8 @@ export const CreatorSignupForm = () => {
     terms: false,
     organization: '',
     website: '',
-    tag: ''
+    tag: '',
+    isOver18: false
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
@@ -39,7 +40,8 @@ export const CreatorSignupForm = () => {
       terms,
       organization,
       website,
-      tag
+      tag,
+      isOver18
     } = submittableData;
     setDisplayLegal(false);
     try {
@@ -52,7 +54,8 @@ export const CreatorSignupForm = () => {
         email,
         password,
         !!promotions,
-        terms
+        terms,
+        isOver18
       );
 
       setIsFormSubmitted(true);
@@ -71,7 +74,8 @@ export const CreatorSignupForm = () => {
       terms: data.terms,
       organization: data.organization,
       website: data.website,
-      tag: data.tag
+      tag: data.tag,
+      isOver18: data.ageConfirmation
     });
     setDisplayLegal(true);
   };
@@ -164,6 +168,16 @@ export const CreatorSignupForm = () => {
             fullWidth
             helperText={t('Password required')}
             variant="outlined"
+          />
+          <CheckboxInput
+            control={control}
+            name="ageConfirmation"
+            label={t('I am over 18 years of age.')}
+            rules={{
+              required:
+                'Unfortunately you cannot create a profile on CubeCommons unless you are 18+ years old.'
+            }}
+            fullWidth
           />
           <CheckboxInput
             control={control}
