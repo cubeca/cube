@@ -166,6 +166,7 @@ const Upload = () => {
         title: values.title,
         type: values.type,
         expiry: values.expiry,
+        category: values.categories,
         description: values.description,
         coverImageText: values.imageText,
         bannerImageText: values.bannerImageText,
