@@ -269,6 +269,8 @@ const Video = () => {
                                       <Link
                                         href={contributor.url}
                                         sx={{ color: 'inherit' }}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                       >
                                         {contributor.name}
                                       </Link>
