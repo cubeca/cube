@@ -209,10 +209,10 @@ const Upload = () => {
         />
       )
     },
-    {
-      label: 'Accessibility',
-      view: <Accessibility />
-    },
+    // {
+    //   label: 'Accessibility',
+    //   view: <Accessibility />
+    // },
     {
       label: 'Tags',
       view: <Tags control={control} />
