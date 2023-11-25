@@ -209,7 +209,11 @@ const Video = () => {
               </s.EmbedWrapper>
             </Stack>
 
-            <Typography component="p" variant="body1">
+            <Typography
+              component="p"
+              variant="body1"
+              sx={{ whiteSpace: 'pre-wrap' }}
+            >
               {content?.description}
             </Typography>
           </s.ContentWrapper>
