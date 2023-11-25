@@ -220,6 +220,7 @@ const Tags = ({ control }: any) => {
                 name={`artistName${index}`}
                 fullWidth
                 placeholder={t('Name (required)')}
+                rules={{ required: index === 0 }}
               />
             </Grid>
             <Grid xs={12} sm={4}>
