@@ -7,12 +7,13 @@ export const insertIdentity = (
   password: string,
   permissionIds: string[],
   hasAcceptedTerms: boolean,
-  hasAcceptedNewsletter: boolean
+  hasAcceptedNewsletter: boolean,
+  isOver18: boolean
 ) => {
   const text = `
     INSERT INTO
-      users(name, email, profile_id, password, permission_ids, is_active, has_accepted_terms, has_accepted_newsletter)
-      VALUES($1, $2, $3, $4, $5, $6, $7, $8)
+      users(name, email, profile_id, password, permission_ids, is_active, has_accepted_terms, has_accepted_newsletter, is_over_18)
+      VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING *`;
   const values = [
     name,
@@ -22,7 +23,8 @@ export const insertIdentity = (
     `{${permissionIds.join(',')}}`,
     `false`,
     `${hasAcceptedTerms}`,
-    `${hasAcceptedNewsletter}`
+    `${hasAcceptedNewsletter}`,
+    `${isOver18}`
   ];
 
   return db.query(text, values);

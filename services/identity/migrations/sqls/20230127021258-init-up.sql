@@ -10,5 +10,6 @@ CREATE TABLE users (
     has_verified_email BOOLEAN DEFAULT false,
     has_accepted_terms BOOLEAN DEFAULT false,
     has_accepted_newsletter BOOLEAN DEFAULT false,
+    is_over_18 BOOLEAN DEFAULT false,
     PRIMARY KEY (id)
 );

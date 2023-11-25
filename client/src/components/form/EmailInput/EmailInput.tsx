@@ -9,6 +9,7 @@ const EmailInput: FC<TextInputProps> = (props) => {
   return (
     <TextInput
       {...props}
+      colorMode={props.colorMode}
       rules={{
         pattern: {
           value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
