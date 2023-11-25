@@ -6,6 +6,7 @@ interface MediaPlayerProps {
   coverArtUrl?: string;
   subtitleUrl?: string;
   isSafari?: boolean;
+  coverImageAltText?: string;
 }
 
 const MediaPlayer = ({
@@ -13,11 +14,13 @@ const MediaPlayer = ({
   isAudio,
   coverArtUrl,
   subtitleUrl,
-  isSafari
+  isSafari,
+  coverImageAltText
 }: MediaPlayerProps) => {
   return (
     <>
       <s.StyledPlayer
+        coverImageAltText={coverImageAltText}
         isSafari={isSafari}
         coverArtUrl={coverArtUrl || ''}
         url={url}
@@ -42,6 +45,7 @@ const MediaPlayer = ({
         controls
         width={'100%'}
         height={'auto'}
+        aria-label={coverImageAltText}
       />
     </>
   );

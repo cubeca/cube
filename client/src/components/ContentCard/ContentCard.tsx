@@ -15,6 +15,7 @@ export interface ContentCardProps {
   title: string;
   icon?: string;
   hasSignLanguage?: boolean;
+  coverImageAltText?: string;
 }
 
 const ContentCard: FC<ContentCardProps> = ({
@@ -22,24 +23,27 @@ const ContentCard: FC<ContentCardProps> = ({
   image,
   icon,
   url,
-  hasSignLanguage
+  hasSignLanguage,
+  coverImageAltText
 }) => {
   return (
     <s.ContentCard className="content-card">
       <Link to={url} title={title}>
-        <s.Thumbnail sx={{
+        <s.Thumbnail
+          sx={{
             backgroundImage: `url('${image}')`
-          }} >
+          }}
+          aria-label={coverImageAltText}
+        >
+          <span role="img" aria-label={coverImageAltText}></span>
         </s.Thumbnail>
-          <div className="types">
-            
-          </div>
+        <div className="types"></div>
 
         <s.Data direction="row" alignItems="space-between">
           <Typography component="div" className="title">
             {title}
           </Typography>
-          <div className='types'>
+          <div className="types">
             {icon === 'video' ? (
               <PlayArrowIcon fontSize="small" />
             ) : icon === 'audio' ? (
@@ -55,7 +59,6 @@ const ContentCard: FC<ContentCardProps> = ({
           </div>
         </s.Data>
       </Link>
-
     </s.ContentCard>
   );
 };

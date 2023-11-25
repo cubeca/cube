@@ -8,9 +8,17 @@ interface LinkPlayerProps {
   url: string;
   cover: string;
   title: string;
+  coverImageAltText?: string;
+  bannerImageAltText?: string;
 }
 
-const LinkPlayer = ({ url, cover, title }: LinkPlayerProps) => {
+const LinkPlayer = ({
+  url,
+  cover,
+  title,
+  coverImageAltText,
+  bannerImageAltText
+}: LinkPlayerProps) => {
   // check if URL is a file
   const isFile =
     /\.(jpeg|jpg|gif|png|pdf|doc|docx|xls|xlsx|ppt|pptx|txt|csv|zip|rar|tar|gz|7z|exe|dll)$/i.test(
@@ -51,7 +59,9 @@ const LinkPlayer = ({ url, cover, title }: LinkPlayerProps) => {
                   },
                   backgroundImage: `url(${cover})`
                 }}
-              ></s.ImageBox>
+              >
+                <span role="img" aria-label={bannerImageAltText}></span>
+              </s.ImageBox>
             )}
             <s.UrlInfoBox>
               <s.LeftContainer>

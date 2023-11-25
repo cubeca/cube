@@ -113,6 +113,7 @@ const UserContent = ({ profile }: UserContentProps) => {
               url={`/content/${item.id}`}
               icon={item.type}
               hasSignLanguage={item.hasSignLanguage}
+              coverImageAltText={item.coverImageText}
             />
           ))
         )}
