@@ -13,21 +13,6 @@ export const VideoWrapper = styled(Box)`
   width: 100%;
   padding-top: 56.25%;
 
-  & video::-webkit-media-text-track-display {
-    overflow: visible !important;
-    -webkit-box-sizing: border-box;
-    background: black;
-    padding: 8px;
-    borderradius: 16px;
-  }
-
-  & video::-webkit-media-text-track-container {
-    overflow: visible !important;
-    -webkit-transform: translateY(-10%) !important;
-    transform: translateY(-10%) !important;
-    position: relative;
-  }
-
   & > div,
   video,
   iframe {
@@ -52,7 +37,6 @@ export const AudioWrapper = styled(Box)`
     -webkit-box-sizing: border-box;
     background: black;
     padding: 8px;
-    borderradius: 16px;
   }
 
   & video::-webkit-media-text-track-container {
