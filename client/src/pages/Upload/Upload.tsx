@@ -10,7 +10,7 @@ import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
 import Accessibility from './components/Screens/Accessibility';
 import TOS from './components/Screens/TOS';
-import VTTEditor from './components/VTT/VTTEditor';
+import VTTEditor from '../SubtitleEditor/components/Editor/Editor';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
@@ -223,8 +223,7 @@ const Upload = () => {
     {
       label: 'Terms of Service',
       view: <TOS />
-    },
-
+    }
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
 
@@ -244,20 +243,9 @@ const Upload = () => {
 
   if (isSuccess) {
     //@ts-ignore - idk why this is not working - we can see in the node_modules it is part of the spec....
-    if (response?.data?.vttQueued && !vttEditorLaunched) { 
-      console.log('VTT Queued');
-      SCREENS_BASE.push({
-      label: 'Subtitle Editor',
-      view: (
-        <VTTEditor
-          content={response?.data}
-
-        />
-      )
-    })
-    setSCREENS(SCREENS_BASE);
-    setVTTEditorLaunched(true);
-    setScreenIndex(screenIndex + 1);
+    if (response.data.vttQueued && response?.data?.id) {
+      //@ts-ignore
+      navigate(`/subtitle-editor/${response?.data?.id}/true`);
     } else if (!vttEditorLaunched) {
       navigate(`/profile/${tag}`);
     }
@@ -278,29 +266,27 @@ const Upload = () => {
           !formState.isValid ||
           (screenIndex === 0 && (!isCoverImageSelected || !isMediaSelected)) ||
           (screenIndex === 1 && !isVTTSelected) ||
-          vttEditorLaunched 
+          vttEditorLaunched
         }
       />
       <Screens screen={activeScreenView} />
-      {
-        vttEditorLaunched ? null : 
-      <FormFooter
-        isLoading={isLoading}
-        screens={SCREENS.map((x) => x.label)}
-        screenIndex={screenIndex}
-        onScreenIndexChange={handleScreenChange}
-        handleSubmit={handleSubmit(onSubmit)}
-        isNextDisabled={
-          !formState.isValid ||
-          (screenIndex === 0 && !isCoverImageSelected) ||
-          (!mediaLink && !isMediaSelected) ||
-          (screenIndex === 1 &&
-            !isVTTSelected &&
-            mediaType in ['video', 'audio']) 
-        }
-
-      />
-}
+      {vttEditorLaunched ? null : (
+        <FormFooter
+          isLoading={isLoading}
+          screens={SCREENS.map((x) => x.label)}
+          screenIndex={screenIndex}
+          onScreenIndexChange={handleScreenChange}
+          handleSubmit={handleSubmit(onSubmit)}
+          isNextDisabled={
+            !formState.isValid ||
+            (screenIndex === 0 && !isCoverImageSelected) ||
+            (!mediaLink && !isMediaSelected) ||
+            (screenIndex === 1 &&
+              !isVTTSelected &&
+              mediaType in ['video', 'audio'])
+          }
+        />
+      )}
     </Box>
   );
 };
