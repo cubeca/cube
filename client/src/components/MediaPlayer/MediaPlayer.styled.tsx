@@ -4,11 +4,19 @@ import { styled } from 'theme/utils';
 interface StyledPlayerProps {
   coverArtUrl: string;
   isSafari?: boolean;
+  coverImageAltText?: string;
 }
 
 export const StyledPlayer = styled(
-  ({ coverArtUrl, isSafari, ...other }: StyledPlayerProps) => (
-    <ReactPlayer {...other} />
+  ({
+    coverArtUrl,
+    isSafari,
+    coverImageAltText,
+    ...other
+  }: StyledPlayerProps) => (
+    <ReactPlayer {...other}>
+      <span role="img" aria-label={coverImageAltText}></span>
+    </ReactPlayer>
   )
 )`
   background-image: ${(props) =>

@@ -55,6 +55,9 @@ const Video = () => {
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
+  const coverImageAltText = content?.coverImageText;
+  const bannerImageAltText = content?.bannerImageText;
+
   const loggedInProfileId = getProfileId();
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
 
@@ -128,6 +131,7 @@ const Video = () => {
       <MediaPlayer
         url={audioUrl || ''}
         coverArtUrl={coverArtUrl}
+        coverImageAltText={coverImageAltText}
         subtitleUrl={subtitleUrl}
         isSafari={isSafari}
       />
@@ -138,7 +142,11 @@ const Video = () => {
 
   const videoContent = (
     <s.VideoWrapper>
-      <MediaPlayer url={videoUrl || ''} subtitleUrl={subtitleUrl} />
+      <MediaPlayer
+        url={videoUrl || ''}
+        coverImageAltText={coverImageAltText}
+        subtitleUrl={subtitleUrl}
+      />
     </s.VideoWrapper>
   );
 
@@ -148,6 +156,8 @@ const Video = () => {
         url={linkUrl || ''}
         cover={bannerImage || ''}
         title={linkTitle || ''}
+        coverImageAltText={coverImageAltText}
+        bannerImageAltText={bannerImageAltText}
       />
     </s.LinkWrapper>
   );

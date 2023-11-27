@@ -36,6 +36,7 @@ const ContentList: FC<ContentListProps> = ({
             url={`/content/${c.id}`}
             icon={c.icon}
             hasSignLanguage={c.hasSignLanguage}
+            coverImageAltText={c.coverImageText}
           />
         ))}
       </Stack>
