@@ -1,8 +1,7 @@
 import { Box } from '@mui/material';
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import VTTEditor from './components/Editor/Editor';
-import { Grid } from '@mui/material';
 
 const SubtitleEditor = () => {
   const { id, postUpload } = useParams();

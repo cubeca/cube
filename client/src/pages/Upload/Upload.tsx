@@ -10,11 +10,9 @@ import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
 import Accessibility from './components/Screens/Accessibility';
 import TOS from './components/Screens/TOS';
-import VTTEditor from '../SubtitleEditor/components/Editor/Editor';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-import { getContentDetails } from '../../api/content';
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
     [key: string]: { name: string; url?: string }[];

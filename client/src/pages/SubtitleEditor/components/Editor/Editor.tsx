@@ -5,11 +5,11 @@ import { getAuthToken } from '../../../../utils/auth';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { TextField } from '@mui/material';
+import { BFF_URL } from '../../../../api/settings';
 import * as s from './Editor.styled';
 
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import { parse } from 'date-fns';
 
 const Editor = (props: { contentId: any; postUpload: any }) => {
   const { contentId, postUpload } = props;
@@ -26,14 +26,13 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         const interval = setInterval(async () => {
           const authToken = await getAuthToken();
           axios
-            .get(`http://localhost:8085/vtt/${contentId}`, {
+            .get(`${BFF_URL}/vtt/${contentId}`, {
               headers: {
                 Authorization: `Bearer ${authToken}`
               }
             })
             .then((res) => {
               if (res.status === 200 && res.data !== null) {
-                console.log(res.data);
                 setVTT(res.data.transcript);
                 clearInterval(interval);
                 setLoaded(true);
@@ -42,7 +41,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         }, 2000);
         return () => clearInterval(interval);
       } catch (error) {
-        console.log(error);
+        console.error({ error });
       }
     }
   }, [loaded, contentId]);
@@ -182,8 +181,6 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       vttArray.push({ key, ...vtt[key] });
     }
     vttArray.sort((a, b) => a.start - b.start);
-    console.log({ vttArray });
-    console.log('sorted');
     const response = vttArray.map((item) => {
       const key = item.key;
       return (
