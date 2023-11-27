@@ -43,9 +43,7 @@ const NavPanel = () => {
         <LegalModalNav />
       </s.NavItem>
 
-      <s.NavItem>
-        <Social />
-      </s.NavItem>
+      <s.NavItem>{/* <Social /> */}</s.NavItem>
     </s.NavList>
   );
 };

@@ -1,4 +1,9 @@
-import { getAuthToken, removeAuthToken, setAuthToken, setProfileId } from '../utils/auth';
+import {
+  getAuthToken,
+  removeAuthToken,
+  setAuthToken,
+  setProfileId
+} from '../utils/auth';
 import { authApi } from '.';
 
 export const anonymousJWT = async () => {
@@ -26,7 +31,7 @@ export const login = async (email: string, password: string) => {
 export const updateEmail = async (userId: string, email: string) => {
   return await authApi.updateEmail({
     uuid: userId,
-    email,
+    email
   });
 };
 
@@ -34,25 +39,33 @@ export const updatePassword = async ({
   newPassword,
   currentPassword,
   token
-} : {
+}: {
   newPassword: string;
   currentPassword?: string;
   token?: string;
 }) => {
-  const headers = token ? {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-   } : undefined;
-  return await authApi.updatePassword({
-    currentPassword,
-    newPassword,
-  }, headers);
+  const headers = token
+    ? {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    : undefined;
+  return await authApi.updatePassword(
+    {
+      currentPassword,
+      newPassword
+    },
+    headers
+  );
 };
 
 export const forgotPassword = async (email: string) => {
-  const anonToken = await anonymousJWT()
-  return await authApi.forgotPassword({ email }, { headers: { Authorization: `Bearer ${anonToken}`}});
+  const anonToken = await anonymousJWT();
+  return await authApi.forgotPassword(
+    { email },
+    { headers: { Authorization: `Bearer ${anonToken}` } }
+  );
 };
 
 export const creatorSignup = async (
@@ -63,7 +76,8 @@ export const creatorSignup = async (
   email: string,
   password: string,
   hasAcceptedTerms: boolean,
-  hasAcceptedNewsletter: boolean
+  hasAcceptedNewsletter: boolean,
+  isOver18: boolean
 ) =>
   await authApi.user({
     name,
@@ -73,7 +87,8 @@ export const creatorSignup = async (
     email,
     password,
     hasAcceptedTerms,
-    hasAcceptedNewsletter
+    hasAcceptedNewsletter,
+    isOver18
   });
 
 export const userSignup = async (
@@ -81,17 +96,22 @@ export const userSignup = async (
   email: string,
   password: string,
   hasAcceptedTerms: boolean,
-  hasAcceptedNewsletter: boolean
+  hasAcceptedNewsletter: boolean,
+  isOver18: boolean
 ) =>
   await authApi.user({
     name,
     email,
     password,
     hasAcceptedTerms,
-    hasAcceptedNewsletter
+    hasAcceptedNewsletter,
+    isOver18
   });
 
 export const resendEmailVerification = async (email: string) => {
-  const authToken = await getAuthToken()
-  return await authApi.resendEmailVerification({ email }, { headers: { Authorization : `Bearer ${authToken}`}})
-}
+  const authToken = await getAuthToken();
+  return await authApi.resendEmailVerification(
+    { email },
+    { headers: { Authorization: `Bearer ${authToken}` } }
+  );
+};

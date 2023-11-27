@@ -33,8 +33,14 @@ interface ExtendedContentDetailsResponse extends ContentDetailsResponse {
         hlsUrl?: string;
       };
     };
+    vttFileUrl?: {
+      playerInfo?: {
+        publicUrl?: string;
+      };
+    };
   };
 }
+
 const useContentDetails = (): ExtendedContentDetailsResponse => {
   const { id } = useParams();
 

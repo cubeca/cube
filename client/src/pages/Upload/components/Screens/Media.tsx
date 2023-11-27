@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Link, Typography, useTheme } from '@mui/material';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
@@ -79,8 +79,15 @@ const Media = ({
         </Select>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'What type of media are you uploading? Don’t see the type you need in this list? Contact us.'
+            'What type of media are you uploading? Don’t see the type you need in this list? '
           )}
+          <Link
+            href="mailto:ash@cubecommons.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('Contact us.')}
+          </Link>
         </Typography>
       </Box>
       {showField('title') ? (

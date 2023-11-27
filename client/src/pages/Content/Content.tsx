@@ -59,10 +59,7 @@ const Video = () => {
   const bannerImageAltText = content?.bannerImageText;
 
   const loggedInProfileId = getProfileId();
-
-
-  // actual subtitle data coming soon!
-  const subtitleUrl = '';
+  const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
 
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
@@ -145,7 +142,11 @@ const Video = () => {
 
   const videoContent = (
     <s.VideoWrapper>
-      <MediaPlayer url={videoUrl || ''} coverImageAltText={coverImageAltText} />
+      <MediaPlayer
+        url={videoUrl || ''}
+        coverImageAltText={coverImageAltText}
+        subtitleUrl={subtitleUrl}
+      />
     </s.VideoWrapper>
   );
 
@@ -216,7 +217,11 @@ const Video = () => {
               </s.EmbedWrapper>
             </Stack>
 
-            <Typography component="p" variant="body1">
+            <Typography
+              component="p"
+              variant="body1"
+              sx={{ whiteSpace: 'pre-wrap' }}
+            >
               {content?.description}
             </Typography>
           </s.ContentWrapper>
@@ -276,6 +281,8 @@ const Video = () => {
                                       <Link
                                         href={contributor.url}
                                         sx={{ color: 'inherit' }}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                       >
                                         {contributor.name}
                                       </Link>

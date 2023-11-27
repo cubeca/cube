@@ -28,8 +28,8 @@ const Details = ({
     const reqMap = {
       video: ['description', 'vtt', 'kidsContent', 'expiry'],
       audio: ['description', 'vtt', 'expiry'],
-      pdf: ['description', 'expiry'],
-      link: ['description', 'expiry']
+      pdf: ['description', 'expiry', 'kidsContent'],
+      link: ['description', 'expiry', 'kidsContent']
     };
     if (!uploadType) return false;
     // @ts-ignore

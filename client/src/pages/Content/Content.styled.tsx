@@ -13,21 +13,6 @@ export const VideoWrapper = styled(Box)`
   width: 100%;
   padding-top: 56.25%;
 
-  & video::-webkit-media-text-track-display {
-    overflow: visible !important;
-    -webkit-box-sizing: border-box;
-    background: black;
-    padding: 8px;
-    borderradius: 16px;
-  }
-
-  & video::-webkit-media-text-track-container {
-    overflow: visible !important;
-    -webkit-transform: translateY(-10%) !important;
-    transform: translateY(-10%) !important;
-    position: relative;
-  }
-
   & > div,
   video,
   iframe {
@@ -52,7 +37,6 @@ export const AudioWrapper = styled(Box)`
     -webkit-box-sizing: border-box;
     background: black;
     padding: 8px;
-    borderradius: 16px;
   }
 
   & video::-webkit-media-text-track-container {
@@ -171,13 +155,17 @@ export const EmbedWrapper = styled(Box)`
 
 export const Tags = styled(Box)`
   margin: 8px 0 0;
+  max-width: 100%;
+  flex-wrap: wrap;
 `;
 
 export const Tag = styled(Typography)`
   display: inline;
   word-wrap: break-word;
+  white-space: nowrap;
   font-size: 16px;
-  color: theme.palette.secondary.light;
+  color: ${(props) => props.theme.palette.primary.light};
+  font-weight: 400;
   font-weight: 400;
   line-height: 21px;
   text-decoration: ${(props) => (props.underline ? 'underline' : 'none')};
