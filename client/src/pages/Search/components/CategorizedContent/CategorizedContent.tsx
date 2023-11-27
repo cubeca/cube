@@ -1,170 +1,117 @@
 import Grid from '@mui/system/Unstable_Grid';
 import ContentCard from 'components/ContentCard';
-import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedContent.styled';
-import { useState } from 'react';
-import { ContentCategories, ContentLists } from 'types/enums';
-import useContent from 'hooks/useContent';
-import { ContentLoader } from 'components/Loaders';
+import { useCallback, useEffect, useState } from 'react';
+import Lottie from 'lottie-react';
 import ContentFilter from './CategorizedContentFilter';
-
-// Category icons
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import LinkIcon from '@mui/icons-material/Link';
-
-// FPO images
-import FPOThumb1 from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
-import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
-import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
-import FPOThumb4 from 'assets/images/fpo/ryan-stefan-5K98ScREEUY-unsplash-thumb.png';
-import FPOThumb5 from 'assets/images/fpo/filip-zrnzevic-QsWG0kjPQRY-unsplash-thumb.png';
-import FPOThumb6 from 'assets/images/fpo/coline-beulin-oLWGI-Q76Yc-unsplash-thumb.png';
-import FPOThumb7 from 'assets/images/fpo/abi-baurer-2xbcFBRGsZo-unsplash-thumb.png';
-import FPOThumb8 from 'assets/images/fpo/eldar-nazarov-gnYfMrL0rck-unsplash-thumb.png';
+import { searchContent } from 'api/search';
+import { ContentStorage, SearchFilters } from '@cubeca/bff-client-oas-axios';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
+import useDebounce from '../../../../hooks/useDebounce';
+import { useTranslation } from 'react-i18next';
 
 const CategorizedContent = () => {
+  const [searchTerm, setSearchTerm] = useState('profileId');
+  const [categoryFilter, setCategoryFilter] = useState();
+  const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const debouncedSearchTerm = useDebounce(searchTerm, 1000, 'profileId');
+  const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
-  const [selectedCategory, setSelectedCategory] = useState(
-    ContentCategories.Video
-  );
-  const { data, isLoading } = useContent(
-    ContentLists.Categorized,
-    selectedCategory
+  const [offset, setOffset] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(12);
+  const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
+
+  const fetchContent = useCallback(
+    async (newOffset: number) => {
+      setIsLoading(true);
+      try {
+        const searchFilters: SearchFilters = {
+          category: categoryFilter === 'all' ? undefined : categoryFilter
+        };
+
+        const results = await searchContent(
+          debouncedSearchTerm.trim(),
+          newOffset,
+          newOffset === 0 ? 11 : limit,
+          searchFilters
+        );
+
+        const newResults = Array.isArray(results) ? results : [];
+
+        if (newOffset === 0) {
+          setContentResults(results);
+        } else {
+          setContentResults((prevResults) => [...prevResults, ...results]);
+
+          if (newResults.length <= 0) {
+            setHasMoreToLoad(false);
+          }
+        }
+        setOffset(newOffset + (newOffset === 0 ? 11 : limit));
+      } catch (error) {
+        console.error('An error occurred during the search:', error);
+        setError('Failed to load search results');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [debouncedSearchTerm, categoryFilter]
   );
 
-  // Dummy content used for layout purposes: 
-  // const content = data || [
-  const content = [
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb1,
-      title: 'Lorem ipsum dolor sit amet consectetur adipiscing elit',
-      url: 'https://www.example.com',
-      icon: <PlayArrowIcon fontSize="small" />,
-      hasSignLanguage: true
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb2,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      icon: <PlayArrowIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb3,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      icon: <PlayArrowIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb4,
-      title: 'Audio Title',
-      url: 'https://www.example.com',
-      icon: <VolumeUpIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb5,
-      title: 'Audio Title',
-      url: 'https://www.example.com',
-      icon: <VolumeUpIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb6,
-      title: 'Audio Title',
-      url: 'https://www.example.com',
-      icon: <VolumeUpIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb7,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      icon: <MenuBookIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb8,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      icon: <MenuBookIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb1,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      icon: <MenuBookIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb7,
-      title: 'Link Title',
-      url: 'https://www.example.com',
-      icon: <LinkIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb8,
-      title: 'Link Title',
-      url: 'https://www.example.com',
-      icon: <LinkIcon fontSize="small" />,
-      hasSignLanguage: false
-    },
-    {
-      id: 0,
-      thumbnailUrl: FPOThumb1,
-      title: 'Link Title',
-      url: 'https://www.example.com',
-      icon: <LinkIcon fontSize="small" />,
-      hasSignLanguage: false
-    }
-  ];
+  useEffect(() => {
+    fetchContent(0); // Fetch initial content with offset 0
+  }, [fetchContent]);
+
+  const handleLoadMore = () => {
+    fetchContent(offset);
+  };
 
   return (
-
     <s.ContentWrapper>
       <Grid container>
         <Grid xs={10} xsOffset={1}>
-        
-          <ContentFilter />
+          <ContentFilter
+            setSearchTerm={setSearchTerm}
+            categoryFilter={categoryFilter}
+            setCategoryFilter={setCategoryFilter}
+          />
 
           <s.Content>
-            {!isLoading ? (
-              content.map((key: any) => (
+            {isLoading ? (
+              <Lottie
+                className="loading-cubes"
+                animationData={LoadingCubes}
+                loop={true}
+              />
+            ) : error ? (
+              <p>{error}</p>
+            ) : (
+              contentResults?.map((key: any) => (
                 <ContentCard
                   key={key.id}
-                  image={key.thumbnailUrl}
+                  image={key.coverImageUrl?.playerInfo?.publicUrl || ''}
                   title={key.title}
-                  creator={key.creator}
-                  url={key.url}
-                  icon={key.icon}
+                  url={`/content/${key.id}`}
+                  icon={key.type}
                   hasSignLanguage={key.hasSignLanguage}
                 />
               ))
-            ) : (
-              <ContentLoader size={6} />
             )}
-          </s.Content>
 
+            {!isLoading &&
+              debouncedSearchTerm.trim() !== '' &&
+              hasMoreToLoad && (
+                <s.LoadMore onClick={handleLoadMore}>
+                  <span className="inner">
+                    <span className="label">{t('Load More Results')}</span>
+                  </span>
+                </s.LoadMore>
+              )}
+          </s.Content>
         </Grid>
       </Grid>
     </s.ContentWrapper>
-    
   );
 };
 

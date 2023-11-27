@@ -3,7 +3,7 @@ import FormControl from '../FormControl';
 import { InputProps as MuiInputProps } from '../types';
 import { Controller } from 'react-hook-form';
 import * as s from './TextInput.styled';
-
+import { Box } from '@mui/material';
 
 interface TextInputProps extends MuiInputProps {
   type?: HTMLInputTypeAttribute;
@@ -12,6 +12,7 @@ interface TextInputProps extends MuiInputProps {
   rows?: string | number;
   InputProps?: any;
   multiline?: boolean;
+  colorMode?: 'light' | 'dark';
 }
 
 const defaultRules = {
@@ -35,10 +36,10 @@ const TextInput: FC<TextInputProps> = ({
   variant = 'outlined',
   rows,
   InputProps,
-  multiline
+  multiline,
+  colorMode = 'light'
 }) => {
   return (
-    
     <Controller
       name={name}
       control={control}
@@ -49,30 +50,33 @@ const TextInput: FC<TextInputProps> = ({
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => {
         return (
-          <FormControl
-            className={className}
-            id={id}
-            label={label}
-            error={!!error}
-            helperText={error && error.message ? error.message : helperText}
-            helperTextId={helperTextId}
-            fullWidth={fullWidth}
-          >
-            <s.TextInput
-              sx={sx}
+          <s.FieldWrapper colorMode={colorMode}>
+            <FormControl
               className={className}
-              placeholder={placeholder}
-              variant={variant}
-              size="small"
-              type={type}
+              id={id}
+              label={label}
               error={!!error}
+              helperText={error && error.message ? error.message : helperText}
+              helperTextId={helperTextId}
               fullWidth={fullWidth}
-              multiline={multiline}
-              rows={rows}
-              InputProps={InputProps}
-              {...field}
-            />
-          </FormControl>
+            >
+              <s.TextInput
+                sx={sx}
+                className={className}
+                placeholder={placeholder}
+                variant={variant}
+                size="small"
+                type={type}
+                error={!!error}
+                fullWidth={fullWidth}
+                multiline={multiline}
+                rows={rows}
+                InputProps={InputProps}
+                colorMode={colorMode}
+                {...field}
+              />
+            </FormControl>
+          </s.FieldWrapper>
         );
       }}
     />

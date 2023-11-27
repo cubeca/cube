@@ -21,6 +21,10 @@ import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 import { OVER_18 } from 'constants/localStorage';
+
+import useDeleteContent from 'hooks/useDeleteContent';
+import DeleteContentButton from 'components/DeleteContentButton';
+import { getProfileId } from 'utils/auth';
 import EmbedModal from 'components/EmbedModal';
 
 const Video = () => {
@@ -38,10 +42,7 @@ const Video = () => {
     : '';
 
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
-    useState(() => {
-      const isOver18 = localStorage.getItem(OVER_18);
-      return isOver18 !== 'true';
-    });
+    useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
   const youtubeID = '';
 
@@ -54,6 +55,7 @@ const Video = () => {
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
+  const loggedInProfileId = getProfileId();
 
   // actual subtitle data coming soon!
   const subtitleUrl = '';
@@ -64,12 +66,10 @@ const Video = () => {
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const onOver18Click = () => {
-    localStorage.setItem(OVER_18, 'true');
     setIsSuitableForChildrenModalOpen(false);
   };
 
   const onUnder18Click = () => {
-    localStorage.setItem(OVER_18, 'false');
     setIsSuitableForChildrenModalOpen(false);
   };
 
@@ -82,8 +82,7 @@ const Video = () => {
   }, [contentRef.current, content]);
 
   useEffect(() => {
-    const isOver18 = localStorage.getItem(OVER_18);
-    if (content?.isSuitableForChildren === false && isOver18 !== 'true') {
+    if (content?.isSuitableForChildren === false) {
       setIsSuitableForChildrenModalOpen(true);
     }
   }, [content?.isSuitableForChildren]);
@@ -186,10 +185,17 @@ const Video = () => {
           ) : null}
 
           <s.ContentWrapper>
-            <Typography component="h1" variant="h3">
-              {content?.title}
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography component="h1" variant="h3">
+                {content?.title}
+              </Typography>
 
+              {loggedInProfileId === profileId && (
+                <Box sx={{ marginLeft: 'auto' }}>
+                  <DeleteContentButton contentId={content?.id || ''} />
+                </Box>
+              )}
+            </Box>
             <s.ContentDate component="p" variant="body2">
               {formattedCreatedDate}
             </s.ContentDate>
@@ -203,7 +209,11 @@ const Video = () => {
               </s.EmbedWrapper>
             </Stack>
 
-            <Typography component="p" variant="body1">
+            <Typography
+              component="p"
+              variant="body1"
+              sx={{ whiteSpace: 'pre-wrap' }}
+            >
               {content?.description}
             </Typography>
           </s.ContentWrapper>
@@ -263,6 +273,8 @@ const Video = () => {
                                       <Link
                                         href={contributor.url}
                                         sx={{ color: 'inherit' }}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                       >
                                         {contributor.name}
                                       </Link>

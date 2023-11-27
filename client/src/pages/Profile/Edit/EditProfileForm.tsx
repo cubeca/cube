@@ -45,10 +45,10 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
   };
 
   const onChangeAudioDescription = (files: File[]) => {
-    setIsAudioUploadComplete(false)
+    setIsAudioUploadComplete(false);
     const file = files[0];
     updateAudioDescription(profile.id, file);
-    setIsAudioUploadComplete(true)
+    setIsAudioUploadComplete(true);
   };
 
   const logoIdUpload = 'logo-upload';
@@ -58,7 +58,9 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
     <Stack direction="column">
       <s.EditProfileImagesWrapper>
         <s.EditProfileHeroBg>
-          {profile.heroUrl && <img src={profile!.heroUrl} alt='user profile hero' />}
+          {profile.heroUrl && (
+            <img src={profile!.heroUrl} alt="user profile hero" />
+          )}
           <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
             <CameraIcon />
             <Typography>Upload</Typography>
@@ -72,7 +74,9 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         </s.EditProfileHeroBg>
         <s.ImageWrapper>
           <s.ImageInner>
-            {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
+            {profile.logoUrl && (
+              <img src={profile!.logoUrl} alt="user profile thumbnail" />
+            )}
           </s.ImageInner>
           <s.EditWrapper>
             <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
@@ -89,84 +93,82 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
         </s.ImageWrapper>
       </s.EditProfileImagesWrapper>
 
-      <s.EditFieldsWrapper>
-        <TextInput
-          className="dark"
-          defaultValue={profile.organization}
-          name="organization"
-          id="organization"
-          control={control}
-          fullWidth
-          variant="outlined"
-          label={t('Organization Name')}
-        />
-        <TextInput
-          className="dark"
-          defaultValue={profile.website}
-          name="website"
-          id="website"
-          control={control}
-          fullWidth
-          variant="outlined"
-          label={t('Organization URL')}
-        />
-        <TextInput
-          className="dark"
-          defaultValue={profile.description}
-          name="profileDescription"
-          id="profileDescription"
-          control={control}
-          multiline
-          rows={4}
-          fullWidth
-          variant="outlined"
-          label={t('Description')}
-        />
-        <sRadioInput.DarkRadioInput
-          control={control}
-          name="budget"
-          label="Budget"
-          id="budget"
-          direction="vertical"
-          defaultValue={profile.budget}
-          options={[
-            {
-              value: '1',
-              label: '100 to 10,000',
-              id: '1'
-            },
-            {
-              value: '2',
-              label: '10,000 to 30,000',
-              id: '2'
-            },
-            {
-              value: '3',
-              label: '30,000 to 80,000',
-              id: '3'
-            },
-            {
-              value: '4',
-              label: '80,000+',
-              id: '4'
-            }
-          ]}
-        />
+      <TextInput
+        colorMode="dark"
+        defaultValue={profile.organization}
+        name="organization"
+        id="organization"
+        control={control}
+        fullWidth
+        variant="outlined"
+        label={t('Organization Name')}
+      />
+      <TextInput
+        colorMode="dark"
+        defaultValue={profile.website}
+        name="website"
+        id="website"
+        control={control}
+        fullWidth
+        variant="outlined"
+        label={t('Organization URL')}
+      />
+      <TextInput
+        colorMode="dark"
+        defaultValue={profile.description}
+        name="profileDescription"
+        id="profileDescription"
+        control={control}
+        multiline
+        rows={4}
+        fullWidth
+        variant="outlined"
+        label={t('Description')}
+      />
+      <sRadioInput.DarkRadioInput
+        control={control}
+        name="budget"
+        label="Budget"
+        id="budget"
+        direction="vertical"
+        defaultValue={profile.budget}
+        options={[
+          {
+            value: '1',
+            label: '100 to 10,000',
+            id: '1'
+          },
+          {
+            value: '2',
+            label: '10,000 to 30,000',
+            id: '2'
+          },
+          {
+            value: '3',
+            label: '30,000 to 80,000',
+            id: '3'
+          },
+          {
+            value: '4',
+            label: '80,000+',
+            id: '4'
+          }
+        ]}
+      />
 
-        <UploadInput
-          text={t('Audio file describing the information above')}
-          onDrop={onChangeAudioDescription}
-          maxFiles={1}
-          style={'dark'}
-          isUploadComplete={isAudioUploadComplete}
-        />
+      <UploadInput
+        text={t('Audio file describing the information above')}
+        onDrop={onChangeAudioDescription}
+        maxFiles={1}
+        style={'dark'}
+        isUploadComplete={isAudioUploadComplete}
+      />
 
-        <Stack direction="row" justifyContent="right">
-          <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
-            {t('Update Profile')}
-          </Button>
-        </Stack>
-      </s.EditFieldsWrapper>
+      <Stack direction="row" justifyContent="right">
+        <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
+          {t('Update Profile')}
+        </Button>
+      </Stack>
     </Stack>
   );
 };

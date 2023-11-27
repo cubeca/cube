@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Link, Typography, useTheme } from '@mui/material';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
@@ -79,8 +79,15 @@ const Media = ({
         </Select>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'What type of media are you uploading? Don’t see the type you need in this list? Contact us.'
+            'What type of media are you uploading? Don’t see the type you need in this list? '
           )}
+          <Link
+            href="mailto:ash@cubecommons.ca"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {t('Contact us.')}
+          </Link>
         </Typography>
       </Box>
       {showField('title') ? (
@@ -163,6 +170,21 @@ const Media = ({
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
               'Upload a Banner Image to allow users to preview your link. For best results, we recommend images dimensions are 1280px by 720px. File size should not exceed 500 kb.'
+            )}
+          </Typography>
+        </Box>
+      ) : null}
+      {showField('link') ? (
+        <Box my={theme.spacing(5)}>
+          <TextInput
+            control={control}
+            name="bannerImageText"
+            placeholder={t('Banner Image alt text (required)')}
+            fullWidth
+          />
+          <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+            {t(
+              'Alt text should describe who or what is in the picture, atmospheric or prop details and any vibrant colours or important design elements or symbols'
             )}
           </Typography>
         </Box>

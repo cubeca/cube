@@ -12,25 +12,24 @@ const HeroPanelHome = () => {
   const { t } = useTranslation('about');
   return (
     <s.HeroPanelHome>
-
       <s.Bg>
         <img src={HeroHome} alt="hero" width="100%" height="auto" />
       </s.Bg>
 
       <s.Content>
         <Grid container>
-
           <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
             <s.Headline>
               <Typography component="h1" variant="h5">
                 <span>{t('Featured in ')}</span>
-                <strong className="category">{t('Videos')}</strong>
-                :
+                <strong className="category">{t('Videos')}</strong>:
               </Typography>
               <Typography component="h2" variant="h1">
                 Movement As Collective Process
               </Typography>
-              <a href="#TEST" className="play-button"><img src={Play} alt="play"/></a>
+              <a href="#TEST" className="play-button">
+                <img src={Play} alt="play" />
+              </a>
             </s.Headline>
           </Grid>
 
@@ -42,12 +41,10 @@ const HeroPanelHome = () => {
               image={CtaImage}
             />
           </Grid>
-
         </Grid>
       </s.Content>
 
       <TagOfTheWeek />
-
     </s.HeroPanelHome>
   );
 };

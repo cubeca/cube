@@ -79,10 +79,12 @@ export const addContent = async ({
 };
 
 export const getVTT = async (id: string) => {
-  console.log({id})
   return await contentApi.getVtt(id);
 }
 
 export const updateVTT = async (id: string, transcript: any) => {
   return await contentApi.updateVtt(id, transcript);
 }
+export const deleteContent = async (contentId: string) => {
+  return await contentApi.deleteContent(contentId);
+};

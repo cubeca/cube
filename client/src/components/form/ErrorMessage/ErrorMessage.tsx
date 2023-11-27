@@ -6,7 +6,9 @@ interface ErrorMessageProps {
 }
 
 const ErrorMessage: FC<ErrorMessageProps> = ({ children }) => (
-  <Box color="#f44336">{children}</Box>
+  <Box sx={{ fontSize: 18 }} color="#FFB7C4">
+    {children}
+  </Box>
 );
 
 export default ErrorMessage;
