@@ -61,7 +61,7 @@ export const UserSignupForm = () => {
       email: data.email,
       password: data.password,
       promotions: data.promotions,
-      terms: data.terms,
+      terms: true,
       isOver18: data.ageConfirmation
     });
     setDisplayLegal(true);

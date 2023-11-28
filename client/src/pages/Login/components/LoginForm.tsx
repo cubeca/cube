@@ -19,35 +19,39 @@ interface LoginFormProps {
   invalidToken?: boolean;
 }
 
-export const LoginForm = ({ emailVerified, passwordReset, invalidToken }: LoginFormProps) => {
+export const LoginForm = ({
+  emailVerified,
+  passwordReset,
+  invalidToken
+}: LoginFormProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
-  const [isUnverifiedLogin, setIsUnverifiedLogin] = useState(false)
-  const [isLinkResent, setIsLinkResent] = useState(false)
+  const [isUnverifiedLogin, setIsUnverifiedLogin] = useState(false);
+  const [isLinkResent, setIsLinkResent] = useState(false);
   const { login } = useAuth();
-  const [user, setUser] = useState<any>()
+  const [user, setUser] = useState<any>();
 
   const onSubmit = async (data: FieldValues) => {
     const { email, password } = data;
     try {
       setErrorMessage('');
       const user = await login(email, password);
-      setUser(user)
+      setUser(user);
 
-      const isEmailVerified = !!(user as any).has_verified_email
+      const isEmailVerified = !!(user as any).has_verified_email;
 
-      if(isEmailVerified) {
+      if (isEmailVerified) {
         if ((user as any).profile_id) {
-          const { data } = await getProfile((user as any).profile_id)
+          const { data } = await getProfile((user as any).profile_id);
           navigate(`/profile/${(data as any).tag}`);
         } else {
-          navigate('/home');
+          navigate('/');
         }
       } else {
         setIsUnverifiedLogin(true);
-        setUser(user)
+        setUser(user);
       }
     } catch (e: any) {
       setErrorMessage(e.response?.data || t('An Error occured during login'));
@@ -55,25 +59,35 @@ export const LoginForm = ({ emailVerified, passwordReset, invalidToken }: LoginF
   };
 
   const handleResendVerification = async () => {
-    await resendEmailVerification(user.email)
-    setIsLinkResent(true)
-  }
+    await resendEmailVerification(user.email);
+    setIsLinkResent(true);
+  };
 
-  if(isUnverifiedLogin) {
+  if (isUnverifiedLogin) {
     return (
       <Box display="flex" flexDirection="column">
         <Box pt={4}>
           {isLinkResent ? (
-            <Typography>{t('Email verification link has been resent to the provided email address.')}</Typography>
+            <Typography>
+              {t(
+                'Email verification link has been resent to the provided email address.'
+              )}
+            </Typography>
           ) : (
-          <ErrorMessage>{t('Email is unverified. Check your email for a verification link, or resend to provided email address.')}</ErrorMessage>
+            <ErrorMessage>
+              {t(
+                'Email is unverified. Check your email for a verification link, or resend to provided email address.'
+              )}
+            </ErrorMessage>
           )}
         </Box>
-        {!isLinkResent ? (<Button type="submit" onClick={handleResendVerification} fullWidth>
-          {t('Resend Email Verification Link')}
-        </Button>) : null}
+        {!isLinkResent ? (
+          <Button type="submit" onClick={handleResendVerification} fullWidth>
+            {t('Resend Email Verification Link')}
+          </Button>
+        ) : null}
       </Box>
-    )
+    );
   }
 
   return (
@@ -83,7 +97,7 @@ export const LoginForm = ({ emailVerified, passwordReset, invalidToken }: LoginF
           {t('Email Verified. Please login.')}
         </Typography>
       )}
-        {passwordReset && (
+      {passwordReset && (
         <Typography variant="h4" component="h2" pb={4}>
           {t('Password reset successful. Please login with your new password.')}
         </Typography>
@@ -114,9 +128,7 @@ export const LoginForm = ({ emailVerified, passwordReset, invalidToken }: LoginF
             helperText={t('Password required')}
             variant="outlined"
           />
-          {errorMessage && (
-            <ErrorMessage>{errorMessage}</ErrorMessage>
-          )}
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box>
             <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
               {t('Login')}
