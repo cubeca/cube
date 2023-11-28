@@ -48,9 +48,6 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     validFor = 30 * 60
   } = meta;
 
-  // inspect('meta ==', meta);
-  // return res.status(500).send('Error retrieving content upload url');
-
   if (!allocVidTime) {
     console.error(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
@@ -79,7 +76,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
       return res.status(500).send('Error creating the DB entry for this file');
     }
 
-    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(
+    const { tusUploadUrl, cloudflareStreamUid, data } = await stream.getTusUploadUrl(
       fileId,
       Number(tusUploadLength),
       reserveDurationSeconds,
@@ -88,7 +85,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     );
 
     if (!tusUploadUrl || !cloudflareStreamUid) {
-      return res.status(500).send('Error retrieving content upload url');
+      return res.status(500).send('Error retrieving content upload url' + data);
     }
 
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
@@ -102,7 +99,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     res.status(200).send('OK');
   } catch (e: any) {
     console.error('Error retrieving content upload url', e);
-    res.status(500).send('Error retrieving content upload url');
+    res.status(500).send('Error retrieving content upload url' + e);
   }
 });
 
@@ -141,7 +138,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     res.status(201).json({ fileId, presignedUrl });
   } catch (e: any) {
     console.error('Error retrieving content upload url', e);
-    res.status(500).send('Error retrieving content upload url');
+    res.status(500).send('Error retrieving content upload url' + e);
   }
 });
 

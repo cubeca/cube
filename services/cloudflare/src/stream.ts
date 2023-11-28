@@ -39,11 +39,11 @@ export const getTusUploadUrl = async (
     })
   };
 
-  const { headers } = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
-  const tusUploadUrl = headers['location'];
-  const cloudflareStreamUid = headers['stream-media-id'];
+  const { data } = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
+  const tusUploadUrl = data.headers['location'];
+  const cloudflareStreamUid = data.headers['stream-media-id'];
 
-  return { tusUploadUrl, cloudflareStreamUid };
+  return { tusUploadUrl, cloudflareStreamUid, data };
 };
 
 export const getVideoDetails = async (cloudflareStreamUid: string) => {
