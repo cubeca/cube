@@ -57,7 +57,7 @@ const LinkPlayer = ({
                     xs: '200px',
                     md: '400px'
                   },
-                  backgroundImage: `url(${cover})`
+                  backgroundImage: `url(${cover.replace(/ /g, '%20')})`
                 }}
               >
                 <span role="img" aria-label={bannerImageAltText}></span>
