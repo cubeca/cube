@@ -30,7 +30,6 @@ const UserContent = ({ profile }: UserContentProps) => {
 
   const fetchContent = useCallback(
     async (newOffset: number) => {
-      console.log('iamhere');
       setIsLoading(true);
       try {
         const searchFilters: SearchFilters = {
