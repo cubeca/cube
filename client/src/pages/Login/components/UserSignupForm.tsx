@@ -21,14 +21,22 @@ export const UserSignupForm = () => {
     email: '',
     password: '',
     promotions: false,
-    terms: false
+    terms: false,
+    isOver18: false
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const handleSignup = async () => {
-    const { firstName, lastName, email, password, promotions, terms } =
-      submittableData;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      promotions,
+      terms,
+      isOver18
+    } = submittableData;
     setDisplayLegal(false);
     try {
       setErrorMessage('');
@@ -37,7 +45,8 @@ export const UserSignupForm = () => {
         email,
         password,
         !!promotions,
-        terms
+        terms,
+        isOver18
       );
 
       setIsFormSubmitted(true);
@@ -52,7 +61,8 @@ export const UserSignupForm = () => {
       email: data.email,
       password: data.password,
       promotions: data.promotions,
-      terms: data.terms
+      terms: data.terms,
+      isOver18: data.ageConfirmation
     });
     setDisplayLegal(true);
   };
@@ -109,6 +119,15 @@ export const UserSignupForm = () => {
             fullWidth
             helperText={t('Password required')}
             variant="outlined"
+          />
+          <CheckboxInput
+            control={control}
+            name="ageConfirmation"
+            label={t('I am 18 years old or older')}
+            rules={{
+              required: 'You must confirm that you are at least 18 years old'
+            }}
+            fullWidth
           />
           <CheckboxInput
             control={control}
