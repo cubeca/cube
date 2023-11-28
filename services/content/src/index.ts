@@ -212,19 +212,21 @@ app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Res
   try {
     const { id } = req.params;
     const { transcript } = req.body;
-    const user = extractUser(req); 
+    const user = extractUser(req);
     const content = await db.getContentById(id);
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, content.data.profileId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update content for this profile');
     }
     const result = await db.updateVTT(id, transcript);
+    const dataBuffer = Buffer.from(id);
+    const messageId = await pubsub.topic('vtt_upload').publishMessage({ data: dataBuffer });
     res.status(200).json(result);
   } catch (error) {
     console.error('Error updating VTT', error);
     res.status(500).send('Error updating VTT');
   }
-})
+});
 
 // Starting the server
 app.listen(settings.PORT, async () => {

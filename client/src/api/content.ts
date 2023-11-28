@@ -78,6 +78,13 @@ export const addContent = async ({
   return await contentApi.addContent(payload);
 };
 
+export const getVTT = async (id: string) => {
+  return await contentApi.getVtt(id);
+}
+
+export const updateVTT = async (id: string, transcript: any) => {
+  return await contentApi.updateVtt(id, transcript);
+}
 export const deleteContent = async (contentId: string) => {
   return await contentApi.deleteContent(contentId);
 };
