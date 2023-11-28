@@ -210,10 +210,10 @@ const Upload = () => {
         />
       )
     },
-    {
-      label: 'Accessibility',
-      view: <Accessibility />
-    },
+    // {
+    //   label: 'Accessibility',
+    //   view: <Accessibility />
+    // },
     {
       label: 'Tags',
       view: <Tags control={control} />
@@ -225,16 +225,21 @@ const Upload = () => {
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
 
+  // leaving this logic here for now for when we bring the accessibility screen back
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   if (!['video', 'audio'].includes(mediaType)) {
+  //     const tmpScreens = [...SCREENS_BASE];
+  //     //remove accessibility screen
+  //     tmpScreens.splice(2, 1);
+  //     setSCREENS(tmpScreens);
+  //   } else {
+  //     setSCREENS(SCREENS_BASE);
+  //   }
+  // }, [mediaType]);
+
   useEffect(() => {
-    // @ts-ignore
-    if (!['video', 'audio'].includes(mediaType)) {
-      const tmpScreens = [...SCREENS_BASE];
-      //remove accessibility screen
-      tmpScreens.splice(2, 1);
-      setSCREENS(tmpScreens);
-    } else {
-      setSCREENS(SCREENS_BASE);
-    }
+    setSCREENS(SCREENS_BASE);
   }, [mediaType]);
 
   const activeScreenView = SCREENS[screenIndex].view;
