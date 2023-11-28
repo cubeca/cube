@@ -21,11 +21,9 @@ const retry = async (contentID, currentTries) => {
   const dataBuffer = Buffer.from(
     JSON.stringify({ contentID, tries: tries + 1 })
   );
-  let sleepTime = 10 * tries;
+  const sleepTime = 10;
   console.log(`Sleeping for ${sleepTime} seconds`);
   await new Promise((resolve) => setTimeout(resolve, sleepTime * 1000));
-
-  await new Promise((resolve) => setTimeout(resolve, 15000));
   await pubSubClient
     .topic("vtt_transcribe")
     .publishMessage({ data: dataBuffer });
@@ -135,7 +133,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
     }
   } catch (error) {
     console.log({ error });
-    if (tries <= 10) {
+    if (tries <= 100) {
       await retry(contentID, tries);
       return;
     } else {
@@ -176,19 +174,20 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
     }
     console.log("VTT JSON Saved");
     //publish message to vtt_upload
-
-    try {
-      const dataBuffer = Buffer.from(contentID);
-      const messageId = await pubSubClient
-        .topic("vtt_upload")
-        .publishMessage({ data: dataBuffer });
-      console.log(`Message ${messageId} published.`);
-    } catch (error) {
-      console.error(`Received error while publishing: ${error.message}`);
-      throw new Error(error);
-    }
+    const dataBuffer = Buffer.from(contentID);
+    const messageId = await pubSubClient
+      .topic("vtt_upload")
+      .publishMessage({ data: dataBuffer });
+    console.log(`Message ${messageId} published.`);
   } catch (processingError) {
     console.error({ processingError });
+    if (tries <= 25) {
+      //Try up to 25 times
+      await retry(contentID, tries);
+      return;
+    } else {
+      console.log("Too many retries");
+    }
   } finally {
     if (mediaData.type === "video") {
       try {

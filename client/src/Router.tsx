@@ -8,7 +8,8 @@ import {
   Login,
   ResetPassword,
   ForgotPassword,
-  EmbeddedContent
+  EmbeddedContent,
+  SubtitleEditor
 } from 'pages';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -24,6 +25,10 @@ const Router = () => {
       <Route path="/profile/:tag" element={<Profile />} />
       <Route path="/profile/:tag/upload" element={<Upload />} />
       <Route path="/content/:id" element={<Content />} />
+      <Route
+        path="/subtitle-editor/:id/:postUpload?"
+        element={<SubtitleEditor />}
+      />
       <Route path="/embed/:id" element={<EmbeddedContent />} />
       <Route
         path="/verified"
