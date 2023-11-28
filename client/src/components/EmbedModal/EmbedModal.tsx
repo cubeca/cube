@@ -16,13 +16,13 @@ function generateEmbedCode(type: string, url: string) {
 
   switch (type) {
     case 'audio':
-      embedCode = `<audio controls><source src="${url}" type="audio/mpeg">Your browser does not support the audio tag.</audio>`;
+      embedCode = `<iframe src="${url}" style="width:100%; height:auto;" frameborder="0"></iframe>`;
       break;
     case 'pdf':
-      embedCode = `<iframe src="${url}" style="width:600px; height:500px;" frameborder="0"></iframe>`;
+      embedCode = `<iframe src="${url}" style="width:100%; height:auto;" frameborder="0"></iframe>`;
       break;
     case 'video':
-      embedCode = `<video controls><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+      embedCode = `<iframe src="${url}" style="width:100%; height:auto;" frameborder="0"></iframe>`;
       break;
     case 'link':
       embedCode = `<a href="${url}" target="_blank"></a>`;
