@@ -38,17 +38,18 @@ const useContent = (list = 'videos', category?: string) => {
     isError: isUploadError,
     isLoading: isUploadLoading,
     isSuccess: isUploadSuccess,
-    mutate
+    mutate,
+    data: response
   } = useMutation(addContent);
 
-  const handleAddContent = (
+  const handleAddContent = async (
     payload: AddContentRequest,
     coverImageFile: File,
     mediaFile: File,
     vttFile: File,
     bannerImageFile?: File
   ) =>
-    mutate({
+    await mutate({
       payload,
       coverImageFile,
       mediaFile,
@@ -62,7 +63,8 @@ const useContent = (list = 'videos', category?: string) => {
     isUploadLoading,
     isUploadError,
     isUploadSuccess,
-    data: undefined, // data?.data.data,
+    response,
+    data,
     addContent: handleAddContent
   };
 };

@@ -7,6 +7,7 @@ import Login from './Login';
 import ResetPassword from './ResetPassword';
 import ForgotPassword from './ForgotPassword';
 import NotFound from './NotFound';
+import SubtitleEditor from './SubtitleEditor';
 import EmbeddedContent from './EmbeddedContent';
 
 export {
@@ -19,5 +20,6 @@ export {
   Login,
   ResetPassword,
   ForgotPassword,
+  SubtitleEditor,
   EmbeddedContent
 };
