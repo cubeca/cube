@@ -21,6 +21,7 @@ const Video = () => {
   const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const coverImageAltText = content?.coverImageText;
+  const bannerImageAltText = content?.bannerImageText;
   const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
@@ -64,6 +65,8 @@ const Video = () => {
         url={linkUrl || ''}
         cover={bannerImage || ''}
         title={linkTitle || ''}
+        coverImageAltText={coverImageAltText}
+        bannerImageAltText={bannerImageAltText}
       />
     </s.LinkWrapper>
   );
