@@ -36,6 +36,7 @@ export const UserHeroBg = styled(Box)`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
 
     ${(props) => props.theme.breakpoints.up('md')} {
       width: 87.5%;
@@ -51,7 +52,11 @@ export const UserHeroBg = styled(Box)`
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(0deg, rgba(47,64,72,1) 0%, rgba(47,64,72,0) 100%);
+    background: linear-gradient(
+      0deg,
+      rgba(47, 64, 72, 1) 0%,
+      rgba(47, 64, 72, 0) 100%
+    );
 
     ${(props) => props.theme.breakpoints.up('md')} {
       top: 0;
@@ -85,7 +90,7 @@ export const ViewSection = styled(Stack)`
   align-items: center;
   margin-top: -136px;
   z-index: 3;
-  
+
   &::before {
     content: '';
     display: block;
@@ -95,7 +100,7 @@ export const ViewSection = styled(Stack)`
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #2F4048;
+    background-color: #2f4048;
   }
 
   ${(props) => props.theme.breakpoints.up('md')} {
@@ -229,7 +234,7 @@ export const EditProfileHeroBg = styled(Box)`
 export const Body = styled(Box)`
   width: 100%;
   padding: 30px;
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 60px 30px;
   }
