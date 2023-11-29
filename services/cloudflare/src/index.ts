@@ -39,14 +39,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   }
 
   const meta = parseTusUploadMetadata(tusUploadMetadata);
-
-  const {
-    fileName,
-    // mimeType,
-    profileId,
-    allocVidTime = 60 * 60,
-    validFor = 30 * 60
-  } = meta;
+  const { fileName, profileId, allocVidTime = 60 * 60, validFor = 30 * 60 } = meta;
 
   if (!allocVidTime) {
     console.error(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);

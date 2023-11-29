@@ -10,7 +10,6 @@ export const upload = async (
 ): Promise<string | undefined> => {
   const mimeType = file.type;
   if (mimeType.startsWith('video')) {
-
     // This is just a hack until the Files & Upload APIs get refactored,
     // to allow creating a file stub with ID in a separate API call before triggering TUS.
     // TODO Replace with API call to create file stub.
@@ -53,12 +52,10 @@ export const uploadViaTus = async (
       metadata: {
         fileName: file.name,
         mimeType: file.type,
-
-        // TODO remove this hack (tries to reserve 1 minute per 1 MB filesize)
-        allocVidTime: Math.ceil(60 * (file.size / 1000000)),
-
+        allocVidTime: 21600,
         ...meta
       },
+      timeout: 600,
       onError(error: any) {
         reject(error);
       },
