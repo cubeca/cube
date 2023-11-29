@@ -7,7 +7,7 @@ const CLOUDFLARE_STREAM_BASE_URL = `https://api.cloudflare.com/client/v4/account
 
 const cloudflareApi = axios.create({
   baseURL: CLOUDFLARE_STREAM_BASE_URL,
-  timeout: 10 * 1000,
+  timeout: 10 * 60 * 1000,
   validateStatus: null
 });
 
@@ -39,9 +39,13 @@ export const getTusUploadUrl = async (
     })
   };
 
-  const { data } = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
-  const tusUploadUrl = data.headers['location'];
-  const cloudflareStreamUid = data.headers['stream-media-id'];
+  const response = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
+  console.log(response);
+
+  const tusUploadUrl = response.headers['location'];
+  const cloudflareStreamUid = response.headers['stream-media-id'];
+
+  console.log('tusUploadUrl: ', tusUploadUrl);
 
   return { tusUploadUrl, cloudflareStreamUid, data };
 };

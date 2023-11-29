@@ -31,6 +31,6 @@ export const contentApi = axios.create({
 
 export const cloudflareApi = axios.create({
   baseURL: settings.CLOUDFLARE_SERVICE_URL,
-  timeout: 60 * 1000,
+  timeout: 10 * 60 * 1000,
   validateStatus: null
 });

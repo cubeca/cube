@@ -55,7 +55,7 @@ export const uploadViaTus = async (
         allocVidTime: 21600,
         ...meta
       },
-      timeout: 600,
+      timeout: 10 * 60 * 1000,
       onError(error: any) {
         reject(error);
       },
