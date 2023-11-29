@@ -17,11 +17,21 @@ export const Filters = styled(Stack)`
     width: 100%;
     display: flex;
     flex-flow: column nowrap;
-
+    
     ${(props) => props.theme.breakpoints.up('md')} {
       margin-bottom: 16px;
       flex-flow: row nowrap;
+      justify-content: stretch;
       gap: 20px;
+
+      > div {
+        &:first-child {
+          flex: 1 1 auto;
+        }
+        &:last-child {
+          flex: 0 0 auto;
+        }
+      }
     }
   }
 

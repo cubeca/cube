@@ -21,6 +21,7 @@ export const EditProfileHeroBg = styled(Box)`
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center top;
   }
 
   label {
@@ -32,7 +33,7 @@ export const EditProfileHeroBg = styled(Box)`
     height: calc(100%);
     padding: 0;
     border: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 
     p {
       position: absolute;
@@ -52,7 +53,7 @@ export const EditProfileHeroBg = styled(Box)`
       left: 50%;
       margin-left: -14px;
       margin-top: -21px;
-      
+
       circle,
       path {
         fill: ${(props) => props.theme.palette.primary.light};
@@ -107,7 +108,7 @@ export const EditWrapper = styled(Box)`
     padding: 0;
     border: 0;
     border-radius: 50%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 
     p {
       position: absolute;
@@ -127,7 +128,7 @@ export const EditWrapper = styled(Box)`
       left: 50%;
       margin-left: -14px;
       margin-top: -21px;
-      
+
       circle,
       path {
         fill: ${(props) => props.theme.palette.primary.light};
