@@ -28,7 +28,8 @@ const MediaPlayer = ({
           file: {
             attributes: {
               poster: coverArtUrl,
-              controls: true
+              controls: true,
+              crossOrigin: 'true'
             },
             forceVideo: true,
             tracks: [
