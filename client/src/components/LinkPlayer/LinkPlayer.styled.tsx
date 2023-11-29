@@ -18,7 +18,7 @@ export const SubContainer = styled(Box)`
 export const ImageBox = styled(Box)`
   width: 100%;
 
-  background: no-repeat center/cover;
+  background: no-repeat top center / cover;
 `;
 
 export const UrlInfoBox = styled(Box)`
