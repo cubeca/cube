@@ -69,21 +69,6 @@ export const getProfileData = async (profileId: string, authHeader: AxiosHeaders
   return profile;
 };
 
-<<<<<<< Updated upstream
-=======
-interface Collaborator {
-  organization: string;
-  tag: string;
-  logofileid?: string;
-  logoUrl?: string;
-  website: string;
-  herofileid?: string;
-  descriptionfileid?: string;
-  description?: string;
-  budget?: string;
-}
-
->>>>>>> Stashed changes
 export async function transformContent(contentItems: any[], authHeader: AxiosHeaders) {
   const urlFieldNames = {
     coverImageFileId: 'coverImageUrl',
@@ -92,15 +77,6 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
     bannerImageFileId: 'bannerImageUrl'
   };
 
-<<<<<<< Updated upstream
-=======
-  // Separated the logic to get the file from cloudflare API for reusability
-  async function getFileFromCloudflare(fileId: string) {
-    const response = await cloudflareApi.get(`files/${fileId}`, { headers: authHeader });
-    return response.data;
-  }
-
->>>>>>> Stashed changes
   return Promise.all(
     contentItems.map(async (item) => {
       const newItem = { ...item };
@@ -113,7 +89,6 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
         }
       }
 
-<<<<<<< Updated upstream
       if (item.collaborators) {
         const collaboratorInfo = await fetchCollaboratorInfo(item.collaborators);
         newItem.collaboratorDetails = collaboratorInfo;
@@ -121,43 +96,6 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
       }
 
       return newItem;
-=======
-      // Process collaborator fields
-      newItem.collaborators = await Promise.all(
-        newItem.collaborators.map(async (profileId: string) => {
-          // Fetch the collaborator profiles using the profile id
-          const getCollaboratorInfoResponse = await profileApi.post(
-            'getProfilesByIdList',
-            { profileIdList: [profileId] },
-            { headers: authHeader }
-          );
-          const collaborator: Collaborator[] = Object.values(getCollaboratorInfoResponse.data);
-
-          const updatedCollaborators = await Promise.all(
-            collaborator.map(async (collaborator) => {
-              const collaboratorInfo = {
-                organization: collaborator.organization,
-                tag: collaborator.tag,
-                logoUrl: ''
-              };
-
-              if (collaborator.logofileid) {
-                try {
-                  const data = await getFileFromCloudflare(collaborator.logofileid);
-                  collaboratorInfo.logoUrl = data.playerInfo.publicUrl;
-                } catch (error) {
-                  console.error('Error fetching logo from Cloudflare:', error);
-                }
-              }
-
-              return collaboratorInfo;
-            })
-          );
-
-          return updatedCollaborators;
-        })
-      );
->>>>>>> Stashed changes
     })
   );
 
