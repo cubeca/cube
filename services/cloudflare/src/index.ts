@@ -69,7 +69,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
       return res.status(500).send('Error creating the DB entry for this file');
     }
 
-    const { tusUploadUrl, cloudflareStreamUid, data } = await stream.getTusUploadUrl(
+    const { tusUploadUrl, cloudflareStreamUid } = await stream.getTusUploadUrl(
       fileId,
       Number(tusUploadLength),
       reserveDurationSeconds,
@@ -78,7 +78,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     );
 
     if (!tusUploadUrl || !cloudflareStreamUid) {
-      return res.status(500).send('Error retrieving content upload url' + data);
+      return res.status(500).send('Error retrieving content upload url');
     }
 
     await db.updateVideoFileWithCfStreamUid(fileId, cloudflareStreamUid, tusUploadUrl);
