@@ -172,7 +172,7 @@ export const CreatorSignupForm = () => {
           <CheckboxInput
             control={control}
             name="ageConfirmation"
-            label={t('I am over 18 years of age.')}
+            label={t('I am 18 years of age or older.')}
             rules={{
               required:
                 'Unfortunately you cannot create a profile on CubeCommons unless you are 18+ years old.'

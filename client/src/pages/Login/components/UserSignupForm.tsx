@@ -123,7 +123,7 @@ export const UserSignupForm = () => {
           <CheckboxInput
             control={control}
             name="ageConfirmation"
-            label={t('I am 18 years old or older')}
+            label={t('I am 18 years of age or older.')}
             rules={{
               required: 'You must confirm that you are at least 18 years old'
             }}
