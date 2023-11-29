@@ -20,14 +20,13 @@ const Video = () => {
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const coverImageAltText = content?.coverImageText;
   const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-  // actual subtitle data coming soon!
-  const subtitleUrl = '';
+  const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -40,6 +39,7 @@ const Video = () => {
       <MediaPlayer
         url={audioUrl || ''}
         coverArtUrl={coverArtUrl}
+        coverImageAltText={coverImageAltText}
         subtitleUrl={subtitleUrl}
         isSafari={isSafari}
       />
@@ -50,7 +50,11 @@ const Video = () => {
 
   const videoContent = (
     <s.VideoWrapper>
-      <MediaPlayer url={videoUrl || ''} />
+      <MediaPlayer
+        url={videoUrl || ''}
+        coverImageAltText={coverImageAltText}
+        subtitleUrl={subtitleUrl}
+      />
     </s.VideoWrapper>
   );
 
