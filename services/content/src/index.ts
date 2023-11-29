@@ -212,7 +212,9 @@ app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Res
   try {
     const { id } = req.params;
     const { transcript } = req.body;
+    console.log({ id, transcript });
     const user = extractUser(req);
+    console.log({ user });
     const content = await db.getContentById(id);
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, content.data.profileId);
     if (!isUserAssociated) {
@@ -220,7 +222,7 @@ app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Res
     }
     const result = await db.updateVTT(id, transcript);
     const dataBuffer = Buffer.from(id);
-    const messageId = await pubsub.topic('vtt_upload').publishMessage({ data: dataBuffer });
+    await pubsub.topic('vtt_upload').publishMessage({ data: dataBuffer });
     res.status(200).json(result);
   } catch (error) {
     console.error('Error updating VTT', error);
