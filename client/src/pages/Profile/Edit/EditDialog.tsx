@@ -6,14 +6,24 @@ interface EditDialogProps {
   isOpen: boolean;
   onClose: () => void;
   profile: any;
+  onUploadComplete: () => void;
 }
 
-const EditDialog = ({ isOpen, onClose, profile }: EditDialogProps) => {
+const EditDialog = ({
+  isOpen,
+  onClose,
+  profile,
+  onUploadComplete
+}: EditDialogProps) => {
   const { t } = useTranslation();
 
   return (
     <Dialog open={isOpen} onClose={onClose} id="edit-profile-dialog" title="">
-      <EditProfileForm profile={profile} onSave={onClose} />
+      <EditProfileForm
+        profile={profile}
+        onSave={onClose}
+        onUploadComplete={onUploadComplete}
+      />
     </Dialog>
   );
 };

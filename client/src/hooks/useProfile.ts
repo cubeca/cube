@@ -7,10 +7,10 @@ const useProfile = (tag?: string) => {
   const { tag: paramTag } = useParams();
   const profileId = getProfileId();
 
-  const { isLoading, isError, data } = useQuery(
+  const { isLoading, isError, data, refetch } = useQuery(
     ['profile_by_tag', tag],
     () => getProfileByTag(tag ?? paramTag ?? ''),
-    { enabled: !!tag || !!paramTag}
+    { enabled: !!tag || !!paramTag }
   );
 
   const profile = data?.data.data;
@@ -21,7 +21,8 @@ const useProfile = (tag?: string) => {
     data: {
       ...profile,
       profileId
-    }
+    },
+    refetch
   };
 };
 
