@@ -1,9 +1,6 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-
-// TODO Replace with https://www.npmjs.com/package/file-type
 import mime from 'mime';
-
 import * as db from './db/queries';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
@@ -138,8 +135,6 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
 export interface VideoPlayerInfo {
   hlsUrl?: string;
   dashUrl?: string;
-
-  // See https://www.npmjs.com/package/@cloudflare/stream-react
   videoIdOrSignedUrl?: string;
 }
 
