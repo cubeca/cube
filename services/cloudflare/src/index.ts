@@ -41,9 +41,6 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   const meta = parseTusUploadMetadata(tusUploadMetadata);
   const { fileName, profileId, allocVidTime = 60 * 60, validFor = 30 * 60 } = meta;
 
-  // inspect('meta ==', meta);
-  // return res.status(500).send('Error retrieving content upload url');
-
   if (!allocVidTime) {
     console.error(400, `Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
     return res.status(400).send(`Invalid Request. 'allocVidTime' field in 'Upload-Metadata' header required`);
@@ -95,7 +92,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
     res.status(200).send('OK');
   } catch (e: any) {
     console.error('Error retrieving content upload url', e);
-    res.status(500).send('Error retrieving content upload url');
+    res.status(500).send('Error retrieving content upload url' + e);
   }
 });
 
@@ -134,7 +131,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
     res.status(201).json({ fileId, presignedUrl });
   } catch (e: any) {
     console.error('Error retrieving content upload url', e);
-    res.status(500).send('Error retrieving content upload url');
+    res.status(500).send('Error retrieving content upload url' + e);
   }
 });
 
