@@ -47,7 +47,7 @@ export const getTusUploadUrl = async (
 
   console.log('tusUploadUrl: ', tusUploadUrl);
 
-  return { tusUploadUrl, cloudflareStreamUid, data };
+  return { tusUploadUrl, cloudflareStreamUid };
 };
 
 export const getVideoDetails = async (cloudflareStreamUid: string) => {
