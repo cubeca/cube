@@ -6,6 +6,7 @@ import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { TextField } from '@mui/material';
 import { BFF_URL } from '../../../../api/settings';
+import { getProfile } from '../../../../utils/auth';
 import * as s from './Editor.styled';
 
 import axios from 'axios';
@@ -17,9 +18,9 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<any>({});
+
   const { t } = useTranslation();
 
-  //poll for vtt
   useEffect(() => {
     if (!loaded) {
       try {
@@ -50,7 +51,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
     setSaveLoading(true);
     const authToken = await getAuthToken();
     const response = await axios.put(
-      `http://localhost:8085/vtt/${contentId}`,
+      `${BFF_URL}/vtt/${contentId}`,
       {
         transcript: vtt
       },
@@ -62,6 +63,10 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
     );
     console.log({ response });
     setSaveLoading(false);
+    if (postUpload) {
+      const profile = getProfile();
+      window.location.href = `/profile/${profile.tag}`;
+    }
   };
 
   const timeToSeconds = (time: string) => {

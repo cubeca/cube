@@ -45,6 +45,7 @@ export const LoginForm = ({
       if (isEmailVerified) {
         if ((user as any).profile_id) {
           const { data } = await getProfile((user as any).profile_id);
+          localStorage.setItem('PROFILE', JSON.stringify(data));
           navigate(`/profile/${(data as any).tag}`);
         } else {
           navigate('/');
