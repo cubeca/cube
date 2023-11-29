@@ -39,14 +39,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   }
 
   const meta = parseTusUploadMetadata(tusUploadMetadata);
-
-  const {
-    fileName,
-    // mimeType,
-    profileId,
-    allocVidTime = 60 * 60,
-    validFor = 30 * 60
-  } = meta;
+  const { fileName, profileId, allocVidTime = 60 * 60, validFor = 30 * 60 } = meta;
 
   // inspect('meta ==', meta);
   // return res.status(500).send('Error retrieving content upload url');
