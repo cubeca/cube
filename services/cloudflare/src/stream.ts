@@ -40,12 +40,9 @@ export const getTusUploadUrl = async (
   };
 
   const response = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
-  console.log(response);
 
   const tusUploadUrl = response.headers['location'];
   const cloudflareStreamUid = response.headers['stream-media-id'];
-
-  console.log('tusUploadUrl: ', tusUploadUrl);
 
   return { tusUploadUrl, cloudflareStreamUid };
 };

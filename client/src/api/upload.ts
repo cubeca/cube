@@ -49,13 +49,13 @@ export const uploadViaTus = async (
     const options = {
       endpoint: uploadTusEndpoint,
       retryDelays: [0, 3000, 5000, 10000, 20000],
+      chunkSize: 50 * 1024 * 1024,
       metadata: {
         fileName: file.name,
         mimeType: file.type,
         allocVidTime: 21600,
         ...meta
       },
-      timeout: 10 * 60 * 1000,
       onError(error: any) {
         reject(error);
       },
