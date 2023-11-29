@@ -7,6 +7,7 @@ import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { TextField } from '@mui/material';
 import { BFF_URL } from '../../../../api/settings';
 import { getProfile } from '../../../../utils/auth';
+import { useNavigate } from 'react-router-dom';
 import * as s from './Editor.styled';
 
 import axios from 'axios';
@@ -18,6 +19,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
   const [loaded, setLoaded] = useState<boolean>(false);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<any>({});
+  const navigate = useNavigate();
 
   const { t } = useTranslation();
 
@@ -65,7 +67,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
     setSaveLoading(false);
     if (postUpload) {
       const profile = getProfile();
-      window.location.href = `/profile/${profile.tag}`;
+      navigate(`/profile/${profile.tag}`);
     }
   };
 
