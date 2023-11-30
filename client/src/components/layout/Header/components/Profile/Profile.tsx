@@ -1,17 +1,14 @@
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import ProfileMenu from './ProfileMenu';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './Profile.styled';
 import { UserContext } from 'providers/UserProvider';
-import { getProfileId } from 'utils/auth';
-import { getProfile } from 'api/profile';
+import { getProfileId, getProfileTag } from 'utils/auth';
 import { BFFGetProfileByTagData } from '@cubeca/bff-client-oas-axios';
-import { useNavigate } from 'react-router-dom';
-import useAuth from 'hooks/useAuth';
 import useProfile from 'hooks/useProfile';
 
 const Profile = () => {
@@ -19,29 +16,8 @@ const Profile = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { user } = useContext(UserContext);
-  const [tag, setTag] = useState('');
   const profileId = getProfileId();
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-  const { data: profile } = useProfile(tag);
-
-  useEffect(() => {
-    const getTag = async () => {
-      try {
-        const { data } = await getProfile(
-          (user as any)?.profile_id || profileId
-        );
-        setTag((data as any).tag);
-      } catch (e: any) {
-        logout();
-        navigate('/login?error=invalidToken');
-      }
-    };
-
-    if (user?.profile_id) {
-      getTag();
-    }
-  }, []);
+  const { data: profile } = useProfile(getProfileTag());
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);

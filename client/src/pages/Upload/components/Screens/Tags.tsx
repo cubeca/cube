@@ -1,7 +1,6 @@
 import {
   Autocomplete,
   Box,
-  Stack,
   TextField,
   Typography,
   useTheme
@@ -10,7 +9,7 @@ import Grid from '@mui/system/Unstable_Grid';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
 import { useTranslation } from 'react-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CollaboratorInput from 'components/form/CollaboratorInput';
 import * as s from './Tags.styled';
 import { SearchFiltersCategoryEnum } from '@cubeca/bff-client-oas-axios';
