@@ -45,7 +45,7 @@ const HeroPanelHome = () => {
         </Grid>
       </s.Content>
 
-      <TagOfTheWeek />
+      {/* <TagOfTheWeek /> */}
     </s.HeroPanelHome>
   );
 };
