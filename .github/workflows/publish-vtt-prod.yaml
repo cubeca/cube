@@ -16,5 +16,5 @@ jobs:
     uses: ./.github/workflows/publish-vtt-reusable.yaml
     with:
       ENV_NAME: prod
-      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
-      GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-prod.iam.gserviceaccount.com
+      GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
+      GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
