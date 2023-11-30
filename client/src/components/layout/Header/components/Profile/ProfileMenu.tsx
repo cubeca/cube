@@ -1,20 +1,16 @@
-import { Menu } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ProfileMenuItem from './ProfileMenuItem';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import useProfile from 'hooks/useProfile';
 import UpdateEmailDialog from './UpdateEmailDialog';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PasswordIcon from '@mui/icons-material/Password';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import useAuth from 'hooks/useAuth';
 import { UserContext } from 'providers/UserProvider';
 import * as s from './Profile.styled';
-import { getProfile } from 'api/profile';
-import { getProfileId } from 'utils/auth';
 import { BFFGetProfileByTagData } from '@cubeca/bff-client-oas-axios';
 
 interface ProfileMenuProps {
@@ -26,7 +22,14 @@ interface ProfileMenuProps {
   profileId?: string;
 }
 
-const ProfileMenu = ({ open, anchorEl, onClose, id, profile, profileId }: ProfileMenuProps) => {
+const ProfileMenu = ({
+  open,
+  anchorEl,
+  onClose,
+  id,
+  profile,
+  profileId
+}: ProfileMenuProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [isUpdateEmailDialogOpen, setIsUpdateEmailDialogOpen] = useState(false);

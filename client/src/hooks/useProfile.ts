@@ -10,7 +10,7 @@ const useProfile = (tag?: string) => {
   const { isLoading, isError, data } = useQuery(
     ['profile_by_tag', tag],
     () => getProfileByTag(tag ?? paramTag ?? ''),
-    { enabled: !!tag || !!paramTag}
+    { enabled: !!tag || !!paramTag }
   );
 
   const profile = data?.data.data;

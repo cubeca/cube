@@ -32,6 +32,15 @@ export const getProfileId = () => {
   return localStorage.getItem(PROFILE_ID);
 };
 
+export const getProfileTag = () => {
+  const profile = localStorage.getItem('PROFILE');
+  if (profile) {
+    const profileObj = JSON.parse(profile);
+    return profileObj.tag;
+  }
+  return null;
+};
+
 export const removeAuthToken = () => {
   localStorage.removeItem(AUTH_TOKEN);
   localStorage.removeItem(PROFILE_ID);
