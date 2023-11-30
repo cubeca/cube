@@ -8,18 +8,32 @@ import TextInput from 'components/form/TextInput';
 import * as s from './EditProfileForm.styled';
 import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
 import UploadInput from 'components/form/UploadInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Lottie from 'lottie-react';
+import LoadingCircle from 'assets/animations/loading-circle.json';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 
 interface EditProfileFormProps {
   profile: any;
   onSave: () => void;
+  onUploadComplete: () => void;
 }
 
-const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
+const EditProfileForm = ({
+  profile,
+  onSave,
+  onUploadComplete
+}: EditProfileFormProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit } = useForm();
-  const { updateSection, updateLogo, updateAudioDescription, updateHero } =
-    useEditProfile(profile.tag);
+  const {
+    updateSection,
+    updateLogo,
+    updateAudioDescription,
+    updateHero,
+    isUploadingHero,
+    isUploadingLogo
+  } = useEditProfile(profile.tag);
   const [isAudioUploadComplete, setIsAudioUploadComplete] = useState(false);
 
   const onSubmitSection = (data: FieldValues) => {
@@ -34,14 +48,29 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
     onSave();
   };
 
-  const onChangeLogo = (e: any) => {
+  const [selectedLogo, setSelectedLogo] = useState(null);
+  const [selectedHero, setSelectedHero] = useState(null);
+
+  const onChangeLogo = async (e: any) => {
     const file = e.target.files[0];
-    updateLogo(profile.id, file);
+    await updateLogo(profile.id, file);
+    onUploadComplete();
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedLogo(reader.result as any);
+    };
+    reader.readAsDataURL(file);
   };
 
-  const onChangeHero = (e: any) => {
+  const onChangeHero = async (e: any) => {
     const file = e.target.files[0];
-    updateHero(profile.id, file);
+    await updateHero(profile.id, file);
+    onUploadComplete();
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedHero(reader.result as any);
+    };
+    reader.readAsDataURL(file);
   };
 
   const onChangeAudioDescription = (files: File[]) => {
@@ -58,24 +87,60 @@ const EditProfileForm = ({ profile, onSave }: EditProfileFormProps) => {
     <Stack direction="column">
       <s.EditProfileImagesWrapper>
         <s.EditProfileHeroBg>
-          {profile.heroUrl && (
-            <img src={profile!.heroUrl} alt="user profile hero" />
+          {isUploadingHero ? (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%'
+              }}
+            >
+              <Lottie
+                className="loading-circle"
+                animationData={LoadingCircle}
+                loop={true}
+                autoplay={true}
+                style={{ width: '100px', height: '100px' }}
+              />
+            </div>
+          ) : (
+            <>
+              {profile.heroUrl && (
+                <img
+                  src={selectedHero || profile!.heroUrl}
+                  alt="user profile hero"
+                />
+              )}
+              <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
+                <CameraIcon />
+                <Typography>Upload</Typography>
+                <input
+                  type="file"
+                  id={heroIdUpload}
+                  onChange={onChangeHero}
+                  style={{ display: 'none' }}
+                />
+              </label>
+            </>
           )}
-          <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
-            <CameraIcon />
-            <Typography>Upload</Typography>
-            <input
-              type="file"
-              id={heroIdUpload}
-              onChange={onChangeHero}
-              style={{ display: 'none' }}
-            />
-          </label>
         </s.EditProfileHeroBg>
         <s.ImageWrapper>
           <s.ImageInner>
-            {profile.logoUrl && (
-              <img src={profile!.logoUrl} alt="user profile thumbnail" />
+            {isUploadingLogo ? (
+              <Lottie
+                className="loading-circle"
+                animationData={LoadingCircle}
+                loop={true}
+                autoplay={true}
+              />
+            ) : (
+              profile.logoUrl && (
+                <img
+                  src={selectedLogo || profile!.logoUrl}
+                  alt="user profile thumbnail"
+                />
+              )
             )}
           </s.ImageInner>
           <s.EditWrapper>

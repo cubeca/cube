@@ -5,9 +5,12 @@ import {
   updateProfileHero,
   updateProfileAudioDescription
 } from 'api/profile';
+import { useState } from 'react';
 
 const useEditProfile = (profileTag: string) => {
   const queryClient = useQueryClient();
+  const [isUploadingHero, setIsUploadingHero] = useState(false);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
 
   const updateSectionMutation = useMutation({
     mutationFn: (body: {
@@ -30,22 +33,39 @@ const useEditProfile = (profileTag: string) => {
       })
   });
 
-  const updateLogoMutation = useMutation({
-    mutationFn: (body: { id: string; file: File }) =>
-      updateProfileLogo(body.id, body.file),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
+  const updateHeroMutation = useMutation({
+    mutationFn: (body: { id: string; file: File }) => {
+      setIsUploadingHero(true);
+      return updateProfileHero(body.id, body.file);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ['profile_by_tag', profileTag]
-      })
+      });
+      setIsUploadingHero(false);
+    },
+    onError: (error) => {
+      console.log('Hero upload error', error);
+      setIsUploadingHero(false);
+    }
   });
 
-  const updateHeroMutation = useMutation({
-    mutationFn: (body: { id: string; file: File }) =>
-      updateProfileHero(body.id, body.file),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
+  const updateLogoMutation = useMutation({
+    mutationFn: (body: { id: string; file: File }) => {
+      setIsUploadingLogo(true);
+      return updateProfileLogo(body.id, body.file);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: ['profile_by_tag', profileTag]
-      })
+      });
+
+      setIsUploadingLogo(false);
+    },
+    onError: (error) => {
+      console.log('Logo upload error', error);
+      setIsUploadingLogo(false);
+    }
   });
 
   const updateAudioMutation = useMutation({
@@ -57,7 +77,13 @@ const useEditProfile = (profileTag: string) => {
       })
   });
 
-  const updateSection = (id: string, organization: string, website: string, description: string, budget: string) => {
+  const updateSection = (
+    id: string,
+    organization: string,
+    website: string,
+    description: string,
+    budget: string
+  ) => {
     updateSectionMutation.mutate({
       id,
       organization,
@@ -91,7 +117,9 @@ const useEditProfile = (profileTag: string) => {
   return {
     updateSection,
     updateLogo,
+    isUploadingHero,
     updateHero,
+    isUploadingLogo,
     updateAudioDescription
   };
 };

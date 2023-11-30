@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
 import useProfile from 'hooks/useProfile';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ViewSection from './View/ViewSection';
 import { useNavigate } from 'react-router-dom';
 import Button from 'components/Button';
@@ -16,7 +16,7 @@ import EditDialog from './Edit/EditDialog';
 
 const Profile = () => {
   const { t } = useTranslation();
-  const { data: profile, isLoading } = useProfile();
+  const { data: profile, isLoading, refetch } = useProfile();
   const { isLoggedIn } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -25,6 +25,11 @@ const Profile = () => {
     if (profile) {
       navigate(`upload`);
     }
+  };
+
+  const handleUploadComplete = () => {
+    console.log('refetching');
+    refetch();
   };
 
   return (
@@ -76,6 +81,7 @@ const Profile = () => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         profile={profile!}
+        onUploadComplete={handleUploadComplete}
       />
 
       <Footer />
