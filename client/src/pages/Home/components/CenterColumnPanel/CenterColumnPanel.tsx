@@ -57,17 +57,17 @@ const CenterColumnPanel = () => {
             </Typography>
             <Typography component="p">
               {t(
-                'A DAO is a decentralized autonomous organization; made possible by the technology it is built on. CubeCommons operates like a DAO while fulfilling the requirements of a not-for-profit. This means that all content creators on Cube are collective owners of the platform they share.'
+                'Creating a profile on CubeCommons makes you an owner of CubeCommons.'
               )}
             </Typography>
             <Typography component="p">
               {t(
-                'Cube does not produce a publicly traded token, only an internal governance token that contributors earn for uploading their content to this shared database. Factors like including Sign-Language translations or multilingual subtitles, weight their governance token earnings. With their tokens, members of Cube can propose and vote on developments to the site, and the use of its assets. Sign-up to request a profile, and as soon as you or your organization is approved by the community, you are a voting DAO member.'
+                'As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and a precarious relationships with corporations that often go obsolete or make decisions that do not align with our mandates. When organizations load their educational content onto their Cube profile, they earn governance tokens that give them the right to vote on platform changes, additions and maintenance. By pooling our resources we mean to experiment with autonomy, collective governance and new models for education and cultural archiving.'
               )}
             </Typography>
             <Typography component="p">
               {t(
-                'Cube, unlike other streaming platforms, does not sell your data. The art organizations here are dedicated to sustainable online ecosystems, that engage with audiences and creators in equitable ways.'
+                'We are just getting started; our early adopters get to load as much content as they like and have a say in the development of our governance system. Our governance tokens are not a form of currency and cannot be bought or sold. Only earned through acts of knowledge sharing.'
               )}
             </Typography>
             {/* <Button href="https://www.example.com" variant="contained">
