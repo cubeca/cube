@@ -62,7 +62,7 @@ const Media = ({
     'QuickTime'
   ];
 
-  const audioFileTypes = ['MP3', 'WAV', 'OGG'];
+  const audioFileTypes = ['MP3', 'WAV', 'OGG', 'AAC'];
   const pdfFileTypes = ['PDF'];
 
   const showField = (field: string) => {
