@@ -50,7 +50,7 @@ const TextInput: FC<TextInputProps> = ({
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => {
         return (
-          <s.FieldWrapper colorMode={colorMode}>
+          <s.FieldWrapper colorMode={colorMode} sx={{ width: '100%' }}>
             <FormControl
               className={className}
               id={id}

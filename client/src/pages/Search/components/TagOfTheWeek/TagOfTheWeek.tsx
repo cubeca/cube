@@ -77,17 +77,21 @@ const Content = () => {
       <s.ContentHeader container>
         <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
           <Typography component="h3" variant="h3">
-            <span>Tag of the week:</span> <strong>#queer</strong>
+            <span>Featured content:</span>
           </Typography>
         </Grid>
       </s.ContentHeader>
 
       <s.Content>
         {!isLoading ? (
-          <swiper-container slides-per-view="auto" mousewheel="true" direction="horizontal">
+          <swiper-container
+            slides-per-view="auto"
+            mousewheel="true"
+            direction="horizontal"
+          >
             {content.map((key: any) => (
               <swiper-slide key={key.id}>
-               <ContentCard
+                <ContentCard
                   key={key.id}
                   image={key.thumbnailUrl}
                   title={key.title}
@@ -103,7 +107,6 @@ const Content = () => {
           <ContentLoader size={6} />
         )}
       </s.Content>
-      
     </s.ContentWrapper>
   );
 };

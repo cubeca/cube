@@ -184,7 +184,7 @@ const getTheme = (mode?: 'dark' | 'light') =>
         MuiMenu: {
           styleOverrides: {
             paper: {
-              backgroundColor: 'blue'
+              backgroundColor: THEME_COLORS.background.paper
             }
           }
         }

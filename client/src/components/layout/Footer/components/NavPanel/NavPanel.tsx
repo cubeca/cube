@@ -25,7 +25,7 @@ const NavPanel = () => {
       </s.NavItem>
 
       <s.NavItem>
-        <s.NavLink to="/">{t('Contact Us')}</s.NavLink>
+        <s.NavLink to="mailto:ash@cubecommons.ca">{t('Contact Us')}</s.NavLink>
       </s.NavItem>
 
       <s.NavItem>

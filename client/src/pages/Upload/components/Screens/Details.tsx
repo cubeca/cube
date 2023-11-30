@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
 import { useState } from 'react';
+import { Controller } from 'react-hook-form';
 
 const Details = ({
   control,
@@ -27,7 +28,7 @@ const Details = ({
   const showField = (field: string) => {
     const reqMap = {
       video: ['description', 'vtt', 'kidsContent', 'expiry'],
-      audio: ['description', 'vtt', 'expiry'],
+      audio: ['description', 'vtt', 'expiry', 'kidsContent'],
       pdf: ['description', 'expiry', 'kidsContent'],
       link: ['description', 'expiry', 'kidsContent']
     };
@@ -77,24 +78,35 @@ const Details = ({
       ) : null}
       {showField('kidsContent') ? (
         <Box my={theme.spacing(5)}>
-          <Select
-            label={t('Is this video made for kids? (required)')}
+          <Controller
             name="audience"
             control={control}
-            fullWidth={false}
             defaultValue=""
-          >
-            <MenuItem.li value="yeskids">
-              {t('Yes, it’s made for kids')}
-            </MenuItem.li>
-            <MenuItem.li value="nokids">
-              {t('No, it’s not made for kids')}
-            </MenuItem.li>
-          </Select>
+            rules={{ required: true }}
+            render={({ field }) => (
+              <Select
+                label={t('Is this video made for kids? (required)')}
+                fullWidth={false}
+                control={control}
+                {...field}
+              >
+                <MenuItem.li value="yeskids">
+                  {t(
+                    'All Ages - This content is suitable for people under the age of 18.'
+                  )}
+                </MenuItem.li>
+                <MenuItem.li value="nokids">
+                  {t(
+                    'Mature - This content is not suitable for people under the age of 18.'
+                  )}
+                </MenuItem.li>
+              </Select>
+            )}
+          />
 
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Regardless of your location, you’re legally required to comply with the Children’s Online Privacy Protection Act (COPPA) and/or other laws. You’re required to tell us whether your videos are made for kids. What’s content made for kids?'
+              'You’re required to tell us whether your videos are made for kids. You may not upload content that is considered “obscene” or “pornography”. These terms are difficult to define, by law they are judged on the standard of what an average Canadian would think. If you have any doubt please mark your content "Mature".  Thank you.'
             )}
           </Typography>
         </Box>

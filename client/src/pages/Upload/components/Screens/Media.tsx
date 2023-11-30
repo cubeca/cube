@@ -45,11 +45,31 @@ const Media = ({
   //   setIsDragOver(false);
   // };
 
+  const videoFileTypes = [
+    'MP4',
+    'MKV',
+    'MOV',
+    'AVI',
+    'FLV',
+    'MPEG-2 TS',
+    'MPEG-2 PS',
+    'MXF',
+    'LXF',
+    'GXF',
+    '3GP',
+    'WebM',
+    'MPG',
+    'QuickTime'
+  ];
+
+  const audioFileTypes = ['MP3', 'WAV', 'OGG', 'AAC'];
+  const pdfFileTypes = ['PDF'];
+
   const showField = (field: string) => {
     const reqMap = {
-      video: ['title', 'mediaFile', 'thumbNail'],
-      audio: ['title', 'mediaFile', 'thumbNail'],
-      pdf: ['title', 'thumbNail', 'mediaFile'],
+      video: ['title', 'mediaFile', 'thumbNail', 'videoFileTypes'],
+      audio: ['title', 'mediaFile', 'thumbNail', 'audioFileTypes'],
+      pdf: ['title', 'thumbNail', 'mediaFile', 'pdfFileTypes'],
       link: ['title', 'thumbNail', 'link']
     };
     if (!uploadType) return false;
@@ -57,6 +77,30 @@ const Media = ({
     const map = reqMap[uploadType];
     return map.includes(field);
   };
+
+  const videoFileTypesText = showField('videoFileTypes')
+    ? videoFileTypes.length > 1
+      ? videoFileTypes.slice(0, -1).join(', ') +
+        ', or ' +
+        videoFileTypes[videoFileTypes.length - 1]
+      : videoFileTypes.join('')
+    : '';
+
+  const audioFileTypesText = showField('audioFileTypes')
+    ? audioFileTypes.length > 1
+      ? audioFileTypes.slice(0, -1).join(', ') +
+        ', or ' +
+        audioFileTypes[audioFileTypes.length - 1]
+      : audioFileTypes.join('')
+    : '';
+
+  const pdfFileTypesText = showField('pdfFileTypes')
+    ? pdfFileTypes.length > 1
+      ? pdfFileTypes.slice(0, -1).join(', ') +
+        ', or ' +
+        pdfFileTypes[pdfFileTypes.length - 1]
+      : pdfFileTypes.join('')
+    : '';
 
   return (
     <Box className={'upload__media-screen'}>
@@ -118,7 +162,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Upload your audio, video or pdf content. This is a shared network, to reduce energy and space consumption please upload files xxx, xxx or xxx, no more than xx mb. While your video uploads you can click "Next" to complete required information for accessibility.'
+              `Upload your audio, video or pdf content. This is a shared network, to reduce energy and space consumption please upload files of type: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2GB. While your video uploads you can click "Next" to complete required information for accessibility.`
             )}
           </Typography>
         </Box>

@@ -119,15 +119,15 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
 
   try {
     const r = await db.selectUserByEmail(email);
-    if (!r) {
-      return res.status(403).send('Invalid email or password.');
+    if (!r.rows[0]) {
+      return res.status(403).send('Invalid email or password');
     }
 
     const user = r.rows[0];
     const decryptedPassword = decryptString(user.password);
     const isValidPassword = await comparePassword(password, decryptedPassword);
     if (!isValidPassword) {
-      return res.status(403).send('Invalid email or password.');
+      return res.status(403).send('Invalid email or password');
     }
 
     const token = jwt.sign(

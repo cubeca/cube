@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 
@@ -10,6 +10,7 @@ import MediaPlayer from 'components/MediaPlayer';
 import YouTubePlayer from 'components/YouTubePlayer';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
+import AgeCheckModal from 'components/AgeCheckModal';
 
 const Video = () => {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -20,14 +21,35 @@ const Video = () => {
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const coverImageAltText = content?.coverImageText;
+  const bannerImageAltText = content?.bannerImageText;
   const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
 
-  // actual subtitle data coming soon!
-  const subtitleUrl = '';
+  const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
+    useState(false);
+
+  const onOver18Click = () => {
+    setIsSuitableForChildrenModalOpen(false);
+  };
+
+  const onUnder18Click = () => {
+    setIsSuitableForChildrenModalOpen(false);
+  };
+
+  useEffect(() => {
+    if (content?.isSuitableForChildren === false) {
+      setIsSuitableForChildrenModalOpen(true);
+    }
+  }, [content?.isSuitableForChildren]);
+
+  function handleClose() {
+    setIsSuitableForChildrenModalOpen(false);
+  }
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -40,6 +62,7 @@ const Video = () => {
       <MediaPlayer
         url={audioUrl || ''}
         coverArtUrl={coverArtUrl}
+        coverImageAltText={coverImageAltText}
         subtitleUrl={subtitleUrl}
         isSafari={isSafari}
       />
@@ -50,7 +73,11 @@ const Video = () => {
 
   const videoContent = (
     <s.VideoWrapper>
-      <MediaPlayer url={videoUrl || ''} />
+      <MediaPlayer
+        url={videoUrl || ''}
+        coverImageAltText={coverImageAltText}
+        subtitleUrl={subtitleUrl}
+      />
     </s.VideoWrapper>
   );
 
@@ -60,12 +87,21 @@ const Video = () => {
         url={linkUrl || ''}
         cover={bannerImage || ''}
         title={linkTitle || ''}
+        coverImageAltText={coverImageAltText}
+        bannerImageAltText={bannerImageAltText}
       />
     </s.LinkWrapper>
   );
 
   return (
     <Box ref={contentRef}>
+      <AgeCheckModal
+        isOpen={isSuitableForChildrenModalOpen}
+        onClose={handleClose}
+        onOver18Click={onOver18Click}
+        onUnder18Click={onUnder18Click}
+      />
+
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
           {isLoading ? (
