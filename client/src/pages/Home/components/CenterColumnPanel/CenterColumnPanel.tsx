@@ -62,7 +62,7 @@ const CenterColumnPanel = () => {
             </Typography>
             <Typography component="p">
               {t(
-                'As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and a precarious relationships with corporations that often go obsolete or make decisions that do not align with our values. When organizations load their educational content onto their Cube profile, they earn governance tokens that give them the right to vote on platform changes, editions and maintenance. By pooling our resources we mean to experiment with autonomy, collective governance and new models for education and cultural teaching.'
+                'As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and precarious relationships with corporations that often go obsolete or make decisions that do not align with our values. When organizations load their educational content onto their Cube profile, they earn governance tokens that give them the right to vote on platform changes, editions and maintenance. By pooling our resources we mean to experiment with autonomy, collective governance and new models for education and cultural teaching.'
               )}
             </Typography>
             <Typography component="p">
