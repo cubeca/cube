@@ -20,10 +20,13 @@ const VirtualExperiencesPanel = () => {
           <Typography component="p">{t('virtualExperiencesText')}</Typography>
 
           <s.LinkWrapper>
-            <s.ExternalLinkButton to="https://www.voxels.com/">
+            <s.ExternalLinkButton target="_blank" to="https://www.voxels.com/">
               {t('Visit Voxels')}
             </s.ExternalLinkButton>
-            <s.ExternalLinkText to="https://wiki.cryptovoxels.com/">
+            <s.ExternalLinkText
+              target="_blank"
+              to="https://wiki.cryptovoxels.com/"
+            >
               {t('How to Use Voxels')}
             </s.ExternalLinkText>
           </s.LinkWrapper>
