@@ -93,7 +93,7 @@ const CenterColumnPanel = () => {
                 'CubeCommons was developed through the partnership and collaborative brainstorming of individuals and organizations including @221A, Artengine (@Artengine), Burnaby Art Gallery (@BAG), Centre A (@CentreA), @Cinevolution, Contemporary Art Gallery (@CAG), Museum of Anthropology (@MOA), Museum of Vancouver (@MOV), New Media Gallery (@NMG), Richmond Art Gallery (@RAG), SFU Galleries (@SFUGalleries), and more, from across Canada.'
               )}
             </Typography>
-            <Button href="https://www.example.com" variant="contained">
+            <Button href="/signup" variant="contained">
               Join Us
             </Button>
           </s.CenterColumnTextSection>
