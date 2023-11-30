@@ -1,6 +1,6 @@
-name: Publish VTT Dev
+name: Publish VTT Prod
 
-run-name: Publish VTT Dev @ ${{ github.sha }}
+run-name: Publish VTT Prod @ ${{ github.sha }}
 
 on:
   push:
@@ -17,4 +17,4 @@ jobs:
     with:
       ENV_NAME: prod
       GCP_WORKLOAD_IDENTITY_PROVIDER: projects/744911585239/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
-      GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-dev.iam.gserviceaccount.com
+      GCP_SERVICE_ACCOUNT: docker-image-publisher@cubecommons-prod.iam.gserviceaccount.com
