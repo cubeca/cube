@@ -20,16 +20,17 @@ const HeroPanelHome = () => {
         <Grid container>
           <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
             <s.Headline>
-              <Typography component="h1" variant="h5">
+              {/* <Typography component="h1" variant="h5">
                 <span>{t('Featured in ')}</span>
                 <strong className="category">{t('Videos')}</strong>:
-              </Typography>
+              </Typography> */}
               <Typography component="h2" variant="h1">
-                Movement As Collective Process
+                Welcome to Our <br />
+                Search Page
               </Typography>
-              <a href="#TEST" className="play-button">
+              {/* <a href="#TEST" className="play-button">
                 <img src={Play} alt="play" />
-              </a>
+              </a> */}
             </s.Headline>
           </Grid>
 
