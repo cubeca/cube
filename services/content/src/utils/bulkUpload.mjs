@@ -3,7 +3,8 @@ import csv from 'csv-parser';
 import axios from 'axios';
 
 const endpointUrl = 'https://content-ztbavieh4q-pd.a.run.app';
-const authToken = 'your_authorization_token';
+const authToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDVUJFIiwic3ViIjoiNjYzOWI2NjYtZTg5MC00ZGZkLTk5NjQtNmM4NzgyYjY1NzMzIiwiYXVkIjpbImFub255bW91cyIsImNvbnRlbnRFZGl0b3IiLCJhY3RpdmUiXSwiaWF0IjoxNzAxNDU0NDA3LCJleHAiOjE3MDE3MTM2MDd9.sNAlrGX3OShhEzAcwhk8UEqPwkLVlhaWTS4iJqmuBkc';
 
 // Replace with your actual default cover images map
 const defaultCoverImages = {
@@ -57,7 +58,22 @@ fs.createReadStream('/Users/taylorjackson/Desktop/formatted2.csv')
   .on('end', () => {
     // // Map the data to the schema
     const addContentRequests = results.map(createAddContentRequest);
-    console.log(addContentRequests);
+
+    addContentRequests.forEach((contentRequest) => {
+      axios
+        .post(endpointUrl, contentRequest, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((response) => {
+          console.log('Success:', response.data);
+        })
+        .catch((error) => {
+          console.error('Error:', error.response.data);
+        });
+    });
   });
 
 function createAddContentRequest(item) {
@@ -83,12 +99,11 @@ function createAddContentRequest(item) {
           name: 'Click here'
         }
       ]
-    }, // You need to provide this
+    } // You need to provide this
 
-    expiry: 'your_default_expiry', // You need to provide this
-
-    mediaFileId: 'your_default_mediaFileId', // You need to provide this
-    vttFileId: 'your_default_vttFileId', // You need to provide this
-    collaborators: ['default_collaborator'] // You need to provide this
+    // expiry: 'your_default_expiry', // You need to provide this
+    // mediaFileId: 'your_default_mediaFileId', // You need to provide this
+    // vttFileId: 'your_default_vttFileId', // You need to provide this
+    // collaborators: ['default_collaborator'] // You need to provide this
   };
 }
