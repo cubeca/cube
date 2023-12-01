@@ -107,7 +107,11 @@ const UserContent = ({ profile }: UserContentProps) => {
           displayContent?.map((item: any) => (
             <ContentCard
               key={item.id}
-              image={item.coverImageUrl?.playerInfo?.publicUrl || ''}
+              image={
+                item.coverImageUrl?.playerInfo?.publicUrl ||
+                item.coverImageExternalUrl ||
+                ''
+              }
               title={item.title}
               url={`/content/${item.id}`}
               icon={item.type}
