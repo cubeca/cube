@@ -30,45 +30,50 @@ const Content = () => {
     {
       id: 0,
       thumbnailUrl: FPOThumb1,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      icon: <PlayArrowIcon fontSize="small" />,
-      hasSignLanguage: true
+      title: 'Alex Morrison, Nooks and Corners',
+      url: '/',
+      icon: 'video',
+      hasSignLanguage: false
     },
     {
       id: 1,
       thumbnailUrl: FPOThumb2,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      icon: <PlayArrowIcon fontSize="small" />
+      title: 'Faye HeavyShield (French)',
+      url: '/',
+      icon: 'video',
+      hasSignLanguage: false
     },
     {
       id: 2,
       thumbnailUrl: FPOThumb3,
-      title: 'Video Title',
-      url: 'https://www.example.com',
-      icon: <PlayArrowIcon fontSize="small" />
+      title: 'Faye HeavyShield (English)',
+      url: '/',
+      icon: 'video',
+      hasSignLanguage: false
     },
     {
       id: 3,
       thumbnailUrl: FPOThumb4,
-      title: 'Book Title',
-      url: 'https://www.example.com',
-      icon: <MenuBookIcon fontSize="small" />
+      title:
+        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
+      url: '/',
+      icon: 'audio',
+      hasSignLanguage: false
     },
     {
-      id: 4,
       thumbnailUrl: FPOThumb5,
-      title: 'Audio Title',
-      url: 'https://www.example.com',
-      icon: <VolumeUpIcon fontSize="small" />
+      title:
+        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
+      url: '/',
+      icon: 'audio',
+      hasSignLanguage: false
     },
     {
       id: 5,
       thumbnailUrl: FPOThumb6,
-      title: 'Link Title',
-      url: 'https://www.example.com',
-      icon: <LinkIcon fontSize="small" />
+      title: 'How to feel unsafe in a safe way',
+      url: '/',
+      icon: 'video'
     }
   ];
 
