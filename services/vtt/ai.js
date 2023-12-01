@@ -13,7 +13,6 @@ const transcribe = async (audioPath) => {
     file: readStream,
     model: "whisper-1",
     response_format: "verbose_json",
-    language: "en",
   });
   const segments = response.segments;
   const finalResponse = {};
