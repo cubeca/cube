@@ -46,6 +46,7 @@ const EditProfileForm = ({
       budget
     );
     onSave();
+    onUploadComplete();
   };
 
   const [selectedLogo, setSelectedLogo] = useState(null);

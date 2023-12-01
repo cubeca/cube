@@ -90,6 +90,7 @@ const Tags = ({ control }: any) => {
         <Controller
           name="categories"
           control={control}
+          rules={{ required: true }}
           render={({ field }) => (
             <Autocomplete
               multiple

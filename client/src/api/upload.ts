@@ -104,14 +104,7 @@ export const uploadS3 = async (
     timeout: 10 * 60 * 1000,
     validateStatus: null,
     headers: {
-      'Content-Type': mimeType,
-      'Content-Length': fileSizeBytes
-    },
-
-    onUploadProgress: (progressEvent: any) => {
-      // see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/progress_event
-      console.log(`profile ${profileId} uploadS3 progress for ${fileName}`);
-      console.dir(progressEvent);
+      'Content-Type': mimeType
     }
   };
 
