@@ -59,7 +59,9 @@ const LegalModalNav = () => {
   return (
     <>
       <s.NavLink onClick={() => setLegalDisplay(true)}>
-        {t('Terms of Service')}
+        {t(
+          'Our Code of Contact is Defined by our Terms of Service and Privacy Policy'
+        )}
       </s.NavLink>
 
       <BootstrapDialog
@@ -71,7 +73,7 @@ const LegalModalNav = () => {
           id="customized-dialog-title"
           onClose={() => setLegalDisplay(false)}
         >
-          Terms of Service
+          Terms of Service and Privacy Policy
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <ToS />

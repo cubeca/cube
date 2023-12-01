@@ -69,13 +69,11 @@ const LegalModalSignup = (props: LegalModalSignupProps) => {
           id="customized-dialog-title"
           onClose={() => setDisplay(false)}
         >
-          Terms of Service
+          Terms of Service and Privacy Policy
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <ToS />
-          <Button onClick={() => callback()}>
-            Accept Terms and Conditions
-          </Button>
+          <Button onClick={() => callback()}>Accept</Button>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDisplay(false)}>Decline</Button>

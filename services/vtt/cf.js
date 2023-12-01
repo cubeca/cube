@@ -5,7 +5,6 @@ const cfAPI = process.env.cfToken;
 const cfAccountID = process.env["CF-ACCOUNT-ID"];
 const cfR2ID = process.env["CF-R2-ID"];
 const cfR2Secret = process.env["CF-R2-SECRET"];
-const cfBucketName = "cubecommons-dev";
 
 //s3 import
 const {
@@ -91,11 +90,10 @@ const uploadFile = async (id, path) => {
       accessKeyId: cfR2ID,
       secretAccessKey: cfR2Secret,
     },
-    endpoint:
-      "https://812b8374abe5aa28e1ff4b96f82e1340.r2.cloudflarestorage.com",
+    endpoint: `https://${cfAccountID}.r2.cloudflarestorage.com`,
   });
   const uploadParams = {
-    Bucket: cfBucketName,
+    Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
     Key: `${id}/vtt.vtt`,
     Body: path,
   };

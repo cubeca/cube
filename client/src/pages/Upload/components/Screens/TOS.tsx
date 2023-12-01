@@ -7,7 +7,9 @@ const TOS = () => {
 
   return (
     <>
-      <Typography variant="h1">{t('Terms of Service')}</Typography>
+      <Typography variant="h1">
+        {t('Terms of Service & Privacy Policy')}
+      </Typography>
       <ToS />
     </>
   );
