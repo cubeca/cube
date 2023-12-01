@@ -30,7 +30,11 @@ const ContentList: FC<ContentListProps> = ({
         {content.map((c) => (
           <ContentCard
             key={c.id}
-            image={c.coverImageUrl?.playerInfo?.publicUrl || ''}
+            image={
+              c.coverImageUrl?.playerInfo?.publicUrl ||
+              c.coverImageExternalUrl ||
+              ''
+            }
             title={c.title}
             creator={c.creator}
             url={`/content/${c.id}`}
