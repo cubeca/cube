@@ -8,11 +8,6 @@ import { ContentLoader } from 'components/Loaders';
 import { ContentLists } from 'types/enums';
 import * as s from './TagOfTheWeek.styled';
 
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import LinkIcon from '@mui/icons-material/Link';
-
 import FPOThumb1 from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
 import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
 import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
