@@ -2,7 +2,7 @@ import fs from 'fs';
 import csv from 'csv-parser';
 import axios from 'axios';
 
-const endpointUrl = 'https://content-ztbavieh4q-pd.a.run.app';
+const endpointUrl = 'https://content-ztbavieh4q-pd.a.run.app/content';
 const authToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDVUJFIiwic3ViIjoiNjYzOWI2NjYtZTg5MC00ZGZkLTk5NjQtNmM4NzgyYjY1NzMzIiwiYXVkIjpbImFub255bW91cyIsImNvbnRlbnRFZGl0b3IiLCJhY3RpdmUiXSwiaWF0IjoxNzAxNDU0NDA3LCJleHAiOjE3MDE3MTM2MDd9.sNAlrGX3OShhEzAcwhk8UEqPwkLVlhaWTS4iJqmuBkc';
 
@@ -79,7 +79,7 @@ fs.createReadStream('/Users/taylorjackson/Desktop/formatted2.csv')
 function createAddContentRequest(item) {
   return {
     profileId: item.profileId, // Assuming this comes from the CSV data
-    type: ['link'], // You need to provide this
+    type: 'link', // You need to provide this
     externalUrl: item.url, // Assuming this comes from the CSV data
     title: item.title, // Assuming this comes from the CSV data
     description: item.description, // Assuming this comes from the CSV data
@@ -100,10 +100,5 @@ function createAddContentRequest(item) {
         }
       ]
     } // You need to provide this
-
-    // expiry: 'your_default_expiry', // You need to provide this
-    // mediaFileId: 'your_default_mediaFileId', // You need to provide this
-    // vttFileId: 'your_default_vttFileId', // You need to provide this
-    // collaborators: ['default_collaborator'] // You need to provide this
   };
 }
