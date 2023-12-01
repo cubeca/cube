@@ -69,9 +69,13 @@ const Details = ({
             isUploadReady={isVTTUploadReady}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-            {t(
-              "Upload File For Subtitles. If you don't have one, don't worry. Subtitle will be automatically generated for you in the event on one is not provided. Please stick around to confirm their content."
-            )}
+            {t('Upload File For Subtitles.')}{' '}
+            <strong>
+              {t(
+                "If you don't have one, don't worry. Subtitle file will be automatically generated for you at the end."
+              )}
+            </strong>{' '}
+            {t('Please stick around to confirm their content.')}
             <br />
           </Typography>
         </Box>
