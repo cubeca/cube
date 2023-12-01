@@ -120,6 +120,10 @@ export const ViewSection = styled(Stack)`
 
 export const Header = styled(Box)`
   text-align: center;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
 
   ${(props) => props.theme.breakpoints.up('md')} {
     height: 360px;
@@ -127,6 +131,7 @@ export const Header = styled(Box)`
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
+    align-items: center;
   }
 
   small {
