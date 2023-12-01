@@ -305,12 +305,11 @@ const Video = () => {
                         );
                       })}
                 </Stack>
-                {content?.collaboratorDetails &&
-                  content?.collaboratorDetails[0]?.logoUrl !== null && (
-                    <>
-                      <s.Seperator />
-                    </>
-                  )}
+                {content?.collaboratorDetails && (
+                  <>
+                    <s.Seperator />
+                  </>
+                )}
 
                 {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
                 <Contributors
