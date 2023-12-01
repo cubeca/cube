@@ -90,7 +90,11 @@ const CategorizedContent = () => {
               contentResults?.map((key: any) => (
                 <ContentCard
                   key={key.id}
-                  image={key.coverImageUrl?.playerInfo?.publicUrl || ''}
+                  image={
+                    key.coverImageUrl?.playerInfo?.publicUrl ||
+                    key.coverImageExternalUrl ||
+                    ''
+                  }
                   title={key.title}
                   url={`/content/${key.id}`}
                   icon={key.type}
