@@ -11,25 +11,33 @@ import YouTubePlayer from 'components/YouTubePlayer';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 import AgeCheckModal from 'components/AgeCheckModal';
+import { getIDfromURL } from 'utils/youtubeUtils';
 
 const Video = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const { data: content, isLoading } = useContentDetails();
-  const youtubeID = '';
-
+  let youtubeID = '';
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
-  const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
+  const coverArtUrl = content?.coverImageUrl
+    ? content?.coverImageUrl?.playerInfo?.publicUrl
+    : content?.coverImageExternalUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const coverImageAltText = content?.coverImageText;
   const bannerImageAltText = content?.bannerImageText;
-  const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
+  const bannerImage = content?.bannerImageUrl
+    ? content?.bannerImageUrl?.playerInfo?.publicUrl
+    : content?.bannerImageExternalUrl;
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
 
+  // if content contains a link URL, check if it's a youtube link and get the ID
+  if (linkUrl) {
+    youtubeID = getIDfromURL(linkUrl);
+  }
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
 

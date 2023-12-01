@@ -41,7 +41,7 @@ export const selectAllProfiles = async () => {
 
 // Function to select a profile from the 'profiles' table by its tag
 export const selectProfileByTag = async (tag: string) => {
-  const text = `SELECT * from profiles where tag = $1;`;
+  const text = `SELECT * from profiles where LOWER(tag) = LOWER($1);`;
   const values = [tag];
 
   // Execute the query and return the result
