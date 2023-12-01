@@ -68,7 +68,7 @@ fs.createReadStream('/Users/taylorjackson/Desktop/formatted2.csv')
           }
         })
         .then((response) => {
-          console.log('Success:', response.data);
+          console.log('Success: ');
         })
         .catch((error) => {
           console.error('Error:', error.response.data);
@@ -91,6 +91,7 @@ function createAddContentRequest(item) {
     mediaLength: item.length, // Assuming this comes from the CSV data
     tags: ['artist talk', 'cultural teachings', 'discussion', 'exhibition', 'lecture'], // You need to provide this
     category: ['video', 'audio', 'link'], // You need to provide this
+    collaborators: [item.profileId], // You need to provide this
 
     contributors: {
       artist: [
@@ -99,6 +100,6 @@ function createAddContentRequest(item) {
           name: 'Click here'
         }
       ]
-    } // You need to provide this
+    }
   };
 }
