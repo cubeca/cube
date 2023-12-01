@@ -11,6 +11,8 @@ const sequelizeContent = new Sequelize(dbName, dbUser, dbPassword, {
   dialect: "postgres",
   define: {
     timestamps: false,
+    idleTimeoutMillis: 30000,
+    max: 10,
   },
 });
 
@@ -20,6 +22,8 @@ const sequelizeCF = new Sequelize("cube_cloudflare", dbUser, dbPassword, {
   dialect: "postgres",
   define: {
     timestamps: false,
+    idleTimeoutMillis: 30000,
+    max: 10,
   },
 });
 
