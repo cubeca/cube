@@ -25,7 +25,7 @@ function generateEmbedCode(type: string, url: string) {
       embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
       break;
     case 'link':
-      embedCode = `<a href="${url}" target="_blank"></a>`;
+      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
       break;
     default:
       embedCode = 'Invalid type specified';
