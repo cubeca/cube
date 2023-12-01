@@ -21,7 +21,7 @@ import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
 import { OVER_18 } from 'constants/localStorage';
-
+import { getIDfromURL } from 'utils/youtubeUtils';
 import useDeleteContent from 'hooks/useDeleteContent';
 import DeleteContentButton from 'components/DeleteContentButton';
 import { getProfileId } from 'utils/auth';
@@ -44,7 +44,7 @@ const Video = () => {
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
-  const youtubeID = '';
+  let youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
@@ -69,6 +69,10 @@ const Video = () => {
 
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
+  // if content contains a link URL, check if it's a youtube link and get the ID
+  if (linkUrl) {
+    youtubeID = getIDfromURL(linkUrl);
+  }
   const onOver18Click = () => {
     setIsSuitableForChildrenModalOpen(false);
   };
