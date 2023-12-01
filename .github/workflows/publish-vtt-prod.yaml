@@ -18,3 +18,4 @@ jobs:
       ENV_NAME: prod
       GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
       GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
+      CLOUDFLARE_R2_BUCKET_NAME: cubecommons-prod

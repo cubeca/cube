@@ -14,11 +14,15 @@ on:
       ENV_NAME:
         required: true
         type: string
+      CLOUDFLARE_R2_BUCKET_NAME:
+        required: true
+        type: string
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 env:
   GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ inputs.GCP_WORKLOAD_IDENTITY_PROVIDER }}
   GCP_SERVICE_ACCOUNT: ${{ inputs.GCP_SERVICE_ACCOUNT }}
   ENV_NAME: ${{ inputs.ENV_NAME }}
+  CLOUDFLARE_R2_BUCKET_NAME: ${{ inputs.CLOUDFLARE_R2_BUCKET_NAME }}
 jobs:
   publish_vtt:
     runs-on: ubuntu-22.04
@@ -53,7 +57,7 @@ jobs:
            --project=cubecommons-${{ env.ENV_NAME }} \
            --memory=2GB \
            --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
-           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432 \
+           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432,CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
            --ingress-settings=internal-only
       - name: Deploy VTT Upload
         run: |
@@ -67,5 +71,5 @@ jobs:
            --project=cubecommons-${{ env.ENV_NAME }} \
            --memory=256MB \
            --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
-           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432 \
+           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432,CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
            --ingress-settings=internal-only

@@ -48,7 +48,7 @@ const FormFooter = ({
         fullWidth={false}
         disabled={isLoading || isNextDisabled}
       >
-        {t('Accept Terms of Use and Submit')}
+        {t('Accept Terms')}
       </Button>
     ) : (
       <Button
