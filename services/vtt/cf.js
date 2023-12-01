@@ -52,7 +52,7 @@ const downloadR2 = async (filePathInBucket, outputPath, fileName) => {
     endpoint: `https://${cfAccountID}.r2.cloudflarestorage.com`,
   });
   const downloadParams = {
-    Bucket: cfBucketName,
+    Bucket: process.env.CLOUDFLARE_R2_BUCKET_NAME,
     Key: filePathInBucket,
   };
   const command = new GetObjectCommand(downloadParams);
