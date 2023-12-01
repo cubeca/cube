@@ -48,16 +48,19 @@ const Video = () => {
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
-  const coverArtUrl = content?.coverImageUrl?.playerInfo?.publicUrl;
+  const coverArtUrl = content?.coverImageUrl
+    ? content?.coverImageUrl?.playerInfo?.publicUrl
+    : content?.coverImageExternalUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
-  const bannerImage = content?.bannerImageUrl?.playerInfo?.publicUrl;
+  const bannerImage = content?.bannerImageUrl
+    ? content?.bannerImageUrl?.playerInfo?.publicUrl
+    : content?.bannerImageExternalUrl;
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
   const profileId = content?.profileId;
   const coverImageAltText = content?.coverImageText;
   const bannerImageAltText = content?.bannerImageText;
-
   const loggedInProfileId = getProfileId();
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
 
