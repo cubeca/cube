@@ -162,6 +162,8 @@ const Upload = () => {
 
   const onSubmit = (values: FieldValues) => {
     const contributors = getContributors(values);
+    const collaborators = [profileId, values.collaborators];
+
     addContent(
       {
         profileId: profileId!,
@@ -172,7 +174,7 @@ const Upload = () => {
         description: values.description,
         coverImageText: values.imageText,
         bannerImageText: values.bannerImageText,
-        collaborators: [values.collaborators],
+        collaborators: collaborators,
         contributors: contributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),
         externalUrl: values.link ? values.link : null,
