@@ -21,15 +21,15 @@ const defaultCoverImages = {
 const organizationProfileIds = {
   Artengine: 'd9ae2071-10d7-467d-9a40-cc591d2fb9cd',
   '221A': 'd230c768-66ca-43b7-bd1d-1939afb393e2',
-  'Agnes Etherington Art Centre': '',
-  'Morris and Helen Belkin Art Gallery': '',
-  'Museum of Anthropology': '',
-  TwoRiversGalleryBC: ''
+  'Agnes Etherington Art Centre': '3b19d661-eeac-4985-aef1-2cf8f2dccd72',
+  'Morris and Helen Belkin Art Gallery': '2b29fc0e-3f48-4464-8ba7-88e064800829',
+  'Museum of Anthropology': '203e5d9c-7721-4df1-84ef-c73983320c3b',
+  TwoRiversGalleryBC: '2d2d6055-f35a-48de-a9b7-ccd69325ed05'
 };
 
 const results = [];
 
-fs.createReadStream('/Users/taylorjackson/Desktop/formatted2.csv')
+fs.createReadStream('/Users/taylorjackson/Desktop/formatted.csv')
   .pipe(csv())
   .on('data', (data) => {
     try {
@@ -42,15 +42,17 @@ fs.createReadStream('/Users/taylorjackson/Desktop/formatted2.csv')
       const url = data['URL'];
       const artistUrl = data['Organizational Channel'];
 
-      results.push({
-        title: title,
-        length: length,
-        url: url,
-        coverSrc: coverSrc,
-        profileId: profileId,
-        artistUrl: artistUrl,
-        description: desc
-      });
+      if (profileId === '2d2d6055-f35a-48de-a9b7-ccd69325ed05') {
+        results.push({
+          title: title,
+          length: length,
+          url: url,
+          coverSrc: coverSrc,
+          profileId: profileId,
+          artistUrl: artistUrl,
+          description: desc
+        });
+      }
     } catch (error) {
       console.error('Error parsing data:', data, error);
     }
@@ -58,7 +60,7 @@ fs.createReadStream('/Users/taylorjackson/Desktop/formatted2.csv')
   .on('end', () => {
     // // Map the data to the schema
     const addContentRequests = results.map(createAddContentRequest);
-
+    let i = 0;
     addContentRequests.forEach((contentRequest) => {
       axios
         .post(endpointUrl, contentRequest, {
@@ -69,6 +71,8 @@ fs.createReadStream('/Users/taylorjackson/Desktop/formatted2.csv')
         })
         .then((response) => {
           console.log('Success: ');
+          i++;
+          console.log(i);
         })
         .catch((error) => {
           console.error('Error:', error.response.data);
