@@ -13,8 +13,8 @@ interface ViewSectionProps {
 }
 
 const getUrl = (website: string) => {
-  return website?.startsWith('http') ? website : `https://${website}`
-}
+  return website?.startsWith('http') ? website : `https://${website}`;
+};
 
 const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
   return (
@@ -27,14 +27,17 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             target="_blank"
             style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
           >
-            {profile.logoUrl && <img src={profile!.logoUrl} alt='user profile thumbnail' />}
-            {!profile && <Lottie
-              className="loading-circle"
-              animationData={LoadingCircle}
-              loop={true}
-              autoplay={true}
-            />}
-
+            {profile.logoUrl && (
+              <img src={profile!.logoUrl} alt="user profile thumbnail" />
+            )}
+            {!profile && (
+              <Lottie
+                className="loading-circle"
+                animationData={LoadingCircle}
+                loop={true}
+                autoplay={true}
+              />
+            )}
           </s.ImageInner>
           {isLoggedIn && (
             <s.EditWrapper>
@@ -46,23 +49,33 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
         </s.ImageWrapper>
 
         <Typography component="h5" variant="h5">
-          <a href={getUrl(profile?.website)} title={profile!.organization} target="_blank" rel="noreferrer">
+          <a
+            href={getUrl(profile?.website)}
+            title={profile!.organization}
+            target="_blank"
+            rel="noreferrer"
+          >
             {profile!.organization || ''}
           </a>
           <small>
-            {profile!.tag && (
-              profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`
-            )}
+            {profile!.tag &&
+              (profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`)}
           </small>
         </Typography>
       </s.Header>
 
       <s.Body>
-        <Typography component="p" variant="body2">
+        <Typography
+          component="p"
+          variant="body2"
+          style={{ whiteSpace: 'pre-wrap' }}
+        >
           {profile.description}
         </Typography>
         <Box pt="16px">
-          {profile?.descriptionUrl && <MediaPlayer url={profile?.descriptionUrl} isAudio />}
+          {profile?.descriptionUrl && (
+            <MediaPlayer url={profile?.descriptionUrl} isAudio />
+          )}
         </Box>
       </s.Body>
     </s.ViewSection>
