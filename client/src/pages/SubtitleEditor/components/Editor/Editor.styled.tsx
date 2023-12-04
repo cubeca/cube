@@ -44,10 +44,10 @@ export const LogoWrapper = styled(Box)`
 export const StyledLoadingText = styled(Typography)`
   ${({ theme }) => `
     color: #D9FFEE;
-    font-family: Inter;
-    font-size: 24px;
+    font-family: Roboto;
+    font-size: 20px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     ${theme.breakpoints.down('sm')} {
       marginTop: ${theme.spacing(0)};
     }
