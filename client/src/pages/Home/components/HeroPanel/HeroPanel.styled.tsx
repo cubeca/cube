@@ -8,7 +8,7 @@ export const Hero = styled(Box)`
   overflow-y: visible;
   z-index: 1;
   margin-top: -78px;
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     margin-top: -116px;
   }
@@ -24,7 +24,7 @@ export const Bg = styled(Box)`
   max-width: ${({ theme }) => theme.breakpoints.values.xl}px;
   min-height: 720px;
   background: transparent no-repeat url('${BgImg}') top center/cover;
-  
+
   ${(props) => props.theme.breakpoints.up('xl')} {
     background-size: contain;
     min-height: 960px;
@@ -35,7 +35,7 @@ export const Content = styled(Grid)`
   position: relative;
   z-index: 2;
   padding: 120px 0 1px 0;
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     padding-bottom: 120px;
   }
@@ -85,7 +85,7 @@ export const ContentMain = styled(Box)`
 //     max-width: 480px;
 //     margin: 0 0 0 auto;
 //   }
-  
+
 //   ${(props) => props.theme.breakpoints.up('lg')} {
 //     height: 600px;
 //     max-width: 600px;
@@ -143,7 +143,7 @@ export const ContentMain = styled(Box)`
 //       order: 2;
 //       margin-bottom: 0;
 //     }
-    
+
 //     ${(props) => props.theme.breakpoints.up('md')} {
 //       font-weight: 500;
 //     }
