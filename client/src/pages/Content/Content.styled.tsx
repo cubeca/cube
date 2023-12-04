@@ -177,6 +177,7 @@ export const LoadingWrapper = styled(Box)`
   justify-content: center;
   align-items: center;
   height: 100%;
+  background-color: #1a1919;
 `;
 
 export const LoadingText = styled(Typography)`
@@ -185,5 +186,7 @@ export const LoadingText = styled(Typography)`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
+
+  line-height: 26px;
 `;
