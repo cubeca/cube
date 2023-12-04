@@ -47,7 +47,7 @@ export const StyledLoadingText = styled(Typography)`
     font-family: Inter;
     font-size: 24px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     ${theme.breakpoints.down('sm')} {
       marginTop: ${theme.spacing(0)};
     }
