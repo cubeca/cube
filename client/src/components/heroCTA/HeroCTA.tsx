@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { ReactComponent as PlaySymbol } from 'assets/icons/play-symbol.svg'
+import { ReactComponent as PlaySymbol } from 'assets/icons/play-symbol.svg';
 import * as s from './HeroCTA.styled';
 import ReactPlayer from 'react-player';
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 
 interface HeroCtaProps {
   title: string;
@@ -12,16 +12,15 @@ interface HeroCtaProps {
   image: string;
 }
 
-const HeroCTA: FC<HeroCtaProps> = ({
-  title,
-  text,
-  video,
-  image,
-}) => (
+const HeroCTA: FC<HeroCtaProps> = ({ title, text, video, image }) => (
   <s.CTA>
     <s.CTAContent>
-      <Typography component="h2" variant="h3" sx={{color: '#2F4048'}}>{title}</Typography>
-      <Typography component="p" variant="body1" sx={{color: '#2F4048'}}>{text}</Typography>
+      <Typography component="h2" variant="h3" sx={{ color: '#2F4048' }}>
+        {title}
+      </Typography>
+      <Typography component="p" variant="body1" sx={{ color: '#2F4048' }}>
+        {text}
+      </Typography>
     </s.CTAContent>
     <s.CTAVideo>
       <ReactPlayer
@@ -30,7 +29,13 @@ const HeroCTA: FC<HeroCtaProps> = ({
         height="100%"
         overflow="hidden"
         playing
-        playIcon={<Box className="play-button"><a href="#TEST"><PlaySymbol /></a></Box>}
+        playIcon={
+          <Box className="play-button">
+            <a href="#TEST">
+              <PlaySymbol />
+            </a>
+          </Box>
+        }
         light={image}
       />
     </s.CTAVideo>

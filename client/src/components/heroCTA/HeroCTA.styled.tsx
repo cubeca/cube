@@ -4,8 +4,7 @@ import { styled } from 'theme/utils';
 export const CTA = styled(Box)`
   position: relative;
   width: 100%;
-  
-  background: ${(props) => props.theme.palette.primary.light};
+  background: #28343c;
 
   ${(props) => props.theme.breakpoints.down('sm')} {
     margin-left: -8.333333333333334vw;
@@ -39,9 +38,12 @@ export const CTAContent = styled(Box)`
   h2 {
     font-weight: 600;
     margin-bottom: 16px;
+    color: #d9ffee;
   }
 
-  p {}
+  p {
+    color: #d9ffee;
+  }
 
   > *:last-child {
     margin-bottom: 0;

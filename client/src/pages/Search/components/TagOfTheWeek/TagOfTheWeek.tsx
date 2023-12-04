@@ -8,12 +8,12 @@ import { ContentLoader } from 'components/Loaders';
 import { ContentLists } from 'types/enums';
 import * as s from './TagOfTheWeek.styled';
 
-import FPOThumb1 from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
+import FPOThumb1 from 'assets/images/fpo/cont-art-gal-thumb1.png';
 import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
 import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
-import FPOThumb4 from 'assets/images/fpo/ryan-stefan-5K98ScREEUY-unsplash-thumb.png';
-import FPOThumb5 from 'assets/images/fpo/filip-zrnzevic-QsWG0kjPQRY-unsplash-thumb.png';
-import FPOThumb6 from 'assets/images/fpo/coline-beulin-oLWGI-Q76Yc-unsplash-thumb.png';
+import FPOThumb4 from 'assets/images/fpo/third-top-thumb.png';
+import FPOThumb5 from 'assets/images/fpo/first-bottom-thumb.png';
+import FPOThumb6 from 'assets/images/fpo/third-bottom-thumb.png';
 
 register();
 
@@ -40,7 +40,7 @@ const Content = () => {
     },
     {
       id: 2,
-      thumbnailUrl: FPOThumb3,
+      thumbnailUrl: FPOThumb4,
       title: 'Faye HeavyShield (English)',
       url: '/',
       icon: 'video',
@@ -48,7 +48,7 @@ const Content = () => {
     },
     {
       id: 3,
-      thumbnailUrl: FPOThumb4,
+      thumbnailUrl: FPOThumb3,
       title:
         'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
       url: '/',
