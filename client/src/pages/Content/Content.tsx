@@ -26,6 +26,8 @@ import useDeleteContent from 'hooks/useDeleteContent';
 import DeleteContentButton from 'components/DeleteContentButton';
 import { getProfileId } from 'utils/auth';
 import EmbedModal from 'components/EmbedModal';
+import Lottie from 'lottie-react';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -63,7 +65,9 @@ const Video = () => {
   const bannerImageAltText = content?.bannerImageText;
   const loggedInProfileId = getProfileId();
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
-
+  const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
+  const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
+  console.log(content);
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
 
@@ -135,13 +139,26 @@ const Video = () => {
 
   const audioContent = (
     <s.AudioWrapper>
-      <MediaPlayer
-        url={audioUrl || ''}
-        coverArtUrl={coverArtUrl}
-        coverImageAltText={coverImageAltText}
-        subtitleUrl={subtitleUrl}
-        isSafari={isSafari}
-      />
+      {audioBeingProcessed ? (
+        <s.LoadingWrapper>
+          <Lottie
+            className="loading-cubes"
+            animationData={LoadingCubes}
+            loop={true}
+          />
+          <s.LoadingText>
+            Your audio is being processed. This may take a few minutes.
+          </s.LoadingText>
+        </s.LoadingWrapper>
+      ) : (
+        <MediaPlayer
+          url={audioUrl || ''}
+          coverArtUrl={coverArtUrl}
+          coverImageAltText={coverImageAltText}
+          subtitleUrl={subtitleUrl}
+          isSafari={isSafari}
+        />
+      )}
     </s.AudioWrapper>
   );
 
@@ -149,11 +166,24 @@ const Video = () => {
 
   const videoContent = (
     <s.VideoWrapper>
-      <MediaPlayer
-        url={videoUrl || ''}
-        coverImageAltText={coverImageAltText}
-        subtitleUrl={subtitleUrl}
-      />
+      {videoBeingProcessed ? (
+        <s.LoadingWrapper>
+          <Lottie
+            className="loading-cubes"
+            animationData={LoadingCubes}
+            loop={true}
+          />
+          <s.LoadingText>
+            Your video is being processed. This may take a few minutes.
+          </s.LoadingText>
+        </s.LoadingWrapper>
+      ) : (
+        <MediaPlayer
+          url={videoUrl || ''}
+          coverImageAltText={coverImageAltText}
+          subtitleUrl={subtitleUrl}
+        />
+      )}
     </s.VideoWrapper>
   );
 
