@@ -15,8 +15,13 @@ const useFilterContent = () => {
     navigate(`${location.pathname}${searchParams ? `?${searchParams}` : ''}`);
   };
 
+  const getFilter = (key: ContentQueryKeys) => {
+    return searchParams.get(key);
+  };
+
   return {
-    setFilter
+    setFilter,
+    getFilter
   };
 };
 

@@ -37,7 +37,7 @@ const HeroPanelHome = () => {
           <Grid xs={10} xsOffset={1} md={4} mdOffset={2}>
             <HeroCTA
               title="How To Use CubeCommons"
-              text="Learn how to use this site and start discovering content"
+              text="Learn how to use this site and start discovering content."
               video="https://vimeo.com/243556536"
               image={CtaImage}
             />

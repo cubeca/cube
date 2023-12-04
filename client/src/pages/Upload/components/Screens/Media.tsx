@@ -144,7 +144,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'What is the title of this content? This is the name that people will see when they search for and view your content. Keep it short, your content will also be searchable by tags you add in minute'
+              'What is the title of this content? This is the name that people will see when they search for and view your content. Keep it short, your content will also be searchable by tags you add in minute.'
             )}
           </Typography>
         </Box>
@@ -162,7 +162,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `Upload your audio, video or pdf content. This is a shared network, to reduce energy and space consumption please upload files of type: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2GB. While your video uploads you can click "Next" to complete required information for accessibility.`
+              `Upload your file. It should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption please upload files of type: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2GB. The arrow should change to a checkmark.`
             )}
           </Typography>
         </Box>
@@ -180,7 +180,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Upload a Thumbnail Image. For best results, we recommend images dimensions are 720px by 720px. File size should not exceed 500 kb.'
+              'Upload a Thumbnail image. For best results, we recommend dimensions are 720px by 720px. The file size should not exceed 500 kb.'
             )}
           </Typography>
         </Box>
@@ -195,7 +195,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Alt text should describe who or what is in the picture, atmospheric or prop details and any vibrant colours or important design elements or symbols'
+              'More is better! Alt text should describe who or what is in the picture, atmospheric details, any vibrant colours, objects or symbols.'
             )}
           </Typography>
         </Box>

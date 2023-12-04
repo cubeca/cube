@@ -41,16 +41,17 @@ const Content = () => {
     {
       id: 2,
       thumbnailUrl: FPOThumb4,
-      title: 'Faye HeavyShield (English)',
-      url: '/',
+      title:
+        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
+      url: 'https://www.cubecommons.ca/content/bc3610ab-9bf6-4283-81a9-ce1287a45570',
       icon: 'video',
       hasSignLanguage: false
     },
     {
       id: 3,
       thumbnailUrl: FPOThumb3,
-      title:
-        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
+      title: 'Faye HeavyShield (English)',
+
       url: '/',
       icon: 'audio',
       hasSignLanguage: false
@@ -59,7 +60,7 @@ const Content = () => {
       thumbnailUrl: FPOThumb5,
       title:
         'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
-      url: '/',
+      url: 'https://www.cubecommons.ca/content/3f15f034-b952-4101-a64a-79b9d0dda987',
       icon: 'audio',
       hasSignLanguage: false
     },
@@ -67,7 +68,7 @@ const Content = () => {
       id: 5,
       thumbnailUrl: FPOThumb6,
       title: 'How to feel unsafe in a safe way',
-      url: '/',
+      url: 'https://www.cubecommons.ca/content/79cf81ff-b033-40d9-84a9-e371c15945c3',
       icon: 'video'
     }
   ];
