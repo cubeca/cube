@@ -259,18 +259,21 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         ) : (
           <>
             <s.WaitWrapper>
+              <s.StyledLoadingText variant={'h4'}>
+                {postUpload
+                  ? t(
+                      'We are loading your file and then generating your subtitles; this may take a few minutes.'
+                    )
+                  : t('Loading subtitles')}
+              </s.StyledLoadingText>
               <s.LogoWrapper>
                 <Lottie
                   className="loading-cubes"
                   animationData={LoadingCubes}
                   loop={true}
+                  style={{ height: '400px' }}
                 />
               </s.LogoWrapper>
-              <s.StyledLoadingText variant={'h4'}>
-                {postUpload
-                  ? t('This may take a few minutes, generating subtitles')
-                  : t('Loading subtitles')}
-              </s.StyledLoadingText>
             </s.WaitWrapper>
           </>
         )}
