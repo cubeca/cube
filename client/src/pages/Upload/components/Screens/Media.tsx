@@ -144,7 +144,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'What is the title of this content? This is the name that people will see when they search for and view your content. Keep it short, your content will also be searchable by tags you add in minute.'
+              `What is the title of this content? This is the name that people will see when they search for and view your content. Keep it short, your content will also be searchable by the description & tags you'll add in a minute.`
             )}
           </Typography>
         </Box>
@@ -180,7 +180,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Upload a Thumbnail image. For best results, we recommend dimensions are 720px by 720px. The file size should not exceed 500 kb.'
+              'Upload a Thumbnail image. For best results, we recommend dimensions are 720px by 720px. The file size should not exceed 500 KB.'
             )}
           </Typography>
         </Box>
@@ -213,7 +213,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Upload a Banner Image to allow users to preview your link. For best results, we recommend images dimensions are 1280px by 720px. File size should not exceed 500 kb.'
+              'Upload a Banner Image to allow users to preview your link. For best results, we recommend images dimensions are 1280px by 720px. File size should not exceed 500 KB.'
             )}
           </Typography>
         </Box>
