@@ -26,15 +26,15 @@ const Content = () => {
       id: 0,
       thumbnailUrl: FPOThumb1,
       title: 'Alex Morrison, Nooks and Corners',
-      url: '/',
+      url: 'https://cubecommons.ca/content/4f0b89ba-9104-4806-91c4-a86cb71a2751',
       icon: 'video',
       hasSignLanguage: false
     },
     {
       id: 1,
       thumbnailUrl: FPOThumb2,
-      title: 'Faye HeavyShield (French)',
-      url: '/',
+      title: 'Faye HeavyShield, CAG (French)',
+      url: 'https://cubecommons.ca/content/9dc02c2f-6d9c-485b-971d-818f23b3267b',
       icon: 'video',
       hasSignLanguage: false
     },
@@ -50,9 +50,8 @@ const Content = () => {
     {
       id: 3,
       thumbnailUrl: FPOThumb3,
-      title: 'Faye HeavyShield (English)',
-
-      url: '/',
+      title: 'Faye HeavyShield, CAG (English)',
+      url: 'https://cubecommons.ca/content/642afc53-60f2-4eb7-89eb-459b8d6ce0be',
       icon: 'audio',
       hasSignLanguage: false
     },
