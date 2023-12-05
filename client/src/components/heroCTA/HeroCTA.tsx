@@ -38,6 +38,10 @@ const HeroCTA: FC<HeroCtaProps> = ({
         controls
         config={{
           file: {
+            attributes: {
+              controls: true,
+              crossOrigin: 'true'
+            },
             forceVideo: true,
             tracks: [
               {
