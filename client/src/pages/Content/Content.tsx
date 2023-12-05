@@ -67,7 +67,7 @@ const Video = () => {
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
-  console.log(subtitleUrl);
+
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
 
