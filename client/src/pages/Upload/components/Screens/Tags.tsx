@@ -109,32 +109,34 @@ const Tags = ({ control }: any) => {
           )}
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
+          <strong>{t('You must separate tags with a comma. ')}</strong>
           {t(
-            'Separate tags by comma. Content tags are how users search on the main page by media type or accessability.'
+            'Being able to search by file type is extremely useful for people with disabilities and for educators.'
           )}
         </Typography>
         <s.StyledList>
-          <s.StyledListItem component="li">Video</s.StyledListItem>
-          <s.StyledListItem component="li">Audio</s.StyledListItem>
+          {t('Note*')}
           <s.StyledListItem component="li">
-            Activity Books{' '}
+            <strong>&quot;Activity Books&quot;</strong>{' '}
             <s.StyledListSpan>
-              are PDFs created for public programming.
+              can refer to PDFs created for public programming.
             </s.StyledListSpan>
           </s.StyledListItem>
           <s.StyledListItem component="li">
-            Digital Publications
+            <strong>&quot;Digital Publications&quot;</strong>{' '}
+            <s.StyledListSpan>distinguishes other PDFs.</s.StyledListSpan>
           </s.StyledListItem>
-          <s.StyledListItem component="li">Link</s.StyledListItem>
           <s.StyledListItem component="li">
-            Collaborations
+            <strong>&quot;Collaborations&quot;</strong>{' '}
             <s.StyledListSpan>
-              {' '}
-              are content traveling between multiple organizations or links to
-              content outside of Cube.
+              is content traveling between multiple organizations or made with
+              other organizations.
             </s.StyledListSpan>
           </s.StyledListItem>
-          <s.StyledListItem component="li">Sign Language</s.StyledListItem>
+          <s.StyledListItem component="li">
+            <strong>&quot;Sign Language&quot;</strong>{' '}
+            <s.StyledListSpan>if your content includes this.</s.StyledListSpan>
+          </s.StyledListItem>
         </s.StyledList>
         <TagInput
           control={control}
@@ -143,8 +145,9 @@ const Tags = ({ control }: any) => {
           placeholder={t('Connection Tags')}
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
+          <strong>{t('You must separate tags with a comma. ')}</strong>
           {t(
-            'Separate tags by comma. Connection tags allow your content to build wider and deeper connections to other cultural and community knowledges. By adding languages and community terms as tags, you make it easier for people to discover this content and content like it. They also contribute to your governance token holdings by expressing how inclusive and accessible your content is. If you want content to be bundled under an exhibition name please create that tag. Some examples of tags:'
+            'These tags allow your content to build wider and deeper connections to other cultural and community content. By adding languages and community terms as tags, you make it easier for people to discover. They also express how accessible your content is. And if you want content to be bundled under an exhibition name please create that tag. Some examples to help get you started:'
           )}
         </Typography>
         <Grid container>
@@ -187,7 +190,7 @@ const Tags = ({ control }: any) => {
       <Box my={theme.spacing(5)}>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Credit any individuals who contribute to this content, including artists, editors etc. Add as many contributors as needed, using “Add more”. Only one name per field.'
+            'Credit anyone who contributed to your content. Add as many as needed, using “Add more”. Please only one name per field.'
           )}
         </Typography>
 
@@ -252,9 +255,7 @@ const Tags = ({ control }: any) => {
           my={theme.spacing(2.5)}
           sx={{ paddingBottom: '20px' }}
         >
-          {t(
-            'Credit all artists who contributed to the creation of this content and include a URL to their website so we can hyperlink their name and increase their discoverability.'
-          )}
+          {t("Include an artist's URL to hyperlink their name in the credits.")}
         </Typography>
 
         {editors.map((_, index) => (
@@ -390,16 +391,6 @@ const Tags = ({ control }: any) => {
             )}
           </Grid>
         ))}
-        <Typography
-          component="p"
-          variant="body2"
-          my={theme.spacing(2.5)}
-          sx={{ paddingBottom: '10px' }}
-        >
-          {t(
-            'Credit all individuals who contributed to creating this content. Use the + button to add more than one contributor per role, or to include roles not listed.'
-          )}
-        </Typography>
       </Box>
 
       <Box my={theme.spacing(5)}>
@@ -412,7 +403,7 @@ const Tags = ({ control }: any) => {
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Did you work with another organization? Include them in the credits.'
+            'Did you work with another organization on CubeCommons? Connect this content to their profile by selecting their name.'
           )}
         </Typography>
       </Box>
