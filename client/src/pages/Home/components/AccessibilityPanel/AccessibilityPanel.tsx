@@ -25,16 +25,36 @@ const AccessibilityPanel = () => {
           {t('accessibility')}
         </Typography>
         {/* <Trans i18nKey="accessibilityText"> */}
-          <Typography
-            component="p"
-            sx={{
-              textAlign: 'center',
-              maxWidth: '720px',
-              margin: '0 auto',
-            }}
+        <Typography
+          component="p"
+          sx={{
+            textAlign: 'center',
+            maxWidth: '720px',
+            margin: '0 auto'
+          }}
+        >
+          CubeCommons aims to be a tool that supports the accessibility of
+          online arts and cultural content, and to build in the work of Canadian
+          organizations like{' '}
+          <a
+            href="https://deafspectrum.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-link"
           >
-            CubeCommons advocates for accessibility standards from which further efforts can be made and developed as technology improves. We aim to be a tool that supports the accessibility of online arts and cultural content, and to be a point of connection to Canadian organizations like <a href="https://deafspectrum.com/" target="_blank" rel="noopener noreferrer" className="inline-link">Deaf Spectrum</a> and <a href="https://openaccessfoundation.org/" target="_blank" rel="noopener noreferrer" className="inline-link">OAFAC</a>.
-          </Typography>
+            Deaf Spectrum
+          </a>{' '}
+          and{' '}
+          <a
+            href="https://openaccessfoundation.org/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-link"
+          >
+            OAFAC
+          </a>
+          .
+        </Typography>
         {/* </Trans> */}
         {/* <MediaPlayer
           url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
@@ -68,7 +88,6 @@ const AccessibilityPanel = () => {
           </s.IconDefinition>
         </Grid>
       </Grid>
-
     </s.AccessibilityPanel>
   );
 };
