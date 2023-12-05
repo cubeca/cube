@@ -337,10 +337,11 @@ const Video = () => {
                               underline="true"
                             >
                               {tag}
+                              {index < array.length - 1 && ','}
                             </s.Tag>
                             {index < array.length - 1 && (
                               <s.Tag component="span" variant="body2">
-                                ,&nbsp;
+                                &nbsp;
                               </s.Tag>
                             )}
                           </React.Fragment>
