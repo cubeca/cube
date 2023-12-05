@@ -162,7 +162,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `Upload your file. It should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption please upload files of type: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2GB. The arrow should change to a checkmark.`
+              `Upload your file. It should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption please upload files of type: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2 GB. The arrow should change to a checkmark.`
             )}
           </Typography>
         </Box>
