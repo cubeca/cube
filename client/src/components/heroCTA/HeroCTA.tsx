@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import { useTranslation } from 'react-i18next';
 import { ReactComponent as PlaySymbol } from 'assets/icons/play-symbol.svg';
 import * as s from './HeroCTA.styled';
 import ReactPlayer from 'react-player';
@@ -10,9 +9,16 @@ interface HeroCtaProps {
   text: string;
   video: string;
   image: string;
+  subtitlesUrl: string;
 }
 
-const HeroCTA: FC<HeroCtaProps> = ({ title, text, video, image }) => (
+const HeroCTA: FC<HeroCtaProps> = ({
+  title,
+  text,
+  video,
+  image,
+  subtitlesUrl
+}) => (
   <s.CTA>
     <s.CTAContent>
       <Typography component="h2" variant="h3" sx={{ color: '#2F4048' }}>
@@ -29,6 +35,21 @@ const HeroCTA: FC<HeroCtaProps> = ({ title, text, video, image }) => (
         height="100%"
         overflow="hidden"
         playing
+        controls
+        config={{
+          file: {
+            forceVideo: true,
+            tracks: [
+              {
+                src: subtitlesUrl,
+                kind: 'subtitles',
+                srcLang: 'en',
+                default: true,
+                label: 'English'
+              }
+            ]
+          }
+        }}
         playIcon={
           <Box className="play-button">
             <a href="#TEST">

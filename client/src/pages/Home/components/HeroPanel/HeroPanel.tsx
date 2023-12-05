@@ -31,35 +31,11 @@ const HeroPanel = () => {
           <HeroCTA
             title="Create"
             text={t('becomeCreatorText')}
-            video="https://vimeo.com/243556536"
+            video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/6b81f5cf09ec80e33408cf61b3e0439d/manifest/video.m3u8"
             image={CtaImage}
+            subtitlesUrl="https://files.cubecommons.ca/fb1cf8ff-522a-41fb-a084-3b482687c059/vtt.vtt"
           />
         </Grid>
-
-        {/* <Grid xs={12} md={4} mdOffset={2}>
-          
-          <s.ContentCTA>
-            <ReactPlayer
-              url="https://vimeo.com/243556536"
-              width="100%"
-              height="100%"
-              overflow="hidden"
-              playing
-              playIcon={
-                <s.ContentCTAPlay>
-                  <Typography component="h1" variant="h1">
-                    {t('Create')}
-                  </Typography>
-                  <Typography component="p" variant="body1">
-                    {t('becomeCreatorText')}
-                  </Typography>
-                  <img className="play-button" src={PlaySymbol} alt="play" />
-                </s.ContentCTAPlay>
-              }
-              light={CTABg}
-            />
-          </s.ContentCTA>
-        </Grid> */}
       </s.Content>
     </s.Hero>
   );

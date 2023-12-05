@@ -38,8 +38,9 @@ const HeroPanelHome = () => {
             <HeroCTA
               title="How To Use CubeCommons"
               text="Learn how to use this site and start discovering content."
-              video="https://vimeo.com/243556536"
+              video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/1522f4bfdb5e28886e25f58c27c3d278/manifest/video.m3u8"
               image={CtaImage}
+              subtitlesUrl="https://files.cubecommons.ca/3ed305be-ff47-4cf2-abb8-6c0d77bcc208/vtt.vtt"
             />
           </Grid>
         </Grid>
