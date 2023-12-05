@@ -31,9 +31,9 @@ const HeroPanel = () => {
           <HeroCTA
             title="Create"
             text={t('becomeCreatorText')}
-            video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/6b81f5cf09ec80e33408cf61b3e0439d/manifest/video.m3u8"
+            video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/43df9c06ed57348a3414802cf1d565f8/manifest/video.m3u8"
             image={CtaImage}
-            subtitlesUrl="https://files.cubecommons.ca/fb1cf8ff-522a-41fb-a084-3b482687c059/vtt.vtt"
+            subtitlesUrl="https://files.cubecommons.ca/24978756-8ad3-4d7b-8412-b1bde69ec26f/vtt.vtt"
           />
         </Grid>
       </s.Content>
