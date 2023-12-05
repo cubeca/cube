@@ -55,7 +55,7 @@ const Details = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `Though this text will be accessible to screen reading tools, it's important to remember that different accessibilities are assisted by different kinds of description. Use language in your text that considers a broad audience and is no greater than 280 characters.`
+              `This text will be accessible by screen reading tools as well as our search tool; it's important to remember that different accessibilities are assisted by different kinds of description, and to add paragraph breaks to make it easier to consume.`
             )}
           </Typography>
         </Box>
@@ -69,13 +69,11 @@ const Details = ({
             isUploadReady={isVTTUploadReady}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-            {t('Upload File For Subtitles.')}{' '}
-            <strong>
-              {t(
-                "If you don't have one, don't worry. Subtitle file will be automatically generated for you at the end."
-              )}
-            </strong>{' '}
-            {t('Please stick around to confirm their content.')}
+            {t('Upload your VTT Subtitle file here.')}{' '}
+            <strong>{t("However if you don't have one, don't worry!")}</strong>{' '}
+            {t(
+              'At the end of this process a Subtitle file will be automatically generated for you and you will be able to edit it.'
+            )}
             <br />
           </Typography>
         </Box>
@@ -110,7 +108,7 @@ const Details = ({
 
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'You’re required to tell us whether your videos are made for kids. You may not upload content that is considered “obscene” or “pornography”. These terms are difficult to define, by law they are judged on the standard of what an average Canadian would think. If you have any doubt please mark your content "Mature".  Thank you.'
+              'You’re required to tell us if your content is suitable for kids. You may not upload content that is considered “obscene” or “pornography”. These terms are difficult to define, by law they are judged "on the standard of what an average Canadian would think". If you have any doubt please mark your content "Mature". Thank you.'
             )}
           </Typography>
         </Box>
