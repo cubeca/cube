@@ -14,6 +14,7 @@ import { styled } from '@mui/material/styles';
 import NavPanel from './components/NavPanel';
 import { ReactComponent as CreditsImg } from 'assets/icons/footer-credits.svg';
 import * as s from './Footer.styled';
+import * as DarkContent from 'components/DarkContent.styled';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -132,22 +133,24 @@ const Footer = () => {
             Beta Site
           </BootstrapDialogTitle>
           <DialogContent dividers>
-            <Typography gutterBottom>
-              <strong>
-                This site is a development site for{' '}
-                <a
-                  href="https://cubecommons.ca"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-link"
-                >
-                  CubeCommons
-                </a>
-                {'. '}
-              </strong>{' '}
-              Feel free to look around, but be prepared for some bugs and
-              unfinished features.
-            </Typography>
+            <DarkContent.Wrapper>
+              <Typography gutterBottom>
+                <strong>
+                  This site is a development site for{' '}
+                  <a
+                    href="https://cubecommons.ca"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-link"
+                  >
+                    CubeCommons
+                  </a>
+                  {'. '}
+                </strong>{' '}
+                Feel free to look around, but be prepared for some bugs and
+                unfinished features.
+              </Typography>
+            </DarkContent.Wrapper>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Got it!</Button>

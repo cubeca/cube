@@ -12,6 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import * as s from './Legal.styled';
 import ToS from './ToS';
+import * as DarkContent from 'components/DarkContent.styled';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -76,7 +77,9 @@ const LegalModalNav = () => {
           Terms of Service and Privacy Policy
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <ToS />
+          <DarkContent.Wrapper>
+            <ToS />
+          </DarkContent.Wrapper>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setLegalDisplay(false)}>Close</Button>

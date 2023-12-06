@@ -13,6 +13,7 @@ import ThirdBottomThumb from 'assets/images/fpo/third-bottom-thumb.png';
 import FourthBottomThumb from 'assets/images/fpo/eldar-nazarov-gnYfMrL0rck-unsplash-thumb.png';
 import ThumbnailGrid from '../ThumbnailGrid';
 import * as s from './CenterColumnPanel.styled';
+import * as DarkContent from 'components/DarkContent.styled';
 
 const CenterColumnPanel = () => {
   const { t } = useTranslation('about');
@@ -51,29 +52,31 @@ const CenterColumnPanel = () => {
           ></ThumbnailGrid>
         </Grid>
         <Grid xs={10} xsOffset={1} md={4}>
-          <s.CenterColumnTextSection>
-            <Typography component="h2" variant="h2">
-              {t('We Are a DAO')}
-            </Typography>
-            <Typography component="p">
-              {t(
-                'Creating a profile on CubeCommons makes you an owner of CubeCommons.'
-              )}
-            </Typography>
-            <Typography component="p">
-              {t(
-                'As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and a precarious relationships with corporations that often go obsolete or make decisions that do not align with our mandates. When organizations load their educational content onto their Cube profile, they earn governance tokens that give them the right to vote on platform changes, additions and maintenance. By pooling our resources we mean to experiment with autonomy, collective governance and new models for education and cultural archiving.'
-              )}
-            </Typography>
-            <Typography component="p">
-              {t(
-                'We are just getting started; our early adopters get to load as much content as they like and have a say in the development of our governance system. Our governance tokens are not a form of currency and cannot be bought or sold. Only earned through acts of knowledge sharing.'
-              )}
-            </Typography>
-            {/* <Button href="https://www.example.com" variant="contained">
-              Browse Our DAO Documentation
-            </Button> */}
-          </s.CenterColumnTextSection>
+          <DarkContent.Wrapper>
+            <s.CenterColumnTextSection>
+              <Typography component="h2" variant="h2">
+                {t('We Are a DAO')}
+              </Typography>
+              <Typography component="p">
+                {t(
+                  'Creating a profile on CubeCommons makes you an owner of CubeCommons.'
+                )}
+              </Typography>
+              <Typography component="p">
+                {t(
+                  'As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and a precarious relationships with corporations that often go obsolete or make decisions that do not align with our mandates. When organizations load their educational content onto their Cube profile, they earn governance tokens that give them the right to vote on platform changes, additions and maintenance. By pooling our resources we mean to experiment with autonomy, collective governance and new models for education and cultural archiving.'
+                )}
+              </Typography>
+              <Typography component="p">
+                {t(
+                  'We are just getting started; our early adopters get to load as much content as they like and have a say in the development of our governance system. Our governance tokens are not a form of currency and cannot be bought or sold. Only earned through acts of knowledge sharing.'
+                )}
+              </Typography>
+              {/* <Button href="https://www.example.com" variant="contained">
+                Browse Our DAO Documentation
+              </Button> */}
+            </s.CenterColumnTextSection>
+          </DarkContent.Wrapper>
         </Grid>
         <Grid xs={10} xsOffset={1} md={3}></Grid>
         <Grid xs={10} xsOffset={1} md={2}></Grid>
@@ -85,17 +88,19 @@ const CenterColumnPanel = () => {
         </Grid>
         <Grid xs={10} xsOffset={1} md={4}>
           <s.CenterColumnTextSection>
-            <Typography component="h2" variant="h2">
-              {t('We Are a Commons')}
-            </Typography>
-            <Typography component="p">
-              {t(
-                'CubeCommons was developed through the partnership and collaborative brainstorming of individuals and organizations including @221A, Artengine (@Artengine), Burnaby Art Gallery (@BAG), Centre A (@CentreA), @Cinevolution, Contemporary Art Gallery (@CAG), Museum of Anthropology (@MOA), Museum of Vancouver (@MOV), New Media Gallery (@NMG), Richmond Art Gallery (@RAG), SFU Galleries (@SFUGalleries), and more, from across Canada.'
-              )}
-            </Typography>
-            <Button href="/signup" variant="contained">
-              Join Us
-            </Button>
+            <DarkContent.Wrapper>
+              <Typography component="h2" variant="h2">
+                {t('We Are a Commons')}
+              </Typography>
+              <Typography component="p">
+                {t(
+                  'CubeCommons was developed through the partnership and collaborative brainstorming of individuals and organizations including @221A, Artengine (@Artengine), Burnaby Art Gallery (@BAG), Centre A (@CentreA), @Cinevolution, Contemporary Art Gallery (@CAG), Museum of Anthropology (@MOA), Museum of Vancouver (@MOV), New Media Gallery (@NMG), Richmond Art Gallery (@RAG), SFU Galleries (@SFUGalleries), and more, from across Canada.'
+                )}
+              </Typography>
+              <Button href="/signup" variant="contained">
+                Join Us
+              </Button>
+            </DarkContent.Wrapper>
           </s.CenterColumnTextSection>
         </Grid>
       </Grid>
