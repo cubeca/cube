@@ -115,20 +115,63 @@ const Details = ({
       ) : null}
 
       <Box my={theme.spacing(5)}>
-        <DatePicker
-          label={t('Expiry Date')}
-          value={expiryValue}
-          onChange={(newValue) => {
-            onExpriryValueChange(newValue);
+        <Controller
+          name="expiry"
+          control={control}
+          defaultValue={expiryValue}
+          render={({ field: { onChange, value } }) => {
+            const dateValue = value
+              ? value instanceof Date
+                ? value
+                : new Date(value)
+              : null;
+            return (
+              <DatePicker
+                label={t('Expiry Date')}
+                value={dateValue}
+                onChange={onChange}
+                renderInput={(params) => (
+                  <TextField
+                    fullWidth
+                    value={
+                      dateValue
+                        ? `${
+                            dateValue.getMonth() + 1
+                          }/${dateValue.getDate()}/${dateValue.getFullYear()}`
+                        : ''
+                    }
+                    {...params}
+                    onKeyUp={(e) => {
+                      const cursorPosition = (e.target as HTMLInputElement)
+                        .selectionStart;
+                      const inputElement = e.target as HTMLInputElement;
+                      const value = inputElement.value;
+                      const dateParts = value.split('/');
+                      const month = dateParts[0];
+                      const day = dateParts[1];
+
+                      if (
+                        e.key !== 'Backspace' &&
+                        cursorPosition !== value.length &&
+                        ((month && month.length === 2) ||
+                          (day && day.length === 2))
+                      ) {
+                        if (
+                          cursorPosition !== null &&
+                          inputElement.setSelectionRange
+                        ) {
+                          inputElement.setSelectionRange(
+                            cursorPosition + 1,
+                            cursorPosition + 1
+                          );
+                        }
+                      }
+                    }}
+                  />
+                )}
+              />
+            );
           }}
-          renderInput={(params) => (
-            <TextField
-              // control={control}
-              // name="expiry"
-              fullWidth
-              {...params}
-            />
-          )}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
