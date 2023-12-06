@@ -67,8 +67,6 @@ const Video = () => {
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
 
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
     youtubeID = getIDfromURL(linkUrl);
@@ -140,7 +138,6 @@ const Video = () => {
         coverArtUrl={coverArtUrl}
         coverImageAltText={coverImageAltText}
         subtitleUrl={subtitleUrl}
-        isSafari={isSafari}
       />
     </s.AudioWrapper>
   );
