@@ -115,20 +115,37 @@ const Details = ({
       ) : null}
 
       <Box my={theme.spacing(5)}>
-        <DatePicker
-          label={t('Expiry Date')}
-          value={expiryValue}
-          onChange={(newValue) => {
-            onExpriryValueChange(newValue);
+        <Controller
+          name="expiry"
+          control={control}
+          defaultValue={expiryValue}
+          render={({ field: { onChange, value } }) => {
+            const dateValue = value
+              ? value instanceof Date
+                ? value
+                : new Date(value)
+              : null;
+            return (
+              <DatePicker
+                label={t('Expiry Date')}
+                value={dateValue}
+                onChange={onChange}
+                renderInput={(params) => (
+                  <TextField
+                    fullWidth
+                    value={
+                      dateValue
+                        ? `${
+                            dateValue.getMonth() + 1
+                          }/${dateValue.getDate()}/${dateValue.getFullYear()}`
+                        : ''
+                    }
+                    {...params}
+                  />
+                )}
+              />
+            );
           }}
-          renderInput={(params) => (
-            <TextField
-              // control={control}
-              // name="expiry"
-              fullWidth
-              {...params}
-            />
-          )}
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
