@@ -2,6 +2,7 @@ import { getContentDetails } from 'api/content';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { ContentStorage } from '@cubeca/bff-client-oas-axios';
+import { useEffect } from 'react';
 
 interface ContentDetailsResponse {
   isLoading: boolean;
@@ -43,11 +44,21 @@ interface ExtendedContentDetailsResponse extends ContentDetailsResponse {
 
 const useContentDetails = (): ExtendedContentDetailsResponse => {
   const { id } = useParams();
-
+  useEffect(() => {
+    console.log('ID changed:', id);
+  }, [id]);
   const { isLoading, isError, data } = useQuery(
     ['content-details', id],
     () => getContentDetails(id ?? ''),
-    { enabled: !!id }
+    {
+      enabled: !!id,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      refetchInterval: false,
+      refetchIntervalInBackground: false,
+      staleTime: Infinity
+    }
   );
 
   return {

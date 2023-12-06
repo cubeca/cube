@@ -67,6 +67,7 @@ const Video = () => {
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
+  console.log(content);
 
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
@@ -107,6 +108,14 @@ const Video = () => {
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
   };
+
+  useEffect(() => {
+    console.log('Content component mounted');
+
+    return () => {
+      console.log('Content component unmounted');
+    };
+  }, []);
 
   function getContributorRole(role: string, count: number): string {
     let roleStr = '';
