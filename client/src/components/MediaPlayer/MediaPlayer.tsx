@@ -37,7 +37,7 @@ const MediaPlayer = ({
                 src: subtitleUrl || '',
                 kind: 'subtitles',
                 srcLang: 'en',
-                default: true,
+                default: false,
                 label: 'English'
               }
             ]
