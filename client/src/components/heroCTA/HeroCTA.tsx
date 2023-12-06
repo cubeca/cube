@@ -56,7 +56,7 @@ const HeroCTA: FC<HeroCtaProps> = ({
         }}
         playIcon={
           <Box className="play-button">
-            <a href="#TEST">
+            <a href="#play-how-to-video">
               <PlaySymbol />
             </a>
           </Box>
