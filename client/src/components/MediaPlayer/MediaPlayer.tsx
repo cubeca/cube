@@ -5,7 +5,6 @@ interface MediaPlayerProps {
   isAudio?: boolean;
   coverArtUrl?: string;
   subtitleUrl?: string;
-  isSafari?: boolean;
   coverImageAltText?: string;
 }
 
@@ -14,14 +13,12 @@ const MediaPlayer = ({
   isAudio,
   coverArtUrl,
   subtitleUrl,
-  isSafari,
   coverImageAltText
 }: MediaPlayerProps) => {
   return (
     <>
       <s.StyledPlayer
         coverImageAltText={coverImageAltText}
-        isSafari={isSafari}
         coverArtUrl={coverArtUrl || ''}
         url={url}
         config={{
@@ -37,7 +34,7 @@ const MediaPlayer = ({
                 src: subtitleUrl || '',
                 kind: 'subtitles',
                 srcLang: 'en',
-                default: true,
+                default: false,
                 label: 'English'
               }
             ]
