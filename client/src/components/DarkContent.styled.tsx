@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const Wrapper = styled(Box)`
-  a {
+  a:not(.MuiButton-root) {
     color: ${(props) => props.theme.palette.primary.main};
     text-decoration: underline;
 

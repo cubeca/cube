@@ -88,17 +88,19 @@ const CenterColumnPanel = () => {
         </Grid>
         <Grid xs={10} xsOffset={1} md={4}>
           <s.CenterColumnTextSection>
-            <Typography component="h2" variant="h2">
-              {t('We Are a Commons')}
-            </Typography>
-            <Typography component="p">
-              {t(
-                'CubeCommons was developed through the partnership and collaborative brainstorming of individuals and organizations including @221A, Artengine (@Artengine), Burnaby Art Gallery (@BAG), Centre A (@CentreA), @Cinevolution, Contemporary Art Gallery (@CAG), Museum of Anthropology (@MOA), Museum of Vancouver (@MOV), New Media Gallery (@NMG), Richmond Art Gallery (@RAG), SFU Galleries (@SFUGalleries), and more, from across Canada.'
-              )}
-            </Typography>
-            <Button href="/signup" variant="contained">
-              Join Us
-            </Button>
+            <DarkContent.Wrapper>
+              <Typography component="h2" variant="h2">
+                {t('We Are a Commons')}
+              </Typography>
+              <Typography component="p">
+                {t(
+                  'CubeCommons was developed through the partnership and collaborative brainstorming of individuals and organizations including @221A, Artengine (@Artengine), Burnaby Art Gallery (@BAG), Centre A (@CentreA), @Cinevolution, Contemporary Art Gallery (@CAG), Museum of Anthropology (@MOA), Museum of Vancouver (@MOV), New Media Gallery (@NMG), Richmond Art Gallery (@RAG), SFU Galleries (@SFUGalleries), and more, from across Canada.'
+                )}
+              </Typography>
+              <Button href="/signup" variant="contained">
+                Join Us
+              </Button>
+            </DarkContent.Wrapper>
           </s.CenterColumnTextSection>
         </Grid>
       </Grid>
