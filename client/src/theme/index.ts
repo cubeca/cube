@@ -120,12 +120,6 @@ const getTheme = (mode?: 'dark' | 'light') =>
           secondary: THEME_COLORS.primary.main,
           disabled: THEME_COLORS.primary.dark
         },
-        action: {
-          active: THEME_COLORS.primary.main,
-          hover: THEME_COLORS.primary.light,
-          focus: THEME_COLORS.primary.light,
-          selected: THEME_COLORS.primary.main
-        },
         error: {
           main: THEME_COLORS.error.main
         },
