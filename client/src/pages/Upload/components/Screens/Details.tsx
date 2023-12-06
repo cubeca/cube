@@ -141,6 +141,32 @@ const Details = ({
                         : ''
                     }
                     {...params}
+                    onKeyUp={(e) => {
+                      const cursorPosition = (e.target as HTMLInputElement)
+                        .selectionStart;
+                      const inputElement = e.target as HTMLInputElement;
+                      const value = inputElement.value;
+                      const dateParts = value.split('/');
+                      const month = dateParts[0];
+                      const day = dateParts[1];
+
+                      if (
+                        e.key !== 'Backspace' &&
+                        cursorPosition !== value.length &&
+                        ((month && month.length === 2) ||
+                          (day && day.length === 2))
+                      ) {
+                        if (
+                          cursorPosition !== null &&
+                          inputElement.setSelectionRange
+                        ) {
+                          inputElement.setSelectionRange(
+                            cursorPosition + 1,
+                            cursorPosition + 1
+                          );
+                        }
+                      }
+                    }}
                   />
                 )}
               />
