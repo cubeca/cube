@@ -170,3 +170,23 @@ export const Tag = styled(Typography)`
   line-height: 21px;
   text-decoration: ${(props) => (props.underline ? 'underline' : 'none')};
 `;
+
+export const LoadingWrapper = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: #1a1919;
+`;
+
+export const LoadingText = styled(Typography)`
+  color: ${(props) => props.theme.palette.primary.light};
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  padding-top: 0.5rem;
+
+  line-height: 26px;
+`;
