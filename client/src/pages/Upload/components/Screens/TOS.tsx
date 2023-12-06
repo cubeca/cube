@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
 import ToS from 'components/Legal/ToS';
+import * as DarkContent from 'components/DarkContent.styled';
 
 import { useTranslation } from 'react-i18next';
 const TOS = () => {
@@ -10,7 +11,9 @@ const TOS = () => {
       <Typography variant="h1">
         {t('Terms of Service & Privacy Policy')}
       </Typography>
-      <ToS />
+      <DarkContent.Wrapper>
+        <ToS />
+      </DarkContent.Wrapper>
     </>
   );
 };
