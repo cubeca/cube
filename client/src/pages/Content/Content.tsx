@@ -3,7 +3,6 @@ import MediaPlayer from 'components/MediaPlayer';
 import YouTubePlayer from 'components/YouTubePlayer';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-
 import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
@@ -67,7 +66,6 @@ const Video = () => {
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
-
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
 
@@ -135,7 +133,7 @@ const Video = () => {
     </s.VideoWrapper>
   );
 
-   const audioContent = (
+  const audioContent = (
     <s.AudioWrapper>
       {audioBeingProcessed ? (
         <s.LoadingWrapper>
@@ -235,9 +233,17 @@ const Video = () => {
               </Typography>
 
               {loggedInProfileId === profileId && (
-                <Box sx={{ marginLeft: 'auto' }}>
+                // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
+                <s.EditDeleteWrapper>
+                  <s.EditSubsButton
+                    component={RouterLink}
+                    to={`/subtitle-editor/${content?.id}`}
+                  >
+                    Edit Subtitles
+                  </s.EditSubsButton>
                   <DeleteContentButton contentId={content?.id || ''} />
-                </Box>
+                </s.EditDeleteWrapper>
+                // </Box>
               )}
             </Box>
             <s.ContentDate component="p" variant="body2">
