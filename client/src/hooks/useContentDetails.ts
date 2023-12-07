@@ -1,5 +1,5 @@
 import { getContentDetails } from 'api/content';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, QueryFunctionContext } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { ContentStorage } from '@cubeca/bff-client-oas-axios';
 
@@ -39,22 +39,24 @@ interface ExtendedContentDetailsResponse extends ContentDetailsResponse {
       };
     };
   };
+  refetch: (context?: QueryFunctionContext) => Promise<void>;
 }
 
 const useContentDetails = (): ExtendedContentDetailsResponse => {
   const { id } = useParams();
 
-  const { isLoading, isError, data } = useQuery(
+  const { isLoading, isError, data, refetch } = useQuery(
     ['content-details', id],
     () => getContentDetails(id ?? ''),
-    { enabled: !!id }
+    { enabled: !!id, refetchOnMount: true, staleTime: 0 }
   );
 
   return {
     isLoading,
     isError,
-    data: data?.data as unknown as ContentStorage
-  };
+    data: data?.data as unknown as ContentStorage,
+    refetch
+  } as unknown as ExtendedContentDetailsResponse;
 };
 
 export default useContentDetails;
