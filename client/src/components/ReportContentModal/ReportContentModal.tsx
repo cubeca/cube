@@ -14,17 +14,13 @@ import ErrorMessage from 'components/form/ErrorMessage';
 interface ReportContentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmitted: () => void;
 }
 
-const ReportContentModal = ({
-  onClose,
-  isOpen,
-  onSubmitted
-}: ReportContentModalProps) => {
+const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
   const { control, handleSubmit, reset } = useForm();
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState('');
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const onSubmit = (data: FieldValues) => {
     const { reportReason, contactName, contactEmail, reportDesc } = data;
@@ -40,11 +36,13 @@ const ReportContentModal = ({
     } catch (e: any) {
       setErrorMessage('An error occurred while submitting report!');
     }
-    onSubmitted();
+
+    setShowSuccessMessage(true);
     reset();
   };
 
   const onCloseAndReset = () => {
+    setShowSuccessMessage(false);
     reset();
     onClose();
   };
@@ -56,74 +54,79 @@ const ReportContentModal = ({
       onClose={onCloseAndReset}
       open={isOpen}
     >
-      <Typography component="h6" variant="h6">
-        Select the reason you wish to report content
-      </Typography>
-
-      <sRadioInput.DarkRadioInput
-        control={control}
-        name="reportReason"
-        id="reportReason"
-        direction="vertical"
-        defaultValue={'Policy'}
-        options={[
-          {
-            value: 'Policy',
-            label:
-              'Policy (non-legal), relating to CubeCommons content and product policies such as spam or phishing.',
-            id: '1'
-          },
-          {
-            value: 'Legal',
-            label:
-              'Legal, relating to country/region-specific laws, such as privacy or intellectual property laws.',
-            id: '2'
-          }
-        ]}
-      />
-
-      <TextInput
-        colorMode="dark"
-        defaultValue={''}
-        name="contactName"
-        id="contactName"
-        control={control}
-        fullWidth
-        variant="outlined"
-        label={'Contact Name'}
-        placeholder="Your name"
-      />
-      <TextInput
-        colorMode="dark"
-        defaultValue={''}
-        name="contactEmail"
-        id="contactEmail"
-        control={control}
-        fullWidth
-        variant="outlined"
-        label={'Contact Email'}
-        placeholder="Your email address"
-      />
-      <TextInput
-        colorMode="dark"
-        defaultValue={''}
-        name="reportDesc"
-        id="reportDesc"
-        control={control}
-        multiline
-        rows={4}
-        fullWidth
-        variant="outlined"
-        label={'Description'}
-        placeholder="Describe the issue"
-      />
-
-      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-      <Stack direction="row" justifyContent="right">
-        <s.ModalButton onClick={handleSubmit(onSubmit)} color="secondary">
-          Submit
-        </s.ModalButton>
-      </Stack>
+      {showSuccessMessage ? (
+        <Typography component="h6" variant="h6" style={{ padding: 20 }}>
+          Success! Your report has been submitted.
+        </Typography>
+      ) : (
+        <>
+          <Typography component="h6" variant="h6">
+            Select the reason you wish to report content
+          </Typography>
+          <sRadioInput.DarkRadioInput
+            control={control}
+            name="reportReason"
+            id="reportReason"
+            direction="vertical"
+            defaultValue={'Policy'}
+            options={[
+              {
+                value: 'Policy',
+                label:
+                  'Policy (non-legal), relating to CubeCommons content and product policies such as spam or phishing.',
+                id: '1'
+              },
+              {
+                value: 'Legal',
+                label:
+                  'Legal, relating to country/region-specific laws, such as privacy or intellectual property laws.',
+                id: '2'
+              }
+            ]}
+          />
+          <TextInput
+            colorMode="dark"
+            defaultValue={''}
+            name="contactName"
+            id="contactName"
+            control={control}
+            fullWidth
+            variant="outlined"
+            label={'Contact Name'}
+            placeholder="Your name"
+          />
+          <TextInput
+            colorMode="dark"
+            defaultValue={''}
+            name="contactEmail"
+            id="contactEmail"
+            control={control}
+            fullWidth
+            variant="outlined"
+            label={'Contact Email'}
+            placeholder="Your email address"
+          />
+          <TextInput
+            colorMode="dark"
+            defaultValue={''}
+            name="reportDesc"
+            id="reportDesc"
+            control={control}
+            multiline
+            rows={4}
+            fullWidth
+            variant="outlined"
+            label={'Description'}
+            placeholder="Describe the issue"
+          />
+          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+          <Stack direction="row" justifyContent="right" style={{ padding: 20 }}>
+            <s.ModalButton onClick={handleSubmit(onSubmit)} color="secondary">
+              Submit
+            </s.ModalButton>
+          </Stack>
+        </>
+      )}
     </Dialog>
   ) : null;
 };

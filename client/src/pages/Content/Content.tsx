@@ -223,7 +223,6 @@ const Video = () => {
       <ReportContentModal
         isOpen={isReportContentModalOpen}
         onClose={handleClose}
-        onSubmitted={() => {}}
       />
 
       <Grid container justifyContent="center">
