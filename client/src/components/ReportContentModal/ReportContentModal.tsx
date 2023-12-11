@@ -56,7 +56,8 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
     >
       {showSuccessMessage ? (
         <Typography component="h6" variant="h6" style={{ padding: 20 }}>
-          Success! Your report has been submitted.
+          Success! Your report has been submitted. Thank you for helping us
+          maintain a safe environment.
         </Typography>
       ) : (
         <>
