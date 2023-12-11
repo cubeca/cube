@@ -6,6 +6,10 @@ import CheckboxInput from 'components/form/CheckboxInput';
 import { FieldValues, useForm } from 'react-hook-form';
 import TextInput from 'components/form/TextInput';
 import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
+import { reportContent } from 'api/content';
+import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import ErrorMessage from 'components/form/ErrorMessage';
 
 interface ReportContentModalProps {
   isOpen: boolean;
@@ -19,10 +23,23 @@ const ReportContentModal = ({
   onSubmitted
 }: ReportContentModalProps) => {
   const { control, handleSubmit, reset } = useForm();
+  const location = useLocation();
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onSubmit = (data: FieldValues) => {
     const { reportReason, contactName, contactEmail, reportDesc } = data;
-    //call service
+
+    try {
+      reportContent(
+        location.pathname,
+        reportReason,
+        contactName,
+        contactEmail,
+        reportDesc
+      );
+    } catch (e: any) {
+      setErrorMessage('An error occurred while submitting report!');
+    }
     onSubmitted();
     reset();
   };
@@ -39,7 +56,7 @@ const ReportContentModal = ({
       onClose={onCloseAndReset}
       open={isOpen}
     >
-      <Typography component="p">
+      <Typography component="h6" variant="h6">
         Select the reason you wish to report content
       </Typography>
 
@@ -48,16 +65,16 @@ const ReportContentModal = ({
         name="reportReason"
         id="reportReason"
         direction="vertical"
-        defaultValue={'1'}
+        defaultValue={'Policy'}
         options={[
           {
-            value: '1',
+            value: 'Policy',
             label:
               'Policy (non-legal), relating to CubeCommons content and product policies such as spam or phishing.',
             id: '1'
           },
           {
-            value: '2',
+            value: 'Legal',
             label:
               'Legal, relating to country/region-specific laws, such as privacy or intellectual property laws.',
             id: '2'
@@ -101,10 +118,11 @@ const ReportContentModal = ({
         placeholder="Describe the issue"
       />
 
+      {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       <Stack direction="row" justifyContent="right">
-        <Button onClick={handleSubmit(onSubmit)} color="secondary">
+        <s.ModalButton onClick={handleSubmit(onSubmit)} color="secondary">
           Submit
-        </Button>
+        </s.ModalButton>
       </Stack>
     </Dialog>
   ) : null;
