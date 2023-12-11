@@ -11,7 +11,7 @@ import Button from 'components/Button';
 import useAuth from 'hooks/useAuth';
 import { getProfile } from 'api/profile';
 import { resendEmailVerification } from 'api/auth';
-import { is } from 'date-fns/locale';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 interface LoginFormProps {
   emailVerified?: boolean;
@@ -32,6 +32,12 @@ export const LoginForm = ({
   const [isLinkResent, setIsLinkResent] = useState(false);
   const { login } = useAuth();
   const [user, setUser] = useState<any>();
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
 
   const onSubmit = async (data: FieldValues) => {
     const { email, password } = data;
@@ -131,7 +137,13 @@ export const LoginForm = ({
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box>
-            <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
+            <HCaptcha sitekey={hCaptchaKey} onVerify={onCaptchaSuccess} />
+            <Button
+              type="submit"
+              disabled={!captchaVerified}
+              onClick={handleSubmit(onSubmit)}
+              fullWidth
+            >
               {t('Login')}
             </Button>
             <Box pt={4}>
