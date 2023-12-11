@@ -12,8 +12,6 @@ import * as s from './Editor.styled';
 
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import { set } from 'date-fns';
-import { clear } from '@testing-library/user-event/dist/clear';
 
 const Editor = (props: { contentId: any; postUpload: any }) => {
   const { contentId, postUpload } = props;
@@ -39,19 +37,19 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
             return;
           }
           const authToken = await getAuthToken();
-          // axios
-          //   .get(`${BFF_URL}/vtt/${contentId}`, {
-          //     headers: {
-          //       Authorization: `Bearer ${authToken}`
-          //     }
-          //   })
-          //   .then((res) => {
-          //     if (res.status === 200 && res.data !== null) {
-          //       setVTT(res.data.transcript);
-          //       clearInterval(interval);
-          //       setLoaded(true);
-          //     }
-          //   });
+          axios
+            .get(`${BFF_URL}/vtt/${contentId}`, {
+              headers: {
+                Authorization: `Bearer ${authToken}`
+              }
+            })
+            .then((res) => {
+              if (res.status === 200 && res.data !== null) {
+                setVTT(res.data.transcript);
+                clearInterval(interval);
+                setLoaded(true);
+              }
+            });
         }, 5000);
         return () => clearInterval(interval);
       } catch (error) {
@@ -74,7 +72,6 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         }
       }
     );
-    console.log({ response });
     setSaveLoading(false);
     if (postUpload) {
       const profile = getProfile();
@@ -136,7 +133,6 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
     end: string,
     text: string
   ) => {
-    console.log({ key, start, end, text });
     const newVTT = { ...vtt };
     delete newVTT[key];
     let startSeconds;
@@ -148,7 +144,6 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       console.log(error);
       return;
     }
-    console.log({ start: startSeconds, end: endSeconds, text });
     newVTT[key] = { start: startSeconds, end: endSeconds, text };
 
     //validate
