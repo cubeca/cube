@@ -190,6 +190,9 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
       </Box>
 
       <Box my={theme.spacing(5)}>
+        <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
+          {t('Credits')}
+        </Typography>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Credit anyone who contributed to your content. Add as many as needed, using “Add more”. Please only one name per field.'

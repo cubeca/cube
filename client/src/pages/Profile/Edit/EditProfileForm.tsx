@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { Box } from '@mui/system';
 
 interface EditProfileFormProps {
   profile: any;
@@ -238,18 +239,22 @@ const EditProfileForm = ({
       />
 
       <Stack direction="row" justifyContent="right">
-        <HCaptcha
-          theme="dark"
-          sitekey={hCaptchaKey}
-          onVerify={onCaptchaSuccess}
-        />
-        <Button
-          color="secondary"
-          disabled={!captchaVerified}
-          onClick={handleSubmit(onSubmitSection)}
-        >
-          {t('Update Profile')}
-        </Button>
+        <Box mt={4} mr={9}>
+          <HCaptcha
+            theme="dark"
+            sitekey={hCaptchaKey}
+            onVerify={onCaptchaSuccess}
+          />
+        </Box>
+        <Box mt={4}>
+          <Button
+            color="secondary"
+            disabled={!captchaVerified}
+            onClick={handleSubmit(onSubmitSection)}
+          >
+            {t('Update Profile')}
+          </Button>
+        </Box>
       </Stack>
     </Stack>
   );
