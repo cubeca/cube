@@ -137,7 +137,11 @@ export const LoginForm = ({
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box>
-            <HCaptcha sitekey={hCaptchaKey} onVerify={onCaptchaSuccess} />
+            <HCaptcha
+              theme="dark"
+              sitekey={hCaptchaKey}
+              onVerify={onCaptchaSuccess}
+            />
             <Button
               type="submit"
               disabled={!captchaVerified}

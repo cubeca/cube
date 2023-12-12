@@ -71,7 +71,11 @@ const ForgotPassword = () => {
             label={t('Email')}
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          <HCaptcha sitekey={hCaptchaKey} onVerify={onCaptchaSuccess} />
+          <HCaptcha
+            theme="dark"
+            sitekey={hCaptchaKey}
+            onVerify={onCaptchaSuccess}
+          />
           <Button
             color="primary"
             disabled={!captchaVerified}

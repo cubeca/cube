@@ -11,7 +11,7 @@ import UploadInput from 'components/form/UploadInput';
 import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
-import LoadingCubes from 'assets/animations/loading-cubes.json';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 interface EditProfileFormProps {
   profile: any;
@@ -83,6 +83,13 @@ const EditProfileForm = ({
 
   const logoIdUpload = 'logo-upload';
   const heroIdUpload = 'hero-upload';
+
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
 
   return (
     <Stack direction="column">
@@ -231,7 +238,16 @@ const EditProfileForm = ({
       />
 
       <Stack direction="row" justifyContent="right">
-        <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
+        <HCaptcha
+          theme="dark"
+          sitekey={hCaptchaKey}
+          onVerify={onCaptchaSuccess}
+        />
+        <Button
+          color="secondary"
+          disabled={!captchaVerified}
+          onClick={handleSubmit(onSubmitSection)}
+        >
           {t('Update Profile')}
         </Button>
       </Stack>

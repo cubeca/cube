@@ -200,7 +200,11 @@ export const CreatorSignupForm = () => {
 
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Box pt="1rem">
-            <HCaptcha sitekey={hCaptchaKey} onVerify={onCaptchaSuccess} />
+            <HCaptcha
+              theme="dark"
+              sitekey={hCaptchaKey}
+              onVerify={onCaptchaSuccess}
+            />
             <Button
               type="submit"
               disabled={!captchaVerified}
