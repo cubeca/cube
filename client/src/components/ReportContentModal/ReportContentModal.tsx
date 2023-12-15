@@ -10,6 +10,7 @@ import { reportContent } from 'api/content';
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import ErrorMessage from 'components/form/ErrorMessage';
+import { Box } from '@mui/system';
 
 interface ReportContentModalProps {
   isOpen: boolean;
@@ -55,10 +56,14 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
       open={isOpen}
     >
       {showSuccessMessage ? (
-        <Typography component="h6" variant="h6" style={{ padding: 20 }}>
-          Success! Your report has been submitted. Thank you for helping us
-          maintain a safe environment.
+        <Box sx={{ py: 6 }} >
+        <Typography component="h6" variant="h6" sx={{ mb: 1 }}>
+          Your report has been submitted.
         </Typography>
+        <Typography component="p" variant="body2">
+          Thank you for helping us maintain a safe environment.
+        </Typography>
+        </Box>
       ) : (
         <>
           <Typography component="h6" variant="h6">
