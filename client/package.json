@@ -9,6 +9,7 @@
     "@fontsource/inter": "^4.5.15",
     "@fontsource/roboto": "^5.0.8",
     "@fontsource/rubik": "^4.5.14",
+    "@hcaptcha/react-hcaptcha": "^1.9.2",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.1",
     "@mui/system": "^5.11.1",

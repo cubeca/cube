@@ -1,4 +1,5 @@
 import { Stack, TextField, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import Dialog from 'components/Dialog';
 import * as s from './ReportContentModal.styled';
 import Button from 'components/Button';
@@ -10,6 +11,7 @@ import { reportContent } from 'api/content';
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import ErrorMessage from 'components/form/ErrorMessage';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@mui/system';
 
 interface ReportContentModalProps {
@@ -22,6 +24,12 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
   const location = useLocation();
   const [errorMessage, setErrorMessage] = useState('');
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
 
   const onSubmit = (data: FieldValues) => {
     const { reportReason, contactName, contactEmail, reportDesc } = data;
@@ -56,13 +64,13 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
       open={isOpen}
     >
       {showSuccessMessage ? (
-        <Box sx={{ py: 6 }} >
-        <Typography component="h6" variant="h6" sx={{ mb: 1 }}>
-          Your report has been submitted.
-        </Typography>
-        <Typography component="p" variant="body2">
-          Thank you for helping us maintain a safe environment.
-        </Typography>
+        <Box sx={{ py: 6 }}>
+          <Typography component="h6" variant="h6" sx={{ mb: 1 }}>
+            Your report has been submitted.
+          </Typography>
+          <Typography component="p" variant="body2">
+            Thank you for helping us maintain a safe environment.
+          </Typography>
         </Box>
       ) : (
         <>
@@ -126,11 +134,29 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             placeholder="Describe the issue"
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          <Stack direction="row" justifyContent="right" sx={{ py: 2 }}>
-            <Button onClick={handleSubmit(onSubmit)} color="secondary">
-              Submit
-            </Button>
-          </Stack>
+
+          <Grid container flex-direction={{ xs: 'column', sm: 'column', md: 'row' }} justifyContent="space-between">
+            <Grid xs={12} md="auto">
+              <Box mt={2}>
+                <HCaptcha
+                  theme="dark"
+                  sitekey={hCaptchaKey}
+                  onVerify={onCaptchaSuccess}
+                />
+              </Box>
+            </Grid>
+            <Grid xs={12} md="auto">
+              <Box mt={2}>
+                <Button
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={!captchaVerified}
+                  color="secondary"
+                >
+                  Submit
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
         </>
       )}
     </Dialog>

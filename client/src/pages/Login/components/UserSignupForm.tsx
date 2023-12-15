@@ -10,6 +10,7 @@ import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import CheckboxInput from 'components/form/CheckboxInput';
 import LegalModalSignup from 'components/Legal/LegalModalSignup';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 export const UserSignupForm = () => {
   const { t } = useTranslation();
@@ -26,6 +27,12 @@ export const UserSignupForm = () => {
   });
   const [errorMessage, setErrorMessage] = useState('');
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
 
   const handleSignup = async () => {
     const {
@@ -142,8 +149,19 @@ export const UserSignupForm = () => {
           />
 
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+
           <Box pt="1rem">
-            <Button type="submit" onClick={handleSubmit(onSubmit)} fullWidth>
+            <HCaptcha
+              theme="dark"
+              sitekey={hCaptchaKey}
+              onVerify={onCaptchaSuccess}
+            />
+            <Button
+              type="submit"
+              disabled={!captchaVerified}
+              onClick={handleSubmit(onSubmit)}
+              fullWidth
+            >
               {t('Review Terms and Sign up')}
             </Button>
           </Box>
