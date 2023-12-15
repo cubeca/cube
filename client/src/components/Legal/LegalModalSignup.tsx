@@ -9,6 +9,7 @@ import {
   IconButton
 } from '@mui/material';
 import ToS from './ToS';
+import * as DarkContent from 'components/DarkContent.styled';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -72,7 +73,9 @@ const LegalModalSignup = (props: LegalModalSignupProps) => {
           Terms of Service and Privacy Policy
         </BootstrapDialogTitle>
         <DialogContent dividers>
-          <ToS />
+          <DarkContent.Wrapper>
+            <ToS />
+          </DarkContent.Wrapper>
           <Button onClick={() => callback()}>Accept</Button>
         </DialogContent>
         <DialogActions>

@@ -7,6 +7,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
+import FlagIcon from '@mui/icons-material/Flag';
 
 import useContentDetails from 'hooks/useContentDetails';
 
@@ -28,6 +29,7 @@ import { getProfileId } from 'utils/auth';
 import EmbedModal from 'components/EmbedModal';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
+import ReportContentModal from 'components/ReportContentModal';
 
 const Video = () => {
   const { t } = useTranslation();
@@ -46,6 +48,8 @@ const Video = () => {
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  const [isReportContentModalOpen, setIsReportContentModalOpen] =
+    useState(false);
   let youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
@@ -71,8 +75,6 @@ const Video = () => {
 
   // check if user is running Safari - Safari won't display the poster for the audio player component.
   // workaround is to show the poster as a background image if isSafari is true
-
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -103,19 +105,17 @@ const Video = () => {
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
     setIsEmbedModalOpen(false);
+    setIsReportContentModalOpen(false);
   }
 
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
   };
 
-  useEffect(() => {
-    console.log('Content component mounted');
+  const openReportContentModal = () => {
+    setIsReportContentModalOpen(true);
+  };
 
-    return () => {
-      console.log('Content component unmounted');
-    };
-  }, []);
 
   function getContributorRole(role: string, count: number): string {
     let roleStr = '';
@@ -166,7 +166,6 @@ const Video = () => {
           coverArtUrl={coverArtUrl}
           coverImageAltText={coverImageAltText}
           subtitleUrl={subtitleUrl}
-          isSafari={isSafari}
         />
       )}
     </s.AudioWrapper>
@@ -223,6 +222,10 @@ const Video = () => {
         onClose={handleClose}
         embedContentType={content?.type || ''}
       />
+      <ReportContentModal
+        isOpen={isReportContentModalOpen}
+        onClose={handleClose}
+      />
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
@@ -252,17 +255,23 @@ const Video = () => {
                 </Box>
               )}
             </Box>
-            <s.ContentDate component="p" variant="body2">
+            <Typography component="p" variant="body2" sx={{ my: 1 }}>
               {formattedCreatedDate}
-            </s.ContentDate>
+            </Typography>
 
-            <Stack direction="row" justifyContent="left">
-              <s.EmbedWrapper>
+            <Stack direction="row" spacing={2} justifyContent="left" sx={{ my: 3, typography: 'body2' }}>
+              <s.ActionsWrapper>
                 <CodeIcon />
-                <s.Embed to={''} onClick={openEmbedModal}>
+                <s.Action to={''} onClick={openEmbedModal}>
                   Embed
-                </s.Embed>
-              </s.EmbedWrapper>
+                </s.Action>
+              </s.ActionsWrapper>
+              <s.ActionsWrapper>
+                <FlagIcon />
+                <s.Action to={''} onClick={openReportContentModal}>
+                  Report Content
+                </s.Action>
+              </s.ActionsWrapper>
             </Stack>
 
             <Typography

@@ -1,7 +1,5 @@
 import * as React from 'react';
 import {
-  Stack,
-  Box,
   Typography,
   Button,
   Dialog,
@@ -13,13 +11,10 @@ import {
 import Grid from '@mui/system/Unstable_Grid';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
-import { ReactComponent as CubeLogo } from 'assets/icons/cube.svg';
 import NavPanel from './components/NavPanel';
-import { useTranslation } from 'react-i18next';
-import TextInput from 'components/form/TextInput';
 import { ReactComponent as CreditsImg } from 'assets/icons/footer-credits.svg';
-import Subscribe from './components/Subscribe/Subscribe';
 import * as s from './Footer.styled';
+import * as DarkContent from 'components/DarkContent.styled';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   '& .MuiDialogContent-root': {
@@ -61,26 +56,39 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
 }
 
 const Footer = () => {
-  const { t } = useTranslation('about');
-
   const [open, setOpen] = React.useState(false);
+  const SHOW_BANNER = process.env.REACT_APP_SHOW_BANNER === 'true';
 
   const handleOpen = () => {
-    if (localStorage.getItem('beta_msg_seen') === null) {
-      setOpen(true);
-      return;
-    }
+    // Only proceed if SHOW_BANNER is true
+    if (SHOW_BANNER) {
+      // Check if the 'beta_msg_seen' flag exists in localStorage
+      const betaMsgSeen = localStorage.getItem('beta_msg_seen');
 
-    const key = localStorage.getItem('beta_msg_seen') || '',
-      object = JSON.parse(key),
-      dateString = object.timestamp,
-      twentyfourhours = 86400000,
-      now = new Date().getTime().toString();
+      // If the flag doesn't exist, open the message and exit the function
+      if (betaMsgSeen === null) {
+        setOpen(true);
+        return;
+      }
 
-    if (parseInt(now) - parseInt(dateString) > twentyfourhours) {
-      setOpen(true);
+      // Parse the stored value to get the timestamp
+      const storedData = JSON.parse(betaMsgSeen);
+      const lastSeenTimestamp = storedData.timestamp;
+
+      // Define time constants for comparison
+      const twentyFourHoursInMilliseconds = 86400000;
+      const currentTime = new Date().getTime();
+
+      // Check if more than 24 hours have passed since the last view
+      if (
+        currentTime - parseInt(lastSeenTimestamp) >
+        twentyFourHoursInMilliseconds
+      ) {
+        setOpen(true);
+      }
     }
   };
+
   const handleClose = () => {
     setOpen(false);
     const last_seen = { timestamp: new Date().getTime() };
@@ -125,11 +133,24 @@ const Footer = () => {
             Beta Site
           </BootstrapDialogTitle>
           <DialogContent dividers>
-            <Typography gutterBottom>
-              <strong>This site is in beta and is not yet live.</strong> Feel
-              free to look around, but be prepared for some bugs and unfinished
-              features.
-            </Typography>
+            <DarkContent.Wrapper>
+              <Typography gutterBottom>
+                <strong>
+                  This site is a development site for{' '}
+                  <a
+                    href="https://cubecommons.ca"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-link"
+                  >
+                    CubeCommons
+                  </a>
+                  {'. '}
+                </strong>{' '}
+                Feel free to look around, but be prepared for some bugs and
+                unfinished features.
+              </Typography>
+            </DarkContent.Wrapper>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Got it!</Button>

@@ -72,7 +72,6 @@ const Video = () => {
         coverArtUrl={coverArtUrl}
         coverImageAltText={coverImageAltText}
         subtitleUrl={subtitleUrl}
-        isSafari={isSafari}
       />
     </s.AudioWrapper>
   );
