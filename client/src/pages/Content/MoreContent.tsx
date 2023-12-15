@@ -44,7 +44,6 @@ const MoreContent = ({
       {!isLoading && moreContent.length > 0 ? (
         <ContentList
           heading={t('More Content Like This')}
-          // content={moreContent.slice(0, 3)}
           content={randomContent}
         />
       ) : (
