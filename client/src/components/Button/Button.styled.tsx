@@ -31,6 +31,7 @@ export const Button = styled(MuiButton)`
 
 export const DeleteButton = styled(Button)`
   background-color: #ffb7c4;
+  font-size: 16px;
   color: #28343c;
   height: 45px;
   width: 110px;
