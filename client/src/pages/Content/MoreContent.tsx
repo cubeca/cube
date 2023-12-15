@@ -16,28 +16,35 @@ const MoreContent = ({
 }: PropsWithChildren<MoreContentProps>) => {
   const [moreContent, setMoreContent] = useState<any>([]);
   const [allContent, setAllContent] = useState<any>([]);
+  const [randomContent, setRandomContent] = useState([]);
   const { t } = useTranslation();
   const { data: content, isLoading } = useProfileContent(profileId);
 
-  useEffect(() => {
-    if (content) {
-      setMoreContent(content);
-      setAllContent(content);
-    }
-  }, [content, excludeId, allContent]);
+  function getRandomContent(content: any[], count: number) {
+    const shuffled = content.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  }
 
   useEffect(() => {
-    const all = [...allContent];
-    const filteredContent = all?.filter((c: any) => c.id !== excludeId);
-    setMoreContent(filteredContent);
-  }, [excludeId]);
+    if (content) {
+      const filteredContent = (content as unknown as Array<any>).filter(
+        (c: any) => c.id !== excludeId
+      );
+      setAllContent(filteredContent);
+    }
+  }, [content, excludeId]);
+
+  useEffect(() => {
+    setMoreContent(allContent);
+    setRandomContent(getRandomContent(allContent, 3) as never[]);
+  }, [allContent]);
 
   return (
     <Stack>
       {!isLoading && moreContent.length > 0 ? (
         <ContentList
           heading={t('More Content Like This')}
-          content={moreContent.slice(0, 3)}
+          content={randomContent}
         />
       ) : (
         <Stack direction="column" spacing={2}>
