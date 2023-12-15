@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -238,24 +239,29 @@ const EditProfileForm = ({
         isUploadComplete={isAudioUploadComplete}
       />
 
-      <Stack direction="row" justifyContent="right">
-        <Box mt={4} mr={9}>
-          <HCaptcha
-            theme="dark"
-            sitekey={hCaptchaKey}
-            onVerify={onCaptchaSuccess}
-          />
-        </Box>
-        <Box mt={4}>
-          <Button
-            color="secondary"
-            disabled={!captchaVerified}
-            onClick={handleSubmit(onSubmitSection)}
-          >
-            {t('Update Profile')}
-          </Button>
-        </Box>
-      </Stack>
+      <Grid container flex-direction={{ xs: 'column', sm: 'column', md: 'row' }} justifyContent="space-between">
+        <Grid xs={12} md="auto">
+          <Box mt={2}>
+            <HCaptcha
+              theme="dark"
+              sitekey={hCaptchaKey}
+              onVerify={onCaptchaSuccess}
+            />
+          </Box>
+        </Grid>
+        <Grid xs={12} md="auto">
+          <Box mt={2}>
+            <Button
+              color="secondary"
+              disabled={!captchaVerified}
+              onClick={handleSubmit(onSubmitSection)}
+            >
+              {t('Update Profile')}
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+
     </Stack>
   );
 };

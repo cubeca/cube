@@ -1,4 +1,5 @@
 import { Stack, TextField, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import Dialog from 'components/Dialog';
 import * as s from './ReportContentModal.styled';
 import Button from 'components/Button';
@@ -133,24 +134,29 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             placeholder="Describe the issue"
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          <Stack direction="row" justifyContent="right" sx={{ py: 2 }}>
-            <Box mt={4} mr={9}>
-              <HCaptcha
-                theme="dark"
-                sitekey={hCaptchaKey}
-                onVerify={onCaptchaSuccess}
-              />
-            </Box>
-            <Box mt={4}>
-              <Button
-                onClick={handleSubmit(onSubmit)}
-                disabled={!captchaVerified}
-                color="secondary"
-              >
-                Submit
-              </Button>
-            </Box>
-          </Stack>
+
+          <Grid container flex-direction={{ xs: 'column', sm: 'column', md: 'row' }} justifyContent="space-between">
+            <Grid xs={12} md="auto">
+              <Box mt={2}>
+                <HCaptcha
+                  theme="dark"
+                  sitekey={hCaptchaKey}
+                  onVerify={onCaptchaSuccess}
+                />
+              </Box>
+            </Grid>
+            <Grid xs={12} md="auto">
+              <Box mt={2}>
+                <Button
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={!captchaVerified}
+                  color="secondary"
+                >
+                  Submit
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
         </>
       )}
     </Dialog>
