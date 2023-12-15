@@ -121,10 +121,10 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             placeholder="Describe the issue"
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          <Stack direction="row" justifyContent="right" style={{ padding: 20 }}>
-            <s.ModalButton onClick={handleSubmit(onSubmit)} color="secondary">
+          <Stack direction="row" justifyContent="right" sx={{ py: 2 }}>
+            <Button onClick={handleSubmit(onSubmit)} color="secondary">
               Submit
-            </s.ModalButton>
+            </Button>
           </Stack>
         </>
       )}
