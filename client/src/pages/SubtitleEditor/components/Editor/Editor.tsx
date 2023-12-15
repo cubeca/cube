@@ -17,6 +17,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
   const { contentId, postUpload } = props;
   const [vtt, setVTT] = useState<any>(null);
   const [loaded, setLoaded] = useState<boolean>(false);
+  const [loadError, setLoadError] = useState<boolean>(false);
   const [saveLoading, setSaveLoading] = useState<boolean>(false);
   const [validationErrors, setValidationErrors] = useState<any>({});
   const navigate = useNavigate();
@@ -26,7 +27,15 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
   useEffect(() => {
     if (!loaded) {
       try {
+        let i = 0;
         const interval = setInterval(async () => {
+          i++;
+          if (i > 60) {
+            //~5 minutes
+            clearInterval(interval);
+            setLoadError(true);
+            return;
+          }
           const authToken = await getAuthToken();
           axios
             .get(`${BFF_URL}/vtt/${contentId}`, {
@@ -41,7 +50,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
                 setLoaded(true);
               }
             });
-        }, 2000);
+        }, 5000);
         return () => clearInterval(interval);
       } catch (error) {
         console.error({ error });
@@ -63,7 +72,6 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         }
       }
     );
-    console.log({ response });
     setSaveLoading(false);
     if (postUpload) {
       const profile = getProfile();
@@ -125,7 +133,6 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
     end: string,
     text: string
   ) => {
-    console.log({ key, start, end, text });
     const newVTT = { ...vtt };
     delete newVTT[key];
     let startSeconds;
@@ -137,7 +144,6 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       console.log(error);
       return;
     }
-    console.log({ start: startSeconds, end: endSeconds, text });
     newVTT[key] = { start: startSeconds, end: endSeconds, text };
 
     //validate
@@ -240,23 +246,16 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
     <Grid container>
       <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
         <Typography variant="h2">{t('Subtitle Editor')}</Typography>
-        {loaded ? (
-          <>
-            {vttDisplay(vtt)}
-            <s.StyledButton
-              variant="outlined"
-              t="Save"
-              disabled={
-                saveLoading ||
-                Object.keys(vtt).length === 0 ||
-                Object.values(validationErrors).length > 0
-              }
-              onClick={handleSave}
-            >
-              Save
-            </s.StyledButton>
-          </>
-        ) : (
+        {/* //Error loading */}
+        {loadError ? (
+          <Typography color="error">
+            {t(
+              'There was an error loading your subtitles. Please try again later.'
+            )}
+          </Typography>
+        ) : null}
+        {/* //Normal loading //Normal loading */}
+        {loaded === false && loadError === false ? (
           <>
             <s.WaitWrapper>
               <s.StyledLoadingText variant={'h4'}>
@@ -276,7 +275,25 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
               </s.LogoWrapper>
             </s.WaitWrapper>
           </>
-        )}
+        ) : null}
+        {/* //Loaded and no errors */}
+        {loaded && loadError === false ? (
+          <>
+            {vttDisplay(vtt)}
+            <s.StyledButton
+              variant="outlined"
+              t="Save"
+              disabled={
+                saveLoading ||
+                Object.keys(vtt).length === 0 ||
+                Object.values(validationErrors).length > 0
+              }
+              onClick={handleSave}
+            >
+              Save
+            </s.StyledButton>
+          </>
+        ) : null}
       </Grid>
     </Grid>
   );
