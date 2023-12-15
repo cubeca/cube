@@ -7,6 +7,11 @@ import {
 } from '@mui/material';
 
 export const Wrapper = styled(MuiDialog)`
+  margin: -12px -12px 64px;
+
+  ${(props) => props.theme.breakpoints.up('sm')} {
+    margin: 0;
+  }
 `;
 
 export const Title = styled(DialogTitle)`
@@ -31,8 +36,12 @@ export const Close = styled(IconButton)`
 `;
 
 export const Body = styled(Box)`
-  padding: 24px;
   color: ${(props) => props.theme.palette.background.default};
   background-color: ${(props) => props.theme.palette.primary.main};
+  padding: 24px 20px 40px;
+  
+  ${(props) => props.theme.breakpoints.up('sm')} {
+    padding: 24px;
+  }
 `;
 
