@@ -64,11 +64,6 @@ export const ContentWrapper = styled(Box)`
   }
 `;
 
-export const ContentDate = styled(Typography)`
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-`;
-
 export const Sidebar = styled(Stack)`
   padding: 30px 0;
 

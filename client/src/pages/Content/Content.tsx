@@ -253,11 +253,11 @@ const Video = () => {
                 </Box>
               )}
             </Box>
-            <s.ContentDate component="p" variant="body2">
+            <Typography component="p" variant="body2" sx={{ my: 1 }}>
               {formattedCreatedDate}
-            </s.ContentDate>
+            </Typography>
 
-            <Stack direction="row" spacing={2} justifyContent="left">
+            <Stack direction="row" spacing={2} justifyContent="left" sx={{ my: 3, typography: 'body2' }}>
               <s.ActionsWrapper>
                 <CodeIcon />
                 <s.Action to={''} onClick={openEmbedModal}>
