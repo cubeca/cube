@@ -42,6 +42,7 @@ export interface Contributor {
   artist?: boolean;
   socialHandle?: string;
   logoUrl?: string;
+  preferredTitle?: string;
 }
 
 export interface CollaboratorDetails {
