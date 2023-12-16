@@ -14,11 +14,13 @@ import CollaboratorInput from 'components/form/CollaboratorInput';
 import * as s from './Tags.styled';
 import { SearchFiltersCategoryEnum } from '@cubeca/bff-client-oas-axios';
 import { Controller } from 'react-hook-form';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
-const Tags = ({ control }: any) => {
+const Tags = ({ control, handleCaptchaVerification }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const categories = Object.keys(SearchFiltersCategoryEnum);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
 
   const [artists, setArtists] = useState<any[]>([
     { name: 'artist_1', url: 'artist_url_1' }
@@ -190,6 +192,9 @@ const Tags = ({ control }: any) => {
       </Box>
 
       <Box my={theme.spacing(5)}>
+        <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
+          {t('Credits')}
+        </Typography>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Credit anyone who contributed to your content. Add as many as needed, using “Add more”. Please only one name per field.'
@@ -401,6 +406,20 @@ const Tags = ({ control }: any) => {
           {t(
             'Did you work with another organization on CubeCommons? Connect this content to their profile by selecting their name.'
           )}
+        </Typography>
+      </Box>
+
+      <Box my={theme.spacing(5)}>
+        <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
+          {t('Captcha')}
+        </Typography>
+        <HCaptcha
+          theme="dark"
+          sitekey={hCaptchaKey}
+          onVerify={handleCaptchaVerification}
+        />
+        <Typography component="p" variant="body2">
+          {t('Verify you are a human being.')}
         </Typography>
       </Box>
     </Box>

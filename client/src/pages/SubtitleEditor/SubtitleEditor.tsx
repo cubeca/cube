@@ -5,7 +5,6 @@ import VTTEditor from './components/Editor/Editor';
 
 const SubtitleEditor = () => {
   const { id, postUpload } = useParams();
-  console.log({ id, postUpload });
 
   return (
     <Box className={'subtitleEditor'}>

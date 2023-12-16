@@ -8,6 +8,9 @@ import * as s from 'components/form/PasswordInput/PasswordInput.styled';
 import { FieldValues, useForm } from 'react-hook-form';
 import ErrorMessage from 'components/form/ErrorMessage';
 import { UserContext } from 'providers/UserProvider';
+import { Box } from '@mui/system';
+import Grid from '@mui/system/Unstable_Grid';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 interface ChangePasswordDialogProps {
   isOpen: boolean;
@@ -25,6 +28,12 @@ const ChangePasswordDialog = ({
   const [errorMessage, setErrorMessage] = useState('');
   const { user } = useContext(UserContext);
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
 
   const onSubmit = async (data: FieldValues) => {
     const { currentPassword, newPassword, confirmPassword } = data;
@@ -85,11 +94,33 @@ const ChangePasswordDialog = ({
               colorMode="dark"
             />
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-            <Stack direction="row" justifyContent="right">
-              <Button color="secondary" onClick={handleSubmit(onSubmit)}>
-                {t('Update Password')}
-              </Button>
-            </Stack>
+
+            <Grid
+              container
+              flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
+              justifyContent="space-between"
+            >
+              <Grid xs={12} md="auto">
+                <Box mt={2}>
+                  <HCaptcha
+                    theme="dark"
+                    sitekey={hCaptchaKey}
+                    onVerify={onCaptchaSuccess}
+                  />
+                </Box>
+              </Grid>
+              <Grid xs={12} md="auto">
+                <Box mt={2}>
+                  <Button
+                    color="secondary"
+                    disabled={!captchaVerified}
+                    onClick={handleSubmit(onSubmit)}
+                  >
+                    {t('Update Password')}
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
           </>
         )}
       </Stack>

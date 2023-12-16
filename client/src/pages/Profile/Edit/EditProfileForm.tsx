@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +12,8 @@ import UploadInput from 'components/form/UploadInput';
 import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
-import LoadingCubes from 'assets/animations/loading-cubes.json';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { Box } from '@mui/system';
 
 interface EditProfileFormProps {
   profile: any;
@@ -83,6 +85,13 @@ const EditProfileForm = ({
 
   const logoIdUpload = 'logo-upload';
   const heroIdUpload = 'hero-upload';
+
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
 
   return (
     <Stack direction="column">
@@ -230,11 +239,29 @@ const EditProfileForm = ({
         isUploadComplete={isAudioUploadComplete}
       />
 
-      <Stack direction="row" justifyContent="right">
-        <Button color="secondary" onClick={handleSubmit(onSubmitSection)}>
-          {t('Update Profile')}
-        </Button>
-      </Stack>
+      <Grid container flex-direction={{ xs: 'column', sm: 'column', md: 'row' }} justifyContent="space-between">
+        <Grid xs={12} md="auto">
+          <Box mt={2}>
+            <HCaptcha
+              theme="dark"
+              sitekey={hCaptchaKey}
+              onVerify={onCaptchaSuccess}
+            />
+          </Box>
+        </Grid>
+        <Grid xs={12} md="auto">
+          <Box mt={2}>
+            <Button
+              color="secondary"
+              disabled={!captchaVerified}
+              onClick={handleSubmit(onSubmitSection)}
+            >
+              {t('Update Profile')}
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+
     </Stack>
   );
 };

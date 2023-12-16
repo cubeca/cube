@@ -135,6 +135,7 @@ const Upload = () => {
   const [isMediaSelected, setIsMediaSelected] = useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
   const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -157,6 +158,10 @@ const Upload = () => {
   const handleVTTFilesUpload = (files: File[]) => {
     setVTTFile(files[0]);
     setIsVTTSelected(true);
+  };
+
+  const handleCaptchaVerification = () => {
+    setCaptchaVerified(true);
   };
 
   const handleScreenChange = (screen: number) => {
@@ -224,7 +229,12 @@ const Upload = () => {
     // },
     {
       label: 'Tags',
-      view: <Tags control={control} />
+      view: (
+        <Tags
+          handleCaptchaVerification={handleCaptchaVerification}
+          control={control}
+        />
+      )
     },
     {
       label: 'Terms of Service',
@@ -290,6 +300,7 @@ const Upload = () => {
           handleSubmit={handleSubmit(onSubmit)}
           isNextDisabled={
             !formState.isValid ||
+            (screenIndex === 2 && !captchaVerified) ||
             (screenIndex === 0 && !isCoverImageSelected) ||
             (!mediaLink && !isMediaSelected) ||
             (screenIndex === 1 &&

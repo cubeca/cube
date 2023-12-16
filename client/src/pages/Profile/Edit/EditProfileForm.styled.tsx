@@ -3,9 +3,14 @@ import { styled } from 'theme/utils';
 
 export const EditProfileImagesWrapper = styled(Stack)`
   position: relative;
-  margin-left: -30px;
-  margin-right: -30px;
+  margin-left: -20px;
+  margin-right: -20px;
   margin-bottom: 30px;
+
+  ${(props) => props.theme.breakpoints.up('sm')} {
+    margin-left: -24px;
+    margin-right: -24px;
+  }
 `;
 
 export const EditProfileHeroBg = styled(Box)`

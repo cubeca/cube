@@ -7,6 +7,9 @@ import Button from 'components/Button';
 import { updateEmail } from 'api/auth';
 import ErrorMessage from 'components/form/ErrorMessage';
 import { useState } from 'react';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
+import Grid from '@mui/system/Unstable_Grid';
+import { Box } from '@mui/system';
 
 interface UpdateEmailDialogProps {
   isOpen: boolean;
@@ -23,6 +26,12 @@ const UpdateEmailDialog = ({
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
+  const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
+  const onCaptchaSuccess = () => {
+    setCaptchaVerified(true);
+  };
 
   const onSubmit = async (data: FieldValues) => {
     const { newEmail, confirmEmail } = data;
@@ -88,11 +97,32 @@ const UpdateEmailDialog = ({
               colorMode="dark"
             />
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-            <Stack direction="row" justifyContent="right">
-              <Button color="secondary" onClick={handleSubmit(onSubmit)}>
-                {t('Update Email Address')}
-              </Button>
-            </Stack>
+            <Grid
+              container
+              flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
+              justifyContent="space-between"
+            >
+              <Grid xs={12} md="auto">
+                <Box mt={2}>
+                  <HCaptcha
+                    theme="dark"
+                    sitekey={hCaptchaKey}
+                    onVerify={onCaptchaSuccess}
+                  />
+                </Box>
+              </Grid>
+              <Grid xs={12} md="auto">
+                <Box mt={2}>
+                  <Button
+                    color="secondary"
+                    disabled={!captchaVerified}
+                    onClick={handleSubmit(onSubmit)}
+                  >
+                    {t('Update Email Address')}
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
           </>
         )}
       </Stack>

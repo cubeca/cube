@@ -3,10 +3,10 @@ import MediaPlayer from 'components/MediaPlayer';
 import YouTubePlayer from 'components/YouTubePlayer';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router-dom';
-
 import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
+import FlagIcon from '@mui/icons-material/Flag';
 
 import useContentDetails from 'hooks/useContentDetails';
 
@@ -20,20 +20,21 @@ import { CollaboratorDetails, Contributor } from 'types/content';
 import AgeCheckModal from 'components/AgeCheckModal';
 import PDFReader from 'components/PDFReader';
 import LinkPlayer from 'components/LinkPlayer/LinkPlayer';
-import { OVER_18 } from 'constants/localStorage';
 import { getIDfromURL } from 'utils/youtubeUtils';
-import useDeleteContent from 'hooks/useDeleteContent';
 import DeleteContentButton from 'components/DeleteContentButton';
 import { getProfileId } from 'utils/auth';
 import EmbedModal from 'components/EmbedModal';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
+import { useLocation } from 'react-router-dom';
+import ReportContentModal from 'components/ReportContentModal';
 
 const Video = () => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const location = useLocation();
   const contentRef = useRef<HTMLDivElement>(null);
-  const { data: content, isLoading } = useContentDetails();
+  const { data: content, isLoading, refetch } = useContentDetails();
   const createdAt = content?.createdAt;
   const formattedCreatedDate = content
     ? new Date(createdAt as string).toLocaleDateString('en-us', {
@@ -46,6 +47,10 @@ const Video = () => {
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  const [subtitleUrl, setSubtitleUrl] = useState('');
+  const [subtitleIsLoading, setSubtitleIsLoading] = useState(true);
+  const [isReportContentModalOpen, setIsReportContentModalOpen] =
+    useState(false);
   let youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
@@ -64,12 +69,8 @@ const Video = () => {
   const coverImageAltText = content?.coverImageText;
   const bannerImageAltText = content?.bannerImageText;
   const loggedInProfileId = getProfileId();
-  const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
-
-  // check if user is running Safari - Safari won't display the poster for the audio player component.
-  // workaround is to show the poster as a background image if isSafari is true
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -82,6 +83,23 @@ const Video = () => {
   const onUnder18Click = () => {
     setIsSuitableForChildrenModalOpen(false);
   };
+
+  // set subtitleUrl when content changes
+  useEffect(() => {
+    setSubtitleUrl(content?.vttFileUrl?.playerInfo?.publicUrl || '');
+  }, [content]);
+
+  // after editing subtitles, refetch content and set subtitleUrl again to
+  // prevent stale data from being displayed
+  useEffect(() => {
+    setSubtitleIsLoading(true);
+    refetch().then((newData) => {
+      refetch().then((newData: any) => {
+        setSubtitleUrl(newData?.data?.data?.vttFileUrl?.playerInfo?.publicUrl);
+        setSubtitleIsLoading(false);
+      });
+    });
+  }, [location, refetch, subtitleUrl]);
 
   useEffect(() => {
     if (contentRef.current) {
@@ -100,10 +118,14 @@ const Video = () => {
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
     setIsEmbedModalOpen(false);
+    setIsReportContentModalOpen(false);
   }
 
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
+  };
+  const openReportContentModal = () => {
+    setIsReportContentModalOpen(true);
   };
 
   function getContributorRole(
@@ -147,7 +169,7 @@ const Video = () => {
 
   const audioContent = (
     <s.AudioWrapper>
-      {audioBeingProcessed ? (
+      {audioBeingProcessed || subtitleIsLoading ? (
         <s.LoadingWrapper>
           <Lottie
             className="loading-cubes"
@@ -174,7 +196,7 @@ const Video = () => {
 
   const videoContent = (
     <s.VideoWrapper>
-      {videoBeingProcessed ? (
+      {videoBeingProcessed || subtitleIsLoading ? (
         <s.LoadingWrapper>
           <Lottie
             className="loading-cubes"
@@ -221,6 +243,10 @@ const Video = () => {
         onClose={handleClose}
         embedContentType={content?.type || ''}
       />
+      <ReportContentModal
+        isOpen={isReportContentModalOpen}
+        onClose={handleClose}
+      />
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
@@ -245,22 +271,41 @@ const Video = () => {
               </Typography>
 
               {loggedInProfileId === profileId && (
-                <Box sx={{ marginLeft: 'auto' }}>
+                // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
+                <s.EditDeleteWrapper>
+                  <s.EditSubsButton
+                    component={RouterLink}
+                    to={`/subtitle-editor/${content?.id}`}
+                  >
+                    Edit Subtitles
+                  </s.EditSubsButton>
                   <DeleteContentButton contentId={content?.id || ''} />
-                </Box>
+                </s.EditDeleteWrapper>
+                // </Box>
               )}
             </Box>
-            <s.ContentDate component="p" variant="body2">
+            <Typography component="p" variant="body2" sx={{ my: 1 }}>
               {formattedCreatedDate}
-            </s.ContentDate>
+            </Typography>
 
-            <Stack direction="row" justifyContent="left">
-              <s.EmbedWrapper>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="left"
+              sx={{ my: 3, typography: 'body2' }}
+            >
+              <s.ActionsWrapper>
                 <CodeIcon />
-                <s.Embed to={''} onClick={openEmbedModal}>
+                <s.Action to={''} onClick={openEmbedModal}>
                   Embed
-                </s.Embed>
-              </s.EmbedWrapper>
+                </s.Action>
+              </s.ActionsWrapper>
+              <s.ActionsWrapper>
+                <FlagIcon />
+                <s.Action to={''} onClick={openReportContentModal}>
+                  Report Content
+                </s.Action>
+              </s.ActionsWrapper>
             </Stack>
 
             <Typography

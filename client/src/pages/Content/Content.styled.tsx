@@ -64,11 +64,6 @@ export const ContentWrapper = styled(Box)`
   }
 `;
 
-export const ContentDate = styled(Typography)`
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
-`;
-
 export const Sidebar = styled(Stack)`
   padding: 30px 0;
 
@@ -131,7 +126,7 @@ export const ContributorSocial = styled(MuiLink)`
   }
 `;
 
-export const Embed = styled(Link)`
+export const Action = styled(Link)`
   color: ${(props) => props.theme.palette.primary.light} !important;
   font-weight: 500;
   margin-left: 0.5rem;
@@ -146,7 +141,7 @@ export const Embed = styled(Link)`
   }
 `;
 
-export const EmbedWrapper = styled(Box)`
+export const ActionsWrapper = styled(Box)`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,4 +184,23 @@ export const LoadingText = styled(Typography)`
   padding-top: 0.5rem;
 
   line-height: 26px;
+`;
+
+export const EditSubsButton = styled(MuiLink)`
+  color: ${(props) => props.theme.palette.primary.light};
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 26px; /* 162.5% */
+  text-decoration-line: underline;
+  margin-right: 22px;
+`;
+
+export const EditDeleteWrapper = styled(Box)`
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 `;
