@@ -23,7 +23,7 @@ export const StyledPasswordInput = styled(PasswordInput)`
   & input:hover + fieldset {
     border-color: ${({ theme, colorMode }) =>
       colorMode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
   }
 
