@@ -25,6 +25,10 @@ export const TextInput = styled(MuiTextField)`
     padding: 16.5px 16px;
   }
 
+  & .MuiInputBase-inputMultiline {
+    padding: 0;
+  }
+
   & .MuiInputBase-formControl {
     margin-bottom: 24px;
   }
