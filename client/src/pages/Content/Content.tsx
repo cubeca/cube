@@ -124,32 +124,41 @@ const Video = () => {
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
   };
-
   const openReportContentModal = () => {
     setIsReportContentModalOpen(true);
   };
 
-  function getContributorRole(role: string, count: number): string {
+  function getContributorRole(
+    role: string,
+    count: number,
+    preferredTitle?: string
+  ): string {
     let roleStr = '';
-    switch (role) {
-      case 'artist':
-        roleStr = 'Artist';
-        break;
-      case 'editor':
-        roleStr = 'Editor';
-        break;
-      case 'camera_operator':
-        roleStr = 'Camera Operator';
-        break;
-      case 'sound_technician':
-        roleStr = 'Sound Technician';
-        break;
-      // Add more roles as needed
-      default: // capitalize first letter of role
-        roleStr = role.charAt(0).toUpperCase() + role.slice(1);
+    if (preferredTitle && preferredTitle !== '') {
+      roleStr = preferredTitle;
+    } else {
+      switch (role) {
+        case 'artist':
+          roleStr = 'Artist';
+          break;
+        case 'editor':
+          roleStr = 'Editor';
+          break;
+        case 'camera_operator':
+          roleStr = 'Camera Operator';
+          break;
+        case 'sound_technician':
+          roleStr = 'Sound Technician';
+          break;
+        // Add more roles as needed
+        default: // capitalize first letter of role
+          roleStr = role.charAt(0).toUpperCase() + role.slice(1);
+      }
     }
     // Add 's' to role if there are multiple contributors
-    return count > 1 ? roleStr + 's' : roleStr;
+    // if the role already ends in an 's', don't add another 's'
+    // for example: 'props' should not become 'propss'
+    return count > 1 && !roleStr.endsWith('s') ? roleStr + 's' : roleStr;
   }
 
   const youtubeContent = (
@@ -279,7 +288,12 @@ const Video = () => {
               {formattedCreatedDate}
             </Typography>
 
-            <Stack direction="row" spacing={2} justifyContent="left" sx={{ my: 3, typography: 'body2' }}>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="left"
+              sx={{ my: 3, typography: 'body2' }}
+            >
               <s.ActionsWrapper>
                 <CodeIcon />
                 <s.Action to={''} onClick={openEmbedModal}>
@@ -337,7 +351,13 @@ const Video = () => {
                                 color: theme.palette.primary.main
                               }}
                             >
-                              {t(getContributorRole(role, contributors.length))}
+                              {t(
+                                getContributorRole(
+                                  (contributors[0] as Contributor)
+                                    ?.preferredTitle || role,
+                                  contributors.length
+                                )
+                              )}
                               :&nbsp;
                             </Typography>
 
