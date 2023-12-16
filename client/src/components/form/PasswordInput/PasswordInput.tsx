@@ -22,7 +22,7 @@ const PasswordInput: FC<TextInputProps> = (props) => {
   return (
     <TextInput
       type={passwordShown ? 'text' : 'password'}
-      colorMode={props.colorMode}
+      colormode={props.colormode}
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
@@ -31,7 +31,7 @@ const PasswordInput: FC<TextInputProps> = (props) => {
               onClick={togglePassword}
               style={{
                 color:
-                  props.colorMode === 'dark'
+                  props.colormode === 'dark'
                     ? theme.palette.background.default
                     : 'inherit'
               }}
@@ -40,7 +40,7 @@ const PasswordInput: FC<TextInputProps> = (props) => {
                 <Visibility
                   style={{
                     fill:
-                      props.colorMode === 'dark'
+                      props.colormode === 'dark'
                         ? theme.palette.background.default
                         : alpha('#D9FFEE', 0.5)
                   }}
@@ -49,7 +49,7 @@ const PasswordInput: FC<TextInputProps> = (props) => {
                 <VisibilityOff
                   style={{
                     fill:
-                      props.colorMode === 'dark'
+                      props.colormode === 'dark'
                         ? theme.palette.background.default
                         : alpha('#D9FFEE', 0.5)
                   }}

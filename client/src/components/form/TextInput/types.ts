@@ -6,5 +6,5 @@ export interface TextInputProps extends InputProps {
   type?: HTMLInputTypeAttribute;
   placeholder?: string;
   variant?: 'standard' | 'outlined';
-  colorMode?: 'light' | 'dark';
+  colormode?: 'light' | 'dark';
 }

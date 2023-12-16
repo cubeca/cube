@@ -85,7 +85,7 @@ const UpdateEmailDialog = ({
               fullWidth
               variant="outlined"
               label={t('New Email')}
-              colorMode="dark"
+              colormode="dark"
             />
             <s.StyledEmailInput
               name="confirmEmail"
@@ -94,7 +94,7 @@ const UpdateEmailDialog = ({
               fullWidth
               variant="outlined"
               label={t('Confirm Email')}
-              colorMode="dark"
+              colormode="dark"
             />
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             <Grid

@@ -99,7 +99,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             ]}
           />
           <TextInput
-            colorMode="dark"
+            colormode="dark"
             defaultValue={''}
             name="contactName"
             id="contactName"
@@ -110,7 +110,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             placeholder="Your name"
           />
           <TextInput
-            colorMode="dark"
+            colormode="dark"
             defaultValue={''}
             name="contactEmail"
             id="contactEmail"
@@ -121,7 +121,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             placeholder="Your email address"
           />
           <TextInput
-            colorMode="dark"
+            colormode="dark"
             defaultValue={''}
             name="reportDesc"
             id="reportDesc"
@@ -135,7 +135,11 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
-          <Grid container flex-direction={{ xs: 'column', sm: 'column', md: 'row' }} justifyContent="space-between">
+          <Grid
+            container
+            flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
+            justifyContent="space-between"
+          >
             <Grid xs={12} md="auto">
               <Box mt={2}>
                 <HCaptcha

@@ -169,7 +169,7 @@ const EditProfileForm = ({
       </s.EditProfileImagesWrapper>
 
       <TextInput
-        colorMode="dark"
+        colormode="dark"
         defaultValue={profile.organization}
         name="organization"
         id="organization"
@@ -179,7 +179,7 @@ const EditProfileForm = ({
         label={t('Organization Name')}
       />
       <TextInput
-        colorMode="dark"
+        colormode="dark"
         defaultValue={profile.website}
         name="website"
         id="website"
@@ -189,7 +189,7 @@ const EditProfileForm = ({
         label={t('Organization URL')}
       />
       <TextInput
-        colorMode="dark"
+        colormode="dark"
         defaultValue={profile.description}
         name="profileDescription"
         id="profileDescription"
@@ -239,7 +239,11 @@ const EditProfileForm = ({
         isUploadComplete={isAudioUploadComplete}
       />
 
-      <Grid container flex-direction={{ xs: 'column', sm: 'column', md: 'row' }} justifyContent="space-between">
+      <Grid
+        container
+        flex-direction={{ xs: 'column', sm: 'column', md: 'row' }}
+        justifyContent="space-between"
+      >
         <Grid xs={12} md="auto">
           <Box mt={2}>
             <HCaptcha
@@ -261,7 +265,6 @@ const EditProfileForm = ({
           </Box>
         </Grid>
       </Grid>
-
     </Stack>
   );
 };

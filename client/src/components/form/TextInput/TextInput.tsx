@@ -12,7 +12,7 @@ interface TextInputProps extends MuiInputProps {
   rows?: string | number;
   InputProps?: any;
   multiline?: boolean;
-  colorMode?: 'light' | 'dark';
+  colormode?: 'light' | 'dark';
 }
 
 const defaultRules = {
@@ -37,7 +37,7 @@ const TextInput: FC<TextInputProps> = ({
   rows,
   InputProps,
   multiline,
-  colorMode = 'light'
+  colormode = 'light'
 }) => {
   return (
     <Controller
@@ -50,7 +50,7 @@ const TextInput: FC<TextInputProps> = ({
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => {
         return (
-          <s.FieldWrapper colorMode={colorMode} sx={{ width: '100%' }}>
+          <s.FieldWrapper colormode={colormode} sx={{ width: '100%' }}>
             <FormControl
               className={className}
               id={id}
@@ -72,7 +72,7 @@ const TextInput: FC<TextInputProps> = ({
                 multiline={multiline}
                 rows={rows}
                 InputProps={InputProps}
-                colorMode={colorMode}
+                colormode={colormode}
                 {...field}
               />
             </FormControl>

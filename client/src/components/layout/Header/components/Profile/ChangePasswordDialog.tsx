@@ -73,7 +73,7 @@ const ChangePasswordDialog = ({
               fullWidth
               variant="outlined"
               label={t('Current Password')}
-              colorMode="dark"
+              colormode="dark"
             />
             <s.StyledPasswordInput
               name="newPassword"
@@ -82,7 +82,7 @@ const ChangePasswordDialog = ({
               fullWidth
               variant="outlined"
               label={t('New Password')}
-              colorMode="dark"
+              colormode="dark"
             />
             <s.StyledPasswordInput
               name="confirmPassword"
@@ -91,7 +91,7 @@ const ChangePasswordDialog = ({
               fullWidth
               variant="outlined"
               label={t('Confirm Password')}
-              colorMode="dark"
+              colormode="dark"
             />
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
