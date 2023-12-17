@@ -7,13 +7,12 @@ export const StyledPasswordInput = styled(PasswordInput)`
   & label {
     color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? `${theme.palette.background.default}`
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
     display: block;
     font-size: 1rem;
     font-weight: 500;
     margin-bottom: 0;
-    font-weight: 600;
   }
 
   & input,
@@ -23,7 +22,7 @@ export const StyledPasswordInput = styled(PasswordInput)`
   & input:hover + fieldset {
     border-color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
   }
 
@@ -31,7 +30,7 @@ export const StyledPasswordInput = styled(PasswordInput)`
   & textarea {
     color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
   }
 

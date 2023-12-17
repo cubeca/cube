@@ -9,7 +9,7 @@ export const TextInput = styled(MuiTextField)`
   & input:hover + fieldset {
     border-color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.main};
   }
 
@@ -17,7 +17,14 @@ export const TextInput = styled(MuiTextField)`
   & textarea {
     color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
+        : theme.palette.primary.light};
+  }
+
+  & label {
+    color: ${({ theme, colormode }) =>
+      colormode === 'dark'
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
   }
 
@@ -38,12 +45,11 @@ export const FieldWrapper = styled(Box)`
   & label {
     color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? `${theme.palette.background.default}`
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
     display: block;
     font-size: 1rem;
     font-weight: 500;
     margin-bottom: 0;
-    font-weight: 600;
   }
 `;
