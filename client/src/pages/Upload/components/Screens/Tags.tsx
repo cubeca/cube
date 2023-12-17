@@ -38,13 +38,15 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
     { name: 'other_name_1', role: 'other_role_1' }
   ]);
 
-  const handleAddMore = (type: string) => {
+  const handleAddMore = (type: string, preferredTitle?: string) => {
     if (type === 'artist') {
       setArtists([
         ...artists,
         {
           name: `artist_${artists.length + 1}`,
-          url: `artist_url_${artists.length + 1}`
+          url: `artist_url_${artists.length + 1}`,
+          preferredTitle:
+            preferredTitle !== 'Artist' ? preferredTitle : 'Artist'
         }
       ]);
     } else if (type === 'editor') {
@@ -203,20 +205,14 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           <Grid key={index} container columnSpacing={2} rowSpacing={4}>
             {index === 0 ? (
               <Grid xs={12} sm={2}>
-                <Typography
-                  component="h6"
-                  variant="h6"
-                  sx={{
-                    mt: {
-                      xs: theme.spacing(0),
-                      sm: theme.spacing(3)
-                    }
-                  }}
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  Artist:
-                </Typography>
+                <TextInput
+                  variant={'outlined'}
+                  control={control}
+                  name={`preferredTitle`}
+                  fullWidth
+                  rules={{ required: index === 0 }}
+                  defaultValue="Artist"
+                />
               </Grid>
             ) : (
               <Grid xs={2} />
@@ -246,7 +242,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                 <s.StyledButton
                   sx={{ marginTop: '14px', height: '58px' }}
                   variant="outlined"
-                  onClick={() => handleAddMore('artist')}
+                  onClick={() => handleAddMore('artist', 'preferredTitle')}
                 >
                   {t('+ more')}
                 </s.StyledButton>

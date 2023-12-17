@@ -15,7 +15,7 @@ import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
-    [key: string]: { name: string; url?: string }[];
+    [key: string]: { name: string; url?: string; preferredTitle?: string }[];
   } = {};
 
   // Handle 'artist' role
@@ -25,7 +25,11 @@ const getContributors = (values: FieldValues) => {
     }
     contributorsObject['artist'].push({
       name: values[`artistName${i}`],
-      url: values[`artistUrl${i}`]
+      url: values[`artistUrl${i}`],
+      preferredTitle:
+        values[`preferredTitle`] !== 'Artist'
+          ? values[`preferredTitle`]
+          : undefined
     });
   }
 

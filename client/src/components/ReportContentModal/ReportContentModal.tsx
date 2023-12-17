@@ -77,7 +77,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
           <Typography component="h6" variant="h6">
             Select the reason you wish to report content
           </Typography>
-          <sRadioInput.DarkRadioInput
+          <sRadioInput.WrappingDarkRadioInput
             control={control}
             name="reportReason"
             id="reportReason"
