@@ -99,7 +99,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             ]}
           />
           <TextInput
-            colorMode="dark"
+            colormode="dark"
             defaultValue={''}
             name="contactName"
             id="contactName"
@@ -110,7 +110,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             placeholder="Your name"
           />
           <TextInput
-            colorMode="dark"
+            colormode="dark"
             defaultValue={''}
             name="contactEmail"
             id="contactEmail"
@@ -121,7 +121,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             placeholder="Your email address"
           />
           <TextInput
-            colorMode="dark"
+            colormode="dark"
             defaultValue={''}
             name="reportDesc"
             id="reportDesc"

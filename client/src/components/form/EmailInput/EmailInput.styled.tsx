@@ -3,8 +3,8 @@ import EmailInput from './EmailInput';
 
 export const StyledEmailInput = styled(EmailInput)`
   & label {
-    color: ${({ theme, colorMode }) =>
-      colorMode === 'dark'
+    color: ${({ theme, colormode }) =>
+      colormode === 'dark'
         ? theme.palette.background.default
         : theme.palette.primary.light};
     display: block;
@@ -19,16 +19,16 @@ export const StyledEmailInput = styled(EmailInput)`
   & input:focus + fieldset,
   & input:active + fieldset,
   & input:hover + fieldset {
-    border-color: ${({ theme, colorMode }) =>
-      colorMode === 'dark'
-        ? `${theme.palette.background.default} !important`
+    border-color: ${({ theme, colormode }) =>
+      colormode === 'dark'
+        ? theme.palette.background.default
         : theme.palette.primary.light};
   }
 
   & input,
   & textarea {
-    color: ${({ theme, colorMode }) =>
-      colorMode === 'dark'
+    color: ${({ theme, colormode }) =>
+      colormode === 'dark'
         ? theme.palette.background.default
         : theme.palette.primary.light};
   }
