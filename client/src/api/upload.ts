@@ -16,8 +16,6 @@ export const upload = async (
     const fileId = makeUUID();
 
     const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
-
-    // Do NOT "await" on purpose, since the fileId is already known.
     await uploadViaTus(file, uploadTusEndpoint, { profileId });
     return fileId;
   } else {
