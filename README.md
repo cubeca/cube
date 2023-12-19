@@ -140,3 +140,6 @@ npm i
 npm run start
 ```
 
+# Styleguide
+
+Site styles can be referenced in the [theme file](https://github.com/cubeca/cube_ui/blob/main/client/src/theme/index.ts)
