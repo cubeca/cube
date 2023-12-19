@@ -14,12 +14,8 @@ export const upload = async (
     // to allow creating a file stub with ID in a separate API call before triggering TUS.
     // TODO Replace with API call to create file stub.
     const fileId = makeUUID();
-
     const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
-
-    // Do NOT "await" on purpose, since the fileId is already known.
-    uploadViaTus(file, uploadTusEndpoint, { profileId });
-
+    await uploadViaTus(file, uploadTusEndpoint, { profileId });
     return fileId;
   } else {
     return await uploadS3(file, profileId);
@@ -107,10 +103,7 @@ export const uploadS3 = async (
       'Content-Type': mimeType
     }
   };
-
-  // Do *NOT* wait, intentionally.
-  // TODO Improve async error handling and progress reporting.
-  axios.put(presignedUrl, file, r2PutOptions);
+  await axios.put(presignedUrl, file, r2PutOptions);
 
   return fileId;
 };
