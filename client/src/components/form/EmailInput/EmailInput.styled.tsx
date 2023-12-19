@@ -5,13 +5,12 @@ export const StyledEmailInput = styled(EmailInput)`
   & label {
     color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
     display: block;
     font-size: 1rem;
     font-weight: 500;
     margin-bottom: 0;
-    font-weight: 600;
   }
 
   & input,
@@ -21,7 +20,7 @@ export const StyledEmailInput = styled(EmailInput)`
   & input:hover + fieldset {
     border-color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
   }
 
@@ -29,7 +28,7 @@ export const StyledEmailInput = styled(EmailInput)`
   & textarea {
     color: ${({ theme, colormode }) =>
       colormode === 'dark'
-        ? theme.palette.background.default
+        ? `${theme.palette.background.default} !important`
         : theme.palette.primary.light};
   }
 
