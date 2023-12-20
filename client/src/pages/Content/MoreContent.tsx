@@ -38,7 +38,7 @@ const MoreContent = ({
       setLoadingMoreContentByTag(true);
       const joinedSearchTerms = currentTags.join(', ');
       const searchTerm = currentTags[0];
-      const results = await searchContent(searchTerm, 0, 10);
+      const results = await searchContent(searchTerm, 0, 6);
       setMoreContentByTag(results);
       setLoadingMoreContentByTag(false);
     } catch (error) {
