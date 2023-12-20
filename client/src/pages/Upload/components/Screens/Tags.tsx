@@ -233,7 +233,13 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                 name={`artistUrl${index}`}
                 fullWidth
                 placeholder={t('URL')}
-                rules={{ required: false }}
+                rules={{
+                  required: false,
+                  validate: (value: string) =>
+                    value === '' ||
+                    /^(ftp|http|https):\/\/[^ "]+$/.test(value) ||
+                    'URL should begin with http://'
+                }}
               />
             </Grid>
 
