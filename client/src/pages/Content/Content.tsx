@@ -9,7 +9,6 @@ import CodeIcon from '@mui/icons-material/Code';
 import FlagIcon from '@mui/icons-material/Flag';
 
 import useContentDetails from 'hooks/useContentDetails';
-
 import MoreContent from './MoreContent';
 import Contributors from './Contributors';
 
@@ -447,6 +446,7 @@ const Video = () => {
               <MoreContent
                 profileId={profileId}
                 excludeId={content?.id || ''}
+                currentTags={content?.tags}
               />
             )}
           </s.Sidebar>

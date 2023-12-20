@@ -4,44 +4,70 @@ import ContentList from 'components/ContentList';
 import { ContentLoader } from 'components/Loaders';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import useProfileContent from 'hooks/useProfileContent';
-
+import { searchContent } from 'api/search';
 interface MoreContentProps {
   profileId: string;
   excludeId: string;
+  currentTags?: string[];
 }
 
 const MoreContent = ({
   profileId,
-  excludeId
+  excludeId,
+  currentTags = []
 }: PropsWithChildren<MoreContentProps>) => {
+  const [moreContentByTag, setMoreContentByTag] = useState<any>([]);
   const [moreContent, setMoreContent] = useState<any>([]);
   const [allContent, setAllContent] = useState<any>([]);
   const [randomContent, setRandomContent] = useState([]);
+  const [loadingMoreContentByTag, setLoadingMoreContentByTag] = useState(true);
+
   const { t } = useTranslation();
-  const { data: content, isLoading } = useProfileContent(profileId);
+
+  // get other content from this profile, in case no tag match
+  const { data: profileContent, isLoading } = useProfileContent(profileId);
 
   function getRandomContent(content: any[], count: number) {
     const shuffled = content.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
 
-  useEffect(() => {
-    if (content) {
-      const filteredContent = (content as unknown as Array<any>).filter(
-        (c: any) => c.id !== excludeId
-      );
-      setAllContent(filteredContent);
+  // get more content by tag
+  const fetchContent = async () => {
+    try {
+      setLoadingMoreContentByTag(true);
+      const joinedSearchTerms = currentTags.join(', ');
+      const searchTerm = currentTags[0];
+      const results = await searchContent(searchTerm, 0, 10);
+      setMoreContentByTag(results);
+      setLoadingMoreContentByTag(false);
+    } catch (error) {
+      console.error(error);
+      setLoadingMoreContentByTag(false);
     }
-  }, [content, excludeId]);
+  };
 
   useEffect(() => {
-    setMoreContent(allContent);
-    setRandomContent(getRandomContent(allContent, 3) as never[]);
-  }, [allContent]);
+    fetchContent();
+  }, []);
+
+  useEffect(() => {
+    if (!loadingMoreContentByTag && randomContent.length === 0) {
+      let contentToUse =
+        moreContentByTag.length > 0 ? moreContentByTag : profileContent;
+
+      if (contentToUse === undefined) {
+        contentToUse = [];
+      }
+
+      const randomizedContent = getRandomContent(contentToUse, 3);
+      setRandomContent(randomizedContent as never[]);
+    }
+  }, [moreContentByTag, profileContent, loadingMoreContentByTag]);
 
   return (
     <Stack>
-      {!isLoading && moreContent.length > 0 ? (
+      {!isLoading && randomContent.length > 0 ? (
         <ContentList
           heading={t('More Content Like This')}
           content={randomContent}
