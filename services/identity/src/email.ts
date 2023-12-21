@@ -136,3 +136,39 @@ export const sendPasswordResetEmail = async (email: string) => {
     throw new Error('Error sending password change email');
   }
 };
+
+/**
+ * Send an email when the contact us form is submitted.
+ */
+export const sendContactUsEmail = async (name: string, email: string, desc: string) => {
+  if (!name || !email || !desc) {
+    throw new Error('Not all required fields have been provided');
+  }
+
+  const defaultClient = Brevo.ApiClient.instance;
+  const apiKey = defaultClient.authentications['api-key'];
+  apiKey.apiKey = settings.BREVO_API_KEY;
+
+  const apiInstance = new Brevo.TransactionalEmailsApi();
+  const sendSmtpEmail = new Brevo.SendSmtpEmail();
+  sendSmtpEmail.sender = {
+    name: 'CubeCommons Do Not Reply',
+    email: 'donotreply@cubecommons.ca'
+  };
+
+  sendSmtpEmail.to = [{ email: settings.CONTACT_US_EMAIL }];
+  sendSmtpEmail.templateId = brevoTemplateIdMapping.CONTACT_US_EMAIL;
+  sendSmtpEmail.params = {
+    name: `${name}`,
+    email: `${email}`,
+    desc: `${desc}`
+  };
+
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log('Contact us email sent successfully');
+  } catch (error) {
+    console.error('Error sending contact us email:', error);
+    throw new Error('Error sending contact us email');
+  }
+};

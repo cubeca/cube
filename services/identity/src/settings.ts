@@ -8,6 +8,7 @@ export const PORT: number = parseInt((process.env.PORT as string) || '8080', 10)
 export const ENCRYPT_SECRET: string = process.env.ENCRYPT_SECRET || 'encrypt_secret';
 export const JWT_TOKEN_SECRET: string = process.env.JWT_TOKEN_SECRET || 'secret';
 export const BREVO_API_KEY: string = process.env.BREVO_API_KEY || '';
+export const CONTACT_US_EMAIL: string = process.env.CONTACT_US_EMAIL || '';
 
 export const PGHOST: string = process.env.PGHOST || 'localhost';
 export const PGPORT: number = parseInt((process.env.PGPORT as string) || '5432', 10);
