@@ -235,10 +235,11 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                 placeholder={t('URL')}
                 rules={{
                   required: false,
-                  validate: (value: string) =>
-                    value === '' ||
-                    /^(ftp|http|https):\/\/[^ "]+$/.test(value) ||
-                    'URL should begin with http://'
+                  pattern: {
+                    value: /^(ftp|http|https):\/\/[^ "]+$/,
+                    message:
+                      'URL should begin with http://, https://, or ftp://'
+                  }
                 }}
               />
             </Grid>
