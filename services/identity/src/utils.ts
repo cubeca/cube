@@ -16,7 +16,8 @@ export const decryptString = (hash: string) =>
 export const brevoTemplateIdMapping = {
   SEND_VERIFICATION_EMAIL: 2,
   PASSWORD_CHANGE_CONFIRMATION: 3,
-  PASSWORD_RESET_EMAIL: 4
+  PASSWORD_RESET_EMAIL: 4,
+  CONTACT_US_EMAIL: 19
 };
 
 export const validateUserCreateInput = [

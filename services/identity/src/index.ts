@@ -16,7 +16,12 @@ import {
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
 import { createDefaultProfile } from './profile';
-import { sendVerificationEmail, sendPasswordChangeConfirmation, sendPasswordResetEmail } from './email';
+import {
+  sendVerificationEmail,
+  sendPasswordChangeConfirmation,
+  sendContactUsEmail,
+  sendPasswordResetEmail
+} from './email';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -350,6 +355,21 @@ app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (re
   } catch (error: any) {
     console.error('Error occurred verifying email: ', error);
     return res.status(500).send('Error occurred verifying email!');
+  }
+});
+
+/**
+ * Trigger an email when someone submits the contact us form.
+ */
+app.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+  const { name, email, desc } = req.body;
+
+  try {
+    await sendContactUsEmail(name, email, desc);
+    res.send('OK');
+  } catch (error: any) {
+    console.error('Error occurred sending email: ', error);
+    return res.status(500).send('Error occurred sending email!');
   }
 });
 

@@ -171,6 +171,13 @@ app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request
   res.status(status).json(data);
 });
 
+app.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+  const { status, data } = await identityApi.post('email/contact-us', req.body, {
+    headers: filterHeadersToForward(req, 'authorization')
+  });
+  res.status(status).json(data);
+});
+
 /////////////////// Profile Service ///////////////////
 
 app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
