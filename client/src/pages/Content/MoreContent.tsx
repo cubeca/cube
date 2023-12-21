@@ -31,14 +31,17 @@ const MoreContent = ({
     const shuffled = content.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
   }
-
   // get more content by tag
   const fetchContent = async () => {
     try {
       setLoadingMoreContentByTag(true);
-      const joinedSearchTerms = currentTags.join(', ');
-      const searchTerm = currentTags[0];
-      const results = await searchContent(searchTerm, 0, 6);
+      const joinedSearchTerms = currentTags.join(' ');
+      console.log('joinedSearchTerms', joinedSearchTerms);
+      console.log(currentTags);
+      const test = ['test', 'another'];
+      const results = await searchContent('test', 0, 6, { tags: test });
+
+      console.log('results', results);
       setMoreContentByTag(results);
       setLoadingMoreContentByTag(false);
     } catch (error) {
@@ -53,13 +56,18 @@ const MoreContent = ({
 
   useEffect(() => {
     if (!loadingMoreContentByTag && randomContent.length === 0) {
-      let contentToUse =
-        moreContentByTag.length > 0 ? moreContentByTag : profileContent;
+      // uncomment this once we fix the tag search bit
+      // let contentToUse =
+      //   moreContentByTag && moreContentByTag.length > 0
+      //     ? moreContentByTag
+      //     : profileContent;
+      let contentToUse = moreContentByTag;
 
-      if (contentToUse === undefined) {
+      if (contentToUse === undefined || contentToUse === null) {
         contentToUse = [];
       }
 
+      // Randomize the content and set it to randomContent
       const randomizedContent = getRandomContent(contentToUse, 3);
       setRandomContent(randomizedContent as never[]);
     }
