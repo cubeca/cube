@@ -237,8 +237,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                   required: false,
                   pattern: {
                     value: /^(ftp|http|https):\/\/[^ "]+$/,
-                    message:
-                      'URL should begin with http://, https://, or ftp://'
+                    message: 'URLs must begin with http://, https://, or ftp://'
                   }
                 }}
               />
