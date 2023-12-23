@@ -362,10 +362,10 @@ app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (re
  * Trigger an email when someone submits the contact us form.
  */
 app.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
-  const { name, email, desc } = req.body;
+  const { name, email, desc, ticketId } = req.body;
 
   try {
-    await sendContactUsEmail(name, email, desc);
+    await sendContactUsEmail(name, email, desc, ticketId);
     res.send('OK');
   } catch (error: any) {
     console.error('Error occurred sending email: ', error);

@@ -140,8 +140,8 @@ export const sendPasswordResetEmail = async (email: string) => {
 /**
  * Send an email when the contact us form is submitted.
  */
-export const sendContactUsEmail = async (name: string, email: string, desc: string) => {
-  if (!name || !email || !desc) {
+export const sendContactUsEmail = async (name: string, email: string, desc: string, ticketId: string) => {
+  if (!name || !email || !desc || !ticketId) {
     throw new Error('Not all required fields have been provided');
   }
 
@@ -159,9 +159,10 @@ export const sendContactUsEmail = async (name: string, email: string, desc: stri
   sendSmtpEmail.to = [{ email: settings.CONTACT_US_EMAIL }];
   sendSmtpEmail.templateId = brevoTemplateIdMapping.CONTACT_US_EMAIL;
   sendSmtpEmail.params = {
-    name: `${name}`,
-    email: `${email}`,
-    desc: `${desc}`
+    contactName: `${name}`,
+    contactEmail: `${email}`,
+    issueDesc: `${desc}`,
+    ticketId: `${ticketId}`
   };
 
   try {

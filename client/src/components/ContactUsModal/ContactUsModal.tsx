@@ -22,6 +22,7 @@ const ContactUsModal = ({ onClose, isOpen }: ContactUsModalProps) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+  const [ticketId, setTicketId] = useState('');
 
   const onCaptchaSuccess = () => {
     setCaptchaVerified(true);
@@ -31,7 +32,10 @@ const ContactUsModal = ({ onClose, isOpen }: ContactUsModalProps) => {
     const { name, email, desc } = data;
 
     try {
-      contactUs(name, email, desc);
+      const generatedTicketId = generateTicketId();
+      setTicketId(generatedTicketId);
+
+      contactUs(name, email, desc, ticketId);
     } catch (e: any) {
       setErrorMessage('An error occurred while sending your email!');
     }
@@ -44,6 +48,19 @@ const ContactUsModal = ({ onClose, isOpen }: ContactUsModalProps) => {
     setShowSuccessMessage(false);
     reset();
     onClose();
+  };
+
+  const generateTicketId = (): string => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const length = 5;
+    let ticketId = '';
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      ticketId += characters[randomIndex];
+    }
+
+    return ticketId;
   };
 
   return isOpen ? (
@@ -59,7 +76,7 @@ const ContactUsModal = ({ onClose, isOpen }: ContactUsModalProps) => {
             Your message has been submitted.
           </Typography>
           <Typography component="p" variant="body2">
-            For future reference, your message code is:
+            For future reference, your message code is: {ticketId}
           </Typography>
         </Box>
       ) : (

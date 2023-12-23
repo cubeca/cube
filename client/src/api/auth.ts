@@ -116,10 +116,15 @@ export const resendEmailVerification = async (email: string) => {
   );
 };
 
-export const contactUs = async (name: string, email: string, desc: string) => {
+export const contactUs = async (
+  name: string,
+  email: string,
+  desc: string,
+  ticketId: string
+) => {
   const authToken = await getAuthToken();
   return await authApi.contactUs(
-    { name, email, desc },
+    { name, email, desc, ticketId },
     { headers: { Authorization: `Bearer ${authToken}` } }
   );
 };
