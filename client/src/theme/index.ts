@@ -12,19 +12,22 @@ const THEME_COLORS = {
   primary: {
     main: '#95F5CB',
     light: '#D9FFEE',
-    dark: '#57838b'
+    dark: '#57838B'
   },
   secondary: {
-    main: '#2A333B',
+    main: '#28343C',
     light: '#D9FFEE',
-    dark: '#57838b'
+    dark: '#57838B'
   },
   background: {
     default: '#28343C',
-    paper: '#2f4048'
+    paper: '#2F4048',
+    light: '#3B545C',
+    dark: '#1A1919'
   },
   error: {
-    main: "#FFB7C4"
+    main: "#FFB7C4",
+    dark: "#D13C4E"
   }
 };
 
@@ -121,7 +124,8 @@ const getTheme = (mode?: 'dark' | 'light') =>
           disabled: THEME_COLORS.primary.dark
         },
         error: {
-          main: THEME_COLORS.error.main
+          main: THEME_COLORS.error.main,
+          dark: THEME_COLORS.error.dark
         },
         warning: {
           main: '#ffde33'
