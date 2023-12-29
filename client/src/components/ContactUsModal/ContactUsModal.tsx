@@ -29,13 +29,13 @@ const ContactUsModal = ({ onClose, isOpen }: ContactUsModalProps) => {
   };
 
   const onSubmit = (data: FieldValues) => {
-    const { name, email, desc } = data;
+    const { name, email, message } = data;
 
     try {
       const generatedTicketId = generateTicketId();
       setTicketId(generatedTicketId);
 
-      contactUs(name, email, desc, ticketId);
+      contactUs(name, email, message, generatedTicketId);
     } catch (e: any) {
       setErrorMessage('An error occurred while sending your email!');
     }

@@ -45,7 +45,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
         contactName,
         contactEmail,
         reportDesc,
-        ticketId
+        generatedTicketId
       );
     } catch (e: any) {
       setErrorMessage('An error occurred while submitting report!');
