@@ -86,7 +86,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
           <Typography component="h6" variant="h6" sx={{ mb: 1 }}>
             Your report has been submitted.
           </Typography>
-          <Typography component="p" variant="body2">
+          <Typography mb={4} component="p" variant="body2">
             Thank you for helping us maintain a safe environment. If you need to
             contact us, please reference this code: {ticketId}.
           </Typography>
