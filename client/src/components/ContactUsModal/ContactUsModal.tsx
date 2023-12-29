@@ -76,7 +76,7 @@ const ContactUsModal = ({ onClose, isOpen }: ContactUsModalProps) => {
             Your message has been submitted.
           </Typography>
           <Typography component="p" variant="body2">
-            For future reference, your message code is: {ticketId}
+            If you need to contact us, please reference this code: {ticketId}.
           </Typography>
         </Box>
       ) : (

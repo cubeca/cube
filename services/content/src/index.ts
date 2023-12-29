@@ -172,15 +172,15 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
 // API endpoint for reporting a content item
 app.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const { disputedUrl, requestType, contactName, contactEmail, issueDesc } = req.body;
+  const { disputedUrl, requestType, contactName, contactEmail, issueDesc, ticketId } = req.body;
 
   // Check if any of the parameters are missing or falsy
-  if (!disputedUrl || !requestType || !contactName || !contactEmail || !issueDesc) {
+  if (!disputedUrl || !requestType || !contactName || !contactEmail || !issueDesc || !ticketId) {
     return res.status(400).send('Missing required parameters');
   }
 
   try {
-    await sendReportAbuseEmail(disputedUrl, requestType, contactName, contactEmail, issueDesc);
+    await sendReportAbuseEmail(disputedUrl, requestType, contactName, contactEmail, issueDesc, ticketId);
     res.status(200).json('OK');
   } catch (error) {
     console.error('Error sending content report', error);

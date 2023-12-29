@@ -13,9 +13,10 @@ export const sendReportAbuseEmail = async (
   requestType: string,
   contactName: string,
   contactEmail: string,
-  issueDesc: string
+  issueDesc: string,
+  ticketId: string
 ) => {
-  if (!disputedUrl || !requestType || !contactName || !contactEmail || !issueDesc) {
+  if (!disputedUrl || !requestType || !contactName || !contactEmail || !issueDesc || !ticketId) {
     throw new Error('Not all required fields have been provided');
   }
 
@@ -37,7 +38,8 @@ export const sendReportAbuseEmail = async (
     requestType: `${requestType}`,
     contactName: `${contactName}`,
     contactEmail: `${contactEmail}`,
-    issueDesc: `${issueDesc}`
+    issueDesc: `${issueDesc}`,
+    ticketId: `${ticketId}`
   };
 
   try {

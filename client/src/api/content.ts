@@ -97,13 +97,15 @@ export const reportContent = async (
   requestType: string,
   contactName: string,
   contactEmail: string,
-  issueDesc: string
+  issueDesc: string,
+  ticketId: string
 ) => {
   return await contentApi.reportContent({
     disputedUrl,
     requestType,
     contactName,
     contactEmail,
-    issueDesc
+    issueDesc,
+    ticketId
   } as ReportContentRequest);
 };

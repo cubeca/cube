@@ -26,6 +26,7 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+  const [ticketId, setTicketId] = useState('');
 
   const onCaptchaSuccess = () => {
     setCaptchaVerified(true);
@@ -35,12 +36,16 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
     const { reportReason, contactName, contactEmail, reportDesc } = data;
 
     try {
+      const generatedTicketId = generateTicketId();
+      setTicketId(generatedTicketId);
+
       reportContent(
         location.pathname,
         reportReason,
         contactName,
         contactEmail,
-        reportDesc
+        reportDesc,
+        ticketId
       );
     } catch (e: any) {
       setErrorMessage('An error occurred while submitting report!');
@@ -56,6 +61,19 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
     onClose();
   };
 
+  const generateTicketId = (): string => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const length = 5;
+    let ticketId = '';
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      ticketId += characters[randomIndex];
+    }
+
+    return ticketId;
+  };
+
   return isOpen ? (
     <Dialog
       id={'report-content'}
@@ -69,7 +87,8 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
             Your report has been submitted.
           </Typography>
           <Typography component="p" variant="body2">
-            Thank you for helping us maintain a safe environment.
+            Thank you for helping us maintain a safe environment. If you need to
+            contact us, please reference this code: {ticketId}.
           </Typography>
         </Box>
       ) : (
