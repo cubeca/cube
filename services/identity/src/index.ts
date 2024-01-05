@@ -142,7 +142,7 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
         aud: user.permission_ids
       },
       settings.JWT_TOKEN_SECRET,
-      { expiresIn: 1 * 60 }
+      { expiresIn: '14d' }
     );
 
     const userReturnObj = {

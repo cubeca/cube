@@ -70,13 +70,6 @@ export const isAuthed = async () => {
     const payload = await getAuthTokenPayload();
     const currentTime = Math.floor(Date.now() / 1000);
 
-    console.log(
-      'isauthed',
-      payload.exp as number,
-      currentTime,
-      currentTime < (payload.exp as number),
-      (payload.aud as Array<string>).includes('active')
-    );
     return (
       (payload.aud as Array<string>).includes('active') &&
       currentTime < (payload.exp as number)
