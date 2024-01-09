@@ -1,23 +1,6 @@
-import { Grid, Typography, Box } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import Button from '../../../../components/Button';
-import TextInput from '../../../../components/form/TextInput';
 import { styled } from 'theme/utils';
-
-export const StyledButton = styled(Button)`
-  margin-top: 14px;
-  height: 58px;
-  width: 100%;
-  line-height: 20px;
-  font-size: 16px;
-  padding: 0;
-  color: #d9ffee;
-  text-align: center;
-  font-family: Inter;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px; /* 125% */
-`;
 
 export const WaitWrapper = styled(Box)`
   ${(props) => props.theme.breakpoints.up('md')} {
@@ -52,4 +35,42 @@ export const StyledLoadingText = styled(Typography)`
       marginTop: ${theme.spacing(0)};
     }
   `}
+`;
+
+//Style like input
+export const StyledText = styled(Typography)`
+  margin-bottom: 32px;
+  box-sizing: border-box;
+`;
+
+export const StyledButtonEdit = styled(Button)`
+  height: 58px;
+  width: 100%;
+  line-height: 20px;
+  font-size: 16px;
+  margin-bottom: 48px;
+  padding: 0;
+  color: #d9ffee;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 125% */
+`;
+
+export const StyledButtonDisplay = styled(Button)`
+  margin-top: 14px;
+  height: 58px;
+  width: 100%;
+  line-height: 20px;
+  font-size: 16px;
+  padding: 0;
+  color: #d9ffee;
+  text-align: center;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 125% */
 `;
