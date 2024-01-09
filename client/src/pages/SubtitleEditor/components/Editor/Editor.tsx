@@ -176,7 +176,23 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
           message: 'Start time must be before end time',
           type: 'time'
         };
-        return;
+      }
+      if (row.text === '') {
+        errors[rowIndex] = {
+          message: 'Text cannot be empty',
+          type: 'text'
+        };
+      }
+      //Validate that there is no overlap
+      if (rowIndex > 0) {
+        const previousRow = newVTT[rowIndex - 1];
+        const previousEnd = parseFloat(previousRow.end);
+        if (start < previousEnd) {
+          errors[rowIndex] = {
+            message: 'Start time cannot overlap previous end time',
+            type: 'time'
+          };
+        }
       }
     });
     console.log({ errors });
