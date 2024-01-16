@@ -74,19 +74,20 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
   }
 
   // Store the values for each field to be updated
-  const args = [
-    req.body.organization as string,
-    req.body.website as string,
-    req.body.heroFileId as string,
-    req.body.logoFileId as string,
-    req.body.description as string,
-    req.body.descriptionFileId as string,
-    req.body.budget as string
-  ];
+  const { organization, website, heroFileId, logoFileId, description, descriptionFileId, budget } = req.body;
 
   // Update the profile and return the updated profile
   try {
-    const dbResult = await db.updateProfile(profileId, ...args);
+    const dbResult = await db.updateProfile(
+      profileId,
+      organization as string,
+      website as string,
+      heroFileId as string,
+      logoFileId as string,
+      description as string,
+      descriptionFileId as string,
+      budget as string
+    );
     res.status(200).json(dbResult.rows[0]);
   } catch (error) {
     console.error('Error updating profile', error);

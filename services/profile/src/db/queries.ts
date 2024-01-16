@@ -1,154 +1,127 @@
-import * as db from './index';
+import { Profile } from './models';
+import { User } from './models';
+import { Op } from 'sequelize';
 
 // Function to insert a new profile into the 'profiles' table
 export const insertProfile = async (organization: string, website: string, tag: string) => {
-  const text = `
-    INSERT INTO
-      profiles(organization, website, tag)
-      VALUES($1, $2, $3)
-      RETURNING *`;
-  const values = [organization, website, tag];
-
-  // Execute the query and return the result
-  return await db.queryDefault(text, [...values]);
+  return await Profile.create({
+    organization,
+    website,
+    tag
+  });
 };
 
 // Function to select a profile from the 'profiles' table by its ID
 export const selectProfileByID = async (id: string) => {
-  const text = `SELECT * from profiles where id = $1;`;
-  const values = [id];
-
-  // Execute the query and return the result
-  return await db.queryDefault(text, values);
+  return await Profile.findOne({
+    where: {
+      id: id
+    }
+  });
 };
 
 // Function to select a profile from the 'profiles' table by its ID
 export const selectProfilesByIdList = async (idList: any) => {
-  const text = `SELECT * FROM profiles WHERE id = ANY($1::uuid[])`;
-  const values = [idList];
-
-  // Execute the query and return the result
-  return await db.queryDefault(text, values);
+  return await Profile.findAll({
+    where: {
+      id: idList
+    }
+  });
 };
 
 // Function to select all of the profiles from the 'profiles' table
 export const selectAllProfiles = async () => {
-  const text = `SELECT id, organization, tag from profiles;`;
-
-  // Execute the query and return the result
-  return await db.queryDefault(text);
+  return await Profile.findAll({
+    attributes: ['id', 'organization', 'tag']
+  });
 };
 
 // Function to select a profile from the 'profiles' table by its tag
 export const selectProfileByTag = async (tag: string) => {
-  const text = `SELECT * from profiles where LOWER(tag) = LOWER($1);`;
-  const values = [tag];
-
-  // Execute the query and return the result
-  return await db.queryDefault(text, values);
+  return await Profile.findOne({
+    where: {
+      tag: tag.toLowerCase()
+    }
+  });
 };
 
 // Function to delete a profile from the 'profiles' table by its ID
 export const deleteProfile = async (profileId: string) => {
-  const sql = `
-    DELETE FROM
-      profiles
-    WHERE
-      id = $1
-    RETURNING *
-  `;
-
-  // Execute the query and return the result
-  return await db.querySingleDefault(sql, [profileId]);
+  return await Profile.destroy({
+    where: {
+      id: profileId
+    },
+    returning: true
+  });
 };
 
 // Function to update a profile in the 'profiles' table by its ID and given arguments
-export const updateProfile = async (profileId: string, ...args: string[]) => {
-  let sql = 'UPDATE profiles SET';
-  const placeholders = [];
-  const COLUMN_NAMES = [
-    'organization',
-    'website',
-    'heroFileId',
-    'logoFileId',
-    'description',
-    'descriptionFileId',
-    'budget'
-  ];
-  let count = 0;
-  let columnCount = 0;
-
-  // Iterate over the provided arguments and create placeholders for each non-null and non-undefined value
-  for (const arg of args) {
-    if (arg !== null && arg !== undefined) {
-      placeholders.push(` ${COLUMN_NAMES[columnCount]} = $${count + 2}`);
-      count++;
+export const updateProfile = async (
+  profileId: string,
+  organization: string,
+  website: string,
+  heroFileId: string,
+  logoFileId: string,
+  description: string,
+  descriptionFileId: string,
+  budget: string
+) => {
+  const updatedProfile = await Profile.update(
+    {
+      organization,
+      website,
+      heroFileId,
+      logoFileId,
+      description,
+      descriptionFileId,
+      budget
+    },
+    {
+      where: {
+        id: profileId
+      },
+      returning: true
     }
-    columnCount++;
-  }
+  );
 
-  // If no arguments are provided, throw an error
-  if (placeholders.length === 0) {
-    throw new Error('No arguments provided to updateProfile');
-  }
-
-  // Complete the SQL query with the placeholders and the given profileId
-  sql += placeholders.join(',');
-  sql += ' WHERE id = $1 RETURNING *';
-  const argList = [profileId, ...args.filter((arg) => arg !== null && arg !== undefined)];
-
-  return await db.queryDefault(sql, argList);
+  return updatedProfile[1][0];
 };
 
 export const isUserAssociatedToProfile = async (uuid: string, profileId: string) => {
-  const sql = `
-    SELECT EXISTS (
-      SELECT 1 
-        FROM users 
-      WHERE id = $1
-        AND profile_id = $2
-    ) as "exists";
-  `;
+  const exists = await User.findOne({
+    where: {
+      id: uuid,
+      profile_id: profileId
+    }
+  });
 
-  const r = await db.queryIdentity(sql, [uuid, profileId]);
-  return !!r.rows[0].exists;
+  return !!exists;
 };
 
 export const searchProfiles = async (offset: number, limit: number, searchTerm: string) => {
-  const whereClauses: string[] = [];
-  const parameters = [];
+  const searchTerms = searchTerm
+    .split('&')
+    .map((term) => term.trim())
+    .filter((term) => term);
 
-  if (searchTerm) {
-    const searchTerms = searchTerm
-      .split('&')
-      .map((term) => term.trim())
-      .filter((term) => term);
+  const whereClauses = searchTerms.map((term) => ({
+    [Op.or]: [
+      { organization: { [Op.iLike]: `%${term}%` } },
+      { website: { [Op.iLike]: `%${term}%` } },
+      { tag: { [Op.iLike]: `%${term}%` } },
+      { description: { [Op.iLike]: `%${term}%` } }
+    ]
+  }));
 
-    searchTerms.forEach((term, index) => {
-      const searchCondition = `
-        (organization ILIKE $${parameters.length + 1}
-        OR website ILIKE $${parameters.length + 1}
-        OR tag ILIKE $${parameters.length + 1}
-        OR description ILIKE $${parameters.length + 1})
-      `;
-      whereClauses.push(searchCondition);
-      parameters.push(`%${term}%`);
-    });
-  }
+  const options = {
+    where: {
+      [Op.and]: whereClauses
+    },
+    order: [['organization', 'ASC']],
+    limit,
+    offset
+  };
 
-  const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' OR ')}` : '';
-
-  const sql = `
-    SELECT * 
-    FROM profiles 
-    ${whereStatement}
-    ORDER BY organization 
-    LIMIT $${parameters.length + 1} 
-    OFFSET $${parameters.length + 2}
-  `;
-
-  parameters.push(limit, offset);
-
-  const result = await db.queryDefault(sql, [...parameters]);
-  return result.rows;
+  const result = await Profile.findAll(options);
+  return result;
 };
