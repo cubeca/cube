@@ -72,14 +72,6 @@ const Video = () => {
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
 
-  // if artist link does not contain http:// or https://, add http://
-  // otherwise a relative link is created
-  const formatUrl = (url: string) => {
-    if (!/^https?:\/\//i.test(url)) {
-      return 'http://' + url;
-    }
-    return url;
-  };
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
     youtubeID = getIDfromURL(linkUrl);
@@ -384,7 +376,7 @@ const Video = () => {
                                   <span key={i}>
                                     {role === 'artist' && contributor.url ? (
                                       <Link
-                                        href={formatUrl(contributor.url)}
+                                        href={contributor.url}
                                         sx={{ color: 'inherit' }}
                                         target="_blank"
                                         rel="noopener noreferrer"
