@@ -214,7 +214,7 @@ User.init(
 );
 
 interface ProfileAttributes {
-  id: string;
+  id?: string;
   organization: string;
   website: string;
   tag: string;
@@ -226,7 +226,7 @@ interface ProfileAttributes {
 }
 
 export class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
-  public declare id: string;
+  public declare id?: string;
   public declare organization: string;
   public declare website: string;
   public declare tag: string;

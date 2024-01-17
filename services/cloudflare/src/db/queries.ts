@@ -101,7 +101,7 @@ export const insertS3FileStub = async (data: S3FileData) => {
     data: data
   });
 
-  return file.toJSON();
+  return file;
 };
 
 export const updateS3FileWithPresignedUrl = async (fileId: string, filePathInBucket: string, presignedUrl: string) => {

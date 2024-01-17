@@ -5,7 +5,7 @@ export const insertIdentity = async (
   email: string,
   profileId: string,
   password: string,
-  permissionIds: string,
+  permissionIds: string[],
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean,
   isOver18: boolean
@@ -16,7 +16,7 @@ export const insertIdentity = async (
       email,
       profile_id: profileId,
       password,
-      permission_ids: [permissionIds],
+      permission_ids: permissionIds,
       is_active: false,
       has_accepted_terms: hasAcceptedTerms,
       has_accepted_newsletter: hasAcceptedNewsletter,

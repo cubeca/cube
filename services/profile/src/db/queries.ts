@@ -1,14 +1,25 @@
 import { Profile } from './models';
 import { User } from './models';
-import { Op } from 'sequelize';
+import { Op, OrderItem } from 'sequelize';
 
 // Function to insert a new profile into the 'profiles' table
 export const insertProfile = async (organization: string, website: string, tag: string) => {
-  return await Profile.create({
-    organization,
-    website,
-    tag
-  });
+  try {
+    const profile = await Profile.create({
+      organization,
+      website,
+      tag,
+      herofileid: '',
+      logofileid: '',
+      description: '',
+      descriptionfileid: '',
+      budget: ''
+    });
+
+    return profile;
+  } catch (error) {
+    throw new Error('Failed to insert profile');
+  }
 };
 
 // Function to select a profile from the 'profiles' table by its ID
@@ -50,8 +61,7 @@ export const deleteProfile = async (profileId: string) => {
   return await Profile.destroy({
     where: {
       id: profileId
-    },
-    returning: true
+    }
   });
 };
 
@@ -70,10 +80,10 @@ export const updateProfile = async (
     {
       organization,
       website,
-      heroFileId,
-      logoFileId,
+      herofileid: heroFileId,
+      logofileid: logoFileId,
       description,
-      descriptionFileId,
+      descriptionfileid: descriptionFileId,
       budget
     },
     {
@@ -117,11 +127,11 @@ export const searchProfiles = async (offset: number, limit: number, searchTerm: 
     where: {
       [Op.and]: whereClauses
     },
-    order: [['organization', 'ASC']],
+    order: [['organization', 'ASC']] as OrderItem[],
     limit,
     offset
   };
 
-  const result = await Profile.findAll(options);
+  const result: Profile[] = await Profile.findAll(options);
   return result;
 };

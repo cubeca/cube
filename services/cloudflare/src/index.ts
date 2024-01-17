@@ -140,8 +140,6 @@ export interface VideoPlayerInfo {
 
 export interface NonVideoPlayerInfo {
   mimeType: string;
-
-  // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
   fileType: string;
   publicUrl: string;
 }
@@ -153,10 +151,12 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
     return res.status(400).send(`Invalid 'fileId' path parameter, must be in UUID format.`);
   }
 
-  const dbFile = await db.getFileById(fileId);
-  if (dbFile === null) {
+  const r = await db.getFileById(fileId);
+  if (r === null) {
     return res.status(404).send('File not found.');
   }
+
+  const dbFile = r?.dataValues;
 
   let playerInfo: VideoPlayerInfo | NonVideoPlayerInfo | undefined = undefined;
 
@@ -178,14 +178,11 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   }
 
   if ('cloudflareR2' === dbFile.storage_type) {
-    // TODO Replace with https://www.npmjs.com/package/file-type
     const mimeType = mime.getType(dbFile.data.filePathInBucket) || 'application/octet-stream';
     const publicUrl = `${settings.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL}/${dbFile.data.filePathInBucket}`;
 
     playerInfo = {
       mimeType,
-
-      // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
       fileType: mime.getExtension(mimeType) || 'bin',
       publicUrl
     };

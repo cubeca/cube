@@ -84,7 +84,7 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
       email,
       profileId,
       encryptedPassword,
-      permissionIds.join(','),
+      permissionIds,
       hasAcceptedNewsletter,
       hasAcceptedTerms,
       isOver18

@@ -11,12 +11,14 @@ export const listContentByProfileId = async (offset: number, limit: number, filt
   try {
     const searchTerm = filters.searchTerm ? filters.searchTerm.split('&') : [];
     const whereClause: any = {
-      profile_id: profileId,
-      ...filters,
       data: {
-        [Op.and]: searchTerm.map((term: string) => ({
-          [Op.like]: `%${term}%`
-        }))
+        [Op.and]: [
+          { profileId: profileId },
+          { ...filters },
+          ...searchTerm.map((term: string) => ({
+            [Op.like]: `%${term}%`
+          }))
+        ]
       }
     };
 
@@ -70,11 +72,13 @@ export const searchContent = async (offset: number, limit: number, filters: any,
 
   const whereClause: any = {
     data: {
-      [Op.or]: searchTerms.map((term: string) => ({
-        [Op.like]: `%${term}%`
-      }))
-    },
-    ...filters
+      [Op.or]: [
+        searchTerms.map((term: string) => ({
+          [Op.like]: `%${term}%`
+        })),
+        { ...filters }
+      ]
+    }
   };
 
   const contentList = await Content.findAll({
