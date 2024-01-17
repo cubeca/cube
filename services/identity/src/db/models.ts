@@ -87,7 +87,7 @@ Content.init(
   {
     sequelize,
     modelName: 'Content',
-    tableName: 'contents'
+    tableName: 'content'
   }
 );
 
@@ -117,7 +117,7 @@ Vtt.init(
   {
     sequelize,
     modelName: 'Vtt',
-    tableName: 'vtts'
+    tableName: 'vtt'
   }
 );
 
