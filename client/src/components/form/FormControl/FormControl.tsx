@@ -39,10 +39,7 @@ const FormControl: FC<FormControlInputProps> = ({
         <FormLabel htmlFor={id}>{label}</FormLabel>
       </Box>
       {children}
-      <FormHelperText
-        id={helperTextId}
-        sx={{ margin: '-10px 0 0', fontSize: 18 }}
-      >
+      <FormHelperText id={helperTextId} sx={{ margin: '0 0 0', fontSize: 18 }}>
         {!!error && helperText}
       </FormHelperText>
     </Box>
