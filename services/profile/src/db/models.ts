@@ -10,11 +10,11 @@ interface FileAttributes {
 }
 
 export class File extends Model<FileAttributes> implements FileAttributes {
-  public id?: string;
-  public storage_type?: string;
-  public created_at?: Date;
-  public updated_at?: Date;
-  public data!: object;
+  public declare id?: string;
+  public declare storage_type?: string;
+  public declare created_at?: Date;
+  public declare updated_at?: Date;
+  public declare data: object;
 }
 
 File.init(
@@ -45,7 +45,9 @@ File.init(
   {
     sequelize,
     modelName: 'File',
-    tableName: 'files'
+    tableName: 'files',
+    paranoid: true,
+    timestamps: false
   }
 );
 
@@ -57,10 +59,10 @@ interface ContentAttributes {
 }
 
 export class Content extends Model<ContentAttributes> implements ContentAttributes {
-  public id?: string;
-  public created_at?: Date;
-  public updated_at?: Date;
-  public data!: object;
+  public declare id?: string;
+  public declare created_at?: Date;
+  public declare updated_at?: Date;
+  public declare data: object;
 }
 
 Content.init(
@@ -87,7 +89,9 @@ Content.init(
   {
     sequelize,
     modelName: 'Content',
-    tableName: 'content'
+    tableName: 'content',
+    timestamps: false,
+    paranoid: true
   }
 );
 
@@ -97,8 +101,8 @@ interface VttAttributes {
 }
 
 export class Vtt extends Model<VttAttributes> implements VttAttributes {
-  public id!: string;
-  public transcript!: object;
+  public declare id: string;
+  public declare transcript: object;
 }
 
 Vtt.init(
@@ -117,7 +121,9 @@ Vtt.init(
   {
     sequelize,
     modelName: 'Vtt',
-    tableName: 'vtt'
+    tableName: 'vtt',
+    paranoid: true,
+    timestamps: false
   }
 );
 
@@ -136,17 +142,17 @@ interface UserAttributes {
 }
 
 export class User extends Model<UserAttributes> implements UserAttributes {
-  public id?: string;
-  public name!: string;
-  public email!: string;
-  public password!: string;
-  public permission_ids!: string[];
-  public is_active!: boolean;
-  public has_verified_email?: boolean;
-  public has_accepted_terms!: boolean;
-  public has_accepted_newsletter!: boolean;
-  public profile_id!: string | null;
-  public is_over_18!: boolean;
+  public declare id?: string;
+  public declare name: string;
+  public declare email: string;
+  public declare password: string;
+  public declare permission_ids: string[];
+  public declare is_active: boolean;
+  public declare has_verified_email?: boolean;
+  public declare has_accepted_terms: boolean;
+  public declare has_accepted_newsletter: boolean;
+  public declare profile_id: string | null;
+  public declare is_over_18: boolean;
 }
 
 User.init(
@@ -201,7 +207,9 @@ User.init(
   {
     sequelize,
     modelName: 'User',
-    tableName: 'users'
+    tableName: 'users',
+    paranoid: true,
+    timestamps: false
   }
 );
 
@@ -218,15 +226,15 @@ interface ProfileAttributes {
 }
 
 export class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
-  public id!: string;
-  public organization!: string;
-  public website!: string;
-  public tag!: string;
-  public herofileid!: string;
-  public logofileid!: string;
-  public description!: string;
-  public descriptionfileid!: string;
-  public budget!: string;
+  public declare id: string;
+  public declare organization: string;
+  public declare website: string;
+  public declare tag: string;
+  public declare herofileid: string;
+  public declare logofileid: string;
+  public declare description: string;
+  public declare descriptionfileid: string;
+  public declare budget: string;
 }
 
 Profile.init(
@@ -275,6 +283,8 @@ Profile.init(
   {
     sequelize,
     modelName: 'Profile',
-    tableName: 'profiles'
+    tableName: 'profiles',
+    paranoid: true,
+    timestamps: false
   }
 );
