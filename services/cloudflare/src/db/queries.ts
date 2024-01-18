@@ -1,65 +1,5 @@
 import { File } from './models';
-
-export enum FileStatus {
-  Stub = 'stub',
-  UploadAuthorized = 'uploadAuthorized'
-}
-
-export interface CommonDebugInfo {
-  urlValidDurationSeconds: number;
-}
-
-export interface CommonUploadInfo {
-  userId: string;
-  fileName: string;
-  fileSizeBytes: number;
-  debug: CommonDebugInfo;
-}
-
-export interface CommonFileData {
-  status?: FileStatus;
-  profileId: string;
-  upload: CommonUploadInfo;
-}
-
-export interface VideoDebugInfo extends CommonDebugInfo {
-  reserveDurationSeconds: number;
-  tusUploadUrl?: string;
-}
-
-export interface VideoUploadInfo extends CommonUploadInfo {
-  debug: VideoDebugInfo;
-}
-
-export interface VideoFileData extends CommonFileData {
-  upload: VideoUploadInfo;
-  cloudflareStreamUid?: string;
-}
-
-export interface S3DebugInfo extends CommonDebugInfo {
-  presignedUrl?: string;
-}
-
-export interface S3UploadInfo extends CommonUploadInfo {
-  mimeType: string;
-  debug: S3DebugInfo;
-}
-
-export interface S3FileData extends CommonFileData {
-  upload: S3UploadInfo;
-  filePathInBucket?: string;
-}
-
-export const insertVideoFileStub = async (data: VideoFileData) => {
-  data.status = FileStatus.Stub;
-
-  const file = await File.create({
-    storage_type: 'cloudflareStream',
-    data: data
-  });
-
-  return file.toJSON();
-};
+import { FileStatus, S3FileData, VideoFileData } from './types';
 
 export const insertVideoFileStubWithForcedFileId = async (fileId: string, data: VideoFileData) => {
   data.status = FileStatus.Stub;
@@ -70,7 +10,7 @@ export const insertVideoFileStubWithForcedFileId = async (fileId: string, data: 
     data: data
   });
 
-  return file.toJSON();
+  return file;
 };
 
 export const updateVideoFileWithCfStreamUid = async (
@@ -78,19 +18,27 @@ export const updateVideoFileWithCfStreamUid = async (
   cloudflareStreamUid: string,
   tusUploadUrl: string
 ) => {
-  try {
-    const file = await File.findOne({ where: { id: fileId } });
-    if (file) {
-      const data = file.data as VideoFileData;
-      data.status = FileStatus.UploadAuthorized;
-      data.upload.debug.tusUploadUrl = tusUploadUrl;
-      data.cloudflareStreamUid = cloudflareStreamUid;
-      await file.save();
+  const updateVideoFileWithCfStreamUid = await File.update(
+    {
+      data: {
+        status: FileStatus.UploadAuthorized,
+        cloudflareStreamUid: cloudflareStreamUid,
+        upload: {
+          debug: {
+            tusUploadUrl: tusUploadUrl
+          }
+        }
+      }
+    },
+    {
+      where: {
+        id: fileId
+      },
+      returning: true
     }
-  } catch (error) {
-    console.error('Error updating video file with Cloudflare Stream UID:', error);
-    throw error;
-  }
+  );
+
+  return updateVideoFileWithCfStreamUid[1][0];
 };
 
 export const insertS3FileStub = async (data: S3FileData) => {
@@ -105,19 +53,23 @@ export const insertS3FileStub = async (data: S3FileData) => {
 };
 
 export const updateS3FileWithPresignedUrl = async (fileId: string, filePathInBucket: string, presignedUrl: string) => {
-  try {
-    const file = await File.findOne({ where: { id: fileId } });
-    if (file) {
-      const data = file.data as S3FileData;
-      data.status = FileStatus.UploadAuthorized;
-      data.upload.debug.presignedUrl = presignedUrl;
-      data.filePathInBucket = filePathInBucket;
-      await file.save();
+  const updateS3FileWithPresignedUrl = await File.update(
+    {
+      data: {
+        status: FileStatus.UploadAuthorized,
+        filePathInBucket: filePathInBucket,
+        presignedUrl: presignedUrl
+      }
+    },
+    {
+      where: {
+        id: fileId
+      },
+      returning: true
     }
-  } catch (error) {
-    console.error('Error updating S3 file with presigned URL:', error);
-    throw error;
-  }
+  );
+
+  return updateS3FileWithPresignedUrl[1][0];
 };
 
 export const getFileById = async (fileId: string) => {
