@@ -73,10 +73,5 @@ export const updateS3FileWithPresignedUrl = async (fileId: string, filePathInBuc
 };
 
 export const getFileById = async (fileId: string) => {
-  try {
-    return await File.findOne({ where: { id: fileId } });
-  } catch (error) {
-    console.error('Error retrieving file by id:', error);
-    throw error;
-  }
+  return await File.findOne({ where: { id: fileId } });
 };

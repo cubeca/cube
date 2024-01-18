@@ -31,13 +31,21 @@ export const selectProfileByID = async (id: string) => {
   });
 };
 
-// Function to select a profile from the 'profiles' table by its ID
-export const selectProfilesByIdList = async (idList: any) => {
-  return await Profile.findAll({
-    where: {
-      id: idList
-    }
-  });
+// Function to select profiles from the 'profiles' table by their IDs
+export const selectProfilesByIdList = async (idList: string[]) => {
+  try {
+    const r = await Profile.findAll({
+      where: {
+        id: {
+          [Op.in]: idList
+        }
+      }
+    });
+  } catch (e) {
+    console.log('dpnt');
+  }
+
+  return r;
 };
 
 // Function to select all of the profiles from the 'profiles' table
@@ -125,7 +133,7 @@ export const searchProfiles = async (offset: number, limit: number, searchTerm: 
 
   const options = {
     where: {
-      [Op.and]: whereClauses
+      [Op.or]: whereClauses
     },
     order: [['organization', 'ASC']] as OrderItem[],
     limit,

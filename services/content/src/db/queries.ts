@@ -1,37 +1,10 @@
 import { Content } from './models';
 import { Vtt } from './models';
 import { User } from './models';
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 
 export const getContentById = async (contentId: string) => {
   return await Content.findOne({ where: { id: contentId } });
-};
-
-export const listContentByProfileId = async (offset: number, limit: number, filters: any, profileId?: string) => {
-  try {
-    const searchTerm = filters.searchTerm ? filters.searchTerm.split('&') : [];
-    const whereClause: any = {
-      data: {
-        [Op.and]: [
-          { profileId: profileId },
-          { ...filters },
-          ...searchTerm.map((term: string) => ({
-            [Op.like]: `%${term}%`
-          }))
-        ]
-      }
-    };
-
-    const contentList = await Content.findAll({
-      where: whereClause,
-      offset,
-      limit
-    });
-
-    return contentList;
-  } catch (error) {
-    throw new Error('Failed to list content');
-  }
 };
 
 export const insertContent = async (data: any) => {
@@ -39,15 +12,8 @@ export const insertContent = async (data: any) => {
 };
 
 export const updateContent = async (data: any, contentId: string) => {
-  const content = await Content.findOne({ where: { id: contentId } });
-  if (!content) {
-    throw new Error('Content not found');
-  }
-
-  content.data = data;
-  await content.save();
-
-  return content;
+  const updatedContent = await Content.update({ data }, { where: { id: contentId }, returning: true });
+  return updatedContent[1][0];
 };
 
 export const deleteContent = async (contentId: string) => {
@@ -71,14 +37,95 @@ export const searchContent = async (offset: number, limit: number, filters: any,
     .filter((term) => term);
 
   const whereClause: any = {
-    data: {
-      [Op.or]: [
-        searchTerms.map((term: string) => ({
-          [Op.like]: `%${term}%`
-        })),
-        { ...filters }
-      ]
-    }
+    [Op.and]: [
+      {
+        [Op.and]: [
+          ...searchTerms.map((term: string) => ({
+            data: {
+              [Op.or]: [
+                { title: { [Op.iLike]: `%${term}%` } },
+                { type: { [Op.iLike]: `%${term}%` } },
+                { tags: { [Op.contains]: JSON.stringify(term) } },
+                { description: { [Op.iLike]: `%${term}%` } },
+                { coverImageText: { [Op.iLike]: `%${term}%` } },
+                {
+                  contributors: {
+                    artist: {
+                      name: { [Op.iLike]: `%${term}%` }
+                    }
+                  }
+                }
+              ]
+            }
+          })),
+          ...(filters.category
+            ? [
+                {
+                  'data.category': {
+                    [Op.contains]: JSON.stringify(filters.category)
+                  }
+                }
+              ]
+            : []),
+          ...(filters.profileId
+            ? [
+                {
+                  'data.profileId': {
+                    [Op.eq]: filters.profileId
+                  }
+                }
+              ]
+            : [])
+        ]
+      }
+    ]
+  };
+
+  const contentList = await Content.findAll({
+    where: whereClause,
+    offset,
+    limit
+  });
+
+  return contentList;
+};
+
+export const listContentByProfileId = async (offset: number, limit: number, filters: any, profileId?: string) => {
+  const whereClause: any = {
+    [Op.and]: [
+      {
+        [Op.or]: [
+          profileId
+            ? [
+                {
+                  'data.profileId': {
+                    [Op.eq]: profileId
+                  }
+                }
+              ]
+            : [],
+          ...(filters.category
+            ? [
+                {
+                  'data.category': {
+                    [Op.contains]: JSON.stringify(filters.category)
+                  }
+                }
+              ]
+            : []),
+
+          ...(filters.tags
+            ? [
+                {
+                  'data.tags': {
+                    [Op.contains]: JSON.stringify(filters.tags)
+                  }
+                }
+              ]
+            : [])
+        ]
+      }
+    ]
   };
 
   const contentList = await Content.findAll({
