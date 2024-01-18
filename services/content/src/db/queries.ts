@@ -1,3 +1,4 @@
+import { sequelize } from './connection';
 import { Content } from './models';
 import { Vtt } from './models';
 import { User } from './models';
@@ -62,7 +63,9 @@ export const searchContent = async (offset: number, limit: number, filters: any,
             ? [
                 {
                   'data.category': {
-                    [Op.contains]: JSON.stringify(filters.category)
+                    [Op.contains]: {
+                      [Op.iLike]: `%${filters.category}%`
+                    }
                   }
                 }
               ]
