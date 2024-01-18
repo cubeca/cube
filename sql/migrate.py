@@ -84,6 +84,7 @@ class User(base):
     has_accepted_terms = db.Column(db.Boolean)
     has_accepted_newsletter = db.Column(db.Boolean)
     profile_id = db.Column(db.String)    
+    is_over_18 = db.Column(db.Boolean)
 
     def to_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}

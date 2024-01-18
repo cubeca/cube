@@ -37,6 +37,7 @@ CREATE TABLE public.users (
     has_accepted_terms BOOL NULL DEFAULT false,
     has_accepted_newsletter BOOL NULL DEFAULT false,
     profile_id VARCHAR NULL,
+    is_over_18 BOOL NULL DEFAULT false,
     CONSTRAINT users_email_key UNIQUE (email),
     CONSTRAINT users_pkey PRIMARY KEY (id)
 );
