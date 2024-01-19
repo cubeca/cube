@@ -11,11 +11,11 @@ import useDebounce from '../../../../hooks/useDebounce';
 import { useTranslation } from 'react-i18next';
 
 const CategorizedContent = () => {
-  const [searchTerm, setSearchTerm] = useState('profileId');
+  const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState();
   const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const debouncedSearchTerm = useDebounce(searchTerm, 1000, 'profileId');
+  const debouncedSearchTerm = useDebounce(searchTerm, 1000, '');
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
   const [offset, setOffset] = useState<number>(0);
