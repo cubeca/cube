@@ -218,7 +218,7 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
     const profile = await getProfileData(profileId, filteredAuthHeader);
     res.status(200).json({ data: profile });
   } catch (error) {
-    res.status(500).json('Unable to retrieve profile details' + error);
+    res.status(500).json('Unable to retrieve profile details');
   }
 });
 
