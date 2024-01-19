@@ -1,4 +1,3 @@
-import { sequelize } from './connection';
 import { Content } from './models';
 import { Vtt } from './models';
 import { User } from './models';
@@ -46,14 +45,12 @@ export const searchContent = async (offset: number, limit: number, filters: any,
               [Op.or]: [
                 { title: { [Op.iLike]: `%${term}%` } },
                 { type: { [Op.iLike]: `%${term}%` } },
-                { tags: { [Op.contains]: JSON.stringify(term) } },
+                { tags: { [Op.iLike]: `%${term}%` } },
                 { description: { [Op.iLike]: `%${term}%` } },
                 { coverImageText: { [Op.iLike]: `%${term}%` } },
                 {
                   contributors: {
-                    artist: {
-                      name: { [Op.iLike]: `%${term}%` }
-                    }
+                    [Op.iLike]: `%${term}%`
                   }
                 }
               ]
@@ -63,9 +60,7 @@ export const searchContent = async (offset: number, limit: number, filters: any,
             ? [
                 {
                   'data.category': {
-                    [Op.contains]: {
-                      [Op.iLike]: `%${filters.category}%`
-                    }
+                    [Op.iLike]: `%${filters.category}%`
                   }
                 }
               ]

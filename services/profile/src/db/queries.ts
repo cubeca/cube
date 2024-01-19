@@ -33,17 +33,13 @@ export const selectProfileByID = async (id: string) => {
 
 // Function to select profiles from the 'profiles' table by their IDs
 export const selectProfilesByIdList = async (idList: string[]) => {
-  try {
-    const r = await Profile.findAll({
-      where: {
-        id: {
-          [Op.in]: idList
-        }
+  const r = await Profile.findAll({
+    where: {
+      id: {
+        [Op.in]: idList
       }
-    });
-  } catch (e) {
-    console.log('dpnt');
-  }
+    }
+  });
 
   return r;
 };
