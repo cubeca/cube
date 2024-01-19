@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   try {
     const r = await db.selectAllProfiles();
-    res.status(200).json(r.rows);
+    res.status(200).json(r);
   } catch (e: any) {
     console.error('Error return all profiles', e);
     res.status(404).send('Error return all profiles');
@@ -35,8 +35,7 @@ app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, 
   // Insert the new profile and return its ID
   try {
     const r = await db.insertProfile(organization, website, tag);
-    const profile = r.rows[0];
-    res.status(201).json({ id: profile.id });
+    res.status(201).json({ id: r.id });
   } catch (e: any) {
     if (e.message.indexOf('duplicate key') !== -1) {
       console.error('Organization with provided details already exists', e);
@@ -74,20 +73,21 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
   }
 
   // Store the values for each field to be updated
-  const args = [
-    req.body.organization as string,
-    req.body.website as string,
-    req.body.heroFileId as string,
-    req.body.logoFileId as string,
-    req.body.description as string,
-    req.body.descriptionFileId as string,
-    req.body.budget as string
-  ];
+  const { organization, website, heroFileId, logoFileId, description, descriptionFileId, budget } = req.body;
 
   // Update the profile and return the updated profile
   try {
-    const dbResult = await db.updateProfile(profileId, ...args);
-    res.status(200).json(dbResult.rows[0]);
+    const dbResult = await db.updateProfile(
+      profileId,
+      organization as string,
+      website as string,
+      heroFileId as string,
+      logoFileId as string,
+      description as string,
+      descriptionFileId as string,
+      budget as string
+    );
+    res.status(200).json(dbResult);
   } catch (error) {
     console.error('Error updating profile', error);
     res.status(500).json(error);
@@ -107,14 +107,13 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
   // Fetch the profile and return its details
   try {
     const r = await db.selectProfileByID(profileId);
-    const profile = r.rows[0];
 
-    if (!profile) {
+    if (!r) {
       res.status(404).send('Profile Id not found');
       return;
     }
 
-    res.status(200).json({ ...profile });
+    res.status(200).json({ ...r?.dataValues });
   } catch (e: any) {
     console.error('Profile does not exist', e);
     res.status(404).send('Profile does not exist');
@@ -133,13 +132,12 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
   // Fetch the profile and return its details
   try {
     const r = await db.selectProfileByTag(tag);
-    const profile = r.rows[0];
 
-    if (!profile) {
+    if (!r) {
       return res.status(404).send('Profile tag not found');
     }
 
-    res.status(200).json({ ...profile });
+    res.status(200).json({ ...r?.dataValues });
   } catch (e: any) {
     console.error('Profile does not exists', e);
     res.status(404).send('Profile does not exist');
@@ -159,14 +157,13 @@ app.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req
   // Fetch the profile and return its details
   try {
     const r = await db.selectProfilesByIdList(profileIdList);
-    const profiles = r.rows;
 
-    if (!profiles) {
+    if (!r) {
       res.status(404).send('No profiles found');
       return;
     }
 
-    res.status(200).json(profiles);
+    res.status(200).json(r);
   } catch (e: any) {
     console.error('Error retrieving profile list', e);
     res.status(404).send('Error retrieving profile list');
@@ -201,8 +198,8 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
 // Route for deleting a profile by its ID
 app.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
-  const r = await db.deleteProfile(req.params.profileId);
-  res.status(200).json({ ...r });
+  await db.deleteProfile(req.params.profileId);
+  res.status(200);
 });
 
 // Route for checking if the service is running
