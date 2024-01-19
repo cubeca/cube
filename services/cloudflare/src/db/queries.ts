@@ -1,12 +1,12 @@
 import { File } from './models';
-import { FileStatus, S3FileData, VideoFileData } from './types';
+import { FileStatus, S3FileData, VideoFileData, StorageType } from './types';
 
 export const insertVideoFileStubWithForcedFileId = async (fileId: string, data: VideoFileData) => {
   data.status = FileStatus.Stub;
 
   const file = await File.create({
     id: fileId,
-    storage_type: 'cloudflareStream',
+    storage_type: StorageType.CloudflareStream,
     data: data
   });
 
@@ -45,7 +45,7 @@ export const insertS3FileStub = async (data: S3FileData) => {
   data.status = FileStatus.Stub;
 
   const file = await File.create({
-    storage_type: 'cloudflareR2',
+    storage_type: StorageType.CloudflareR2,
     data: data
   });
 

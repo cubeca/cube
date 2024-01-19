@@ -3,6 +3,11 @@ export enum FileStatus {
   UploadAuthorized = 'uploadAuthorized'
 }
 
+export enum StorageType {
+  CloudflareStream = 'cloudflareStream',
+  CloudflareR2 = 'cloudflareR2'
+}
+
 export interface CommonDebugInfo {
   urlValidDurationSeconds: number;
 }
