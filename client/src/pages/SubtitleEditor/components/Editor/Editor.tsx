@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Grid from '@mui/system/Unstable_Grid/Grid';
 import { getAuthToken } from '../../../../utils/auth';
 import Lottie from 'lottie-react';
@@ -12,7 +12,6 @@ import * as s from './Editor.styled';
 
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import { Label } from 'components/layout/Header/components/Profile/Profile.styled';
 
 const Editor = (props: { contentId: any; postUpload: any }) => {
   const { contentId, postUpload } = props;
@@ -46,12 +45,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
             })
             .then((res) => {
               if (res.status === 200 && res.data !== null) {
-                const vttArray = [];
-                for (const key in res.data.transcript) {
-                  vttArray.push({ itemKey: key, ...res.data.transcript[key] });
-                }
-                vttArray.sort((a, b) => a.start - b.start);
-                setVTT(vttArray);
+                setVTT(res.data.transcript);
                 clearInterval(interval);
                 setLoaded(true);
               }
@@ -67,18 +61,10 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
   const handleSave = async () => {
     setSaveLoading(true);
     const authToken = await getAuthToken();
-    const vttObject: any = {};
-    vtt.forEach((row: any) => {
-      vttObject[row.start] = {
-        start: row.start,
-        end: row.end,
-        text: row.text
-      };
-    });
-    await axios.put(
+    const response = await axios.put(
       `${BFF_URL}/vtt/${contentId}`,
       {
-        transcript: vttObject
+        transcript: vtt
       },
       {
         headers: {
@@ -87,8 +73,10 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       }
     );
     setSaveLoading(false);
-    const profile = getProfile();
-    navigate(`/profile/${profile.tag}`);
+    if (postUpload) {
+      const profile = getProfile();
+      navigate(`/profile/${profile.tag}`);
+    }
   };
 
   const timeToSeconds = (time: string) => {
@@ -96,12 +84,12 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       const timeArray = time.split(':');
       if (timeArray.length === 2) {
         const minutes = parseInt(timeArray[0]);
-        const seconds = parseFloat(timeArray[1]);
+        const seconds = parseInt(timeArray[1]);
         return minutes * 60 + seconds;
       } else if (timeArray.length === 3) {
         const hours = parseInt(timeArray[0]);
         const minutes = parseInt(timeArray[1]);
-        const seconds = parseFloat(timeArray[2]);
+        const seconds = parseInt(timeArray[2]);
         return hours * 3600 + minutes * 60 + seconds;
       }
     } catch (e) {
@@ -128,9 +116,9 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       minutesString = `${minutes}`;
     }
     if (seconds < 10) {
-      secondsString = `0${seconds.toFixed(3)}`;
+      secondsString = `0${seconds}`;
     } else {
-      secondsString = `${seconds.toFixed(3)}`;
+      secondsString = `${seconds}`;
     }
 
     if (hours > 0) {
@@ -140,13 +128,13 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
   };
 
   const handleVTTChange = (
-    index: number,
+    key: string,
     start: string,
     end: string,
-    text: string,
-    editActive: boolean
+    text: string
   ) => {
-    const newVTT = [...vtt];
+    const newVTT = { ...vtt };
+    delete newVTT[key];
     let startSeconds;
     let endSeconds;
     try {
@@ -156,151 +144,107 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       console.log(error);
       return;
     }
-    //delete changed index
-    console.log({ index });
-    newVTT.splice(index, 1);
-    newVTT.push({
-      start: startSeconds,
-      end: endSeconds,
-      text,
-      editActive
-    });
-    newVTT.sort((a, b) => a.start - b.start);
+    newVTT[key] = { start: startSeconds, end: endSeconds, text };
 
+    //validate
     const errors: any = {};
-    newVTT.forEach((row: any, rowIndex: number) => {
-      const start = parseFloat(row.start);
-      const end = parseFloat(row.end);
-      if (start > end) {
-        errors[rowIndex] = {
+    for (const key in newVTT) {
+      //check if start is before end
+      const row = newVTT[key];
+      if (row.start > row.end) {
+        errors[key] = {
           message: 'Start time must be before end time',
           type: 'time'
         };
+        continue;
       }
-      if (row.text === '') {
-        errors[rowIndex] = {
-          message: 'Text cannot be empty',
-          type: 'text'
-        };
-      }
-      //Validate that there is no overlap
-      if (rowIndex > 0) {
-        const previousRow = newVTT[rowIndex - 1];
-        const previousEnd = parseFloat(previousRow.end);
-        if (start < previousEnd) {
-          errors[rowIndex] = {
-            message: 'Start time cannot overlap previous end time',
-            type: 'time'
-          };
+      //overlapping times
+      const messsage = 'Start times and end times must not overlap';
+      for (const key2 in newVTT) {
+        const item2 = newVTT[key2];
+        if (row.start < item2.end && row.end > item2.start) {
+          if (key !== key2) {
+            errors[key] = { messsage, type: 'time' };
+            errors[key2] = { messsage, type: 'time' };
+          }
         }
       }
-    });
+    }
     console.log({ errors });
     setValidationErrors(errors);
     setVTT(newVTT);
   };
 
-  const errorBool = (index: number, type: string) => {
-    if (validationErrors[index] && validationErrors[index].type === type) {
+  const errorBool = (key: string, type: string) => {
+    if (validationErrors[key] && validationErrors[key].type === type) {
       return true;
     }
     return false;
   };
-  const errorMessage = (index: number) => {
-    if (validationErrors[index]) {
-      return validationErrors[index].message;
+  const errorMessage = (key: string) => {
+    if (validationErrors[key]) {
+      return validationErrors[key].message;
     }
     return null;
   };
 
-  const VTTRow = (props: any) => {
-    const {
-      start: startInput,
-      end: endInput,
-      text: textInput,
-      index,
-      editActive
-    } = props;
-    const [start, setStart] = useState<string>(secondsToTime(startInput));
-    const [end, setEnd] = useState<string>(secondsToTime(endInput));
-    const [text, setText] = useState<string>(textInput);
-
-    return (
-      <Grid container columnSpacing={1} key={index} alignItems="center">
-        {errorMessage(index) ? (
-          <Grid xs={12}>
-            <Typography color="error">{errorMessage(index)}</Typography>
-          </Grid>
-        ) : null}
-        <Grid xs={2}>
-          {editActive ? (
+  const vttDisplay = (vtt: any) => {
+    const vttArray = [];
+    for (const key in vtt) {
+      vttArray.push({ key, ...vtt[key] });
+    }
+    vttArray.sort((a, b) => a.start - b.start);
+    const response = vttArray.map((item) => {
+      const key = item.key;
+      return (
+        <Grid container columnSpacing={1} key={key}>
+          {errorMessage(key) ? (
+            <Grid xs={12}>
+              <Typography color="error">{errorMessage(key)}</Typography>
+            </Grid>
+          ) : null}
+          <Grid xs={1.25}>
             <TextField
               label="Start"
-              defaultValue={start}
+              defaultValue={secondsToTime(item.start)}
               fullWidth
-              error={errorBool(index, 'time')}
-              onChange={(e) => setStart(e.target.value)}
+              error={errorBool(key, 'time')}
+              onBlur={(e) =>
+                handleVTTChange(key, e.target.value, item.end, item.text)
+              }
             />
-          ) : (
-            <s.StyledText variant="outlined">{start}</s.StyledText>
-          )}
-        </Grid>
-
-        <Grid xs={2}>
-          {editActive ? (
+          </Grid>
+          <Grid xs={1.25}>
             <TextField
               label="End"
-              defaultValue={end}
+              defaultValue={secondsToTime(item.end)}
               fullWidth
-              error={errorBool(index, 'time')}
-              onChange={(e) => setEnd(e.target.value)}
+              error={errorBool(key, 'time')}
+              onBlur={(e) =>
+                handleVTTChange(key, item.start, e.target.value, item.text)
+              }
             />
-          ) : (
-            <s.StyledText variant="outlined">{end}</s.StyledText>
-          )}
-        </Grid>
-
-        <Grid xs={7}>
-          {editActive ? (
+          </Grid>
+          <Grid xs={9.5}>
             <TextField
               label="Content"
-              defaultValue={text}
-              error={errorBool(index, 'text')}
+              defaultValue={item.text}
+              error={errorBool(key, 'text')}
               fullWidth
-              onChange={(e) => setText(e.target.value)}
+              onBlur={(e) =>
+                handleVTTChange(key, item.start, item.end, e.target.value)
+              }
             />
-          ) : (
-            <s.StyledText variant="outlined">{text}</s.StyledText>
-          )}
+          </Grid>
         </Grid>
-        {editActive ? (
-          <Grid xs={1}>
-            <s.StyledButtonEdit
-              variant="outlined"
-              t="Save"
-              onClick={() => handleVTTChange(index, start, end, text, false)}
-            >
-              Save
-            </s.StyledButtonEdit>
-          </Grid>
-        ) : (
-          <Grid xs={1}>
-            <s.StyledButtonDisplay
-              variant="outlined"
-              t="Edit"
-              onClick={() => handleVTTChange(index, start, end, text, true)}
-            >
-              Edit
-            </s.StyledButtonDisplay>
-          </Grid>
-        )}
-      </Grid>
-    );
+      );
+    });
+    return <>{response}</>;
   };
 
   return (
     <Grid container>
-      <Grid xs={12} xsOffset={0} md={8} mdOffset={2}>
+      <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
         <Typography variant="h2">{t('Subtitle Editor')}</Typography>
         {/* //Error loading */}
         {loadError ? (
@@ -335,26 +279,19 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         {/* //Loaded and no errors */}
         {loaded && loadError === false ? (
           <>
-            {vtt.map((item: any, index: number) => (
-              <VTTRow
-                start={item.start}
-                end={item.end}
-                text={item.text}
-                index={index}
-                key={index}
-                editActive={item.editActive}
-              />
-            ))}
-            <s.StyledButtonEdit
+            {vttDisplay(vtt)}
+            <s.StyledButton
               variant="outlined"
               t="Save"
               disabled={
-                saveLoading || Object.values(validationErrors).length > 0
+                saveLoading ||
+                Object.keys(vtt).length === 0 ||
+                Object.values(validationErrors).length > 0
               }
               onClick={handleSave}
             >
               Save
-            </s.StyledButtonEdit>
+            </s.StyledButton>
           </>
         ) : null}
       </Grid>

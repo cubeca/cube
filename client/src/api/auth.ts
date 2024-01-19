@@ -16,17 +16,15 @@ export const anonymousJWT = async () => {
 };
 
 export const login = async (email: string, password: string) => {
+  removeAuthToken();
   const {
     data: { jwt, user }
   } = await authApi.login({
     email,
     password
   });
-
-  removeAuthToken();
   setAuthToken(jwt);
   if ((user as any).profile_id) setProfileId((user as any).profile_id);
-
   return user;
 };
 
@@ -63,7 +61,7 @@ export const updatePassword = async ({
 };
 
 export const forgotPassword = async (email: string) => {
-  const anonToken = await getAuthToken();
+  const anonToken = await anonymousJWT();
   return await authApi.forgotPassword(
     { email },
     { headers: { Authorization: `Bearer ${anonToken}` } }
