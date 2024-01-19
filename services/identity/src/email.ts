@@ -67,21 +67,22 @@ export const sendPasswordChangeConfirmation = async (uuid: string) => {
     email: 'donotreply@cubecommons.ca'
   };
 
-  const r = await db.selectUserByID(uuid);
-  const user = r.rows[0];
+  const user = await db.selectUserByID(uuid);
 
-  sendSmtpEmail.to = [{ name: user.name, email: user.email }];
-  sendSmtpEmail.templateId = brevoTemplateIdMapping.PASSWORD_CHANGE_CONFIRMATION;
-  sendSmtpEmail.params = {
-    NAME: `${user.name}`
-  };
+  if (user) {
+    sendSmtpEmail.to = [{ name: user.name, email: user.email }];
+    sendSmtpEmail.templateId = brevoTemplateIdMapping.PASSWORD_CHANGE_CONFIRMATION;
+    sendSmtpEmail.params = {
+      NAME: `${user.name}`
+    };
 
-  try {
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log('Email sent successfully to: ' + user.email);
-  } catch (error) {
-    console.error('Error sending password change confirmation email:', error);
-    throw new Error('Error sending password change confirmation email');
+    try {
+      await apiInstance.sendTransacEmail(sendSmtpEmail);
+      console.log('Email sent successfully to: ' + user.email);
+    } catch (error) {
+      console.error('Error sending password change confirmation email:', error);
+      throw new Error('Error sending password change confirmation email');
+    }
   }
 };
 
@@ -94,46 +95,47 @@ export const sendPasswordResetEmail = async (email: string) => {
     throw new Error('Invalid parameters');
   }
 
-  const r = await db.selectUserByEmail(email);
-  const user = r.rows[0];
+  const user = await db.selectUserByEmail(email);
 
-  const encoder = new UuidEncoder('base36');
-  const encodedUuid = encoder.encode(user.id);
+  if (user) {
+    const encoder = new UuidEncoder('base36');
+    const encodedUuid = encoder.encode(user.id);
 
-  const token = jwt.sign(
-    {
-      iss: 'CUBE',
-      sub: encodedUuid,
-      aud: ['password-reset']
-    },
-    settings.JWT_TOKEN_SECRET,
-    { expiresIn: '4h' }
-  );
+    const token = jwt.sign(
+      {
+        iss: 'CUBE',
+        sub: encodedUuid,
+        aud: ['password-reset']
+      },
+      settings.JWT_TOKEN_SECRET,
+      { expiresIn: '4h' }
+    );
 
-  const defaultClient = Brevo.ApiClient.instance;
-  const apiKey = defaultClient.authentications['api-key'];
-  apiKey.apiKey = process.env.BREVO_API_KEY;
+    const defaultClient = Brevo.ApiClient.instance;
+    const apiKey = defaultClient.authentications['api-key'];
+    apiKey.apiKey = process.env.BREVO_API_KEY;
 
-  const apiInstance = new Brevo.TransactionalEmailsApi();
-  const sendSmtpEmail = new Brevo.SendSmtpEmail();
-  sendSmtpEmail.sender = {
-    name: 'CubeCommons Password Reset',
-    email: 'donotreply@cubecommons.ca'
-  };
+    const apiInstance = new Brevo.TransactionalEmailsApi();
+    const sendSmtpEmail = new Brevo.SendSmtpEmail();
+    sendSmtpEmail.sender = {
+      name: 'CubeCommons Password Reset',
+      email: 'donotreply@cubecommons.ca'
+    };
 
-  sendSmtpEmail.to = [{ name: user.name, email: user.email }];
-  sendSmtpEmail.templateId = brevoTemplateIdMapping.PASSWORD_RESET_EMAIL;
-  sendSmtpEmail.params = {
-    NAME: `${user.name}`,
-    PASSWORD_CHANGE_URL: `${process.env.HOST}/reset-password/${token}`
-  };
+    sendSmtpEmail.to = [{ name: user.name, email: user.email }];
+    sendSmtpEmail.templateId = brevoTemplateIdMapping.PASSWORD_RESET_EMAIL;
+    sendSmtpEmail.params = {
+      NAME: `${user.name}`,
+      PASSWORD_CHANGE_URL: `${process.env.HOST}/reset-password/${token}`
+    };
 
-  try {
-    await apiInstance.sendTransacEmail(sendSmtpEmail);
-    console.log('Email sent successfully to: ' + email);
-  } catch (error) {
-    console.error('Error sending password change email:', error);
-    throw new Error('Error sending password change email');
+    try {
+      await apiInstance.sendTransacEmail(sendSmtpEmail);
+      console.log('Email sent successfully to: ' + email);
+    } catch (error) {
+      console.error('Error sending password change email:', error);
+      throw new Error('Error sending password change email');
+    }
   }
 };
 

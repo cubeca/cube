@@ -49,7 +49,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   try {
     const { uuid: userId } = extractUser(req);
 
-    const dbFileStub = await db.insertVideoFileStubWithForcedFileId(fileId, {
+    const r = await db.insertVideoFileStubWithForcedFileId(fileId, {
       profileId,
       upload: {
         userId,
@@ -62,6 +62,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
       }
     });
 
+    const dbFileStub = r?.dataValues;
     if (fileId != dbFileStub.id) {
       return res.status(500).send('Error creating the DB entry for this file');
     }
@@ -106,7 +107,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
   try {
     const { uuid: userId } = extractUser(req);
 
-    const dbFileStub = await db.insertS3FileStub({
+    const r = await db.insertS3FileStub({
       profileId,
       upload: {
         userId,
@@ -119,6 +120,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
       }
     });
 
+    const dbFileStub = r?.dataValues;
     const fileId = dbFileStub.id;
     const filePathInBucket = `${fileId}/${fileName}`;
     const presignedUrl = await getPresignedUploadUrl(filePathInBucket, mimeType, urlValidDurationSeconds);
@@ -140,8 +142,6 @@ export interface VideoPlayerInfo {
 
 export interface NonVideoPlayerInfo {
   mimeType: string;
-
-  // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
   fileType: string;
   publicUrl: string;
 }
@@ -153,13 +153,14 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
     return res.status(400).send(`Invalid 'fileId' path parameter, must be in UUID format.`);
   }
 
-  const dbFile = await db.getFileById(fileId);
-  if (dbFile === null) {
+  const r = await db.getFileById(fileId);
+  if (r === null) {
     return res.status(404).send('File not found.');
   }
 
   let playerInfo: VideoPlayerInfo | NonVideoPlayerInfo | undefined = undefined;
 
+  const dbFile = r?.dataValues;
   if ('cloudflareStream' === dbFile.storage_type) {
     const videoDetails = await stream.getVideoDetails(dbFile.data.cloudflareStreamUid);
     if (!videoDetails) {
@@ -178,14 +179,11 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   }
 
   if ('cloudflareR2' === dbFile.storage_type) {
-    // TODO Replace with https://www.npmjs.com/package/file-type
     const mimeType = mime.getType(dbFile.data.filePathInBucket) || 'application/octet-stream';
     const publicUrl = `${settings.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL}/${dbFile.data.filePathInBucket}`;
 
     playerInfo = {
       mimeType,
-
-      // TODO Improve mapping to supported FE "player" widgets, i.e. group mime/file types into `playerType`
       fileType: mime.getExtension(mimeType) || 'bin',
       publicUrl
     };
