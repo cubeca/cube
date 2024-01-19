@@ -89,7 +89,7 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
         }
       }
 
-      if (item.collaborators !== null && item.collaborators.length > 0) {
+      if (item.collaborators) {
         const collaboratorInfo = await fetchCollaboratorInfo(item.collaborators);
         newItem.collaboratorDetails = collaboratorInfo;
         delete newItem.collaborators;
@@ -110,30 +110,28 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
 
     for (let i = 0; i < collaborators.length; i++) {
       const collaboratorId = collaborators[i];
-      if (collaboratorId !== '' && collaboratorId !== null) {
-        try {
-          const getCollaboratorInfoResponse = await profileApi.post(
-            'getProfilesByIdList',
-            { profileIdList: [collaboratorId] },
-            { headers: authHeader }
-          );
+      try {
+        const getCollaboratorInfoResponse = await profileApi.post(
+          'getProfilesByIdList',
+          { profileIdList: [collaboratorId] },
+          { headers: authHeader }
+        );
 
-          const { organization, logofileid, tag } = getCollaboratorInfoResponse.data[0];
+        const { organization, logofileid, tag } = getCollaboratorInfoResponse.data[0];
 
-          let logoUrl = null;
-          if (logofileid) {
-            try {
-              const fileResponse = await getFileFromCloudflare(logofileid);
-              logoUrl = fileResponse.playerInfo?.publicUrl;
-            } catch (fileError) {
-              console.error(`Failed to fetch file from Cloudflare for collaborator ${collaboratorId}:`, fileError);
-            }
+        let logoUrl = null;
+        if (logofileid) {
+          try {
+            const fileResponse = await getFileFromCloudflare(logofileid);
+            logoUrl = fileResponse.playerInfo?.publicUrl;
+          } catch (fileError) {
+            console.error(`Failed to fetch file from Cloudflare for collaborator ${collaboratorId}:`, fileError);
           }
-
-          collaboratorInfoList.push({ organization, logoUrl, tag });
-        } catch (error) {
-          console.error(`Failed to fetch info for collaborator ${collaboratorId}:`, error);
         }
+
+        collaboratorInfoList.push({ organization, logoUrl, tag });
+      } catch (error) {
+        console.error(`Failed to fetch info for collaborator ${collaboratorId}:`, error);
       }
     }
 

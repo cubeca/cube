@@ -151,73 +151,11 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
       const mp3Size = Math.round((mp3Stats.size / 1024 / 1024) * 100) / 100; //size in megabytes, rounded to 2 decimal places
       console.log({ mp3Size }); //For debugging, whisper has a 25MB limit
 
-      let transcript;
       if (mp3Size > 25) {
-        const transcripts = [];
-        const chunkCount = Math.ceil(mp3Size / 25);
-        console.log({ chunkCount });
-        const audioDuration = await new Promise((resolve, reject) => {
-          ffmpeg.ffprobe(`${outputPath}/${id}-audio.mp3`, (err, metadata) => {
-            if (err) {
-              console.log({ err });
-              reject(err);
-            }
-            resolve(metadata.format.duration);
-          });
-        });
-        const chunkSize = Math.ceil(audioDuration / chunkCount);
-        //Split audio into chunks
-        for (let i = 0; i < chunkCount; i++) {
-          const startTime = i * chunkSize;
-          const endTime = startTime + chunkSize;
-          console.log({ startTime, endTime });
-          await new Promise((resolve, reject) => {
-            ffmpeg(`${outputPath}/${id}-audio.mp3`)
-              .setStartTime(startTime)
-              .setDuration(chunkSize)
-              .output(`${outputPath}/${id}-audio-${i}.mp3`)
-              .on("end", () => {
-                console.log(`Chunk ${i} Created`);
-                resolve();
-              })
-              .on("error", (error) => {
-                console.log({ error });
-                reject(error);
-              })
-              .run();
-          });
-          transcripts.push({
-            transcript: await transcribe(`${outputPath}/${id}-audio-${i}.mp3`),
-            startTime,
-            endTime,
-          });
-        }
-        console.log("Transcripts Generated");
-        transcript = {};
-        for (const set of transcripts) {
-          const offset = set.startTime;
-          const t = set.transcript;
-          for (const timestamp in t) {
-            const offsetTimestamp = parseFloat(timestamp) + offset;
-            const s = t[timestamp];
-            s.start += offset;
-            s.end += offset;
-            transcript[offsetTimestamp] = s;
-          }
-        }
-      } else {
-        transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
-        console.log("Transcript Generated");
+        throw new Error("MP3 Size too large"); //place holder until audio splitting
       }
-      for (const key in transcript) {
-        const segment = transcript[key];
-        let start = parseFloat(parseFloat(key) + 0.01).toFixed(3);
-        segment.start = start;
-        segment.end = parseFloat(segment.end).toFixed(3);
-        transcript[start] = segment;
-        delete transcript[key];
-      }
-      console.log({ transcript });
+
+      const transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
       console.log("Transcript Generated");
 
       const vttText = generateVTT(transcript);
@@ -256,19 +194,28 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
         console.log("Too many retries");
       }
     } finally {
-      //purge all mp3, mp4, and vtt files
-      //get list
-      const files = fs.readdirSync(outputPath);
-      //filter
-      const purgeList = files.filter((file) => {
-        if (file.includes(id)) {
-          return true;
+      if (mediaData.type === "video") {
+        try {
+          fs.unlinkSync(`${outputPath}/${id}-video`);
+          console.log("Cleanup - Video Removed");
+        } catch (videoCleanupError) {
+          console.log("Unable to remove video");
         }
-        return false;
-      });
-      //delete
-      for (const file of purgeList) {
-        fs.unlinkSync(`${outputPath}/${file}`);
+      }
+      if (mediaData.type === "audio") {
+        try {
+          fs.unlinkSync(`${outputPath}/${id}-audio`);
+          console.log("Cleanup - Audio Removed");
+        } catch (audioCleanupError) {
+          console.log("Unable to remove raw audio");
+        }
+      }
+      //Always remove processed audio
+      try {
+        fs.unlinkSync(`${outputPath}/${id}-audio.mp3`);
+        console.log("Cleanup - Audio Removed");
+      } catch (audioCleanupError) {
+        console.log("Unable to remove processed audio");
       }
     }
   } catch (error) {

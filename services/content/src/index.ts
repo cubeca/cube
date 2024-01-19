@@ -44,11 +44,9 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
     if (!vttFileId && (type === 'video' || type === 'audio')) {
       // Publish a message to Google Pub/Sub
       const topicName = 'vtt_transcribe'; // Replace with your actual topic name
-      //@ts-ignore
       const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
       await pubsub.topic(topicName).publish(Buffer.from(message));
       console.log('Queued VTT');
-      //@ts-ignore
       response.data.vttQueued = true;
     }
 
@@ -131,7 +129,6 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
     }
 
     // Check if user is associated with the profile of the content item
-    //@ts-ignore
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, contentItem.data.profileId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to delete content for this profile');
@@ -219,7 +216,6 @@ app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Res
     const user = extractUser(req);
     console.log({ user });
     const content = await db.getContentById(id);
-    //@ts-ignore
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, content.data.profileId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update content for this profile');

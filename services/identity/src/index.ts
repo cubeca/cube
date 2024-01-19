@@ -90,7 +90,7 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
       isOver18
     );
 
-    const user = r;
+    const user = r.rows[0];
     const encoder = new UuidEncoder('base36');
     const encodedUuid = encoder.encode(user.id);
 
@@ -124,11 +124,11 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
 
   try {
     const r = await db.selectUserByEmail(email);
-    if (!r) {
+    if (!r.rows[0]) {
       return res.status(403).send('Invalid email or password');
     }
 
-    const user = r;
+    const user = r.rows[0];
     const decryptedPassword = decryptString(user.password);
     const isValidPassword = await comparePassword(password, decryptedPassword);
     if (!isValidPassword) {
@@ -142,7 +142,7 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
         aud: user.permission_ids
       },
       settings.JWT_TOKEN_SECRET,
-      { expiresIn: '14d' }
+      { expiresIn: '3d' }
     );
 
     const userReturnObj = {
@@ -202,7 +202,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
     }
 
     const existingUser = await db.selectUserByEmail(email);
-    if (existingUser) {
+    if (existingUser.rows[0]) {
       return res.status(409).json('Email is in use by another user');
     }
 
@@ -238,7 +238,7 @@ app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: 
       return res.status(403).send('Invalid: Unable to verify user.');
     }
 
-    const user = r;
+    const user = r.rows[0];
     if (currentPassword) {
       const decryptedPassword = decryptString(user.password);
       const isValidPassword = await comparePassword(currentPassword, decryptedPassword);
@@ -286,7 +286,13 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       }
 
       const user = await db.selectUserByID(uuid as string);
-      if (user?.has_verified_email) {
+      if (user.rows.length !== 1) {
+        const redirectUrl = `${process.env.HOST}/verified?errorCode=INCORRECT_ID`;
+        return res.status(301).send(redirectUrl);
+      }
+
+      const { has_verified_email } = user.rows[0];
+      if (has_verified_email) {
         const redirectUrl = `${process.env.HOST}/verified?errorCode=EMAIL_ALREADY_VERIFIED`;
         return res.status(301).send(redirectUrl);
       }
@@ -315,8 +321,8 @@ app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request
   }
 
   try {
-    const user = await db.selectUserByEmail(email as string);
-    if (user) {
+    const r = await db.selectUserByEmail(email as string);
+    if (r.rows.length === 1) {
       await sendPasswordResetEmail(email);
     } else {
       return res.status(403).send('Email does not exist');
@@ -336,10 +342,10 @@ app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (re
   const user = extractUser(req);
 
   try {
-    const dbUser = await db.selectUserByID(user.uuid);
-    if (dbUser) {
-      const name = dbUser.name;
-      const email = dbUser.email;
+    const r = await db.selectUserByID(user.uuid);
+    if (r.rows.length === 1) {
+      const name = r.rows[0].name;
+      const email = r.rows[0].email;
       await sendVerificationEmail(name, email, user.token);
     } else {
       return res.status(401).send('Incorrect id provided');

@@ -1,153 +1,163 @@
-import { Content } from './models';
-import { Vtt } from './models';
-import { User } from './models';
-import { Op, where } from 'sequelize';
+import * as db from './index';
 
 export const getContentById = async (contentId: string) => {
-  return await Content.findOne({ where: { id: contentId } });
-};
-
-export const insertContent = async (data: any) => {
-  return await Content.create({ data });
-};
-
-export const updateContent = async (data: any, contentId: string) => {
-  const updatedContent = await Content.update({ data }, { where: { id: contentId }, returning: true });
-  return updatedContent[1][0];
-};
-
-export const deleteContent = async (contentId: string) => {
-  const content = await Content.findOne({ where: { id: contentId } });
-  if (!content) {
-    throw new Error('Content not found');
-  }
-
-  return await content.destroy();
-};
-
-export const isUserAssociatedToProfile = async (uuid: string, profileId: string) => {
-  const user = await User.findOne({ where: { id: uuid, profile_id: profileId } });
-  return !!user;
-};
-
-export const searchContent = async (offset: number, limit: number, filters: any, searchTerm: string) => {
-  const searchTerms = searchTerm
-    .split('&')
-    .map((term) => term.trim())
-    .filter((term) => term);
-
-  const whereClause: any = {
-    [Op.and]: [
-      {
-        [Op.and]: [
-          ...searchTerms.map((term: string) => ({
-            data: {
-              [Op.or]: [
-                { title: { [Op.iLike]: `%${term}%` } },
-                { type: { [Op.iLike]: `%${term}%` } },
-                { tags: { [Op.iLike]: `%${term}%` } },
-                { description: { [Op.iLike]: `%${term}%` } },
-                { coverImageText: { [Op.iLike]: `%${term}%` } },
-                {
-                  contributors: {
-                    [Op.iLike]: `%${term}%`
-                  }
-                }
-              ]
-            }
-          })),
-          ...(filters.category
-            ? [
-                {
-                  'data.category': {
-                    [Op.iLike]: `%${filters.category}%`
-                  }
-                }
-              ]
-            : []),
-          ...(filters.profileId
-            ? [
-                {
-                  'data.profileId': {
-                    [Op.eq]: filters.profileId
-                  }
-                }
-              ]
-            : [])
-        ]
-      }
-    ]
-  };
-
-  const contentList = await Content.findAll({
-    where: whereClause,
-    offset,
-    limit
-  });
-
-  return contentList;
+  const sql = `SELECT * FROM content WHERE id = $1`;
+  return await db.querySingleDefault(sql, contentId);
 };
 
 export const listContentByProfileId = async (offset: number, limit: number, filters: any, profileId?: string) => {
-  const whereClause: any = {
-    [Op.and]: [
-      {
-        [Op.or]: [
-          profileId
-            ? [
-                {
-                  'data.profileId': {
-                    [Op.eq]: profileId
-                  }
-                }
-              ]
-            : [],
-          ...(filters.category
-            ? [
-                {
-                  'data.category': {
-                    [Op.contains]: JSON.stringify(filters.category)
-                  }
-                }
-              ]
-            : []),
+  const values: any[] = [];
+  const whereClauses = [];
 
-          ...(filters.tags
-            ? [
-                {
-                  'data.tags': {
-                    [Op.contains]: JSON.stringify(filters.tags)
-                  }
-                }
-              ]
-            : [])
-        ]
+  if (profileId) {
+    whereClauses.push(`(data->>'profileId')::TEXT = $${values.length + 1}`);
+    values.push(profileId);
+  }
+
+  if (filters) {
+    Object.keys(filters).forEach((key, i) => {
+      if (key === 'tags') {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE ANY (ARRAY[ $${values.length + 1} ])`);
+        values.push(filters[key].map((tag: any) => `%${tag}%`));
+      } else {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE '%' || $${values.length + 1} || '%'`);
+        values.push(filters[key]);
       }
-    ]
-  };
+    });
+  }
 
-  const contentList = await Content.findAll({
-    where: whereClause,
-    offset,
-    limit
-  });
+  const sql = `
+    SELECT *
+    FROM content
+    ${whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : ''}
+    ORDER BY updated_at DESC
+    LIMIT $${values.length + 1}
+    OFFSET $${values.length + 2}
+`;
 
-  return contentList;
+  values.push(limit, offset);
+
+  const dbResult = await db.queryDefault(sql, ...values);
+  return dbResult.rows;
 };
+
+export const insertContent = async (data: any) => {
+  const sql = `
+    INSERT INTO content (
+      data
+    )
+    VALUES (
+      $1
+    )
+    RETURNING *
+  `;
+
+  return await db.querySingleDefault(sql, data);
+};
+
+export const updateContent = async (data: any, contentId: string) => {
+  const sql = `
+    UPDATE
+      content
+    SET 
+      data = $1
+    WHERE
+      id = $2
+    RETURNING *
+  `;
+
+  return await db.querySingleDefault(sql, JSON.stringify(data), contentId);
+};
+
+export const deleteContent = async (contentId: string) => {
+  const sql = `
+    DELETE FROM
+      content
+    WHERE
+      id = $1
+    RETURNING *
+  `;
+
+  return await db.querySingleDefault(sql, contentId);
+};
+
+export const isUserAssociatedToProfile = async (uuid: string, profileId: string) => {
+  const sql = `
+    SELECT EXISTS (
+      SELECT 1 
+        FROM users 
+      WHERE id = $1
+        AND profile_id = $2
+    ) as "exists";
+  `;
+
+  const r = await db.queryIdentity(sql, ...[uuid, profileId]);
+  return !!r.rows[0].exists;
+};
+
+export const searchContent = async (offset: number, limit: number, filters: any, searchTerm: string) => {
+  const whereClauses = [];
+  const parameters = [];
+
+  if (filters) {
+    Object.keys(filters).forEach((key, i) => {
+      if (key === 'tags') {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE ANY (ARRAY[ $${i + 1} ])`);
+        parameters.push(filters[key].map((tag: any) => `%${tag}%`));
+      } else {
+        whereClauses.push(`(data->>'${key}')::TEXT ILIKE '%' || $${i + 1} || '%'`);
+        parameters.push(filters[key]);
+      }
+    });
+  }
+
+  if (searchTerm) {
+    const searchTerms = searchTerm
+      .split('&')
+      .map((term) => term.trim())
+      .filter((term) => term);
+
+    const searchTermClauses = searchTerms.map((term, index) => {
+      const paramIndex = parameters.length + 1;
+      parameters.push(`%${term}%`);
+      return `data::text ILIKE $${paramIndex}`;
+    });
+    whereClauses.push(`(${searchTermClauses.join(' OR ')})`);
+  }
+
+  const whereStatement = whereClauses.length ? `WHERE ${whereClauses.join(' AND ')}` : '';
+
+  const sql = `
+    SELECT * 
+    FROM content 
+    ${whereStatement}
+    ORDER BY created_at DESC 
+    LIMIT $${parameters.length + 1} 
+    OFFSET $${parameters.length + 2}
+  `;
+
+  parameters.push(limit, offset);
+  const result = await db.queryDefault(sql, ...parameters);
+  return result.rows;
+};
+
 
 export const getVTTById = async (id: string) => {
-  try {
-    return await Vtt.findOne({ where: { id } });
-  } catch (error) {
-    throw new Error(`Failed to get VTT with id ${id}: ${error}`);
-  }
-};
+  //table name is vtt
+  const sql = `SELECT * FROM vtt WHERE id = $1`;
+  return await db.querySingleDefault(sql, id);
+}
 
 export const updateVTT = async (id: string, transcript: any) => {
-  try {
-    const updatedVTT = await Vtt.update({ transcript }, { where: { id }, returning: true });
-    return updatedVTT[1][0];
-  } catch (error) {
-    throw new Error(`Failed to update VTT with id ${id}: ${error}`);
-  }
-};
+  const sql = `
+    UPDATE
+      vtt
+    SET 
+      transcript = $1
+    WHERE
+      id = $2
+    RETURNING *
+  `;
+
+  return await db.querySingleDefault(sql, transcript, id);
+}
