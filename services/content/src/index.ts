@@ -38,6 +38,10 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
       return res.status(403).send('User does not have permission to create content for this profile');
     }
 
+    if (vttFileId) {
+      contentData.vttFileId = vttFileId;
+    }
+
     // Insert content into database
     const r = await db.insertContent({ profileId, ...contentData });
     const dbResult = r?.dataValues;
