@@ -49,7 +49,7 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
       await pubsub.topic(topicName).publish(Buffer.from(message));
       console.log('Queued VTT');
       //@ts-ignore
-      dbResult.vttQueued = true;
+      dbResult.data.vttQueued = true;
     }
 
     return res.status(201).json(getApiResultFromDbRow(dbResult));
