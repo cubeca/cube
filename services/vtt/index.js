@@ -14,9 +14,14 @@ const { downloadCloudflareStream, uploadFile, downloadR2 } = require("./cf.js");
 const { transcribe } = require("./ai.js");
 const { generateVTT } = require("./vtt.js");
 
+const maxTries = 100;
 const outputPath = "/tmp";
 
 const retry = async (contentID, currentTries) => {
+  if (typeof currentTries !== "number" || currentTries >= maxTries) {
+    console.error("Max tries reached");
+    return;
+  }
   let tries = currentTries + 1;
   const dataBuffer = Buffer.from(
     JSON.stringify({ contentID, tries: tries + 1 })
@@ -137,13 +142,8 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
         return;
       }
     } catch (error) {
-      console.log({ error });
-      if (tries <= 100) {
-        await retry(contentID, tries);
-        return;
-      } else {
-        throw new Error("Too many retries");
-      }
+      console.error({ error });
+      await retry(contentID, tries);
     }
 
     try {
@@ -181,7 +181,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 resolve();
               })
               .on("error", (error) => {
-                console.log({ error });
+                console.error({ error });
                 reject(error);
               })
               .run();
@@ -248,13 +248,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
       console.log(`Message ${messageId} published.`);
     } catch (processingError) {
       console.error({ processingError });
-      if (tries <= 25) {
-        //Try up to 25 times
-        await retry(contentID, tries);
-        return;
-      } else {
-        console.log("Too many retries");
-      }
+      await retry(contentID, tries);
     } finally {
       //purge all mp3, mp4, and vtt files
       //get list
@@ -272,8 +266,8 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
       }
     }
   } catch (error) {
-    console.log({ error });
-    retry(contentID, tries);
+    console.error({ error });
+    await retry(contentID, tries);
   }
 });
 
