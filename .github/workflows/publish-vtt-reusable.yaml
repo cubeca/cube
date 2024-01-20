@@ -56,8 +56,8 @@ jobs:
            --timeout=540 \
            --project=cubecommons-${{ env.ENV_NAME }} \
            --memory=2GB \
-           --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
-           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432,CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
+           --set-secrets COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
+           --set-env-vars CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
            --ingress-settings=internal-only
       - name: Deploy VTT Upload
         run: |
@@ -70,6 +70,6 @@ jobs:
            --timeout=120 \
            --project=cubecommons-${{ env.ENV_NAME }} \
            --memory=256MB \
-           --set-secrets PGPASSWORD=${{ env.ENV_NAME }}-db-password:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
-           --set-env-vars PGUSER=postgres,PGHOST=/cloudsql/cubecommons-${{ env.ENV_NAME }}:northamerica-northeast2:${{ env.ENV_NAME }},PGDATABASE=cube_content,PGPORT=5432,CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
+           --set-secrets COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
+           --set-env-vars CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
            --ingress-settings=internal-only
