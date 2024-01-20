@@ -2,7 +2,9 @@ const { COCKROACH_DB_CONNECTION_STRING } = require("./settings");
 const { DataTypes, Model } = require("sequelize");
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize(COCKROACH_DB_CONNECTION_STRING);
+const sequelize = new Sequelize(COCKROACH_DB_CONNECTION_STRING, {
+  schema: "cube",
+});
 
 class vtt extends Model {
   static init(sequelize) {
@@ -21,7 +23,7 @@ class vtt extends Model {
       },
       {
         sequelize,
-        modelName: "Vtt",
+        modelName: "vtt",
         tableName: "vtt",
       }
     );
@@ -53,7 +55,7 @@ class content extends Model {
       },
       {
         sequelize,
-        modelName: "Content",
+        modelName: "content",
         tableName: "content",
       }
     );
@@ -89,7 +91,7 @@ class files extends Model {
       },
       {
         sequelize,
-        modelName: "File",
+        modelName: "files",
         tableName: "files",
       }
     );
