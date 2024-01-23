@@ -6,11 +6,11 @@ import Brevo from '@getbrevo/brevo';
 // @ts-ignore
 import UuidEncoder from 'uuid-encoder';
 
-import * as db from './db/queries';
+import * as db from '../../../identity/src/db/queries';
 import * as jwt from 'jsonwebtoken';
-import * as settings from './settings';
+import * as settings from '../settings';
 
-import { brevoTemplateIdMapping } from './utils';
+import { brevoTemplateIdMapping } from '../utils/utils';
 
 /**
  * Send a verification email using the preconfigured Brevo template #2.

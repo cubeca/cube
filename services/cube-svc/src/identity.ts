@@ -4,24 +4,11 @@ import he from 'he';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
-import {
-  comparePassword,
-  encryptString,
-  decryptString,
-  hashPassword,
-  validateUserCreateInput,
-  filterHeadersToForward,
-  UUID_REGEXP
-} from './utils';
+import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward, UUID_REGEXP } from './utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './auth';
-import { createDefaultProfile } from './profile';
-import {
-  sendVerificationEmail,
-  sendPasswordChangeConfirmation,
-  sendContactUsEmail,
-  sendPasswordResetEmail
-} from './email';
+import { createDefaultProfile } from './utils/profile';
+import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEmail, sendPasswordResetEmail } from './email';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -42,17 +29,7 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const {
-    name,
-    email,
-    organization,
-    website,
-    tag,
-    password,
-    hasAcceptedNewsletter = false,
-    hasAcceptedTerms = false,
-    isOver18
-  } = req.body;
+  const { name, email, organization, website, tag, password, hasAcceptedNewsletter = false, hasAcceptedTerms = false, isOver18 } = req.body;
 
   try {
     const hashedPassword = await hashPassword(password);
@@ -66,29 +43,13 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
       profileId = await createDefaultProfile(authHeader, organization, he.decode(website), tag);
       permissionIds.push('contentEditor');
       if (!profileId) {
-        console.error(
-          'Error creating profile for user. Organization name, website or tag already exist',
-          organization,
-          website,
-          tag
-        );
-        return res
-          .status(400)
-          .send('Error creating profile for user. Organization name, website, or tag already exists');
+        console.error('Error creating profile for user. Organization name, website or tag already exist', organization, website, tag);
+        return res.status(400).send('Error creating profile for user. Organization name, website, or tag already exists');
       }
     }
 
     // Insert User Identity
-    const r = await db.insertIdentity(
-      name,
-      email,
-      profileId,
-      encryptedPassword,
-      permissionIds,
-      hasAcceptedNewsletter,
-      hasAcceptedTerms,
-      isOver18
-    );
+    const r = await db.insertIdentity(name, email, profileId, encryptedPassword, permissionIds, hasAcceptedNewsletter, hasAcceptedTerms, isOver18);
 
     const user = r;
     const encoder = new UuidEncoder('base36');

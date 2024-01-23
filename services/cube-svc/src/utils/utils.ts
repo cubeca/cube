@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as CryptoJS from 'crypto-js';
-import * as settings from './settings';
+import * as settings from '../settings';
 import { body } from 'express-validator';
 import { AxiosHeaders } from 'axios';
 import { Request } from 'express';
@@ -10,8 +10,7 @@ export const comparePassword = async (password: string, hash: string) => await b
 export const encryptString = (hash: string) => CryptoJS.AES.encrypt(hash, settings.ENCRYPT_SECRET).toString();
 export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-export const decryptString = (hash: string) =>
-  CryptoJS.AES.decrypt(hash, settings.ENCRYPT_SECRET).toString(CryptoJS.enc.Utf8);
+export const decryptString = (hash: string) => CryptoJS.AES.decrypt(hash, settings.ENCRYPT_SECRET).toString(CryptoJS.enc.Utf8);
 
 export const brevoTemplateIdMapping = {
   SEND_VERIFICATION_EMAIL: 2,

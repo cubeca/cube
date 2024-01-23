@@ -1,5 +1,5 @@
 import axios, { AxiosHeaders } from 'axios';
-import * as settings from './settings';
+import * as settings from '../settings';
 
 const profileApi = axios.create({
   baseURL: settings.PROFILE_SERVICE_URL,
@@ -17,6 +17,6 @@ export const createDefaultProfile = async (authHeader: AxiosHeaders, organizatio
     },
     { headers: authHeader }
   );
-  
+
   return createProfileResponse.data.id;
 };

@@ -1,4 +1,4 @@
-import { User } from './models';
+import { User } from '../models';
 
 export const insertIdentity = async (
   name: string,

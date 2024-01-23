@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
-import * as settings from './settings';
+import * as settings from '../settings';
 
 interface CubeJwtPayload {
   sub: string;
