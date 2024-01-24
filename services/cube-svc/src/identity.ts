@@ -226,14 +226,14 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
 
   if (!token) {
     const redirectUrl = `${process.env.HOST}/verified?errorCode=INVALID_TOKEN`;
-    return res.status(301).send(redirectUrl);
+    return res.status(301).redirect(redirectUrl);
   }
 
   try {
     jwt.verify(token, settings.JWT_TOKEN_SECRET, async (err: any, decoded: any) => {
       if (err) {
         const redirectUrl = `${process.env.HOST}/verified?errorCode=TOKEN_VERIFICATION_FAILED`;
-        return res.status(301).send(redirectUrl);
+        return res.status(301).redirect(redirectUrl);
       }
 
       let uuid = decoded.sub;
@@ -245,7 +245,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       const user = await db.selectUserByID(uuid as string);
       if (user?.has_verified_email) {
         const redirectUrl = `${process.env.HOST}/verified?errorCode=EMAIL_ALREADY_VERIFIED`;
-        return res.status(301).send(redirectUrl);
+        return res.status(301).redirect(redirectUrl);
       }
 
       await db.updateEmailVerification(uuid as string, true);
@@ -253,7 +253,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
       await db.updateActiveStatus(uuid as string, true);
 
       const redirectUrl = `${process.env.HOST}/verified?token=` + encodeURIComponent(token);
-      return res.status(301).send(redirectUrl);
+      return res.status(301).redirect(redirectUrl);
     });
   } catch (error: any) {
     console.error('Error occurred verifying email: ', error);

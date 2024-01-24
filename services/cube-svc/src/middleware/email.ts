@@ -6,7 +6,7 @@ import Brevo from '@getbrevo/brevo';
 // @ts-ignore
 import UuidEncoder from 'uuid-encoder';
 
-import * as db from '../../../identity/src/db/queries';
+import * as db from '../db/queries/identity';
 import * as jwt from 'jsonwebtoken';
 import * as settings from '../settings';
 
