@@ -21,6 +21,13 @@ export const brevoTemplateIdMapping = {
   CONTACT_US_EMAIL: 19
 };
 
+export const getApiResultFromDbRow = (r: any) => ({
+  id: r.id,
+  createdAt: r.created_at,
+  updatedAt: r.updated_at,
+  ...r.data
+});
+
 export const validateUserCreateInput = [
   body('name').notEmpty().trim().escape().withMessage('Name is required.'),
   body('email').isEmail().normalizeEmail().withMessage('Invalid email.'),

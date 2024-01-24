@@ -1,7 +1,6 @@
 import axios from 'axios';
-
-import * as settings from '../../cloudflare/src/settings';
-import { makeCloudflareTusUploadMetadata } from '../../cloudflare/src/utils';
+import * as settings from '../settings';
+import { makeCloudflareTusUploadMetadata } from '../utils/utils';
 
 const CLOUDFLARE_STREAM_BASE_URL = `https://api.cloudflare.com/client/v4/accounts/${settings.CLOUDFLARE_ACCOUNT_ID}/stream`;
 
@@ -40,7 +39,6 @@ export const getTusUploadUrl = async (
   };
 
   const response = await cloudflareApi.post(`?direct_user=true`, null, { headers: requestHeaders });
-
   const tusUploadUrl = response.headers['location'];
   const cloudflareStreamUid = response.headers['stream-media-id'];
 

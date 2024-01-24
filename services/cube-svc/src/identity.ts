@@ -1,9 +1,10 @@
-import express, { Express, Request, Response } from 'express';
-import cors from 'cors';
+import { app } from 'index';
+import { Request, Response } from 'express';
+
 import he from 'he';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
-import * as db from './db/queries';
+import * as db from './db/queries/identity';
 import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward, UUID_REGEXP } from './utils/utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
@@ -13,11 +14,6 @@ import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEma
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import UuidEncoder from 'uuid-encoder';
-
-const app: Express = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 /**
  * Create a user based on provided attributes.  If an organization, website or tag is passed

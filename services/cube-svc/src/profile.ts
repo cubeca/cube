@@ -1,17 +1,9 @@
-import express, { Express, Request, Response } from 'express';
-import cors from 'cors';
-import * as db from './db/queries';
+import { app } from './index';
+import { Request, Response } from 'express';
+
+import * as db from './db/queries/profile';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
-import { isUserAssociatedToProfile } from './db/queries';
-
-// Initialize Express app
-const app: Express = express();
-
-// Set up middleware
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   try {
@@ -67,7 +59,7 @@ app.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, r
   }
 
   const user = extractUser(req);
-  const isUserAssociated = await isUserAssociatedToProfile(user.uuid, profileId);
+  const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
   if (!isUserAssociated) {
     return res.status(403).send('User does not have permission to update this profile');
   }

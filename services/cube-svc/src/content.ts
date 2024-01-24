@@ -1,27 +1,16 @@
-import express, { Express, Request, Response } from 'express';
+import { app } from './index';
+import { Request, Response } from 'express';
+
 const { PubSub } = require('@google-cloud/pubsub');
 const pubsub = new PubSub();
 
-import cors from 'cors';
-import * as db from './db/queries';
+import * as db from './db/queries/content';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendReportAbuseEmail } from './middleware/email';
+import { getApiResultFromDbRow } from './utils/utils';
 
 import { transformContent } from 'utils/utils';
-
-// Creating an instance of Express application
-const app: Express = express();
-app.use(cors());
-app.use(express.json());
-
-// Utility function to map database result to API result
-const getApiResultFromDbRow = (r: any) => ({
-  id: r.id,
-  createdAt: r.created_at,
-  updatedAt: r.updated_at,
-  ...r.data
-});
 
 // API endpoint for creating new content
 app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {

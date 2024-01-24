@@ -25,6 +25,18 @@ export interface CommonFileData {
   upload: CommonUploadInfo;
 }
 
+export interface VideoPlayerInfo {
+  hlsUrl?: string;
+  dashUrl?: string;
+  videoIdOrSignedUrl?: string;
+}
+
+export interface NonVideoPlayerInfo {
+  mimeType: string;
+  fileType: string;
+  publicUrl: string;
+}
+
 export interface VideoDebugInfo extends CommonDebugInfo {
   reserveDurationSeconds: number;
   tusUploadUrl?: string;

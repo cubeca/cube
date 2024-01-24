@@ -1,19 +1,15 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import { app } from './index';
+import { Request, Response } from 'express';
+
 import mime from 'mime';
-import * as db from './db/queries';
+import * as db from './db/queries/cloudflare';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
-import { parseTusUploadMetadata } from './utils/utils';
-import * as stream from './stream';
-import { getPresignedUploadUrl } from './r2';
-
-export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-const app = express();
-
-app.use(cors());
-app.use(express.json());
+import { UUID_REGEXP, parseTusUploadMetadata } from './utils/utils';
+import * as stream from './utils/stream';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { VideoPlayerInfo, NonVideoPlayerInfo } from './types/cloudflare';
 
 app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const fileId = req.query.fileId as string;
@@ -136,18 +132,6 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
   }
 });
 
-export interface VideoPlayerInfo {
-  hlsUrl?: string;
-  dashUrl?: string;
-  videoIdOrSignedUrl?: string;
-}
-
-export interface NonVideoPlayerInfo {
-  mimeType: string;
-  fileType: string;
-  publicUrl: string;
-}
-
 app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
 
@@ -219,3 +203,22 @@ app.get('/', async (req: Request, res: Response) => {
 app.listen(settings.PORT, async () => {
   console.log(`Listening on port ${settings.PORT}`);
 });
+
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: `https://${settings.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: `${settings.CLOUDFLARE_R2_ACCESS_KEY_ID}`,
+    secretAccessKey: `${settings.CLOUDFLARE_R2_SECRET_ACCESS_KEY}`
+  }
+});
+
+const getPresignedUploadUrl = async (filePathInBucket: string, mimeType: string, expiresIn: number) => {
+  const putCommand = new PutObjectCommand({
+    Bucket: settings.CLOUDFLARE_R2_BUCKET_NAME,
+    Key: filePathInBucket,
+    ContentType: mimeType
+  });
+
+  return await getSignedUrl(s3, putCommand, { expiresIn });
+};
