@@ -10,3 +10,11 @@ export const ENCRYPT_SECRET = process.env.ENCRYPT_SECRET || 'encrypt_secret';
 export const JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET || 'secret';
 export const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 export const CONTACT_US_EMAIL = process.env.CONTACT_US_EMAIL || '';
+
+export const CLOUDFLARE_ACCOUNT_ID: string = process.env.CLOUDFLARE_ACCOUNT_ID || '__UNSET__';
+export const CLOUDFLARE_API_TOKEN: string = process.env.CLOUDFLARE_API_TOKEN || '__UNSET__';
+export const CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN: string = process.env.CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN || '__UNSET__';
+export const CLOUDFLARE_R2_ACCESS_KEY_ID: string = process.env.CLOUDFLARE_R2_ACCESS_KEY_ID || '__UNSET__';
+export const CLOUDFLARE_R2_SECRET_ACCESS_KEY: string = process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY || '__UNSET__';
+export const CLOUDFLARE_R2_BUCKET_NAME: string = process.env.CLOUDFLARE_R2_BUCKET_NAME || '__UNSET__';
+export const CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL: string = process.env.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL || '__UNSET__';

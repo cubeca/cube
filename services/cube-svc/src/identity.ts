@@ -4,11 +4,11 @@ import he from 'he';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries';
-import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward, UUID_REGEXP } from './utils';
+import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward, UUID_REGEXP } from './utils/utils';
 import * as settings from './settings';
-import { allowIfAnyOf, extractUser } from './auth';
+import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { createDefaultProfile } from './utils/profile';
-import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEmail, sendPasswordResetEmail } from './email';
+import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEmail, sendPasswordResetEmail } from './middleware/email';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
