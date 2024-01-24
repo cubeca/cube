@@ -4,7 +4,8 @@ import * as settings from '../settings';
 import { body } from 'express-validator';
 import { AxiosHeaders } from 'axios';
 import { Request } from 'express';
-import { cloudflareApi, profileApi, contentApi } from './microservices';
+import * as proo from '../db/queries/profile';
+import * as cloudflare from '../db/queries/cloudflare';
 
 export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
 export const comparePassword = async (password: string, hash: string) => await bcrypt.compare(password, hash);
@@ -160,11 +161,10 @@ export const getFiles = async (fileIds: string[], authHeader: AxiosHeaders) => {
 };
 
 export const getProfileData = async (profileId: string, authHeader: AxiosHeaders) => {
-  const profileResponse = await profileApi.get('profiles/' + profileId, {
-    headers: authHeader
-  });
+  const r = await profileQueries.selectProfileByID(profileId);
+  const profileData = r?.dataValues;
 
-  const { files } = await getFiles([profileResponse.data.herofileid, profileResponse.data.logofileid, profileResponse.data.descriptionfileid], authHeader);
+  const { files } = await getFiles([profile.herofileid, profile.logofileid, profile.descriptionfileid], authHeader);
 
   const profile = profileResponse.data;
   if (files[profile.herofileid]) {
