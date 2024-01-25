@@ -1,7 +1,6 @@
 import { Profile, User } from '../models';
 import { Op, OrderItem } from 'sequelize';
 
-// Function to insert a new profile into the 'profiles' table
 export const insertProfile = async (organization: string, website: string, tag: string) => {
   try {
     const profile = await Profile.create({
@@ -21,7 +20,6 @@ export const insertProfile = async (organization: string, website: string, tag: 
   }
 };
 
-// Function to select a profile from the 'profiles' table by its ID
 export const selectProfileByID = async (id: string) => {
   return await Profile.findOne({
     where: {
@@ -30,7 +28,6 @@ export const selectProfileByID = async (id: string) => {
   });
 };
 
-// Function to select profiles from the 'profiles' table by their IDs
 export const selectProfilesByIdList = async (idList: string[]) => {
   const r = await Profile.findAll({
     where: {
@@ -43,14 +40,12 @@ export const selectProfilesByIdList = async (idList: string[]) => {
   return r;
 };
 
-// Function to select all of the profiles from the 'profiles' table
 export const selectAllProfiles = async () => {
   return await Profile.findAll({
     attributes: ['id', 'organization', 'tag']
   });
 };
 
-// Function to select a profile from the 'profiles' table by its tag
 export const selectProfileByTag = async (tag: string) => {
   return await Profile.findOne({
     where: {
@@ -59,7 +54,6 @@ export const selectProfileByTag = async (tag: string) => {
   });
 };
 
-// Function to delete a profile from the 'profiles' table by its ID
 export const deleteProfile = async (profileId: string) => {
   return await Profile.destroy({
     where: {
@@ -68,7 +62,6 @@ export const deleteProfile = async (profileId: string) => {
   });
 };
 
-// Function to update a profile in the 'profiles' table by its ID and given arguments
 export const updateProfile = async (
   profileId: string,
   organization: string,
