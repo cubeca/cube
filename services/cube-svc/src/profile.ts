@@ -15,6 +15,22 @@ app.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, r
   }
 });
 
+app.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+  try {
+    const r = await db.selectAllProfiles();
+    const result = Object.values(r).map((item: any) => ({
+      id: item.id,
+      organization: item.organization,
+      tag: item.tag
+    }));
+
+    res.status(200).json(result);
+  } catch (e: any) {
+    console.error('Error return all profiles', e);
+    res.status(404).send('Error return all profiles');
+  }
+});
+
 // Route for creating a new profile
 app.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
@@ -98,14 +114,8 @@ app.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req:
 
   // Fetch the profile and return its details
   try {
-    const r = await db.selectProfileByID(profileId);
-
-    if (!r) {
-      res.status(404).send('Profile Id not found');
-      return;
-    }
-
-    res.status(200).json({ ...r?.dataValues });
+    const profile = await getProfileData(profileId);
+    res.status(200).json({ data: profile });
   } catch (e: any) {
     console.error('Profile does not exist', e);
     res.status(404).send('Profile does not exist');
@@ -129,7 +139,9 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
       return res.status(404).send('Profile tag not found');
     }
 
-    res.status(200).json({ ...r?.dataValues });
+    const profileId = r?.dataValues.id;
+    const profile = await getProfileData(profileId);
+    res.status(200).json({ data: profile });
   } catch (e: any) {
     console.error('Profile does not exists', e);
     res.status(404).send('Profile does not exist');
@@ -190,7 +202,13 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
 // Route for deleting a profile by its ID
 app.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
-  await db.deleteProfile(req.params.profileId);
+  const profileId = req.params.profileId;
+
+  if (!profileId) {
+    return res.status(400).send('Profile ID is not provided.');
+  }
+
+  await db.deleteProfile(profileId);
   res.status(200);
 });
 

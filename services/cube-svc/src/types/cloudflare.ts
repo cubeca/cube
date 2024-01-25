@@ -64,3 +64,10 @@ export interface S3FileData extends CommonFileData {
   upload: S3UploadInfo;
   filePathInBucket?: string;
 }
+
+export interface UploadMetadata {
+  reserveDurationSeconds?: number;
+  isPrivate?: boolean;
+  urlValidDurationSeconds?: number;
+  uploadingUserId?: string;
+}

@@ -135,13 +135,42 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
 app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
 
-  if (!UUID_REGEXP.test(fileId)) {
+  if (!UUID_REGEXP.test(fileId as string)) {
     return res.status(400).send(`Invalid 'fileId' path parameter, must be in UUID format.`);
   }
 
+  try {
+    const file = getFile(fileId as string);
+    res.status(200).json(file);
+  } catch (e: any) {
+    console.error('Error retrieving file', e);
+    res.status(500).send('Error retrieving file' + e);
+  }
+});
+
+const s3 = new S3Client({
+  region: 'auto',
+  endpoint: `https://${settings.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+  credentials: {
+    accessKeyId: `${settings.CLOUDFLARE_R2_ACCESS_KEY_ID}`,
+    secretAccessKey: `${settings.CLOUDFLARE_R2_SECRET_ACCESS_KEY}`
+  }
+});
+
+const getPresignedUploadUrl = async (filePathInBucket: string, mimeType: string, expiresIn: number) => {
+  const putCommand = new PutObjectCommand({
+    Bucket: settings.CLOUDFLARE_R2_BUCKET_NAME,
+    Key: filePathInBucket,
+    ContentType: mimeType
+  });
+
+  return await getSignedUrl(s3, putCommand, { expiresIn });
+};
+
+export const getFile = async (fileId: string) => {
   const r = await db.getFileById(fileId);
   if (r === null) {
-    return res.status(404).send('File not found.');
+    throw new Error('File ' + fileId + ' not found.');
   }
 
   let playerInfo: VideoPlayerInfo | NonVideoPlayerInfo | undefined = undefined;
@@ -152,11 +181,11 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
     //@ts-ignore
     const videoDetails = await stream.getVideoDetails(dbFile.data.cloudflareStreamUid);
     if (!videoDetails) {
-      return res.status(404).send('File not found.');
+      throw new Error('File ' + fileId + ' not found.');
     }
 
     if (!videoDetails.readyToStream) {
-      return res.status(409).send('Video is still being processed.');
+      throw new Error('Video is still being processed.');
     }
 
     playerInfo = {
@@ -177,48 +206,16 @@ app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Reque
 
     playerInfo = {
       mimeType,
-      fileType: mime.getExtension(mimeType) || 'bin',
+      fileType: mime.extension(mimeType) || 'bin',
       publicUrl
     };
   }
 
-  res.status(200).json({
+  return {
     id: fileId,
     createdAt: dbFile.created_at,
     updatedAt: dbFile.updated_at,
     storageType: dbFile.storage_type,
     playerInfo
-  });
-});
-
-// Route for checking if the service is running
-app.get('/', async (req: Request, res: Response) => {
-  try {
-    res.status(200).send('Service is running');
-  } catch (error) {
-    res.status(500).send('Internal server error');
-  }
-});
-
-app.listen(settings.PORT, async () => {
-  console.log(`Listening on port ${settings.PORT}`);
-});
-
-const s3 = new S3Client({
-  region: 'auto',
-  endpoint: `https://${settings.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: `${settings.CLOUDFLARE_R2_ACCESS_KEY_ID}`,
-    secretAccessKey: `${settings.CLOUDFLARE_R2_SECRET_ACCESS_KEY}`
-  }
-});
-
-const getPresignedUploadUrl = async (filePathInBucket: string, mimeType: string, expiresIn: number) => {
-  const putCommand = new PutObjectCommand({
-    Bucket: settings.CLOUDFLARE_R2_BUCKET_NAME,
-    Key: filePathInBucket,
-    ContentType: mimeType
-  });
-
-  return await getSignedUrl(s3, putCommand, { expiresIn });
+  };
 };

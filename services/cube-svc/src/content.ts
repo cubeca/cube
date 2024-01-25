@@ -63,6 +63,8 @@ app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
   const filters = req.query.filters ?? {};
 
   const dbResult = await db.listContentByProfileId(offset, limit, filters, profileId);
+  const data = dbResult.map(getApiResultFromDbRow);
+  const transformedContent = await transformContent(data);
 
   // Returning paginated content data
   res.status(200).json({
@@ -71,13 +73,25 @@ app.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
       limit,
       filters
     },
-    data: dbResult.map(getApiResultFromDbRow)
+    transformedContent
   });
 });
 
 // API endpoint for getting content by content id
 app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  res.status(200).json(getApiResultFromDbRow(await db.getContentById(req.params.contentId)));
+  const contentId = req.params.contentId;
+  if (!contentId) {
+    return res.status(400).send('Invalid content ID');
+  }
+
+  const dbResult = await db.getContentById(contentId);
+  if (!dbResult) {
+    return res.status(404).send('Content not found');
+  }
+
+  const transformedContent = await transformContent(dbResult.dataValues);
+
+  res.status(200).json(transformedContent[0]);
 });
 
 // API endpoint for updating content by content id

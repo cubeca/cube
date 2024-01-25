@@ -2,17 +2,19 @@ import * as bcrypt from 'bcrypt';
 import * as CryptoJS from 'crypto-js';
 import * as settings from '../settings';
 import { body } from 'express-validator';
+import { Buffer } from 'node:buffer';
 import { AxiosHeaders } from 'axios';
 import { Request } from 'express';
-import * as proo from '../db/queries/profile';
+import * as profile from '../db/queries/profile';
 import * as cloudflare from '../db/queries/cloudflare';
+import * as content from '../db/queries/content';
+import { getFile } from 'cloudflare';
 
 export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
 export const comparePassword = async (password: string, hash: string) => await bcrypt.compare(password, hash);
 export const encryptString = (hash: string) => CryptoJS.AES.encrypt(hash, settings.ENCRYPT_SECRET).toString();
-export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
 export const decryptString = (hash: string) => CryptoJS.AES.decrypt(hash, settings.ENCRYPT_SECRET).toString(CryptoJS.enc.Utf8);
+export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export const brevoTemplateIdMapping = {
   SEND_VERIFICATION_EMAIL: 2,
@@ -61,8 +63,6 @@ export const stringToKeyValuePairs = (str: any) => {
   return result;
 };
 
-import { Buffer } from 'node:buffer';
-
 export const base64encode = (s: any) => Buffer.from(String(s), 'utf8').toString('base64');
 export const base64decode = (b64: any): string | Buffer | undefined => {
   let decoded = undefined;
@@ -77,13 +77,6 @@ export const base64decode = (b64: any): string | Buffer | undefined => {
     return decoded;
   }
 };
-
-export interface UploadMetadata {
-  reserveDurationSeconds?: number;
-  isPrivate?: boolean;
-  urlValidDurationSeconds?: number;
-  uploadingUserId?: string;
-}
 
 export const makeCloudflareTusUploadMetadata = ({ reserveDurationSeconds, isPrivate, urlValidDurationSeconds, uploadingUserId }: UploadMetadata = {}) => {
   const fields: {
@@ -130,67 +123,56 @@ export const parseTusUploadMetadata = (headerValues: string | string[]): any => 
   return parsed;
 };
 
-export const inspect = (...things: any) => things.forEach((thing: any) => console.dir(thing, { depth: null, color: true }));
-
-export const getFiles = async (fileIds: string[], authHeader: AxiosHeaders) => {
+export const getFiles = async (fileIds: string[]) => {
   const files: { [k: string]: any } = {};
   const errors: any[] = [];
 
   // Filter out empty or falsy values from fileIds array
   const filteredFileIds = fileIds.filter((fileId) => !!fileId);
+  const promises = filteredFileIds.map((fileId) => getFile(fileId));
 
-  // Perform API requests concurrently using Promise.all
-  const apiRequests = filteredFileIds.map((fileId) =>
-    cloudflareApi
-      .get(`files/${fileId}`, { headers: authHeader })
-      .then(({ status, data }) => {
-        if (status === 200) {
-          files[fileId] = data;
-        } else {
-          errors.push({ fileId, status, data });
-        }
-      })
-      .catch((error) => {
-        errors.push({ fileId, error });
-      })
-  );
+  await Promise.all(promises)
+    .then((results) => {
+      results.forEach((result) => {
+        files[result.id] = result;
+      });
+    })
+    .catch((error) => {
+      errors.push({ error });
+    });
 
-  // Wait for all the API requests to finish
-  await Promise.all(apiRequests);
   return { files, errors };
 };
 
-export const getProfileData = async (profileId: string, authHeader: AxiosHeaders) => {
-  const r = await profileQueries.selectProfileByID(profileId);
-  const profileData = r?.dataValues;
+export const getProfileData = async (profileId: string) => {
+  const r = await profile.selectProfileByID(profileId);
+  const profileResult: { [k: string]: any } = { ...r };
 
-  const { files } = await getFiles([profile.herofileid, profile.logofileid, profile.descriptionfileid], authHeader);
+  if (r !== null) {
+    const { files } = await getFiles([r.herofileid, r.logofileid, r.descriptionfileid]);
 
-  const profile = profileResponse.data;
-  if (files[profile.herofileid]) {
-    profile.heroUrl = files[profile.herofileid].playerInfo.publicUrl;
+    if (files[r.herofileid]) {
+      profileResult.heroUrl = files[r.herofileid].playerInfo.publicUrl;
+    }
+    if (files[r.logofileid]) {
+      profileResult.logoUrl = files[r.logofileid].playerInfo.publicUrl;
+    }
+    if (files[r.descriptionfileid]) {
+      profileResult.descriptionUrl = files[r.descriptionfileid].playerInfo.publicUrl;
+    }
   }
-  if (files[profile.logofileid]) {
-    profile.logoUrl = files[profile.logofileid].playerInfo.publicUrl;
-  }
-  if (files[profile.descriptionfileid]) {
-    profile.descriptionUrl = files[profile.descriptionfileid].playerInfo.publicUrl;
-  }
 
-  const contentResponse = await contentApi.get('/content', {
-    params: {
-      profileId,
-      offset: 0,
-      limit: 1000
-    },
-    headers: authHeader
-  });
+  const dbResult = await content.listContentByProfileId(0, 1000, {}, profileId);
+  const data = dbResult.map(getApiResultFromDbRow);
+  const transformedContent = await transformContent(data);
 
-  profile.content = await transformContent(contentResponse.data.data, authHeader);
-  return profile;
+  return {
+    ...profileResult,
+    content: transformedContent
+  };
 };
 
-export async function transformContent(contentItems: any[], authHeader: AxiosHeaders) {
+export async function transformContent(contentItems: any[]) {
   const urlFieldNames = {
     coverImageFileId: 'coverImageUrl',
     mediaFileId: 'mediaUrl',
@@ -205,7 +187,7 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
       // Process URL fields
       for (const [key, value] of Object.entries(urlFieldNames)) {
         if (item[key]) {
-          newItem[value] = await getFileFromCloudflare(item[key]);
+          newItem[value] = await getFile(item[key]);
           delete newItem[key];
         }
       }
@@ -219,12 +201,6 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
       return newItem;
     })
   );
-
-  // Separated the logic to get the file from cloudflare API for reusability
-  async function getFileFromCloudflare(fileId: string) {
-    const response = await cloudflareApi.get(`files/${fileId}`, { headers: authHeader });
-    return response.data;
-  }
 
   async function fetchCollaboratorInfo(collaborators: string[]) {
     const collaboratorInfoList = [];
@@ -240,7 +216,7 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
           let logoUrl = null;
           if (logofileid) {
             try {
-              const fileResponse = await getFileFromCloudflare(logofileid);
+              const fileResponse = await getFile(logofileid);
               logoUrl = fileResponse.playerInfo?.publicUrl;
             } catch (fileError) {
               console.error(`Failed to fetch file from Cloudflare for collaborator ${collaboratorId}:`, fileError);
@@ -258,10 +234,8 @@ export async function transformContent(contentItems: any[], authHeader: AxiosHea
   }
 }
 
-// `tus-js-client` expects to talk to this endpoint directly instead of going through our API client lib.
-export const UPLOAD_TUS_ENDPOINT = `${settings.CLOUDFLARE_SERVICE_URL}/upload/video-tus-reservation`;
-
 export const getUploadTusEndpoint = (fileId: string, authToken: string): string => {
+  const UPLOAD_TUS_ENDPOINT = `${settings.CLOUDFLARE_SERVICE_URL}/upload/video-tus-reservation`;
   const url = new URL(UPLOAD_TUS_ENDPOINT);
   url.searchParams.set('fileId', fileId);
   url.searchParams.set('authorization', authToken);
