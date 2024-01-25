@@ -1,9 +1,19 @@
-import express, { Express } from 'express';
+import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+
+import * as settings from './settings';
 
 export const app: Express = express();
 app.use(cors());
 app.use(express.json());
+
+app.get('/', async (req: Request, res: Response) => {
+  return res.status(200).send('Service is running');
+});
+
+app.listen(settings.PORT, async () => {
+  console.log(`Listening on port ${settings.PORT}`);
+});
 
 app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   type ServiceResult = {

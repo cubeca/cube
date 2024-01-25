@@ -323,11 +323,3 @@ app.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, re
     return res.status(500).send('Error occurred sending email!');
   }
 });
-
-app.get('/', async (req: Request, res: Response) => {
-  return res.status(200).send('Service is running');
-});
-
-app.listen(settings.PORT, async () => {
-  console.log(`Listening on port ${settings.PORT}`);
-});

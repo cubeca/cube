@@ -6,9 +6,9 @@ import { Buffer } from 'node:buffer';
 import { AxiosHeaders } from 'axios';
 import { Request } from 'express';
 import * as profile from '../db/queries/profile';
-import * as cloudflare from '../db/queries/cloudflare';
 import * as content from '../db/queries/content';
 import { getFile } from 'cloudflare';
+import { NonVideoPlayerInfo } from '../types/cloudflare';
 
 export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
 export const comparePassword = async (password: string, hash: string) => await bcrypt.compare(password, hash);
@@ -205,25 +205,25 @@ export async function transformContent(contentItems: any[]) {
   async function fetchCollaboratorInfo(collaborators: string[]) {
     const collaboratorInfoList = [];
 
-    for (let i = 0; i < collaborators.length; i++) {
-      const collaboratorId = collaborators[i];
-      if (collaboratorId !== '' && collaboratorId !== null) {
+    for (const collaboratorId of collaborators) {
+      if (collaboratorId) {
         try {
-          const getCollaboratorInfoResponse = await profileApi.post('getProfilesByIdList', { profileIdList: [collaboratorId] }, { headers: authHeader });
+          const profileData = await profile.selectProfileByID(collaboratorId);
+          if (profileData) {
+            const { organization, logofileid, tag } = profileData;
+            let logoUrl = null;
 
-          const { organization, logofileid, tag } = getCollaboratorInfoResponse.data[0];
-
-          let logoUrl = null;
-          if (logofileid) {
-            try {
-              const fileResponse = await getFile(logofileid);
-              logoUrl = fileResponse.playerInfo?.publicUrl;
-            } catch (fileError) {
-              console.error(`Failed to fetch file from Cloudflare for collaborator ${collaboratorId}:`, fileError);
+            if (logofileid) {
+              try {
+                const fileResponse = await getFile(logofileid);
+                logoUrl = (fileResponse.playerInfo as NonVideoPlayerInfo)?.publicUrl;
+              } catch (fileError) {
+                console.error(`Failed to fetch file from Cloudflare for collaborator ${collaboratorId}:`, fileError);
+              }
             }
-          }
 
-          collaboratorInfoList.push({ organization, logoUrl, tag });
+            collaboratorInfoList.push({ organization, logoUrl, tag });
+          }
         } catch (error) {
           console.error(`Failed to fetch info for collaborator ${collaboratorId}:`, error);
         }
@@ -233,11 +233,3 @@ export async function transformContent(contentItems: any[]) {
     return collaboratorInfoList;
   }
 }
-
-export const getUploadTusEndpoint = (fileId: string, authToken: string): string => {
-  const UPLOAD_TUS_ENDPOINT = `${settings.CLOUDFLARE_SERVICE_URL}/upload/video-tus-reservation`;
-  const url = new URL(UPLOAD_TUS_ENDPOINT);
-  url.searchParams.set('fileId', fileId);
-  url.searchParams.set('authorization', authToken);
-  return url.toString();
-};

@@ -242,8 +242,3 @@ app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Res
     res.status(500).send('Error updating VTT');
   }
 });
-
-// Starting the server
-app.listen(settings.PORT, async () => {
-  console.log(`Listening on port ${settings.PORT}`);
-});

@@ -173,7 +173,7 @@ export const getFile = async (fileId: string) => {
     throw new Error('File ' + fileId + ' not found.');
   }
 
-  let playerInfo: VideoPlayerInfo | NonVideoPlayerInfo | undefined = undefined;
+  let playerInfo: VideoPlayerInfo | NonVideoPlayerInfo = {};
 
   const dbFile = r?.dataValues;
   if ('cloudflareStream' === dbFile.storage_type) {

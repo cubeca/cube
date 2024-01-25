@@ -2,8 +2,9 @@ import { app } from './index';
 import { Request, Response } from 'express';
 
 import * as db from './db/queries/profile';
-import * as settings from './settings';
+
 import { allowIfAnyOf, extractUser } from './middleware/auth';
+import { getProfileData } from 'utils/utils';
 
 app.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   try {
@@ -139,8 +140,8 @@ app.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: R
       return res.status(404).send('Profile tag not found');
     }
 
-    const profileId = r?.dataValues.id;
-    const profile = await getProfileData(profileId);
+    const profileId = r.dataValues.id;
+    const profile = await getProfileData(profileId ?? '');
     res.status(200).json({ data: profile });
   } catch (e: any) {
     console.error('Profile does not exists', e);
@@ -210,17 +211,4 @@ app.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Reques
 
   await db.deleteProfile(profileId);
   res.status(200);
-});
-
-// Route for checking if the service is running
-app.get('/', async (req: Request, res: Response) => {
-  try {
-    res.status(200).send('Service is running');
-  } catch (error) {
-    res.status(500).send('Internal server error');
-  }
-});
-
-app.listen(settings.PORT, async () => {
-  console.log(`Listening on port ${settings.PORT}`);
 });
