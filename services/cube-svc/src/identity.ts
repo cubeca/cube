@@ -1,5 +1,4 @@
-import { app } from 'index';
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
 import he from 'he';
 import { validationResult } from 'express-validator';
@@ -15,11 +14,12 @@ import * as profile from './db/queries/profile';
 // @ts-ignore
 import UuidEncoder from 'uuid-encoder';
 
+export const router = express.Router();
 /**
  * Create a user based on provided attributes.  If an organization, website or tag is passed
  * also create an associated profile for the user.
  */
-app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async (req: Request, res: Response) => {
+router.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async (req: Request, res: Response) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -73,7 +73,7 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
 /**
  * Log a user in based on supplied username and password.
  */
-app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+router.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -125,7 +125,7 @@ app.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Res
 /**
  * Allow anonymous users to obtain a temporary authentication token
  */
-app.post('/auth/anonymous', async (req: Request, res: Response) => {
+router.post('/auth/anonymous', async (req: Request, res: Response) => {
   try {
     const token = jwt.sign(
       {
@@ -146,7 +146,7 @@ app.post('/auth/anonymous', async (req: Request, res: Response) => {
 /**
  * Update an email for currently authenticated users.
  */
-app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+router.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { uuid, email } = req.body;
 
   if (!uuid || !email) {
@@ -177,7 +177,7 @@ app.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Respons
 /**
  * Update password for a user.
  */
-app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: Request, res: Response) => {
+router.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: Request, res: Response) => {
   const { currentPassword, newPassword } = req.body;
 
   if (!newPassword) {
@@ -222,7 +222,7 @@ app.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: 
 /**
  * On account creation, confirm the users email via provided link to their inbox.
  */
-app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
+router.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
   const token = req.params.token as string;
 
   if (!token) {
@@ -266,7 +266,7 @@ app.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
 /**
  * Trigger password reset email to users who are locked out.
  */
-app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+router.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email } = req.body;
   if (!email) {
     return res.status(400).send('Email is required');
@@ -290,7 +290,7 @@ app.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request
 /**
  * Trigger email verification if original has expired or didn't arrive.
  */
-app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+router.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const user = extractUser(req);
 
   try {
@@ -313,7 +313,7 @@ app.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (re
 /**
  * Trigger an email when someone submits the contact us form.
  */
-app.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
+router.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { name, email, desc, ticketId } = req.body;
 
   try {

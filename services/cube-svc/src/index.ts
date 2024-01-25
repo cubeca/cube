@@ -2,14 +2,19 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 
 import * as settings from './settings';
-import { allowIfAnyOf } from 'middleware/auth';
-import * as content from 'db/queries/content';
-import * as profile from 'db/queries/profile';
-import { transformContent } from 'utils/utils';
+import * as content from './db/queries/content';
+import * as profile from './db/queries/profile';
 
-export const app: Express = express();
+import { allowIfAnyOf } from './middleware/auth';
+import { transformContent } from './utils/utils';
+
+import { cloudflare } from './cloudflare';
+
+const app: Express = express();
 app.use(cors());
 app.use(express.json());
+
+app.use('/cloudflare', cloudflare);
 
 app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   type ServiceResult = {

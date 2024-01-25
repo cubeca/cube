@@ -1,5 +1,5 @@
 import { Content, Vtt, User } from '../models';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 
 export const getContentById = async (contentId: string) => {
   return await Content.findOne({ where: { id: contentId } });

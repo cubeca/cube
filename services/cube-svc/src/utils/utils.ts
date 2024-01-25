@@ -7,8 +7,8 @@ import { AxiosHeaders } from 'axios';
 import { Request } from 'express';
 import * as profile from '../db/queries/profile';
 import * as content from '../db/queries/content';
-import { getFile } from 'cloudflare';
-import { NonVideoPlayerInfo } from '../types/cloudflare';
+import { getFile } from '../cloudflare';
+import { NonVideoPlayerInfo, UploadMetadata } from '../types/cloudflare';
 
 export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
 export const comparePassword = async (password: string, hash: string) => await bcrypt.compare(password, hash);
@@ -117,7 +117,9 @@ export const parseTusUploadMetadata = (headerValues: string | string[]): any => 
   const parsed: { [k: string]: string | true | Buffer | undefined } = {};
   for (const headerValue of Array.isArray(headerValues) ? headerValues : [headerValues]) {
     for (const [metaName, metaValue] of headerValue.split(',').map((m: string) => m.split(' '))) {
-      parsed[metaName] = !metaValue ? true : base64decode(metaValue);
+      if (metaName) {
+        parsed[metaName] = !metaValue ? true : base64decode(metaValue);
+      }
     }
   }
   return parsed;

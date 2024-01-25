@@ -1,17 +1,18 @@
-import { app } from './index';
-import { Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 
 import mime from 'mime';
 import * as db from './db/queries/cloudflare';
 import * as settings from './settings';
+import * as stream from './utils/stream';
+
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { UUID_REGEXP, parseTusUploadMetadata } from './utils/utils';
-import * as stream from './utils/stream';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { VideoPlayerInfo, NonVideoPlayerInfo } from './types/cloudflare';
 
-app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+export const cloudflare = express.Router();
+cloudflare.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const fileId = req.query.fileId as string;
 
   if (!fileId) {
@@ -90,7 +91,7 @@ app.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (
   }
 });
 
-app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+cloudflare.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   const {
     profileId,
     upload: { fileName, fileSizeBytes, mimeType, urlValidDurationSeconds = 30 * 60 }
@@ -132,7 +133,7 @@ app.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: 
   }
 });
 
-app.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+cloudflare.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
 
   if (!UUID_REGEXP.test(fileId as string)) {
