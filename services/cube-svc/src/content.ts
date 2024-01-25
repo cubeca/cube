@@ -5,7 +5,6 @@ const { PubSub } = require('@google-cloud/pubsub');
 const pubsub = new PubSub();
 
 import * as db from './db/queries/content';
-import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendReportAbuseEmail } from './middleware/email';
 import { getApiResultFromDbRow } from './utils/utils';
@@ -42,7 +41,7 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
       //@ts-ignore
       const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
       await pubsub.topic(topicName).publish(Buffer.from(message));
-      console.log('Queued VTT');
+
       //@ts-ignore
       dbResult.data.vttQueued = true;
     }
@@ -50,7 +49,7 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error creating the content item', error);
-    res.status(500).send('Error creating the content item');
+    return res.status(500).send('Error creating the content item');
   }
 });
 
@@ -89,9 +88,8 @@ app.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: 
     return res.status(404).send('Content not found');
   }
 
-  const transformedContent = await transformContent(dbResult.dataValues);
-
-  res.status(200).json(transformedContent[0]);
+  const transformedContent = await transformContent([dbResult]);
+  return res.status(200).json(transformedContent[0]);
 });
 
 // API endpoint for updating content by content id
@@ -118,7 +116,7 @@ app.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Reque
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error updating the content item', error);
-    res.status(500).send('Error updating the content item');
+    return res.status(500).send('Error updating the content item');
   }
 });
 
@@ -151,34 +149,7 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error deleting content item', error);
-    res.status(500).send('Could not delete content item');
-  }
-});
-
-app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const offset = parseInt(req.query.offset as string, 10) || 0;
-  const limit = parseInt(req.query.limit as string, 10) || 10;
-  const searchTerm = (req.query.searchTerm as string) || '';
-  const filters = req.query.filters ?? {};
-
-  //  Check if the search term is provided
-  if (!searchTerm && !filters) {
-    return res.status(404).send('Search term or a filter is not provided.');
-  }
-
-  try {
-    const searchResult = await db.searchContent(offset, limit, filters, searchTerm);
-    res.status(200).json({
-      meta: {
-        offset,
-        limit,
-        filters
-      },
-      data: searchResult
-    });
-  } catch (error) {
-    console.error('Error searching for content', error);
-    res.status(500).send('Error searching for content');
+    return res.status(500).send('Could not delete content item');
   }
 });
 
@@ -193,30 +164,26 @@ app.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, re
 
   try {
     await sendReportAbuseEmail(disputedUrl, requestType, contactName, contactEmail, issueDesc, ticketId);
-    res.status(200).json('OK');
+    return res.status(200).json('OK');
   } catch (error) {
     console.error('Error sending content report', error);
-    res.status(500).send('Error sending content report');
-  }
-});
-
-// API endpoint for checking the service status
-app.get('/', async (req: Request, res: Response) => {
-  try {
-    res.status(200).send('Service is running');
-  } catch (error) {
-    res.status(500).send('Internal server error');
+    return res.status(500).send('Error sending content report');
   }
 });
 
 app.get('/vtt/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).send('Invalid request parameters');
+    }
+
     const result = await db.getVTTById(id);
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (error) {
     console.error('Error getting VTT', error);
-    res.status(500).send('Error getting VTT');
+    return res.status(500).send('Error getting VTT');
   }
 });
 
@@ -224,21 +191,26 @@ app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Res
   try {
     const { id } = req.params;
     const { transcript } = req.body;
-    console.log({ id, transcript });
+
+    if (!id || !transcript) {
+      return res.status(400).send('Invalid request parameters');
+    }
+
     const user = extractUser(req);
-    console.log({ user });
     const content = await db.getContentById(id);
+
     //@ts-ignore
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, content.data.profileId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update content for this profile');
     }
+
     const result = await db.updateVTT(id, transcript);
     const dataBuffer = Buffer.from(id);
     await pubsub.topic('vtt_upload').publishMessage({ data: dataBuffer });
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (error) {
     console.error('Error updating VTT', error);
-    res.status(500).send('Error updating VTT');
+    return res.status(500).send('Error updating VTT');
   }
 });

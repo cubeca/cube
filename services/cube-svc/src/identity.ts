@@ -5,7 +5,7 @@ import he from 'he';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries/identity';
-import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward, UUID_REGEXP } from './utils/utils';
+import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, UUID_REGEXP } from './utils/utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEmail, sendPasswordResetEmail } from './middleware/email';
