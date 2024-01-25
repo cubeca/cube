@@ -14,7 +14,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.498.0",
     "@aws-sdk/s3-request-presigner": "^3.498.0",
-    "@getbrevo/brevo": "^2.0.0-beta.4",
+    "@getbrevo/brevo": "github:getbrevo/brevo-node",
     "@google-cloud/pubsub": "^4.1.1",
     "axios": "^1.6.5",
     "bcrypt": "^5.1.1",
