@@ -8,8 +8,8 @@ import * as db from './db/queries/identity';
 import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, filterHeadersToForward, UUID_REGEXP } from './utils/utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
-import { createDefaultProfile } from './utils/profile';
 import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEmail, sendPasswordResetEmail } from './middleware/email';
+import * as profile from './db/queries/profile';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -33,12 +33,13 @@ app.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async
     const permissionIds = ['anonymous'];
 
     // Create Default Profile
-    let profileId = '';
+    let profileId: string = '';
     if (organization || website || tag) {
-      const authHeader = filterHeadersToForward(req, 'authorization');
-      profileId = await createDefaultProfile(authHeader, organization, he.decode(website), tag);
-      permissionIds.push('contentEditor');
-      if (!profileId) {
+      try {
+        const r = await profile.insertProfile(organization, he.decode(website), tag);
+        profileId = r.id as string;
+        permissionIds.push('contentEditor');
+      } catch (error) {
         console.error('Error creating profile for user. Organization name, website or tag already exist', organization, website, tag);
         return res.status(400).send('Error creating profile for user. Organization name, website, or tag already exists');
       }

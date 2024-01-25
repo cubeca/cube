@@ -10,6 +10,7 @@ export const ENCRYPT_SECRET = process.env.ENCRYPT_SECRET || 'encrypt_secret';
 export const JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET || 'secret';
 export const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 export const CONTACT_US_EMAIL = process.env.CONTACT_US_EMAIL || '';
+export const REPORT_ABUSE_EMAIL = process.env.REPORT_ABUSE_EMAIL || '';
 
 export const CLOUDFLARE_ACCOUNT_ID: string = process.env.CLOUDFLARE_ACCOUNT_ID || '__UNSET__';
 export const CLOUDFLARE_API_TOKEN: string = process.env.CLOUDFLARE_API_TOKEN || '__UNSET__';
