@@ -2,19 +2,25 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 
 import * as settings from './settings';
-import * as content from './db/queries/content';
-import * as profile from './db/queries/profile';
+import * as contentQueries from './db/queries/content';
+import * as profileQueries from './db/queries/profile';
 
 import { allowIfAnyOf } from './middleware/auth';
 import { transformContent } from './utils/utils';
 
 import { cloudflare } from './cloudflare';
+import { profile } from './profile';
+import { identity } from './identity';
+import { content } from './content';
 
 const app: Express = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/cloudflare', cloudflare);
+app.use('/', cloudflare);
+app.use('/', profile);
+app.use('/', identity);
+app.use('/', content);
 
 app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   type ServiceResult = {
@@ -47,7 +53,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
   if (!scope || scope === 'content') {
     try {
-      const contentSearchResult = await content.searchContent(offset, limit, filters, searchTerm);
+      const contentSearchResult = await contentQueries.searchContent(offset, limit, filters, searchTerm);
 
       searchContentResult.meta = {
         offset: offset,
@@ -64,7 +70,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
   if (!scope || scope === 'profile') {
     try {
-      const profileSearchResult = await profile.searchProfiles(offset, limit, searchTerm);
+      const profileSearchResult = await profileQueries.searchProfiles(offset, limit, searchTerm);
 
       searchProfileResult.meta = {
         offset: offset,
@@ -102,7 +108,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   return res.status(200).json(responsePayload);
 });
 
-app.get('/', async (res: Response) => {
+app.get('/', async (_req: Request, res: Response) => {
   return res.status(200).send('Service is running');
 });
 

@@ -3,10 +3,10 @@ import express, { Request, Response } from 'express';
 import * as db from './db/queries/profile';
 
 import { allowIfAnyOf, extractUser } from './middleware/auth';
-import { getProfileData } from 'utils/utils';
+import { getProfileData } from './utils/utils';
 
-export const router = express.Router();
-router.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+export const profile = express.Router();
+profile.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (_req: Request, res: Response) => {
   try {
     const r = await db.selectAllProfiles();
     res.status(200).json(r);
@@ -16,7 +16,7 @@ router.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request
   }
 });
 
-router.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+profile.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (_req: Request, res: Response) => {
   try {
     const r = await db.selectAllProfiles();
     const result = Object.values(r).map((item: any) => ({
@@ -33,7 +33,7 @@ router.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (req: Re
 });
 
 // Route for creating a new profile
-router.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+profile.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
 
   // Check if required fields are provided in the request body
@@ -57,7 +57,7 @@ router.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Reques
 });
 
 // Route for updating an existing profile by its ID
-router.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+profile.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
   // Ensure at least one field is provided for update
@@ -104,7 +104,7 @@ router.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request
 });
 
 // Route for fetching a profile by its ID
-router.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+profile.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { profileId } = req.params;
 
   // Check if the profile ID is provided
@@ -124,7 +124,7 @@ router.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (r
 });
 
 // Route for fetching a profile by its tag
-router.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+profile.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { tag } = req.params;
 
   // Check if the profile ID is provided
@@ -150,7 +150,7 @@ router.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req
 });
 
 // Route for fetching a list of profile by their ids
-router.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+profile.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { profileIdList } = req.body;
 
   // Check if the profile id list is provided
@@ -175,7 +175,7 @@ router.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (
   }
 });
 
-router.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+profile.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = (req.query.searchTerm as string) ?? '{}';
@@ -202,7 +202,7 @@ router.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, 
 });
 
 // Route for deleting a profile by its ID
-router.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
+profile.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId;
 
   if (!profileId) {

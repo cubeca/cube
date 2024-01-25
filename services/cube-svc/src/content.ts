@@ -8,11 +8,11 @@ import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendReportAbuseEmail } from './middleware/email';
 import { getApiResultFromDbRow } from './utils/utils';
 
-import { transformContent } from 'utils/utils';
-export const router = express.Router();
+import { transformContent } from './utils/utils';
+export const content = express.Router();
 
 // API endpoint for creating new content
-router.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { profileId, vttFileId, ...contentData } = req.body;
@@ -55,7 +55,7 @@ router.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res:
 
 // API endpoint for listing content by profile id with ability to filter by
 // data points such as type or tags
-router.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+content.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = req.query.profileId as string;
@@ -77,7 +77,7 @@ router.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request,
 });
 
 // API endpoint for getting content by content id
-router.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+content.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const contentId = req.params.contentId;
   if (!contentId) {
     return res.status(400).send('Invalid content ID');
@@ -93,7 +93,7 @@ router.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (re
 });
 
 // API endpoint for updating content by content id
-router.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+content.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { profileId, ...contentData } = req.body;
@@ -121,7 +121,7 @@ router.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Re
 });
 
 // API endpoint for deleting content by content id
-router.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+content.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { contentId } = req.params;
@@ -154,7 +154,7 @@ router.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: 
 });
 
 // API endpoint for reporting a content item
-router.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+content.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { disputedUrl, requestType, contactName, contactEmail, issueDesc, ticketId } = req.body;
 
   // Check if any of the parameters are missing or falsy
@@ -171,7 +171,7 @@ router.post('/report', allowIfAnyOf('anonymous', 'active'), async (req: Request,
   }
 });
 
-router.get('/vtt/:id', async (req: Request, res: Response) => {
+content.get('/vtt/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -187,7 +187,7 @@ router.get('/vtt/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+content.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { transcript } = req.body;
