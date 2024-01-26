@@ -47,10 +47,6 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
     }
   });
 
-  if (!searchTerm && !filters) {
-    return res.status(404).send('Search term or a filter is not provided.');
-  }
-
   if (!scope || scope === 'content') {
     try {
       const contentSearchResult = await contentQueries.searchContent(offset, limit, filters, searchTerm);

@@ -88,7 +88,9 @@ content.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (r
     return res.status(404).send('Content not found');
   }
 
-  const transformedContent = await transformContent([dbResult]);
+  const content = getApiResultFromDbRow(dbResult);
+  const transformedContent = await transformContent([content]);
+
   return res.status(200).json(transformedContent[0]);
 });
 

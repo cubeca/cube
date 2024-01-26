@@ -180,11 +180,6 @@ profile.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request,
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const searchTerm = (req.query.searchTerm as string) ?? '{}';
 
-  // Check if the search term is provided
-  if (!searchTerm) {
-    return res.status(404).send('Search term not provided.');
-  }
-
   // Fetch the profile and return its details
   try {
     const searchResult = await db.searchProfiles(offset, limit, searchTerm);

@@ -110,7 +110,6 @@ export const makeCloudflareTusUploadMetadata = ({ reserveDurationSeconds, isPriv
   }
 
   return serialized.join(',');
-  // maxDurationSeconds NjAw,requiresignedurls,expiry MjAyMy0wMi0yMFQwMDowMDowMFoK,creator ZnJvbS1tZXRhZGF0YS1yYXBoYWVsCg==
 };
 
 export const parseTusUploadMetadata = (headerValues: string | string[]): any => {
@@ -136,7 +135,9 @@ export const getFiles = async (fileIds: string[]) => {
   await Promise.all(promises)
     .then((results) => {
       results.forEach((result) => {
-        files[result.id] = result;
+        if (result) {
+          files[result.id] = result;
+        }
       });
     })
     .catch((error) => {
@@ -218,7 +219,7 @@ export async function transformContent(contentItems: any[]) {
             if (logofileid) {
               try {
                 const fileResponse = await getFile(logofileid);
-                logoUrl = (fileResponse.playerInfo as NonVideoPlayerInfo)?.publicUrl;
+                logoUrl = (fileResponse?.playerInfo as NonVideoPlayerInfo)?.publicUrl;
               } catch (fileError) {
                 console.error(`Failed to fetch file from Cloudflare for collaborator ${collaboratorId}:`, fileError);
               }

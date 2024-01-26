@@ -203,11 +203,15 @@ export const getFile = async (fileId: string) => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
+    const fileType = mime.getExtension(mimeType) || 'bin';
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
     const publicUrl = `${settings.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL}/${dbFile.data.filePathInBucket}`;
 
     playerInfo = {
       mimeType,
-      fileType: mime.extension(mimeType) || 'bin',
+      fileType,
       publicUrl
     };
   }
