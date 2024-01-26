@@ -6,7 +6,7 @@ import * as contentQueries from './db/queries/content';
 import * as profileQueries from './db/queries/profile';
 
 import { allowIfAnyOf } from './middleware/auth';
-import { transformContent } from './utils/utils';
+import { getApiResultFromDbRow, transformContent } from './utils/utils';
 
 import { cloudflare } from './cloudflare';
 import { profile } from './profile';
@@ -50,6 +50,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   if (!scope || scope === 'content') {
     try {
       const contentSearchResult = await contentQueries.searchContent(offset, limit, filters, searchTerm);
+      const data = contentSearchResult.map(getApiResultFromDbRow);
 
       searchContentResult.meta = {
         offset: offset,
@@ -57,7 +58,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
         filters: filters
       };
       searchContentResult.status = 200;
-      searchContentResult.data = await transformContent(contentSearchResult);
+      searchContentResult.data = await transformContent(data);
     } catch (error: any) {
       searchContentResult.status = error.response?.status || 500;
       searchContentResult.error = error.message;

@@ -175,27 +175,6 @@ profile.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async 
   }
 });
 
-profile.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
-  const offset = parseInt(req.query.offset as string, 10) || 0;
-  const limit = parseInt(req.query.limit as string, 10) || 10;
-  const searchTerm = (req.query.searchTerm as string) ?? '{}';
-
-  // Fetch the profile and return its details
-  try {
-    const searchResult = await db.searchProfiles(offset, limit, searchTerm);
-    res.status(200).json({
-      meta: {
-        offset,
-        limit
-      },
-      data: searchResult
-    });
-  } catch (error) {
-    console.error('Error searching for profiles', error);
-    res.status(500).send('Error searching for profiles');
-  }
-});
-
 // Route for deleting a profile by its ID
 profile.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId;

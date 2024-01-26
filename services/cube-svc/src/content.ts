@@ -62,18 +62,12 @@ content.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request
   const filters = req.query.filters ?? {};
 
   const dbResult = await db.listContentByProfileId(offset, limit, filters, profileId);
+
   const data = dbResult.map(getApiResultFromDbRow);
   const transformedContent = await transformContent(data);
 
   // Returning paginated content data
-  res.status(200).json({
-    meta: {
-      offset,
-      limit,
-      filters
-    },
-    transformedContent
-  });
+  res.status(200).json(transformedContent);
 });
 
 // API endpoint for getting content by content id
