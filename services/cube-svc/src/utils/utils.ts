@@ -3,8 +3,6 @@ import * as CryptoJS from 'crypto-js';
 import * as settings from '../settings';
 import { body } from 'express-validator';
 import { Buffer } from 'node:buffer';
-import { AxiosHeaders } from 'axios';
-import { Request } from 'express';
 import * as profile from '../db/queries/profile';
 import * as content from '../db/queries/content';
 import { getFile } from '../cloudflare';
@@ -39,29 +37,6 @@ export const validateUserCreateInput = [
   body('website').optional().trim().escape(),
   body('tag').optional().trim().escape()
 ];
-
-export const filterHeadersToForward = (req: Request, ...allowList: string[]): AxiosHeaders => {
-  return new AxiosHeaders(filterObject(req.headers, ...allowList) as { [key: string]: string });
-};
-
-export const filterObject = (obj: any, ...allowedKeys: string[]) =>
-  Object.fromEntries(Object.entries(obj).filter(([key, _]: [key: string, _: any]) => allowedKeys.includes(key)));
-
-export const stringToKeyValuePairs = (str: any) => {
-  if (str === '{}') {
-    return {};
-  }
-
-  const pairs = str.split('&');
-  const result: any = {};
-
-  for (const pair of pairs) {
-    const [key, value] = pair.split('=');
-    result[key] = value;
-  }
-
-  return result;
-};
 
 export const base64encode = (s: any) => Buffer.from(String(s), 'utf8').toString('base64');
 export const base64decode = (b64: any): string | Buffer | undefined => {

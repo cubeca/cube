@@ -12,6 +12,7 @@ import { cloudflare } from './cloudflare';
 import { profile } from './profile';
 import { identity } from './identity';
 import { content } from './content';
+import { vtt } from './vtt';
 
 const app: Express = express();
 app.use(cors());
@@ -21,6 +22,7 @@ app.use('/', cloudflare);
 app.use('/', profile);
 app.use('/', identity);
 app.use('/', content);
+app.use('/', vtt);
 
 app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   type ServiceResult = {
@@ -57,6 +59,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
         limit: limit,
         filters: filters
       };
+
       searchContentResult.status = 200;
       searchContentResult.data = await transformContent(data);
     } catch (error: any) {
@@ -74,6 +77,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
         limit: limit,
         filters: filters
       };
+
       searchProfileResult.status = 200;
       searchProfileResult.data = profileSearchResult;
     } catch (error: any) {

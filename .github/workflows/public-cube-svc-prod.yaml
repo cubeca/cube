@@ -1,0 +1,25 @@
+name: Publish cube microservice PROD
+
+run-name: Publish cube microservice PROD @ ${{ github.sha }}
+
+on:
+    push:
+        branches:
+            - deploy-production
+        paths:
+            - "services/cube-svc/**"
+            - ".github/workflows/publish-cube-svc-prod.yaml"
+            - ".github/workflows/publish-reusable.yaml"
+
+jobs:
+    publish-service:
+        uses: ./.github/workflows/publish-reusable.yaml
+        with:
+            CODE_BASE_DIR: services/cube-svc
+            GCP_PROJECT: cubecommons-prod
+            GCP_REGION: northamerica-northeast2
+            GCP_RUN_APPNAME: cube-svc
+            GCP_WORKLOAD_IDENTITY_PROVIDER: projects/366271888053/locations/global/workloadIdentityPools/cube-prod/providers/github-actions
+            GCP_SERVICE_ACCOUNT: service-deployer@cubecommons-prod.iam.gserviceaccount.com
+            GCP_RUN_OPTION_ENV: --set-env-vars=CLOUDFLARE_ACCOUNT_ID=812b8374abe5aa28e1ff4b96f82e1340,CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN=customer-ayah89x7bps0l5b8.cloudflarestream.com,CLOUDFLARE_R2_BUCKET_NAME=cubecommons-prod,CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL=https://files.cubecommons.ca
+            GCP_RUN_OPTION_SECRETS: --set-secrets=COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest,ENCRYPT_SECRET=prod-identity-password-encryption-secret:latest,JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,BREVO_API_KEY=prod-brevo-api-key:latest,CONTACT_US_EMAIL=prod-contact-us-email:latest,CLOUDFLARE_R2_ACCESS_KEY_ID=prod-cloudflare-r2-access-key-id:latest,CLOUDFLARE_API_TOKEN=prod-cloudflare-api-token:latest,CLOUDFLARE_R2_SECRET_ACCESS_KEY=prod-cloudflare-r2-secret-access-key:latest
