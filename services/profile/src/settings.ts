@@ -1,6 +1,9 @@
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+export const COCKROACH_DB_CONNECTION_STRING =
+  process.env.COCKROACH_DB_CONNECTION_STRING || 'postgresql://root@localhost:26257/defaultdb?sslmode=disable';
+
 export const PORT: number = parseInt((process.env.PORT as string) || '8080', 10);
 export const JWT_TOKEN_SECRET: string = process.env.JWT_TOKEN_SECRET || 'secret';
 

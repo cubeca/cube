@@ -38,19 +38,25 @@ app.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Re
       return res.status(403).send('User does not have permission to create content for this profile');
     }
 
+    if (vttFileId) {
+      contentData.vttFileId = vttFileId;
+    }
+
     // Insert content into database
-    const dbResult = await db.insertContent({ profileId, ...contentData });
-    const response = { ...dbResult };
+    const r = await db.insertContent({ profileId, ...contentData });
+    const dbResult = r?.dataValues;
     if (!vttFileId && (type === 'video' || type === 'audio')) {
       // Publish a message to Google Pub/Sub
       const topicName = 'vtt_transcribe'; // Replace with your actual topic name
+      //@ts-ignore
       const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
       await pubsub.topic(topicName).publish(Buffer.from(message));
       console.log('Queued VTT');
-      response.data.vttQueued = true;
+      //@ts-ignore
+      dbResult.data.vttQueued = true;
     }
 
-    return res.status(201).json(getApiResultFromDbRow(response));
+    return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error creating the content item', error);
     res.status(500).send('Error creating the content item');
@@ -129,6 +135,7 @@ app.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Req
     }
 
     // Check if user is associated with the profile of the content item
+    //@ts-ignore
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, contentItem.data.profileId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to delete content for this profile');
@@ -216,6 +223,7 @@ app.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Res
     const user = extractUser(req);
     console.log({ user });
     const content = await db.getContentById(id);
+    //@ts-ignore
     const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, content.data.profileId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update content for this profile');

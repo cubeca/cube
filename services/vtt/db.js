@@ -1,107 +1,99 @@
+const { COCKROACH_DB_CONNECTION_STRING } = require("./settings");
+const { DataTypes } = require("sequelize");
 const { Sequelize } = require("sequelize");
-const dbHost = process.env.PGHOST;
-const dbUser = process.env.PGUSER;
-const dbPassword = process.env.PGPASSWORD;
-const dbName = process.env.PGDATABASE;
-const dbPort = process.env.PGPORT;
 
-const sequelizeContent = new Sequelize(dbName, dbUser, dbPassword, {
-  host: dbHost,
-  port: dbPort,
-  dialect: "postgres",
-  define: {
-    timestamps: false,
-    idleTimeoutMillis: 30000,
-    max: 10,
-  },
+const sequelize = new Sequelize(COCKROACH_DB_CONNECTION_STRING, {
+    schema: "cube",
 });
 
-const sequelizeCF = new Sequelize("cube_cloudflare", dbUser, dbPassword, {
-  host: dbHost,
-  port: dbPort,
-  dialect: "postgres",
-  define: {
-    timestamps: false,
-    idleTimeoutMillis: 30000,
-    max: 10,
-  },
-});
-
-const vtt = sequelizeContent.define(
-  "vtt",
-  {
-    id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      primaryKey: true,
+const vtt = sequelize.define(
+    "vtt",
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+        },
+        transcript: {
+            type: DataTypes.JSONB,
+            defaultValue: {},
+        },
     },
-    transcript: {
-      type: Sequelize.JSONB,
-      defaultValue: {},
-    },
-  },
-  {
-    freezeTableName: true,
-  }
+    {
+        sequelize,
+        modelName: "vtt",
+        tableName: "vtt",
+        timestamps: false,
+    }
 );
 
-const content = sequelizeContent.define(
-  "content",
-  {
-    id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      primaryKey: true,
+const content = sequelize.define(
+    "content",
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        data: {
+            type: DataTypes.JSONB,
+            allowNull: false,
+            defaultValue: {},
+        },
     },
-    data: {
-      type: Sequelize.JSONB,
-      defaultValue: {},
-    },
-    created_at: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-    updated_at: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-  },
-  {
-    freezeTableName: true,
-  }
+    {
+        sequelize,
+        modelName: "content",
+        tableName: "content",
+        timestamps: false,
+    }
 );
-const files = sequelizeCF.define(
-  "files",
-  {
-    id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      primaryKey: true,
+
+const files = sequelize.define(
+    "files",
+    {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+        },
+        storage_type: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        created_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        updated_at: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        data: {
+            type: DataTypes.JSONB,
+            allowNull: false,
+            defaultValue: {},
+        },
     },
-    storage_type: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
-    created_at: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-    updated_at: {
-      type: Sequelize.DATE,
-      defaultValue: Sequelize.NOW,
-    },
-    data: {
-      type: Sequelize.JSONB,
-      defaultValue: {},
-    },
-  },
-  {
-    freezeTableName: true,
-  }
+    {
+        sequelize,
+        modelName: "files",
+        tableName: "files",
+        timestamps: false,
+    }
 );
 
 module.exports = {
-  vtt,
-  content,
-  files,
+    sequelize,
+    vtt,
+    content,
+    files,
 };

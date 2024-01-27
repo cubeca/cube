@@ -14,9 +14,14 @@ const { downloadCloudflareStream, uploadFile, downloadR2 } = require("./cf.js");
 const { transcribe } = require("./ai.js");
 const { generateVTT } = require("./vtt.js");
 
+const maxTries = 100;
 const outputPath = "/tmp";
 
 const retry = async (contentID, currentTries) => {
+  if (typeof currentTries !== "number" || currentTries >= maxTries) {
+    console.error("Max tries reached");
+    return;
+  }
   let tries = currentTries + 1;
   const dataBuffer = Buffer.from(
     JSON.stringify({ contentID, tries: tries + 1 })
@@ -137,13 +142,8 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
         return;
       }
     } catch (error) {
-      console.log({ error });
-      if (tries <= 100) {
-        await retry(contentID, tries);
-        return;
-      } else {
-        throw new Error("Too many retries");
-      }
+      console.error({ error });
+      await retry(contentID, tries);
     }
 
     try {
@@ -151,11 +151,73 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
       const mp3Size = Math.round((mp3Stats.size / 1024 / 1024) * 100) / 100; //size in megabytes, rounded to 2 decimal places
       console.log({ mp3Size }); //For debugging, whisper has a 25MB limit
 
+      let transcript;
       if (mp3Size > 25) {
-        throw new Error("MP3 Size too large"); //place holder until audio splitting
+        const transcripts = [];
+        const chunkCount = Math.ceil(mp3Size / 25);
+        console.log({ chunkCount });
+        const audioDuration = await new Promise((resolve, reject) => {
+          ffmpeg.ffprobe(`${outputPath}/${id}-audio.mp3`, (err, metadata) => {
+            if (err) {
+              console.log({ err });
+              reject(err);
+            }
+            resolve(metadata.format.duration);
+          });
+        });
+        const chunkSize = Math.ceil(audioDuration / chunkCount);
+        //Split audio into chunks
+        for (let i = 0; i < chunkCount; i++) {
+          const startTime = i * chunkSize;
+          const endTime = startTime + chunkSize;
+          console.log({ startTime, endTime });
+          await new Promise((resolve, reject) => {
+            ffmpeg(`${outputPath}/${id}-audio.mp3`)
+              .setStartTime(startTime)
+              .setDuration(chunkSize)
+              .output(`${outputPath}/${id}-audio-${i}.mp3`)
+              .on("end", () => {
+                console.log(`Chunk ${i} Created`);
+                resolve();
+              })
+              .on("error", (error) => {
+                console.error({ error });
+                reject(error);
+              })
+              .run();
+          });
+          transcripts.push({
+            transcript: await transcribe(`${outputPath}/${id}-audio-${i}.mp3`),
+            startTime,
+            endTime,
+          });
+        }
+        console.log("Transcripts Generated");
+        transcript = {};
+        for (const set of transcripts) {
+          const offset = set.startTime;
+          const t = set.transcript;
+          for (const timestamp in t) {
+            const offsetTimestamp = parseFloat(timestamp) + offset;
+            const s = t[timestamp];
+            s.start += offset;
+            s.end += offset;
+            transcript[offsetTimestamp] = s;
+          }
+        }
+      } else {
+        transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
+        console.log("Transcript Generated");
       }
-
-      const transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
+      for (const key in transcript) {
+        const segment = transcript[key];
+        let start = parseFloat(parseFloat(key) + 0.01).toFixed(3);
+        segment.start = start;
+        segment.end = parseFloat(segment.end).toFixed(3);
+        transcript[start] = segment;
+        delete transcript[key];
+      }
+      console.log({ transcript });
       console.log("Transcript Generated");
 
       const vttText = generateVTT(transcript);
@@ -186,41 +248,26 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
       console.log(`Message ${messageId} published.`);
     } catch (processingError) {
       console.error({ processingError });
-      if (tries <= 25) {
-        //Try up to 25 times
-        await retry(contentID, tries);
-        return;
-      } else {
-        console.log("Too many retries");
-      }
+      await retry(contentID, tries);
     } finally {
-      if (mediaData.type === "video") {
-        try {
-          fs.unlinkSync(`${outputPath}/${id}-video`);
-          console.log("Cleanup - Video Removed");
-        } catch (videoCleanupError) {
-          console.log("Unable to remove video");
+      //purge all mp3, mp4, and vtt files
+      //get list
+      const files = fs.readdirSync(outputPath);
+      //filter
+      const purgeList = files.filter((file) => {
+        if (file.includes(id)) {
+          return true;
         }
-      }
-      if (mediaData.type === "audio") {
-        try {
-          fs.unlinkSync(`${outputPath}/${id}-audio`);
-          console.log("Cleanup - Audio Removed");
-        } catch (audioCleanupError) {
-          console.log("Unable to remove raw audio");
-        }
-      }
-      //Always remove processed audio
-      try {
-        fs.unlinkSync(`${outputPath}/${id}-audio.mp3`);
-        console.log("Cleanup - Audio Removed");
-      } catch (audioCleanupError) {
-        console.log("Unable to remove processed audio");
+        return false;
+      });
+      //delete
+      for (const file of purgeList) {
+        fs.unlinkSync(`${outputPath}/${file}`);
       }
     }
   } catch (error) {
-    console.log({ error });
-    retry(contentID, tries);
+    console.error({ error });
+    await retry(contentID, tries);
   }
 });
 
