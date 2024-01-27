@@ -26,4 +26,4 @@ jobs:
 
             GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-prod:northamerica-northeast2:prod
             GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-prod:northamerica-northeast2:prod,PGDATABASE=cube_profile,PGUSER=postgres
-            GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,PGPASSWORD=prod-db-password:latest,COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest
+            GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,PGPASSWORD=prod-db-password:latest,COCKROACH_DB_CONNECTION_STRING=cockroachdb-connection:latest
