@@ -26,4 +26,4 @@ jobs:
 
             GCP_RUN_OPTION_DB: --set-cloudsql-instances=cubecommons-prod:northamerica-northeast2:prod
             GCP_RUN_OPTION_ENV: --set-env-vars=PGPORT=5432,PGHOST=/cloudsql/cubecommons-prod:northamerica-northeast2:prod,PGDATABASE=cube_identity,PGUSER=postgres,PROFILE_SERVICE_URL=https://profile-ztbavieh4q-pd.a.run.app,BFF_HOST=https://bff.cubecommons.ca,HOST=https://cubecommons.ca
-            GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,PGPASSWORD=prod-db-password:latest,ENCRYPT_SECRET=prod-identity-password-encryption-secret:latest,BREVO_API_KEY=prod-brevo-api-key:latest,CONTACT_US_EMAIL=prod-contact-us-email:latest,,COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest
+            GCP_RUN_OPTION_SECRETS: --set-secrets=JWT_TOKEN_SECRET=prod-jwt-token-secret:latest,PGPASSWORD=prod-db-password:latest,ENCRYPT_SECRET=prod-identity-password-encryption-secret:latest,BREVO_API_KEY=prod-brevo-api-key:latest,CONTACT_US_EMAIL=prod-contact-us-email:latest,COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest
