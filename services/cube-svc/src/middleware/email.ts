@@ -23,7 +23,7 @@ export const sendVerificationEmail = async (name: string, email: string, token: 
 
   const defaultClient = Brevo.ApiClient.instance;
   const apiKey = defaultClient.authentications['api-key'];
-  apiKey.apiKey = process.env.BREVO_API_KEY;
+  apiKey.apiKey = settings.BREVO_API_KEY;
 
   const apiInstance = new Brevo.TransactionalEmailsApi();
   const sendSmtpEmail = new Brevo.SendSmtpEmail();
@@ -36,7 +36,7 @@ export const sendVerificationEmail = async (name: string, email: string, token: 
   sendSmtpEmail.templateId = brevoTemplateIdMapping.SEND_VERIFICATION_EMAIL;
   sendSmtpEmail.params = {
     NAME: `${name}`,
-    EMAIL_VERIFICATION_URL: `${process.env.BFF_HOST}/auth/email/verify/${token}`
+    EMAIL_VERIFICATION_URL: `${settings.HOST}/auth/email/verify/${token}`
   };
 
   try {
@@ -58,7 +58,7 @@ export const sendPasswordChangeConfirmation = async (uuid: string) => {
 
   const defaultClient = Brevo.ApiClient.instance;
   const apiKey = defaultClient.authentications['api-key'];
-  apiKey.apiKey = process.env.BREVO_API_KEY;
+  apiKey.apiKey = settings.BREVO_API_KEY;
 
   const apiInstance = new Brevo.TransactionalEmailsApi();
   const sendSmtpEmail = new Brevo.SendSmtpEmail();
@@ -113,7 +113,7 @@ export const sendPasswordResetEmail = async (email: string) => {
 
     const defaultClient = Brevo.ApiClient.instance;
     const apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
+    apiKey.apiKey = settings.BREVO_API_KEY;
 
     const apiInstance = new Brevo.TransactionalEmailsApi();
     const sendSmtpEmail = new Brevo.SendSmtpEmail();
@@ -126,7 +126,7 @@ export const sendPasswordResetEmail = async (email: string) => {
     sendSmtpEmail.templateId = brevoTemplateIdMapping.PASSWORD_RESET_EMAIL;
     sendSmtpEmail.params = {
       NAME: `${user.name}`,
-      PASSWORD_CHANGE_URL: `${process.env.HOST}/reset-password/${token}`
+      PASSWORD_CHANGE_URL: `${settings.HOST}/reset-password/${token}`
     };
 
     try {

@@ -116,7 +116,7 @@ profile.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (
   // Fetch the profile and return its details
   try {
     const profile = await getProfileData(profileId);
-    res.status(200).json({ data: profile });
+    res.status(200).json({ ...profile });
   } catch (e: any) {
     console.error('Profile does not exist', e);
     res.status(404).send('Profile does not exist');

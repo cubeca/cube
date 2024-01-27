@@ -124,19 +124,19 @@ export const getFiles = async (fileIds: string[]) => {
 
 export const getProfileData = async (profileId: string) => {
   const r = await profile.selectProfileByID(profileId);
-  const profileResult: { [k: string]: any } = { ...r };
+  const profileResult: { [k: string]: any } = { ...r?.dataValues };
 
-  if (r !== null) {
-    const { files } = await getFiles([r.herofileid, r.logofileid, r.descriptionfileid]);
+  if (profileResult !== null) {
+    const { files } = await getFiles([profileResult.herofileid, profileResult.logofileid, profileResult.descriptionfileid]);
 
-    if (files[r.herofileid]) {
-      profileResult.heroUrl = files[r.herofileid].playerInfo.publicUrl;
+    if (files[profileResult.herofileid]) {
+      profileResult.heroUrl = files[profileResult.herofileid].playerInfo.publicUrl;
     }
-    if (files[r.logofileid]) {
-      profileResult.logoUrl = files[r.logofileid].playerInfo.publicUrl;
+    if (files[profileResult.logofileid]) {
+      profileResult.logoUrl = files[profileResult.logofileid].playerInfo.publicUrl;
     }
-    if (files[r.descriptionfileid]) {
-      profileResult.descriptionUrl = files[r.descriptionfileid].playerInfo.publicUrl;
+    if (files[profileResult.descriptionfileid]) {
+      profileResult.descriptionUrl = files[profileResult.descriptionfileid].playerInfo.publicUrl;
     }
   }
 

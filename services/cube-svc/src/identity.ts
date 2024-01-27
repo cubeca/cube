@@ -226,14 +226,14 @@ identity.get('/auth/email/verify/:token', async (req: Request, res: Response) =>
   const token = req.params.token as string;
 
   if (!token) {
-    const redirectUrl = `${process.env.HOST}/verified?errorCode=INVALID_TOKEN`;
+    const redirectUrl = `${settings.HOST}/verified?errorCode=INVALID_TOKEN`;
     return res.status(301).redirect(redirectUrl);
   }
 
   try {
     jwt.verify(token, settings.JWT_TOKEN_SECRET, async (err: any, decoded: any) => {
       if (err) {
-        const redirectUrl = `${process.env.HOST}/verified?errorCode=TOKEN_VERIFICATION_FAILED`;
+        const redirectUrl = `${settings.HOST}/verified?errorCode=TOKEN_VERIFICATION_FAILED`;
         return res.status(301).redirect(redirectUrl);
       }
 
@@ -245,7 +245,7 @@ identity.get('/auth/email/verify/:token', async (req: Request, res: Response) =>
 
       const user = await db.selectUserByID(uuid as string);
       if (user?.has_verified_email) {
-        const redirectUrl = `${process.env.HOST}/verified?errorCode=EMAIL_ALREADY_VERIFIED`;
+        const redirectUrl = `${settings.HOST}/verified?errorCode=EMAIL_ALREADY_VERIFIED`;
         return res.status(301).redirect(redirectUrl);
       }
 
@@ -253,12 +253,12 @@ identity.get('/auth/email/verify/:token', async (req: Request, res: Response) =>
       await db.addPermissionIds(uuid as string, ['active']);
       await db.updateActiveStatus(uuid as string, true);
 
-      const redirectUrl = `${process.env.HOST}/verified?token=` + encodeURIComponent(token);
+      const redirectUrl = `${settings.HOST}/verified?token=` + encodeURIComponent(token);
       return res.status(301).redirect(redirectUrl);
     });
   } catch (error: any) {
     console.error('Error occurred verifying email: ', error);
-    const redirectUrl = `${process.env.HOST}/verified?errorCode=SERVER_ERROR`;
+    const redirectUrl = `${settings.HOST}/verified?errorCode=SERVER_ERROR`;
     return res.status(500).send(redirectUrl);
   }
 });
