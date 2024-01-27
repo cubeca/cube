@@ -3,73 +3,73 @@ name: Publish VTT
 run-name: Publish VTT
 
 on:
-  workflow_call:
-    inputs:
-      GCP_WORKLOAD_IDENTITY_PROVIDER:
-        required: true
-        type: string
-      GCP_SERVICE_ACCOUNT:
-        required: true
-        type: string
-      ENV_NAME:
-        required: true
-        type: string
-      CLOUDFLARE_R2_BUCKET_NAME:
-        required: true
-        type: string
+    workflow_call:
+        inputs:
+            GCP_WORKLOAD_IDENTITY_PROVIDER:
+                required: true
+                type: string
+            GCP_SERVICE_ACCOUNT:
+                required: true
+                type: string
+            ENV_NAME:
+                required: true
+                type: string
+            CLOUDFLARE_R2_BUCKET_NAME:
+                required: true
+                type: string
 # See https://www.padok.fr/en/blog/github-action-gcp-identity
 env:
-  GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ inputs.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-  GCP_SERVICE_ACCOUNT: ${{ inputs.GCP_SERVICE_ACCOUNT }}
-  ENV_NAME: ${{ inputs.ENV_NAME }}
-  CLOUDFLARE_R2_BUCKET_NAME: ${{ inputs.CLOUDFLARE_R2_BUCKET_NAME }}
+    GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ inputs.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+    GCP_SERVICE_ACCOUNT: ${{ inputs.GCP_SERVICE_ACCOUNT }}
+    ENV_NAME: ${{ inputs.ENV_NAME }}
+    CLOUDFLARE_R2_BUCKET_NAME: ${{ inputs.CLOUDFLARE_R2_BUCKET_NAME }}
 jobs:
-  publish_vtt:
-    runs-on: ubuntu-22.04
-    name: Publish VTT
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v3
+    publish_vtt:
+        runs-on: ubuntu-22.04
+        name: Publish VTT
+        permissions:
+            contents: read
+            id-token: write
+        steps:
+            - name: Checkout ${{ github.repository }}
+              uses: actions/checkout@v3
 
-      - name: Set up node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+            - name: Set up node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
 
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+            - name: Authenticate with GCP
+              uses: google-github-actions/auth@v1
+              with:
+                  workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+                  service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
 
-      - name: Deploy VTT Transcribe
-        run: |
-          cd services/vtt/
-          gcloud functions deploy vtt_transcribe \
-           --runtime nodejs18 \
-           --trigger-topic vtt_transcribe \
-           --gen2 \
-           --region=northamerica-northeast2 \
-           --timeout=540 \
-           --project=cubecommons-${{ env.ENV_NAME }} \
-           --memory=2GB \
-           --set-secrets COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
-           --set-env-vars CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
-           --ingress-settings=internal-only
-      - name: Deploy VTT Upload
-        run: |
-          cd services/vtt/
-          gcloud functions deploy vtt_upload \
-           --runtime nodejs18 \
-           --trigger-topic vtt_upload \
-           --gen2 \
-           --region=northamerica-northeast2 \
-           --timeout=120 \
-           --project=cubecommons-${{ env.ENV_NAME }} \
-           --memory=256MB \
-           --set-secrets COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
-           --set-env-vars CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
-           --ingress-settings=internal-only
+            - name: Deploy VTT Transcribe
+              run: |
+                  cd services/vtt/
+                  gcloud functions deploy vtt_transcribe \
+                   --runtime nodejs18 \
+                   --trigger-topic vtt_transcribe \
+                   --gen2 \
+                   --region=northamerica-northeast2 \
+                   --timeout=540 \
+                   --project=cubecommons-${{ env.ENV_NAME }} \
+                   --memory=2GB \
+                   --set-secrets COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
+                   --set-env-vars CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
+                   --ingress-settings=internal-only
+            - name: Deploy VTT Upload
+              run: |
+                  cd services/vtt/
+                  gcloud functions deploy vtt_upload \
+                   --runtime nodejs18 \
+                   --trigger-topic vtt_upload \
+                   --gen2 \
+                   --region=northamerica-northeast2 \
+                   --timeout=120 \
+                   --project=cubecommons-${{ env.ENV_NAME }} \
+                   --memory=256MB \
+                   --set-secrets COCKROACH_DB_CONNECTION_STRING=cockroachdb_connection:latest,OPENAI=${{ env.ENV_NAME }}-openai:latest,cfToken=${{ env.ENV_NAME }}-cloudflare-api-token:latest,CF-R2-ID=${{ env.ENV_NAME }}-cloudflare-r2-access-key-id:latest,CF-R2-SECRET=${{ env.ENV_NAME }}-cloudflare-r2-secret-access-key:latest,CF-ACCOUNT-ID=${{ env.ENV_NAME }}-cloudflare-account-id:latest \
+                   --set-env-vars CLOUDFLARE_R2_BUCKET_NAME=${{ env.CLOUDFLARE_R2_BUCKET_NAME }} \
+                   --ingress-settings=internal-only
