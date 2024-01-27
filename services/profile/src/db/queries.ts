@@ -1,6 +1,6 @@
 import { Profile } from './models';
 import { User } from './models';
-import { Op, OrderItem } from 'sequelize';
+import { Op, OrderItem, Sequelize } from 'sequelize';
 
 // Function to insert a new profile into the 'profiles' table
 export const insertProfile = async (organization: string, website: string, tag: string) => {
@@ -54,9 +54,10 @@ export const selectAllProfiles = async () => {
 // Function to select a profile from the 'profiles' table by its tag
 export const selectProfileByTag = async (tag: string) => {
   return await Profile.findOne({
-    where: {
-      tag: tag.toLowerCase()
-    }
+    where: Sequelize.where(
+      Sequelize.fn('LOWER', Sequelize.col('tag')),
+      Sequelize.fn('LOWER', tag)
+    )
   });
 };
 
