@@ -8,7 +8,7 @@ import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './Profile.styled';
 import { UserContext } from 'providers/UserProvider';
 import { getProfileId, getProfileTag } from 'utils/auth';
-import { BFFGetProfileByTagData } from '@cubeca/bff-client-oas-axios';
+import { GetProfileByTagData } from '@cubeca/cube-svc-client-oas-axios';
 import useProfile from 'hooks/useProfile';
 
 const Profile = () => {
@@ -69,7 +69,7 @@ const Profile = () => {
         anchorEl={anchorEl}
         onClose={handleMenuClose}
         id={menuId}
-        profile={profile as BFFGetProfileByTagData}
+        profile={profile as GetProfileByTagData}
         profileId={profileId || ''}
       />
     </Box>

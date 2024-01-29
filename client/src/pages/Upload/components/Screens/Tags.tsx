@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import CollaboratorInput from 'components/form/CollaboratorInput';
 import * as s from './Tags.styled';
-import { SearchFiltersCategoryEnum } from '@cubeca/bff-client-oas-axios';
+import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import { Controller } from 'react-hook-form';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 

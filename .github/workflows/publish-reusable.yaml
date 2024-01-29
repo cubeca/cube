@@ -1,138 +1,125 @@
-name: Publish Service
-
-run-name: Publish Service
-
+name: Publish CubeCommons Service
+run-name: Publish CubeCommons Service
 on:
-  workflow_call:
-    inputs:
-      CODE_BASE_DIR:
-        required: true
-        type: string
-      GCP_PROJECT:
-        required: true
-        type: string
-      GCP_REGION:
-        required: true
-        type: string
-      GCP_RUN_APPNAME:
-        required: true
-        type: string
-
-      # See https://www.padok.fr/en/blog/github-action-gcp-identity
-      GCP_WORKLOAD_IDENTITY_PROVIDER:
-        required: true
-        type: string
-      GCP_SERVICE_ACCOUNT:
-        required: true
-        type: string
-
-
-      GCP_RUN_OPTION_MIN_INSTANCES:
-        default: '--min-instances=0'
-        required: false
-        type: string
-      GCP_RUN_OPTION_DB:
-        # default: '--set-cloudsql-instances='
-        default: '--clear-cloudsql-instances'
-        required: false
-        type: string
-      GCP_RUN_OPTION_ENV:
-        # default: '--set-env-vars=ENVVAR1=VALUE1,ENVVAR2=VALUE2'
-        default: '--clear-env-vars'
-        required: false
-        type: string
-      GCP_RUN_OPTION_SECRETS:
-        # default: '--set-secrets=ENVVAR1=SECRET1_ID:latest,ENVVAR2=SECRET2_ID:latest'
-        default: '--clear-secrets'
-        required: false
-        type: string
-      # --service-account=$GCP_RUN_SERVICE_ACCOUNT
+    workflow_call:
+        inputs:
+            CODE_BASE_DIR:
+                required: true
+                type: string
+            GCP_PROJECT:
+                required: true
+                type: string
+            GCP_REGION:
+                required: true
+                type: string
+            GCP_RUN_APPNAME:
+                required: true
+                type: string
+            GCP_WORKLOAD_IDENTITY_PROVIDER:
+                required: true
+                type: string
+            GCP_SERVICE_ACCOUNT:
+                required: true
+                type: string
+            GCP_RUN_OPTION_MIN_INSTANCES:
+                default: "--min-instances=0"
+                required: false
+                type: string
+            GCP_RUN_OPTION_DB:
+                default: "--clear-cloudsql-instances"
+                required: false
+                type: string
+            GCP_RUN_OPTION_ENV:
+                default: "--clear-env-vars"
+                required: false
+                type: string
+            GCP_RUN_OPTION_SECRETS:
+                default: "--clear-secrets"
+                required: false
+                type: string
 
 env:
-  # Translate all `inputs.*` into env vars, so that they can also be used inside Makefiles and shell scripts
-  GITHUB_SHA: ${{ github.sha }}
-  LOCAL_DOCKER_IMAGE: cubeca/${{ inputs.GCP_RUN_APPNAME }}:latest
-  CODE_BASE_DIR: ${{ inputs.CODE_BASE_DIR }}
-  GCP_PROJECT: ${{ inputs.GCP_PROJECT }}
-  GCP_ARTIFACT_REGISTRY_DOMAIN: ${{ inputs.GCP_REGION }}-docker.pkg.dev
-  GCP_DOCKER_IMAGE: ${{ inputs.GCP_REGION }}-docker.pkg.dev/${{ inputs.GCP_PROJECT }}/cube-docker-images/${{ inputs.GCP_RUN_APPNAME }}:${{ github.sha }}
-  GCP_RUN_APPNAME: ${{ inputs.GCP_RUN_APPNAME }}
-  GCP_RUN_REGION: ${{ inputs.GCP_REGION }}
-  GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ inputs.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-  GCP_SERVICE_ACCOUNT: ${{ inputs.GCP_SERVICE_ACCOUNT }}
+    # Translate all `inputs.*` into env vars, so that they can also be used inside Makefiles and shell scripts
+    GITHUB_SHA: ${{ github.sha }}
+    LOCAL_DOCKER_IMAGE: cubeca/${{ inputs.GCP_RUN_APPNAME }}:latest
+    CODE_BASE_DIR: ${{ inputs.CODE_BASE_DIR }}
+    GCP_PROJECT: ${{ inputs.GCP_PROJECT }}
+    GCP_ARTIFACT_REGISTRY_DOMAIN: ${{ inputs.GCP_REGION }}-docker.pkg.dev
+    GCP_DOCKER_IMAGE: ${{ inputs.GCP_REGION }}-docker.pkg.dev/${{ inputs.GCP_PROJECT }}/cube-docker-images/${{ inputs.GCP_RUN_APPNAME }}:${{ github.sha }}
+    GCP_RUN_APPNAME: ${{ inputs.GCP_RUN_APPNAME }}
+    GCP_RUN_REGION: ${{ inputs.GCP_REGION }}
+    GCP_WORKLOAD_IDENTITY_PROVIDER: ${{ inputs.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+    GCP_SERVICE_ACCOUNT: ${{ inputs.GCP_SERVICE_ACCOUNT }}
 
-  GCP_RUN_OPTION_MIN_INSTANCES: ${{ inputs.GCP_RUN_OPTION_MIN_INSTANCES }}
-  GCP_RUN_OPTION_DB: ${{ inputs.GCP_RUN_OPTION_DB }}
-  GCP_RUN_OPTION_ENV: ${{ inputs.GCP_RUN_OPTION_ENV }}
-  GCP_RUN_OPTION_SECRETS: ${{ inputs.GCP_RUN_OPTION_SECRETS }}
-
-# See https://www.padok.fr/en/blog/github-action-gcp-identity
+    GCP_RUN_OPTION_MIN_INSTANCES: ${{ inputs.GCP_RUN_OPTION_MIN_INSTANCES }}
+    GCP_RUN_OPTION_DB: ${{ inputs.GCP_RUN_OPTION_DB }}
+    GCP_RUN_OPTION_ENV: ${{ inputs.GCP_RUN_OPTION_ENV }}
+    GCP_RUN_OPTION_SECRETS: ${{ inputs.GCP_RUN_OPTION_SECRETS }}
 
 jobs:
-  publish_service:
-    runs-on: ubuntu-22.04
-    name: Publish Service
+    publish_service:
+        runs-on: ubuntu-22.04
+        name: Publish Service
+        # Add "id-token" with the intended permissions.
+        # See https://github.com/google-github-actions/auth#usage
+        # See https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+        # See https://github.com/cubeca/api-specs/settings/actions
+        permissions:
+            contents: read
+            id-token: write
 
-    # Add "id-token" with the intended permissions.
-    # See https://github.com/google-github-actions/auth#usage
-    # See https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
-    # See https://github.com/cubeca/api-specs/settings/actions
-    permissions:
-      contents: read
-      id-token: write
+        steps:
+            - name: Checkout ${{ github.repository }}
+              uses: actions/checkout@v3
 
-    steps:
-      - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v3
+            - name: Set up node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
 
-      - name: Set up node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
+            - name: Authenticate with GCP
+              uses: google-github-actions/auth@v1
+              with:
+                  workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+                  service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
 
-      - name: Authenticate with GCP
-        uses: google-github-actions/auth@v1
-        with:
-          workload_identity_provider: ${{ env.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ env.GCP_SERVICE_ACCOUNT }}
+            - name: Set up GCP Cloud SDK
+              uses: google-github-actions/setup-gcloud@v1
 
-      - name: Set up GCP Cloud SDK
-        uses: google-github-actions/setup-gcloud@v1
+            - name: Configure Docker to use GCP Artifact Registry
+              run: |
+                  gcloud auth configure-docker $GCP_ARTIFACT_REGISTRY_DOMAIN
 
-      - name: Configure Docker to use GCP Artifact Registry
-        run: |
-          gcloud auth configure-docker $GCP_ARTIFACT_REGISTRY_DOMAIN
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+            - name: Run make docker_build
+              run: |
+                  make --directory=$CODE_BASE_DIR docker_build
 
-      - name: Run make docker_build
-        run: |
-          make --directory=$CODE_BASE_DIR docker_build
+            - name: Run docker tag and push
+              run: |
+                  docker tag $LOCAL_DOCKER_IMAGE $GCP_DOCKER_IMAGE
+                  docker push $GCP_DOCKER_IMAGE
 
-      - name: Run docker tag and push
-        run: |
-          docker tag $LOCAL_DOCKER_IMAGE $GCP_DOCKER_IMAGE
-          docker push $GCP_DOCKER_IMAGE
+            - name: Deploy to GCP Cloud Run
+              run: |
+                  gcloud run deploy \
+                    --project=$GCP_PROJECT \
+                    --platform=managed \
+                    --region=$GCP_RUN_REGION \
+                    --image=$GCP_DOCKER_IMAGE \
+                    --ingress=all \
+                    --allow-unauthenticated \
+                    --timeout=300 \
+                    $GCP_RUN_OPTION_MIN_INSTANCES \
+                    --max-instances=1 \
+                    --cpu=1 \
+                    --memory=1Gi \
+                    --execution-environment=gen1 \
+                    $GCP_RUN_OPTION_DB \
+                    $GCP_RUN_OPTION_ENV \
+                    $GCP_RUN_OPTION_SECRETS \
+                    $GCP_RUN_APPNAME
 
-      - name: Deploy to GCP Cloud Run
-        run: |
-          gcloud run deploy \
-            --project=$GCP_PROJECT \
-            --platform=managed \
-            --region=$GCP_RUN_REGION \
-            --image=$GCP_DOCKER_IMAGE \
-            --ingress=all \
-            --allow-unauthenticated \
-            --timeout=300 \
-            $GCP_RUN_OPTION_MIN_INSTANCES \
-            --max-instances=1 \
-            --cpu=1 \
-            --memory=1Gi \
-            --execution-environment=gen1 \
-            $GCP_RUN_OPTION_DB \
-            $GCP_RUN_OPTION_ENV \
-            $GCP_RUN_OPTION_SECRETS \
-            $GCP_RUN_APPNAME
-
-            # --ingress=internal-and-cloud-load-balancing \
+                    # --ingress=internal-and-cloud-load-balancing \

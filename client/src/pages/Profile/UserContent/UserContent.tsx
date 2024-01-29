@@ -4,7 +4,7 @@ import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { SearchFilters } from '@cubeca/bff-client-oas-axios';
+import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
 import useDebounce from '../../../hooks/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { searchContent } from 'api/search';

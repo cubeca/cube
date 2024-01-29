@@ -3,7 +3,7 @@ import { contentApi } from '.';
 import {
   AddContentRequest,
   ReportContentRequest
-} from '@cubeca/bff-client-oas-axios';
+} from '@cubeca/cube-svc-client-oas-axios';
 
 export type CategoryType =
   | 'all'
