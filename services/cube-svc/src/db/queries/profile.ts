@@ -1,5 +1,5 @@
 import { Profile, User } from '../models';
-import { Op, OrderItem } from 'sequelize';
+import { Op, OrderItem, Sequelize } from 'sequelize';
 
 export const insertProfile = async (organization: string, website: string, tag: string) => {
   try {
