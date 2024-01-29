@@ -5,7 +5,10 @@ import { useCallback, useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import ContentFilter from './CategorizedContentFilter';
 import { searchContent } from 'api/search';
-import { ContentStorage, SearchFilters } from '@cubeca/bff-client-oas-axios';
+import {
+  ContentStorage,
+  SearchFilters
+} from '@cubeca/cube-svc-client-oas-axios';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import useDebounce from '../../../../hooks/useDebounce';
 import { useTranslation } from 'react-i18next';

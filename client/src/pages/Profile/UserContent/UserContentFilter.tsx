@@ -2,7 +2,7 @@ import Select from 'components/form/Select';
 import TextInput from 'components/form/TextInput';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { SearchFiltersCategoryEnum } from '@cubeca/bff-client-oas-axios';
+import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import * as s from './UserContentFilter.styled';
 import * as MenuItem from '../../../components/form/Select/MenuItem.styled';
 import { FC } from 'react';

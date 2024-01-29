@@ -1,7 +1,7 @@
 import { getContentByProfileId } from 'api/content';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { ContentStorage } from '@cubeca/bff-client-oas-axios';
+import { ContentStorage } from '@cubeca/cube-svc-client-oas-axios';
 
 interface ContentDetailsResponse {
   isLoading: boolean;
@@ -9,8 +9,6 @@ interface ContentDetailsResponse {
   data?: ContentStorage;
 }
 const useContentDetails = (profileId: string): ContentDetailsResponse => {
-
-
   const { isLoading, isError, data } = useQuery(
     ['profile', profileId],
     () => getContentByProfileId(profileId ?? ''),

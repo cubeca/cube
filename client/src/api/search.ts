@@ -1,4 +1,7 @@
-import { BFFSearchResponse, SearchFilters } from '@cubeca/bff-client-oas-axios';
+import {
+  SearchResponse,
+  SearchFilters
+} from '@cubeca/cube-svc-client-oas-axios';
 import { bffApi } from '.';
 
 /**
@@ -16,7 +19,7 @@ export const search = async (
   filters?: SearchFilters
 ) => {
   const data = await bffApi.search(searchTerm, offset, limit, filters);
-  const search: BFFSearchResponse = data.data;
+  const search: SearchResponse = data.data;
   return {
     contentResults: search.contentResults.data,
     profileResults: search.profileResults.data

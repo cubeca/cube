@@ -6,7 +6,7 @@ The codebase is a standard client-side React Application built from `create-reac
 
 ## Configuration
 
-1. In the `.env` file, you must specify a `PORT` for the application to run on and the `REACT_APP_BFF_URL` which is the backend service providing the data.  You can check an example configuration in `.env.example`.
+1. In the `.env` file, you must specify a `PORT` for the application to run on and the `REACT_APP_CUBE_SVC_URL` which is the backend service providing the data.  You can check an example configuration in `.env.example`.
 
 ## Building
 

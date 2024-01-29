@@ -1,4 +1,4 @@
-import { SearchFiltersCategoryEnum } from '@cubeca/bff-client-oas-axios';
+import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import Select from 'components/form/Select';
 import TextInput from 'components/form/TextInput';
 import { useForm } from 'react-hook-form';

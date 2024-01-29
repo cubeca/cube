@@ -11,14 +11,14 @@ import ChangePasswordDialog from './ChangePasswordDialog';
 import useAuth from 'hooks/useAuth';
 import { UserContext } from 'providers/UserProvider';
 import * as s from './Profile.styled';
-import { BFFGetProfileByTagData } from '@cubeca/bff-client-oas-axios';
+import { GetProfileByTagData } from '@cubeca/cube-svc-client-oas-axios';
 
 interface ProfileMenuProps {
   open: boolean;
   anchorEl: null | HTMLElement;
   onClose: () => void;
   id: string;
-  profile?: BFFGetProfileByTagData;
+  profile?: GetProfileByTagData;
   profileId?: string;
 }
 

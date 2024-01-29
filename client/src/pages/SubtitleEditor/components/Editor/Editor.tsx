@@ -5,7 +5,7 @@ import { getAuthToken } from '../../../../utils/auth';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { TextField } from '@mui/material';
-import { BFF_URL } from '../../../../api/settings';
+import { CUBE_SVC_URL } from '../../../../api/settings';
 import { getProfile } from '../../../../utils/auth';
 import { useNavigate } from 'react-router-dom';
 import * as s from './Editor.styled';
@@ -39,7 +39,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
           }
           const authToken = await getAuthToken();
           axios
-            .get(`${BFF_URL}/vtt/${contentId}`, {
+            .get(`${CUBE_SVC_URL}/vtt/${contentId}`, {
               headers: {
                 Authorization: `Bearer ${authToken}`
               }
@@ -76,7 +76,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
       };
     });
     await axios.put(
-      `${BFF_URL}/vtt/${contentId}`,
+      `${CUBE_SVC_URL}/vtt/${contentId}`,
       {
         transcript: vttObject
       },

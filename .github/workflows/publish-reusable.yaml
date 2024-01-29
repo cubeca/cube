@@ -1,7 +1,5 @@
 name: Publish CubeCommons Service
-
 run-name: Publish CubeCommons Service
-
 on:
     workflow_call:
         inputs:
@@ -17,35 +15,28 @@ on:
             GCP_RUN_APPNAME:
                 required: true
                 type: string
-
-            # See https://www.padok.fr/en/blog/github-action-gcp-identity
             GCP_WORKLOAD_IDENTITY_PROVIDER:
                 required: true
                 type: string
             GCP_SERVICE_ACCOUNT:
                 required: true
                 type: string
-
             GCP_RUN_OPTION_MIN_INSTANCES:
                 default: "--min-instances=0"
                 required: false
                 type: string
             GCP_RUN_OPTION_DB:
-                # default: '--set-cloudsql-instances='
                 default: "--clear-cloudsql-instances"
                 required: false
                 type: string
             GCP_RUN_OPTION_ENV:
-                # default: '--set-env-vars=ENVVAR1=VALUE1,ENVVAR2=VALUE2'
                 default: "--clear-env-vars"
                 required: false
                 type: string
             GCP_RUN_OPTION_SECRETS:
-                # default: '--set-secrets=ENVVAR1=SECRET1_ID:latest,ENVVAR2=SECRET2_ID:latest'
                 default: "--clear-secrets"
                 required: false
                 type: string
-            # --service-account=$GCP_RUN_SERVICE_ACCOUNT
 
 env:
     # Translate all `inputs.*` into env vars, so that they can also be used inside Makefiles and shell scripts
@@ -65,13 +56,10 @@ env:
     GCP_RUN_OPTION_ENV: ${{ inputs.GCP_RUN_OPTION_ENV }}
     GCP_RUN_OPTION_SECRETS: ${{ inputs.GCP_RUN_OPTION_SECRETS }}
 
-# See https://www.padok.fr/en/blog/github-action-gcp-identity
-
 jobs:
     publish_service:
         runs-on: ubuntu-22.04
         name: Publish Service
-
         # Add "id-token" with the intended permissions.
         # See https://github.com/google-github-actions/auth#usage
         # See https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token

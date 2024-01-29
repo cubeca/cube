@@ -1,7 +1,7 @@
 import { getContentDetails } from 'api/content';
 import { useQuery, QueryFunctionContext } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { ContentStorage } from '@cubeca/bff-client-oas-axios';
+import { ContentStorage } from '@cubeca/cube-svc-client-oas-axios';
 
 interface ContentDetailsResponse {
   isLoading: boolean;

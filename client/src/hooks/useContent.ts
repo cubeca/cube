@@ -8,7 +8,7 @@ import {
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { ContentQueryKeys } from 'api/enums';
-import { AddContentRequest } from '@cubeca/bff-client-oas-axios';
+import { AddContentRequest } from '@cubeca/cube-svc-client-oas-axios';
 
 const useContent = (list = 'videos', category?: string) => {
   const [searchParams] = useSearchParams();
