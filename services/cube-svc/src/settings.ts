@@ -5,6 +5,7 @@ export const HOST = process.env.HOST || 'http://localhost';
 export const PORT = parseInt(process.env.PORT || '8080', 10);
 
 export const COCKROACH_DB_CONNECTION_STRING = process.env.COCKROACH_DB_CONNECTION_STRING || 'postgresql://root@localhost:26257/defaultdb?sslmode=disable';
+export const CUBE_SVC_HOST = process.env.CUBE_SVC_HOST || 'http://localhost';
 
 export const ENCRYPT_SECRET = process.env.ENCRYPT_SECRET || 'encrypt_secret';
 export const JWT_TOKEN_SECRET = process.env.JWT_TOKEN_SECRET || 'secret';

@@ -36,7 +36,7 @@ export const sendVerificationEmail = async (name: string, email: string, token: 
   sendSmtpEmail.templateId = brevoTemplateIdMapping.SEND_VERIFICATION_EMAIL;
   sendSmtpEmail.params = {
     NAME: `${name}`,
-    EMAIL_VERIFICATION_URL: `${settings.HOST}/auth/email/verify/${token}`
+    EMAIL_VERIFICATION_URL: `${settings.CUBE_SVC_HOST}/auth/email/verify/${token}`
   };
 
   try {
