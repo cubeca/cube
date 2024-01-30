@@ -47,6 +47,6 @@ export const searchContent = async (
     filters,
     'content'
   );
-  const search: BFFSearchResponse = data.data;
+  const search: SearchResponse = data.data;
   return search.contentResults.data;
 };
