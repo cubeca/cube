@@ -311,7 +311,7 @@ identity.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), asyn
 });
 
 /**
- * Trigger an email when someone submits the contact us form.
+ * Trigger an email when someone submits the contact us form
  */
 identity.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { name, email, desc, ticketId } = req.body;
