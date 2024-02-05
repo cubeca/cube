@@ -1,4 +1,4 @@
-import { Playlist, User } from '../models';
+import { Playlist } from '../models';
 import { Op } from 'sequelize';
 
 export const getPlaylistById = async (playlistId: string) => {

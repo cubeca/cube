@@ -150,6 +150,42 @@ export const getProfileData = async (profileId: string) => {
   };
 };
 
+export async function transformPlaylist(playlistItems: any[]) {
+  return Promise.all(
+    playlistItems.map(async (item) => {
+      const newItem = { ...item };
+      const contentIds = newItem.contentIds;
+
+      const contentData = await Promise.all(contentIds.map((contentId: string) => content.getContentById(contentId)));
+      const transformedContent = await transformContentSimple(contentData);
+
+      return (newItem.contentItems = transformedContent);
+    })
+  );
+}
+
+export async function transformContentSimple(contentItems: any[]) {
+  const urlFieldNames = {
+    coverImageFileId: 'coverImageUrl'
+  };
+
+  return Promise.all(
+    contentItems.map(async (item) => {
+      const newItem = { ...item };
+
+      // Process URL fields
+      for (const [key, value] of Object.entries(urlFieldNames)) {
+        if (item[key]) {
+          newItem[value] = await getFile(item[key]);
+          delete newItem[key];
+        }
+      }
+
+      return newItem;
+    })
+  );
+}
+
 export async function transformContent(contentItems: any[]) {
   const urlFieldNames = {
     coverImageFileId: 'coverImageUrl',

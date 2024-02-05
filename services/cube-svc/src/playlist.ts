@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import * as db from './db/queries/playlist';
-import * as contentQueries from './db/queries/content';
-import { getApiResultFromDbRow, transformContent, transformPlaylist } from 'utils/utils';
+import { getApiResultFromDbRow, transformPlaylist } from 'utils/utils';
 import { extractUser } from 'middleware/auth';
 
 export const playlist = express.Router();
@@ -17,7 +16,10 @@ playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
     return res.status(404).send('Playlist not found');
   }
 
-  return res.status(200).json(dbResult);
+  const data = dbResult.dataValues;
+  const transformedPlaylist = await transformPlaylist([data]);
+
+  return res.status(200).json(transformedPlaylist);
 });
 
 playlist.get('/playlist', async (req: Request, res: Response) => {
@@ -29,8 +31,9 @@ playlist.get('/playlist', async (req: Request, res: Response) => {
 
   const dbResult = await db.listPlaylistsByProfileAndUserId(offset, limit, filters, profileId, userId);
   const data = dbResult.map(getApiResultFromDbRow);
+  const transformedPlaylist = await transformPlaylist(data);
 
-  res.status(200).json(data);
+  res.status(200).json(transformedPlaylist);
 });
 
 playlist.post('/playlist', async (req: Request, res: Response) => {
