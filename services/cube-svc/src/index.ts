@@ -13,6 +13,7 @@ import { profile } from './profile';
 import { identity } from './identity';
 import { content } from './content';
 import { vtt } from './vtt';
+import { playlist } from './playlist';
 
 const app: Express = express();
 app.use(cors());
@@ -23,6 +24,7 @@ app.use('/', profile);
 app.use('/', identity);
 app.use('/', content);
 app.use('/', vtt);
+app.use('/', playlist);
 
 app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   type ServiceResult = {

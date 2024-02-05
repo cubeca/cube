@@ -5,6 +5,10 @@ export const getContentById = async (contentId: string) => {
   return await Content.findOne({ where: { id: contentId } });
 };
 
+export const getContentByIdList = async (contentIdList: string[]) => {
+  return await Content.findAll({ where: { id: contentIdList } });
+};
+
 export const insertContent = async (data: any) => {
   return await Content.create({ data });
 };

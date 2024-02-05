@@ -57,3 +57,13 @@ CREATE TABLE public.profiles (
     CONSTRAINT profiles_tag_key UNIQUE (tag),
     CONSTRAINT profiles_website_key UNIQUE (website)
 );
+
+-- Playlist
+CREATE TABLE public.playlists (
+    id UUID NOT NULL DEFAULT gen_random_uuid(),
+    created_at TIMESTAMPTZ NULL DEFAULT current_timestamp(),
+    updated_at TIMESTAMPTZ NULL DEFAULT current_timestamp(),
+    data JSONB NOT NULL DEFAULT '{}'::JSONB,
+    CONSTRAINT playlists_pkey PRIMARY KEY (id)
+);
+CREATE INDEX playlist_by_profile_id ON public.playlists ((data ->> 'profileId'));

@@ -288,3 +288,47 @@ Profile.init(
     timestamps: false
   }
 );
+
+interface PlaylistAttributes {
+  id?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  data: object;
+}
+
+export class Playlist extends Model<PlaylistAttributes> implements PlaylistAttributes {
+  public declare id?: string;
+  public declare created_at?: Date;
+  public declare updated_at?: Date;
+  public declare data: object;
+}
+
+Playlist.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW
+    },
+    data: {
+      type: DataTypes.JSONB,
+      allowNull: false,
+      defaultValue: {}
+    }
+  },
+  {
+    sequelize,
+    modelName: 'Playlist',
+    tableName: 'playlist',
+    timestamps: false,
+    paranoid: true
+  }
+);
