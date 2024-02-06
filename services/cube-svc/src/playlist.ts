@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import * as db from './db/queries/playlist';
-import { getApiResultFromDbRow, transformPlaylist } from 'utils/utils';
-import { extractUser } from 'middleware/auth';
+import { getApiResultFromDbRow, transformPlaylist } from './utils/utils';
+import { allowIfAnyOf, extractUser } from './middleware/auth';
 
 export const playlist = express.Router();
 
@@ -16,27 +16,23 @@ playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
     return res.status(404).send('Playlist not found');
   }
 
-  const data = dbResult.dataValues;
-  const transformedPlaylist = await transformPlaylist([data]);
-
+  const transformedPlaylist = await transformPlaylist([dbResult.dataValues]);
   return res.status(200).json(transformedPlaylist);
 });
 
-playlist.get('/playlist', async (req: Request, res: Response) => {
+playlist.get('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = req.query.profileId as string;
   const userId = req.query.userId as string;
-  const filters = req.query.filters ?? {};
 
-  const dbResult = await db.listPlaylistsByProfileAndUserId(offset, limit, filters, profileId, userId);
-  const data = dbResult.map(getApiResultFromDbRow);
-  const transformedPlaylist = await transformPlaylist(data);
-
+  const dbResult = await db.listPlaylistsByProfileAndUserId(offset, limit, profileId, userId);
+  const playlistList = dbResult.map((item) => item.dataValues);
+  const transformedPlaylist = await transformPlaylist(playlistList);
   res.status(200).json(transformedPlaylist);
 });
 
-playlist.post('/playlist', async (req: Request, res: Response) => {
+playlist.post('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { profileId, ...playlistData } = req.body;
@@ -50,6 +46,8 @@ playlist.post('/playlist', async (req: Request, res: Response) => {
     const r = await db.insertPlaylist({ userId: user.uuid, profileId, ...playlistData });
     const dbResult = r?.dataValues;
 
+    console.log(dbResult);
+
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error creating the playlist', error);
@@ -57,7 +55,7 @@ playlist.post('/playlist', async (req: Request, res: Response) => {
   }
 });
 
-playlist.post('/playlist/:playlistId', async (req: Request, res: Response) => {
+playlist.post('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { ...playlistData } = req.body;
@@ -83,7 +81,7 @@ playlist.post('/playlist/:playlistId', async (req: Request, res: Response) => {
   }
 });
 
-playlist.delete('/playlist/:playlistId', async (req: Request, res: Response) => {
+playlist.delete('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { playlistId } = req.params;

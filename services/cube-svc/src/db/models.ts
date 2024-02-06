@@ -327,7 +327,7 @@ Playlist.init(
   {
     sequelize,
     modelName: 'Playlist',
-    tableName: 'playlist',
+    tableName: 'playlists',
     timestamps: false,
     paranoid: true
   }
