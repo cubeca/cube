@@ -156,17 +156,20 @@ export async function transformPlaylist(playlistItems: any[]) {
       const newItem = { ...item };
       const contentIds = newItem.data.contentIds;
 
-      const contentData = await Promise.all(
-        contentIds.map(async (contentId: string) => {
-          const contentItem = await content.getContentById(contentId);
-          return contentItem?.dataValues;
-        })
-      );
+      if (contentIds !== null || contentIds.length > 0) {
+        const contentData = await Promise.all(
+          contentIds.map(async (contentId: string) => {
+            const contentItem = await content.getContentById(contentId);
+            return contentItem?.dataValues;
+          })
+        );
 
-      const contentItems = contentData.map(getApiResultFromDbRow);
-      const transformedContent = await transformContentSimple(contentItems);
+        const contentItems = contentData.map(getApiResultFromDbRow);
+        const transformedContent = await transformContentSimple(contentItems);
 
-      newItem.contentItems = transformedContent;
+        newItem.contentItems = transformedContent;
+      }
+
       return newItem;
     })
   );
