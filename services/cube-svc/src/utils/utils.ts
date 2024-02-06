@@ -156,7 +156,7 @@ export async function transformPlaylist(playlistItems: any[]) {
       const newItem = { ...item };
       const contentIds = newItem.data.contentIds;
 
-      if (contentIds !== null || contentIds.length > 0) {
+      if (contentIds && contentIds.length > 0) {
         const contentData = await Promise.all(
           contentIds.map(async (contentId: string) => {
             const contentItem = await content.getContentById(contentId);
