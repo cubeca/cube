@@ -60,7 +60,8 @@ export const insertPlaylist = async (data: any) => {
 };
 
 export const updatePlaylist = async (playlistId: string, data: any) => {
-  return await Playlist.update({ data }, { where: { id: playlistId } });
+  const updatedPlaylist = await Playlist.update({ data }, { where: { id: playlistId }, returning: true });
+  return updatedPlaylist[1][0];
 };
 
 export const listPlaylists = async (offset: number, limit: number) => {

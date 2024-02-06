@@ -5,7 +5,7 @@ import { allowIfAnyOf, extractUser } from './middleware/auth';
 
 export const playlist = express.Router();
 
-playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
+playlist.get('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const playlistId = req.params.playlistId;
   if (!playlistId) {
     return res.status(400).send('Invalid playlist Id');
@@ -32,7 +32,7 @@ playlist.get('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   res.status(200).json(transformedPlaylist);
 });
 
-playlist.post('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+playlist.post('/playlist', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { profileId, ...playlistData } = req.body;
@@ -46,8 +46,6 @@ playlist.post('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Requ
     const r = await db.insertPlaylist({ userId: user.uuid, profileId, ...playlistData });
     const dbResult = r?.dataValues;
 
-    console.log(dbResult);
-
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
     console.error('Error creating the playlist', error);
@@ -55,7 +53,7 @@ playlist.post('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Requ
   }
 });
 
-playlist.post('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+playlist.post('/playlist/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { ...playlistData } = req.body;
@@ -73,15 +71,14 @@ playlist.post('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), asyn
     }
 
     const dbResult = await db.updatePlaylist(playlistId, { ...playlistData });
-
-    return res.status(200).json(getApiResultFromDbRow(dbResult));
+    return res.status(200).json(getApiResultFromDbRow(dbResult?.dataValues));
   } catch (error) {
     console.error('Error updating the playlist', error);
     return res.status(500).send('Error updating the playlist');
   }
 });
 
-playlist.delete('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+playlist.delete('/playlist/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { playlistId } = req.params;
@@ -106,7 +103,7 @@ playlist.delete('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), as
 
     // Delete playlist in the database
     const dbResult = await db.deletePlaylist(playlistId);
-    return res.status(200).json(getApiResultFromDbRow(dbResult));
+    return res.status(200).json(dbResult);
   } catch (error) {
     console.error('Error deleting playlist', error);
     return res.status(500).send('Could not delete playlist');
