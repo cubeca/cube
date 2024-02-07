@@ -151,10 +151,21 @@ export const getProfileData = async (profileId: string) => {
 };
 
 export async function transformPlaylist(playlistItems: any[]) {
+  const urlFieldNames = {
+    coverImageFileId: 'coverImageUrl'
+  };
+
   return Promise.all(
     playlistItems.map(async (item) => {
       const newItem = { ...item };
       const contentIds = newItem.data.contentIds;
+
+      for (const [key, value] of Object.entries(urlFieldNames)) {
+        if (item[key]) {
+          newItem[value] = await getFile(item[key]);
+          delete newItem[key];
+        }
+      }
 
       if (contentIds && contentIds.length > 0) {
         const contentData = await Promise.all(
