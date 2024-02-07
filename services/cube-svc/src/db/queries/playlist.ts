@@ -46,6 +46,31 @@ export const listPlaylistsByProfileAndUserId = async (offset: number, limit: num
   return playlistList;
 };
 
+export const searchPlaylist = async (offset: number, limit: number, searchTerm: string) => {
+  const whereClause: any = {};
+
+  if (searchTerm) {
+    whereClause[Op.or] = [
+      {
+        'data.title': {
+          [Op.iLike]: `%${searchTerm}%`
+        },
+        'data.description': {
+          [Op.iLike]: `%${searchTerm}%`
+        }
+      }
+    ];
+  }
+
+  const playlistList = await Playlist.findAll({
+    where: whereClause,
+    offset,
+    limit
+  });
+
+  return playlistList;
+};
+
 export const isUserAssociatedToPlaylist = async (uuid: string, playlistId: string) => {
   const user = await Playlist.findOne({ where: { 'data.userId': uuid, id: playlistId } });
   return !!user;
