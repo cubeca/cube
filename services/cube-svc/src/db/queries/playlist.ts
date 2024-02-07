@@ -46,21 +46,34 @@ export const listPlaylistsByProfileAndUserId = async (offset: number, limit: num
   return playlistList;
 };
 
-export const searchPlaylist = async (offset: number, limit: number, searchTerm: string) => {
-  const whereClause: any = {};
+export const searchPlaylist = async (offset: number, limit: number, filters: any, searchTerm: string) => {
+  const searchTerms = searchTerm
+    .split('&')
+    .map((term) => term.trim())
+    .filter((term) => term);
 
-  if (searchTerm) {
-    whereClause[Op.or] = [
+  const whereClause: any = {
+    [Op.and]: [
       {
-        'data.title': {
-          [Op.iLike]: `%${searchTerm}%`
-        },
-        'data.description': {
-          [Op.iLike]: `%${searchTerm}%`
-        }
+        [Op.and]: [
+          ...searchTerms.map((term: string) => ({
+            data: {
+              [Op.or]: [{ title: { [Op.iLike]: `%${term}%` } }, { description: { [Op.iLike]: `%${term}%` } }]
+            }
+          })),
+          ...(filters.profileId
+            ? [
+                {
+                  'data.profileId': {
+                    [Op.eq]: filters.profileId
+                  }
+                }
+              ]
+            : [])
+        ]
       }
-    ];
-  }
+    ]
+  };
 
   const playlistList = await Playlist.findAll({
     where: whereClause,

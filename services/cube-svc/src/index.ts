@@ -92,11 +92,12 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
   if (!scope || scope === 'playlist') {
     try {
-      const playlistSearchResult = await playlistQueries.searchPlaylist(offset, limit, searchTerm);
+      const playlistSearchResult = await playlistQueries.searchPlaylist(offset, limit, filters, searchTerm);
 
       searchPlaylistResult.meta = {
         offset: offset,
-        limit: limit
+        limit: limit,
+        filters: filters
       };
 
       searchPlaylistResult.status = 200;
