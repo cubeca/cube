@@ -1,6 +1,10 @@
 import { Playlist } from '../models';
 import { Op } from 'sequelize';
 
+interface PlaylistData {
+  contentIds: string[];
+}
+
 export const getPlaylistById = async (playlistId: string) => {
   return await Playlist.findOne({
     where: {
@@ -82,6 +86,26 @@ export const searchPlaylist = async (offset: number, limit: number, filters: any
   });
 
   return playlistList;
+};
+
+export const addContentToPlaylist = async (playlistId: string, contentId: string) => {
+  const playlist = (await Playlist.findOne({ where: { id: playlistId } })) as { data: PlaylistData };
+
+  if (playlist) {
+    const contentIds = playlist.data.contentIds || [];
+    contentIds.push(contentId);
+    return await Playlist.update({ data: { contentIds } }, { where: { id: playlistId }, returning: true });
+  }
+};
+
+export const removeContentFromPlaylist = async (playlistId: string, contentId: string) => {
+  const playlist = (await Playlist.findOne({ where: { id: playlistId } })) as { data: PlaylistData };
+
+  if (playlist) {
+    const contentIds = playlist.data.contentIds || [];
+    const updatedContentIds = contentIds.filter((id: string) => id !== contentId);
+    return await Playlist.update({ data: { contentIds: updatedContentIds } }, { where: { id: playlistId }, returning: true });
+  }
 };
 
 export const isUserAssociatedToPlaylist = async (uuid: string, playlistId: string) => {
