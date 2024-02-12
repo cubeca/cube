@@ -93,8 +93,10 @@ export const addContentToPlaylist = async (playlistId: string, contentId: string
 
   if (playlist) {
     const contentIds = playlist.data.contentIds || [];
-    contentIds.push(contentId);
-    return await Playlist.update({ data: { contentIds } }, { where: { id: playlistId }, returning: true });
+    if (!contentIds.includes(contentId)) {
+      const updatedData = { ...playlist.data, contentIds: [...contentIds, contentId] };
+      return await Playlist.update({ data: updatedData }, { where: { id: playlistId }, returning: true });
+    }
   }
 };
 
@@ -104,7 +106,8 @@ export const removeContentFromPlaylist = async (playlistId: string, contentId: s
   if (playlist) {
     const contentIds = playlist.data.contentIds || [];
     const updatedContentIds = contentIds.filter((id: string) => id !== contentId);
-    return await Playlist.update({ data: { contentIds: updatedContentIds } }, { where: { id: playlistId }, returning: true });
+    const updatedData = { ...playlist.data, contentIds: updatedContentIds };
+    return await Playlist.update({ data: updatedData }, { where: { id: playlistId }, returning: true });
   }
 };
 
