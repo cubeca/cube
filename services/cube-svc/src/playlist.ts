@@ -97,7 +97,7 @@ playlist.post('/playlist/addContent/:playlistId', allowIfAnyOf('active'), async 
 
     const dbResult = await db.addContentToPlaylist(playlistId, contentId);
     if (dbResult) {
-      return res.status(200).json(getApiResultFromDbRow(dbResult[1]));
+      return res.status(200).json(getApiResultFromDbRow(dbResult[1][0]));
     } else {
       return res.status(500).send('Error adding content to the playlist');
     }
@@ -126,7 +126,7 @@ playlist.post('/playlist/removeContent/:playlistId', allowIfAnyOf('active'), asy
 
     const dbResult = await db.removeContentFromPlaylist(playlistId, contentId);
     if (dbResult) {
-      return res.status(200).json(getApiResultFromDbRow(dbResult[1]));
+      return res.status(200).json(getApiResultFromDbRow(dbResult[1][0]));
     } else {
       return res.status(500).send('Error removing content from the playlist');
     }
