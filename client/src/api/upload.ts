@@ -1,8 +1,11 @@
 import axios from 'axios';
+import EventEmitter from 'events';
 
 import { Upload } from 'tus-js-client';
 import { uploadApi, getUploadTusEndpoint } from '.';
 import { makeUUID } from './helpers';
+
+export const progressEmitter = new EventEmitter();
 
 export const upload = async (
   file: File,
@@ -10,9 +13,6 @@ export const upload = async (
 ): Promise<string | undefined> => {
   const mimeType = file.type;
   if (mimeType.startsWith('video')) {
-    // This is just a hack until the Files & Upload APIs get refactored,
-    // to allow creating a file stub with ID in a separate API call before triggering TUS.
-    // TODO Replace with API call to create file stub.
     const fileId = makeUUID();
     const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
     await uploadViaTus(file, uploadTusEndpoint, { profileId });
@@ -27,19 +27,10 @@ export type ProgressHandler = (
   bytesTotal: number
 ) => void;
 
-const defaultProgressHandler: ProgressHandler = (
-  bytesUploaded: number,
-  bytesTotal: number
-) => {
-  const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-  console.log(`uploadViaTus ${bytesUploaded}/${bytesTotal} = ${percentage}%`);
-};
-
 export const uploadViaTus = async (
   file: File,
   uploadTusEndpoint: string,
-  meta: any,
-  progressHandler: ProgressHandler = defaultProgressHandler
+  meta: any
 ): Promise<undefined> => {
   return await new Promise((resolve, reject) => {
     const options = {
@@ -55,7 +46,13 @@ export const uploadViaTus = async (
       onError(error: any) {
         reject(error);
       },
-      onProgress: progressHandler,
+      onProgress: (bytesUploaded: number, bytesTotal: number) => {
+        const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+        console.log(
+          `uploadViaTus ${bytesUploaded}/${bytesTotal} = ${percentage}%`
+        );
+        progressEmitter.emit('progress', { bytesUploaded, bytesTotal });
+      },
       onSuccess() {
         resolve(undefined);
       }

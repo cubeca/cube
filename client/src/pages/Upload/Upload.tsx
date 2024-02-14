@@ -13,6 +13,10 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
+
+import EventEmitter from 'events';
+import { progressEmitter } from 'api/upload';
+
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
     [key: string]: { name: string; url?: string; preferredTitle?: string }[];
@@ -172,6 +176,12 @@ const Upload = () => {
   const onSubmit = (values: FieldValues) => {
     const contributors = getContributors(values);
     const collaborators = [profileId, values.collaborators];
+
+    progressEmitter.on('progress', ({ bytesUploaded, bytesTotal }) => {
+      // Update UI with progress information
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+      console.log(`Upload Progress: ${percentage}%`);
+    });
 
     addContent(
       {
