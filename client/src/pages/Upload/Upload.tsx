@@ -189,7 +189,10 @@ const Upload = () => {
         externalUrl: values.link ? values.link : null,
         isSuitableForChildren: values.audience
           ? values.audience === 'yeskids'
-          : false
+          : false,
+        embedContentWhitelist: values.embedContentWhitelist
+          .split(',')
+          .map((tag: string) => tag.trim())
       },
       coverImageFile!,
       mediaFile!,

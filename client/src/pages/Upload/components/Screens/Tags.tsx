@@ -415,6 +415,19 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
         </Typography>
       </Box>
 
+      <TagInput
+        control={control}
+        name="embedContentWhitelist"
+        fullWidth
+        placeholder={t('Embedded Content Whitelist')}
+      />
+      <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
+        <strong>{t('You must separate websites with a comma. ')}</strong>
+        {t(
+          'Would you like to be the only ones who can embed this content on your website. Input your URL here to restrict any other site from embedding it.'
+        )}
+      </Typography>
+
       <Box my={theme.spacing(5)}>
         <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
           {t('Captcha')}
