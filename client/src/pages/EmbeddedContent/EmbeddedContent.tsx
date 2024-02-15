@@ -113,7 +113,7 @@ const Video = () => {
     </s.LinkWrapper>
   );
 
-  const currentDomain = window.top?.location.hostname ?? '';
+  const currentDomain = window.parent.location.hostname;
   return isDomainAllowed(currentDomain) ? (
     <Box ref={contentRef}>
       <AgeCheckModal
