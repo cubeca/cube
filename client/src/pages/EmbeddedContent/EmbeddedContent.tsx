@@ -33,6 +33,7 @@ const Video = () => {
   const mediaType = content?.type;
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
+  const embedContentWhitelist = content?.embedContentWhitelist;
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -57,6 +58,18 @@ const Video = () => {
 
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
+  }
+
+  function isDomainAllowed(domain: string) {
+    console.log(domain, embedContentWhitelist);
+    if (
+      embedContentWhitelist === undefined ||
+      embedContentWhitelist.length === 0
+    ) {
+      return true;
+    }
+
+    return embedContentWhitelist.includes(domain);
   }
 
   const youtubeContent = (
@@ -100,7 +113,8 @@ const Video = () => {
     </s.LinkWrapper>
   );
 
-  return (
+  const currentDomain = window.location.hostname;
+  return isDomainAllowed(currentDomain) ? (
     <Box ref={contentRef}>
       <AgeCheckModal
         isOpen={isSuitableForChildrenModalOpen}
@@ -126,6 +140,10 @@ const Video = () => {
           ) : null}
         </Grid>
       </Grid>
+    </Box>
+  ) : (
+    <Box>
+      <h1>This content is not allowed to be embedded.</h1>
     </Box>
   );
 };

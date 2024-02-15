@@ -238,11 +238,13 @@ const Video = () => {
         onOver18Click={onOver18Click}
         onUnder18Click={onUnder18Click}
       />
+
       <EmbedModal
         isOpen={isEmbedModalOpen}
         onClose={handleClose}
         embedContentType={content?.type || ''}
       />
+
       <ReportContentModal
         isOpen={isReportContentModalOpen}
         onClose={handleClose}
