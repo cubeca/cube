@@ -420,6 +420,14 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
         name="embedContentWhitelist"
         fullWidth
         placeholder={t('Embedded Content Whitelist')}
+        rules={{
+          required: false,
+          pattern: {
+            value: /^(?!ftp|http|https|www)([^,"]+(?:,[^,"]+)*)$/,
+            message:
+              'Only list the domain name, e.g. example.com, not the full URL.'
+          }
+        }}
       />
       <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
         <strong>{t('You must separate websites with a comma. ')}</strong>

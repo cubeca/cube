@@ -71,7 +71,7 @@ content.get('/content', allowIfAnyOf('anonymous', 'active'), async (req: Request
 });
 
 // API endpoint for getting content by content id
-content.get('/content/:contentId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+content.get('/content/:contentId', async (req: Request, res: Response) => {
   const contentId = req.params.contentId;
   if (!contentId) {
     return res.status(400).send('Invalid content ID');

@@ -71,7 +71,6 @@ const Video = () => {
   const loggedInProfileId = getProfileId();
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
-  const embedContentWhitelist = content?.embedContentWhitelist;
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -240,14 +239,11 @@ const Video = () => {
         onUnder18Click={onUnder18Click}
       />
 
-      {embedContentWhitelist && embedContentWhitelist.length > 0 && (
-        <EmbedModal
-          isOpen={isEmbedModalOpen}
-          onClose={handleClose}
-          embedContentType={content?.type || ''}
-          embedContentWhitelist={embedContentWhitelist}
-        />
-      )}
+      <EmbedModal
+        isOpen={isEmbedModalOpen}
+        onClose={handleClose}
+        embedContentType={content?.type || ''}
+      />
 
       <ReportContentModal
         isOpen={isReportContentModalOpen}

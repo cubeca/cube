@@ -9,31 +9,23 @@ interface EmbedModalProps {
   isOpen: boolean;
   onClose: () => void;
   embedContentType: string;
-  embedContentWhitelist: string[];
 }
 
-function generateEmbedCode(
-  type: string,
-  embedContentWhitelist: string[],
-  url: string
-) {
+function generateEmbedCode(type: string, url: string) {
   let embedCode = '';
-  const currentDomain = window.location.hostname;
-
-  function isDomainAllowed(currentDomain: string) {
-    return embedContentWhitelist.includes(currentDomain);
-  }
-
-  if (!isDomainAllowed(currentDomain)) {
-    return 'Domain not allowed to generate embed code.';
-  }
 
   switch (type) {
     case 'audio':
+      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
+      break;
     case 'pdf':
+      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
+      break;
     case 'video':
+      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
+      break;
     case 'link':
-      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0" referrerpolicy="strict-origin"></iframe>`;
+      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
       break;
     default:
       embedCode = 'Invalid type specified';
@@ -42,12 +34,7 @@ function generateEmbedCode(
   return embedCode;
 }
 
-const EmbedModal = ({
-  onClose,
-  isOpen,
-  embedContentType,
-  embedContentWhitelist
-}: EmbedModalProps) => {
+const EmbedModal = ({ onClose, isOpen, embedContentType }: EmbedModalProps) => {
   const [copyCodeButtonText, setCopyCodeButtonText] = useState('Copy Code');
 
   const copyToClipboard = async () => {
@@ -63,7 +50,6 @@ const EmbedModal = ({
   const hostname = window.location.hostname;
   const embedCode = generateEmbedCode(
     embedContentType,
-    embedContentWhitelist,
     'https://' + hostname + location
   );
 
