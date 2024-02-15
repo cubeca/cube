@@ -161,9 +161,9 @@ export async function transformPlaylist(playlistItems: any[]) {
       const contentIds = newItem.data.contentIds;
 
       for (const [key, value] of Object.entries(urlFieldNames)) {
-        if (item[key]) {
-          newItem[value] = await getFile(item[key]);
-          delete newItem[key];
+        if (item.data[key]) {
+          newItem.data[value] = await getFile(item.data[key]);
+          delete newItem.data[key];
         }
       }
 
