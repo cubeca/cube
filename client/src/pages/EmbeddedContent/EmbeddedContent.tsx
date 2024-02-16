@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 
@@ -36,37 +36,31 @@ const Video = () => {
   const embedContentWhitelist = content?.embedContentWhitelist;
 
   const [isDomainAllowed, setIsDomainAllowed] = useState(true);
-
-  // if content contains a link URL, check if it's a youtube link and get the ID
-  if (linkUrl) {
-    youtubeID = getIDfromURL(linkUrl);
-  }
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
 
-  const onOver18Click = () => {
-    setIsSuitableForChildrenModalOpen(false);
-  };
-
-  const onUnder18Click = () => {
-    setIsSuitableForChildrenModalOpen(false);
-  };
-
   useEffect(() => {
-    if (content?.isSuitableForChildren === false) {
-      setIsSuitableForChildrenModalOpen(true);
-    }
-  }, [content?.isSuitableForChildren]);
+    if (!isLoading && embedContentWhitelist) {
+      const handleParentMessage = (event: { origin: string }) => {
+        console.log('Received message from parent:', event.origin);
+        checkIsDomainAllowed(event.origin);
+      };
 
-  function handleClose() {
-    setIsSuitableForChildrenModalOpen(false);
-  }
+      window.addEventListener('message', handleParentMessage);
+
+      return () => {
+        window.removeEventListener('message', handleParentMessage);
+      };
+    }
+  }, [content, isLoading, embedContentWhitelist]);
 
   function checkIsDomainAllowed(domain: string) {
+    console.log(embedContentWhitelist);
     if (
       embedContentWhitelist === undefined ||
       embedContentWhitelist.length === 0
     ) {
+      console.log('No embedContentWhitelist found');
       setIsDomainAllowed(true);
     }
 
@@ -74,10 +68,17 @@ const Video = () => {
       .replace(/(^\w+:|^)\/\//, '')
       .toLowerCase();
 
+    console.log('normalizedInputUrl:', normalizedInputUrl);
+
     const checkEmbedWhitelist = (embedContentWhitelist ?? []).some((domain) => {
       const normalizedDomain = domain
         .replace(/(^\w+:|^)\/\//, '')
         .toLowerCase();
+
+      console.log(
+        normalizedInputUrl === normalizedDomain,
+        normalizedInputUrl === `www.${normalizedDomain}`
+      );
 
       return (
         normalizedInputUrl === normalizedDomain ||
@@ -88,18 +89,22 @@ const Video = () => {
     setIsDomainAllowed(checkEmbedWhitelist);
   }
 
-  useEffect(() => {
-    const handleParentMessage = (event: { origin: string }) => {
-      console.log('Received message from parent:', event.origin);
-      checkIsDomainAllowed(event.origin);
-    };
+  // if content contains a link URL, check if it's a youtube link and get the ID
+  if (linkUrl) {
+    youtubeID = getIDfromURL(linkUrl);
+  }
 
-    window.addEventListener('message', handleParentMessage);
+  const onOver18Click = () => {
+    setIsSuitableForChildrenModalOpen(false);
+  };
 
-    return () => {
-      window.removeEventListener('message', handleParentMessage);
-    };
-  }, [isDomainAllowed]);
+  const onUnder18Click = () => {
+    setIsSuitableForChildrenModalOpen(false);
+  };
+
+  const handleClose = () => {
+    setIsSuitableForChildrenModalOpen(false);
+  };
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -142,7 +147,7 @@ const Video = () => {
     </s.LinkWrapper>
   );
 
-  return !isDomainAllowed ? (
+  return isDomainAllowed ? (
     <Box ref={contentRef}>
       <AgeCheckModal
         isOpen={isSuitableForChildrenModalOpen}
