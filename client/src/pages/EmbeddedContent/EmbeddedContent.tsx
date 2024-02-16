@@ -35,7 +35,7 @@ const Video = () => {
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
 
-  const [isDomainAllowed, setIsDomainAllowed] = useState(true);
+  const [isDomainAllowed, setIsDomainAllowed] = useState(false);
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
 
