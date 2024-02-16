@@ -49,6 +49,7 @@ const Video = () => {
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
   const [subtitleUrl, setSubtitleUrl] = useState('');
   const [subtitleIsLoading, setSubtitleIsLoading] = useState(true);
+  const [showEmbedModal, setShowEmbedModal] = useState(true);
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
   let youtubeID = '';
@@ -115,6 +116,14 @@ const Video = () => {
       setIsSuitableForChildrenModalOpen(true);
     }
   }, [content?.isSuitableForChildren]);
+
+  useEffect(() => {
+    if (embedContentWhitelist) {
+      if (embedContentWhitelist.length > 0) {
+        setShowEmbedModal(false);
+      }
+    }
+  }, [content, isLoading, embedContentWhitelist]);
 
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
@@ -241,8 +250,7 @@ const Video = () => {
         onUnder18Click={onUnder18Click}
       />
 
-      {(embedContentWhitelist === undefined ||
-        embedContentWhitelist.length === 0) && (
+      {showEmbedModal && (
         <EmbedModal
           isOpen={isEmbedModalOpen}
           onClose={handleClose}
