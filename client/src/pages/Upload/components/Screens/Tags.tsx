@@ -423,9 +423,10 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
         rules={{
           required: false,
           pattern: {
-            value: /^(?!ftp|http|https|www)([^,"]+(?:,[^,"]+)*)$/,
+            value:
+              /^((www\.)?[\w-]+\.[a-z]{2,})?(,( (www\.)?[\w-]+\.[a-z]{2,}))*$/,
             message:
-              'Only list the domain name, e.g. example.com, not the full URL.'
+              'Separate domains by comma in the format: example.com, or www.example.com.'
           }
         }}
       />

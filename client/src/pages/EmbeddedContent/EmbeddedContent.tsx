@@ -43,7 +43,6 @@ const Video = () => {
     if (!isLoading && embedContentWhitelist) {
       setIsDomainAllowed(false);
       const handleParentMessage = (event: { origin: string }) => {
-        console.log('Received message from parent:', event.origin);
         checkIsDomainAllowed(event.origin);
       };
 
@@ -60,15 +59,12 @@ const Video = () => {
       embedContentWhitelist === undefined ||
       embedContentWhitelist.length === 0
     ) {
-      console.log('No embedContentWhitelist found');
       setIsDomainAllowed(true);
     }
 
     const normalizedInputUrl = domain
       .replace(/(^\w+:|^)\/\//, '')
       .toLowerCase();
-
-    console.log('normalizedInputUrl:', normalizedInputUrl);
 
     const checkEmbedWhitelist = (embedContentWhitelist ?? []).some((domain) => {
       const normalizedDomain = domain
