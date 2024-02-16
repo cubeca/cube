@@ -49,7 +49,7 @@ const Video = () => {
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
   const [subtitleUrl, setSubtitleUrl] = useState('');
   const [subtitleIsLoading, setSubtitleIsLoading] = useState(true);
-  const [showEmbedModal, setShowEmbedModal] = useState(true);
+  const [showEmbedModal, setShowEmbedModal] = useState(false);
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
   let youtubeID = '';
@@ -118,10 +118,8 @@ const Video = () => {
   }, [content?.isSuitableForChildren]);
 
   useEffect(() => {
-    if (embedContentWhitelist) {
-      if (embedContentWhitelist.length > 0) {
-        setShowEmbedModal(false);
-      }
+    if (!embedContentWhitelist || embedContentWhitelist === undefined) {
+      setShowEmbedModal(true);
     }
   }, [content, isLoading, embedContentWhitelist]);
 
