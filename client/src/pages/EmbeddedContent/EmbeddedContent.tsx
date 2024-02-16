@@ -35,7 +35,7 @@ const Video = () => {
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
 
-  const [isDomainAllowed, setIsDomainAllowed] = useState(false);
+  const [isDomainAllowed, setIsDomainAllowed] = useState(true);
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -63,6 +63,7 @@ const Video = () => {
   }
 
   function checkIsDomainAllowed(domain: string) {
+    console.log(embedContentWhitelist);
     if (
       embedContentWhitelist === undefined ||
       embedContentWhitelist.length === 0
@@ -84,14 +85,12 @@ const Video = () => {
 
       console.log(
         normalizedInputUrl === normalizedDomain,
-        normalizedInputUrl === `www.${normalizedDomain}`,
-        normalizedInputUrl === `https://www.${normalizedDomain}`
+        normalizedInputUrl === `www.${normalizedDomain}`
       );
 
       return (
         normalizedInputUrl === normalizedDomain ||
-        normalizedInputUrl === `www.${normalizedDomain}` ||
-        normalizedInputUrl === `https://www.${normalizedDomain}`
+        normalizedInputUrl === `www.${normalizedDomain}`
       );
     });
 
