@@ -72,6 +72,29 @@ const Video = () => {
     return embedContentWhitelist.includes(domain);
   }
 
+  useEffect(() => {
+    console.log('i am in thie effect');
+    const handleParentMessage = (event: { origin: string }) => {
+      if (embedContentWhitelist) {
+        if (embedContentWhitelist.includes(event.origin)) {
+          console.log(`Received message from allowed domain: ${event.origin}`);
+          // Handle the message from the allowed domain
+        } else {
+          console.log(
+            `Received message from disallowed domain: ${event.origin}`
+          );
+          // Handle the message from the disallowed domain
+        }
+      }
+    };
+
+    window.addEventListener('message', handleParentMessage);
+
+    return () => {
+      window.removeEventListener('message', handleParentMessage);
+    };
+  }, []);
+
   const youtubeContent = (
     <s.VideoWrapper>
       <YouTubePlayer id={youtubeID} />
