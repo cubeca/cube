@@ -118,7 +118,14 @@ const Video = () => {
   }, [content?.isSuitableForChildren]);
 
   useEffect(() => {
-    if (!embedContentWhitelist || embedContentWhitelist === undefined) {
+    console.log(
+      embedContentWhitelist === undefined,
+      embedContentWhitelist.length === 0
+    );
+    if (
+      embedContentWhitelist === undefined ||
+      embedContentWhitelist.length === 0
+    ) {
       setShowEmbedModal(true);
     }
   }, [content, isLoading, embedContentWhitelist]);
