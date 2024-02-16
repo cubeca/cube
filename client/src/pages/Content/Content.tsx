@@ -241,7 +241,8 @@ const Video = () => {
         onUnder18Click={onUnder18Click}
       />
 
-      {(!embedContentWhitelist || embedContentWhitelist.length === 0) && (
+      {(embedContentWhitelist === undefined ||
+        embedContentWhitelist.length === 0) && (
         <EmbedModal
           isOpen={isEmbedModalOpen}
           onClose={handleClose}
