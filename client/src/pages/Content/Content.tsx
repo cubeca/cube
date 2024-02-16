@@ -127,8 +127,10 @@ const Video = () => {
       embedContentWhitelist?.length === 0
     ) {
       setShowEmbedModal(true);
+    } else {
+      setShowEmbedModal(false);
     }
-  }, [content, isLoading, embedContentWhitelist]);
+  }, [isLoading, embedContentWhitelist]);
 
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
@@ -306,27 +308,29 @@ const Video = () => {
               {formattedCreatedDate}
             </Typography>
 
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="left"
-              sx={{ my: 3, typography: 'body2' }}
-            >
-              {showEmbedModal && (
+            {!isLoading && (
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="left"
+                sx={{ my: 3, typography: 'body2' }}
+              >
+                {showEmbedModal && (
+                  <s.ActionsWrapper>
+                    <CodeIcon />
+                    <s.Action to={''} onClick={openEmbedModal}>
+                      Embed
+                    </s.Action>
+                  </s.ActionsWrapper>
+                )}
                 <s.ActionsWrapper>
-                  <CodeIcon />
-                  <s.Action to={''} onClick={openEmbedModal}>
-                    Embed
+                  <FlagIcon />
+                  <s.Action to={''} onClick={openReportContentModal}>
+                    Report Content
                   </s.Action>
                 </s.ActionsWrapper>
-              )}
-              <s.ActionsWrapper>
-                <FlagIcon />
-                <s.Action to={''} onClick={openReportContentModal}>
-                  Report Content
-                </s.Action>
-              </s.ActionsWrapper>
-            </Stack>
+              </Stack>
+            )}
 
             <Typography
               component="p"
