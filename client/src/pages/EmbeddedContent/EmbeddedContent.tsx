@@ -35,6 +35,8 @@ const Video = () => {
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
 
+  const [isDomainAllowed, setIsDomainAllowed] = useState(false);
+
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
     youtubeID = getIDfromURL(linkUrl);
@@ -60,34 +62,46 @@ const Video = () => {
     setIsSuitableForChildrenModalOpen(false);
   }
 
-  function isDomainAllowed(domain: string) {
-    console.log(domain, embedContentWhitelist);
+  function checkIsDomainAllowed(domain: string) {
     if (
       embedContentWhitelist === undefined ||
       embedContentWhitelist.length === 0
     ) {
-      return true;
+      console.log('No embedContentWhitelist found');
+      setIsDomainAllowed(true);
     }
 
-    return embedContentWhitelist.includes(domain);
+    const normalizedInputUrl = domain
+      .replace(/(^\w+:|^)\/\//, '')
+      .toLowerCase();
+
+    console.log('normalizedInputUrl:', normalizedInputUrl);
+
+    const checkEmbedWhitelist = (embedContentWhitelist ?? []).some((domain) => {
+      const normalizedDomain = domain
+        .replace(/(^\w+:|^)\/\//, '')
+        .toLowerCase();
+
+      console.log(
+        normalizedInputUrl === normalizedDomain,
+        normalizedInputUrl === `www.${normalizedDomain}`,
+        normalizedInputUrl === `https://www.${normalizedDomain}`
+      );
+
+      return (
+        normalizedInputUrl === normalizedDomain ||
+        normalizedInputUrl === `www.${normalizedDomain}` ||
+        normalizedInputUrl === `https://www.${normalizedDomain}`
+      );
+    });
+
+    setIsDomainAllowed(checkEmbedWhitelist);
   }
 
   useEffect(() => {
-    console.log('i am in thie effect');
     const handleParentMessage = (event: { origin: string }) => {
       console.log('Received message from parent:', event.origin);
-      if (embedContentWhitelist) {
-        console.log('i am here');
-        if (embedContentWhitelist.includes(event.origin)) {
-          console.log(`Received message from allowed domain: ${event.origin}`);
-          // Handle the message from the allowed domain
-        } else {
-          console.log(
-            `Received message from disallowed domain: ${event.origin}`
-          );
-          // Handle the message from the disallowed domain
-        }
-      }
+      checkIsDomainAllowed(event.origin);
     };
 
     window.addEventListener('message', handleParentMessage);
@@ -138,7 +152,7 @@ const Video = () => {
     </s.LinkWrapper>
   );
 
-  return isDomainAllowed('') ? (
+  return isDomainAllowed ? (
     <Box ref={contentRef}>
       <AgeCheckModal
         isOpen={isSuitableForChildrenModalOpen}
