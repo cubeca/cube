@@ -35,12 +35,13 @@ const Video = () => {
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
 
-  const [isDomainAllowed, setIsDomainAllowed] = useState(false);
+  const [isDomainAllowed, setIsDomainAllowed] = useState(true);
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
 
   useEffect(() => {
     if (!isLoading && embedContentWhitelist) {
+      setIsDomainAllowed(false);
       const handleParentMessage = (event: { origin: string }) => {
         console.log('Received message from parent:', event.origin);
         checkIsDomainAllowed(event.origin);
@@ -55,7 +56,6 @@ const Video = () => {
   }, [content, isLoading, embedContentWhitelist]);
 
   function checkIsDomainAllowed(domain: string) {
-    console.log(embedContentWhitelist);
     if (
       embedContentWhitelist === undefined ||
       embedContentWhitelist.length === 0
