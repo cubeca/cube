@@ -120,11 +120,11 @@ const Video = () => {
   useEffect(() => {
     console.log(
       embedContentWhitelist === undefined,
-      embedContentWhitelist.length === 0
+      embedContentWhitelist?.length === 0
     );
     if (
       embedContentWhitelist === undefined ||
-      embedContentWhitelist.length === 0
+      embedContentWhitelist?.length === 0
     ) {
       setShowEmbedModal(true);
     }
