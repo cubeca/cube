@@ -108,7 +108,7 @@ const Video = () => {
     return () => {
       window.removeEventListener('message', handleParentMessage);
     };
-  }, []);
+  }, [isDomainAllowed]);
 
   const youtubeContent = (
     <s.VideoWrapper>
