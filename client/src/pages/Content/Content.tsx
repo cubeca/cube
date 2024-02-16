@@ -250,13 +250,11 @@ const Video = () => {
         onUnder18Click={onUnder18Click}
       />
 
-      {showEmbedModal && (
-        <EmbedModal
-          isOpen={isEmbedModalOpen}
-          onClose={handleClose}
-          embedContentType={content?.type || ''}
-        />
-      )}
+      <EmbedModal
+        isOpen={isEmbedModalOpen}
+        onClose={handleClose}
+        embedContentType={content?.type || ''}
+      />
 
       <ReportContentModal
         isOpen={isReportContentModalOpen}
@@ -309,12 +307,14 @@ const Video = () => {
               justifyContent="left"
               sx={{ my: 3, typography: 'body2' }}
             >
-              <s.ActionsWrapper>
-                <CodeIcon />
-                <s.Action to={''} onClick={openEmbedModal}>
-                  Embed
-                </s.Action>
-              </s.ActionsWrapper>
+              {showEmbedModal && (
+                <s.ActionsWrapper>
+                  <CodeIcon />
+                  <s.Action to={''} onClick={openEmbedModal}>
+                    Embed
+                  </s.Action>
+                </s.ActionsWrapper>
+              )}
               <s.ActionsWrapper>
                 <FlagIcon />
                 <s.Action to={''} onClick={openReportContentModal}>
