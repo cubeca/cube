@@ -424,7 +424,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           required: false,
           pattern: {
             value:
-              /^((www\.)?[\w-]+\.[a-z]{2,})?(,( (www\.)?[\w-]+\.[a-z]{2,}))*$/,
+              /^(?:(?:\w+\.)?(?:www\.)?[\w-]+\.[a-z]{2,})(?:, (?:\w+\.)?(?:www\.)?[\w-]+\.[a-z]{2,})*$/,
             message:
               'Separate domains by comma in the format: example.com, or www.example.com.'
           }
