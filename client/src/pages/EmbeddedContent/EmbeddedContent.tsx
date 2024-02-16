@@ -63,12 +63,10 @@ const Video = () => {
   }
 
   function checkIsDomainAllowed(domain: string) {
-    console.log(embedContentWhitelist);
     if (
       embedContentWhitelist === undefined ||
       embedContentWhitelist.length === 0
     ) {
-      console.log('No embedContentWhitelist found');
       setIsDomainAllowed(true);
     }
 
@@ -76,17 +74,10 @@ const Video = () => {
       .replace(/(^\w+:|^)\/\//, '')
       .toLowerCase();
 
-    console.log('normalizedInputUrl:', normalizedInputUrl);
-
     const checkEmbedWhitelist = (embedContentWhitelist ?? []).some((domain) => {
       const normalizedDomain = domain
         .replace(/(^\w+:|^)\/\//, '')
         .toLowerCase();
-
-      console.log(
-        normalizedInputUrl === normalizedDomain,
-        normalizedInputUrl === `www.${normalizedDomain}`
-      );
 
       return (
         normalizedInputUrl === normalizedDomain ||
@@ -151,7 +142,7 @@ const Video = () => {
     </s.LinkWrapper>
   );
 
-  return isDomainAllowed ? (
+  return !isDomainAllowed ? (
     <Box ref={contentRef}>
       <AgeCheckModal
         isOpen={isSuitableForChildrenModalOpen}
