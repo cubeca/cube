@@ -75,7 +75,9 @@ const Video = () => {
   useEffect(() => {
     console.log('i am in thie effect');
     const handleParentMessage = (event: { origin: string }) => {
+      console.log('Received message from parent:', event.origin);
       if (embedContentWhitelist) {
+        console.log('i am here');
         if (embedContentWhitelist.includes(event.origin)) {
           console.log(`Received message from allowed domain: ${event.origin}`);
           // Handle the message from the allowed domain
