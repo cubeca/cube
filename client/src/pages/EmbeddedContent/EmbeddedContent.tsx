@@ -72,6 +72,8 @@ const Video = () => {
         .toLowerCase();
 
       console.log(
+        normalizedDomain,
+        normalizedInputUrl,
         normalizedInputUrl === normalizedDomain,
         normalizedInputUrl === `www.${normalizedDomain}`
       );
