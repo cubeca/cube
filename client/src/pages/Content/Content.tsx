@@ -60,6 +60,7 @@ const Video = () => {
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [subtitleUrl, setSubtitleUrl] = useState('');
   const [subtitleIsLoading, setSubtitleIsLoading] = useState(true);
+  const [showEmbedModal, setShowEmbedModal] = useState(false);
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
   const [userId, setUserId] = useState('');
@@ -84,6 +85,7 @@ const Video = () => {
   const loggedInProfileId = getProfileId();
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
+  const embedContentWhitelist = content?.embedContentWhitelist;
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -137,6 +139,21 @@ const Video = () => {
     }
   }, [content?.isSuitableForChildren]);
 
+  useEffect(() => {
+    console.log(
+      embedContentWhitelist === undefined,
+      embedContentWhitelist?.length === 0
+    );
+    if (
+      embedContentWhitelist === undefined ||
+      embedContentWhitelist?.length === 0
+    ) {
+      setShowEmbedModal(true);
+    } else {
+      setShowEmbedModal(false);
+    }
+  }, [isLoading, embedContentWhitelist]);
+
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
     setIsEmbedModalOpen(false);
@@ -150,6 +167,7 @@ const Video = () => {
   const openPlaylistModal = () => {
     setIsPlaylistModalOpen(true);
   };
+
   const openReportContentModal = () => {
     setIsReportContentModalOpen(true);
   };
@@ -264,6 +282,7 @@ const Video = () => {
         onOver18Click={onOver18Click}
         onUnder18Click={onUnder18Click}
       />
+
       <EmbedModal
         isOpen={isEmbedModalOpen}
         onClose={handleClose}
@@ -277,6 +296,7 @@ const Video = () => {
         profileId={loggedInProfileId || ''}
         userId={userId || ''}
       />
+
       <ReportContentModal
         isOpen={isReportContentModalOpen}
         onClose={handleClose}
@@ -322,31 +342,35 @@ const Video = () => {
               {formattedCreatedDate}
             </Typography>
 
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="left"
-              sx={{ my: 3, typography: 'body2' }}
-            >
-              <s.ActionsWrapper>
-                <CodeIcon />
-                <s.Action to={''} onClick={openEmbedModal}>
-                  Embed
-                </s.Action>
-              </s.ActionsWrapper>
-              <s.ActionsWrapper>
-                <CodeIcon />
-                <s.Action to={''} onClick={openPlaylistModal}>
-                  Add to Playlist
-                </s.Action>
-              </s.ActionsWrapper>
-              <s.ActionsWrapper>
-                <FlagIcon />
-                <s.Action to={''} onClick={openReportContentModal}>
-                  Report Content
-                </s.Action>
-              </s.ActionsWrapper>
-            </Stack>
+            {!isLoading && (
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="left"
+                sx={{ my: 3, typography: 'body2' }}
+              >
+                {showEmbedModal && (
+                  <s.ActionsWrapper>
+                    <CodeIcon />
+                    <s.Action to={''} onClick={openEmbedModal}>
+                      Embed
+                    </s.Action>
+                  </s.ActionsWrapper>
+                )}
+                <s.ActionsWrapper>
+                  <CodeIcon />
+                  <s.Action to={''} onClick={openPlaylistModal}>
+                    Add to Playlist
+                  </s.Action>
+                </s.ActionsWrapper>
+                <s.ActionsWrapper>
+                  <FlagIcon />
+                  <s.Action to={''} onClick={openReportContentModal}>
+                    Report Content
+                  </s.Action>
+                </s.ActionsWrapper>
+              </Stack>
+            )}
 
             <Typography
               component="p"

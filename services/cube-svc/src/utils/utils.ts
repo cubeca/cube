@@ -151,22 +151,36 @@ export const getProfileData = async (profileId: string) => {
 };
 
 export async function transformPlaylist(playlistItems: any[]) {
+  const urlFieldNames = {
+    coverImageFileId: 'coverImageUrl'
+  };
+
   return Promise.all(
     playlistItems.map(async (item) => {
       const newItem = { ...item };
       const contentIds = newItem.data.contentIds;
 
-      const contentData = await Promise.all(
-        contentIds.map(async (contentId: string) => {
-          const contentItem = await content.getContentById(contentId);
-          return contentItem?.dataValues;
-        })
-      );
+      for (const [key, value] of Object.entries(urlFieldNames)) {
+        if (item.data[key]) {
+          newItem.data[value] = await getFile(item.data[key]);
+          delete newItem.data[key];
+        }
+      }
 
-      const contentItems = contentData.map(getApiResultFromDbRow);
-      const transformedContent = await transformContentSimple(contentItems);
+      if (contentIds && contentIds.length > 0) {
+        const contentData = await Promise.all(
+          contentIds.map(async (contentId: string) => {
+            const contentItem = await content.getContentById(contentId);
+            return contentItem?.dataValues;
+          })
+        );
 
-      newItem.contentItems = transformedContent;
+        const contentItems = contentData.map(getApiResultFromDbRow);
+        const transformedContent = await transformContentSimple(contentItems);
+
+        newItem.contentItems = transformedContent;
+      }
+
       return newItem;
     })
   );

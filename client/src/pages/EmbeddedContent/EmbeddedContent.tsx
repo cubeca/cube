@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 
@@ -33,13 +33,64 @@ const Video = () => {
   const mediaType = content?.type;
   const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
+  const embedContentWhitelist = content?.embedContentWhitelist;
+
+  const [isDomainAllowed, setIsDomainAllowed] = useState(true);
+  const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
+    useState(false);
+
+  useEffect(() => {
+    if (!isLoading && embedContentWhitelist) {
+      setIsDomainAllowed(false);
+      const handleParentMessage = (event: { origin: string }) => {
+        checkIsDomainAllowed(event.origin);
+      };
+
+      window.addEventListener('message', handleParentMessage);
+
+      return () => {
+        window.removeEventListener('message', handleParentMessage);
+      };
+    }
+  }, [content, isLoading, embedContentWhitelist]);
+
+  function checkIsDomainAllowed(domain: string) {
+    if (
+      embedContentWhitelist === undefined ||
+      embedContentWhitelist.length === 0
+    ) {
+      setIsDomainAllowed(true);
+    }
+
+    const normalizedInputUrl = domain
+      .replace(/(^\w+:|^)\/\//, '')
+      .toLowerCase();
+
+    const checkEmbedWhitelist = (embedContentWhitelist ?? []).some((domain) => {
+      const normalizedDomain = domain
+        .replace(/(^\w+:|^)\/\//, '')
+        .toLowerCase();
+
+      console.log(
+        normalizedDomain,
+        normalizedInputUrl,
+        normalizedInputUrl === normalizedDomain,
+        normalizedInputUrl === `www.${normalizedDomain}`
+      );
+
+      return (
+        normalizedInputUrl === normalizedDomain ||
+        normalizedInputUrl === `www.${normalizedDomain}`
+      );
+    });
+
+    setIsDomainAllowed(checkEmbedWhitelist);
+  }
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
     youtubeID = getIDfromURL(linkUrl);
   }
-  const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
-    useState(false);
 
   const onOver18Click = () => {
     setIsSuitableForChildrenModalOpen(false);
@@ -49,15 +100,9 @@ const Video = () => {
     setIsSuitableForChildrenModalOpen(false);
   };
 
-  useEffect(() => {
-    if (content?.isSuitableForChildren === false) {
-      setIsSuitableForChildrenModalOpen(true);
-    }
-  }, [content?.isSuitableForChildren]);
-
-  function handleClose() {
+  const handleClose = () => {
     setIsSuitableForChildrenModalOpen(false);
-  }
+  };
 
   const youtubeContent = (
     <s.VideoWrapper>
@@ -100,7 +145,7 @@ const Video = () => {
     </s.LinkWrapper>
   );
 
-  return (
+  return isDomainAllowed ? (
     <Box ref={contentRef}>
       <AgeCheckModal
         isOpen={isSuitableForChildrenModalOpen}
@@ -126,6 +171,10 @@ const Video = () => {
           ) : null}
         </Grid>
       </Grid>
+    </Box>
+  ) : (
+    <Box>
+      <h1>This content is not allowed to be embedded.</h1>
     </Box>
   );
 };

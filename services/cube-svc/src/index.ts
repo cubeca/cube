@@ -4,6 +4,7 @@ import cors from 'cors';
 import * as settings from './settings';
 import * as contentQueries from './db/queries/content';
 import * as profileQueries from './db/queries/profile';
+import * as playlistQueries from './db/queries/playlist';
 
 import { allowIfAnyOf } from './middleware/auth';
 import { getApiResultFromDbRow, transformContent } from './utils/utils';
@@ -37,6 +38,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   const scope: string | undefined = req.query.scope as string | undefined;
   const searchContentResult: ServiceResult = { status: null, data: null, error: null, meta: null };
   const searchProfileResult: ServiceResult = { status: null, data: null, error: null, meta: null };
+  const searchPlaylistResult: ServiceResult = { status: null, data: null, error: null, meta: null };
 
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
@@ -88,6 +90,24 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
     }
   }
 
+  if (!scope || scope === 'playlist') {
+    try {
+      const playlistSearchResult = await playlistQueries.searchPlaylist(offset, limit, filters, searchTerm);
+
+      searchPlaylistResult.meta = {
+        offset: offset,
+        limit: limit,
+        filters: filters
+      };
+
+      searchPlaylistResult.status = 200;
+      searchPlaylistResult.data = playlistSearchResult;
+    } catch (error: any) {
+      searchPlaylistResult.status = error.response?.status || 500;
+      searchPlaylistResult.error = error.message;
+    }
+  }
+
   const responsePayload: any = {};
 
   if (!scope || scope === 'content') {
@@ -105,6 +125,15 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
       data: searchProfileResult.data,
       status: searchProfileResult.status,
       error: searchProfileResult.error
+    };
+  }
+
+  if (!scope || scope === 'playlist') {
+    responsePayload.playlistResults = {
+      meta: searchPlaylistResult.meta,
+      data: searchPlaylistResult.data,
+      status: searchPlaylistResult.status,
+      error: searchPlaylistResult.error
     };
   }
 

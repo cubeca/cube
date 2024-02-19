@@ -78,6 +78,64 @@ playlist.post('/playlist/:playlistId', allowIfAnyOf('active'), async (req: Reque
   }
 });
 
+playlist.post('/playlist/addContent/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+  try {
+    const user = extractUser(req);
+    const { playlistId } = req.params;
+    const { contentId } = req.body;
+
+    // Validate request body and parameters
+    if (!playlistId || !contentId) {
+      return res.status(400).send('Invalid request body or parameters');
+    }
+
+    // Check that the user updating playlist is indeed associated to the playlist submitted in the request
+    const isUserAssociated = await db.isUserAssociatedToPlaylist(user.uuid, playlistId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to update playlist');
+    }
+
+    const dbResult = await db.addContentToPlaylist(playlistId, contentId);
+    if (dbResult) {
+      return res.status(200).json(getApiResultFromDbRow(dbResult[1][0]));
+    } else {
+      return res.status(500).send('Error adding content to the playlist');
+    }
+  } catch (error) {
+    console.error('Error adding content to the playlist', error);
+    return res.status(500).send('Error adding content to the playlist');
+  }
+});
+
+playlist.post('/playlist/removeContent/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+  try {
+    const user = extractUser(req);
+    const { playlistId } = req.params;
+    const { contentId } = req.body;
+
+    // Validate request body and parameters
+    if (!playlistId || !contentId) {
+      return res.status(400).send('Invalid request body or parameters');
+    }
+
+    // Check that the user updating playlist is indeed associated to the playlist submitted in the request
+    const isUserAssociated = await db.isUserAssociatedToPlaylist(user.uuid, playlistId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to update playlist');
+    }
+
+    const dbResult = await db.removeContentFromPlaylist(playlistId, contentId);
+    if (dbResult) {
+      return res.status(200).json(getApiResultFromDbRow(dbResult[1][0]));
+    } else {
+      return res.status(500).send('Error removing content from the playlist');
+    }
+  } catch (error) {
+    console.error('Error removing content from the playlist', error);
+    return res.status(500).send('Error removing content from the playlist');
+  }
+});
+
 playlist.delete('/playlist/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
