@@ -16,32 +16,13 @@ import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import usePlaylist from 'hooks/usePlaylist';
 import useProfileContent from 'hooks/useProfileContent';
+import { Content } from 'types/content';
 interface ImageInfo {
   id: string;
   createdAt: string;
   updatedAt: string;
   storageType: string;
   playerInfo: any;
-}
-
-interface ContentItem {
-  category: string[];
-  collaboratorDetails: any[];
-  contributors: any;
-  coverImageText: string;
-  coverImageUrl: ImageInfo;
-  createdAt: string;
-  description: string;
-  expiry: string | null;
-  externalUrl: string | null;
-  id: string;
-  isSuitableForChildren: boolean;
-  mediaUrl: ImageInfo;
-  profileId: string;
-  tags: string[];
-  title: string;
-  type: string;
-  updatedAt: string;
 }
 
 interface Playlist {
@@ -52,7 +33,7 @@ interface Playlist {
   userId: string;
   contentItems: string[];
   data: any;
-  content: ContentItem[];
+  content: Content[];
   created_at: string;
   updated_at: string;
 }
