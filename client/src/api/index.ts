@@ -4,7 +4,8 @@ import {
   ContentApi,
   ProfileApi,
   CloudflareApi,
-  CommonApi
+  CommonApi,
+  PlaylistApi
 } from '@cubeca/cube-svc-client-oas-axios';
 
 import { CUBE_SVC_URL } from './settings';
@@ -43,3 +44,6 @@ export const filesApi = new CloudflareApi(filesConfiguration);
 
 const bffConfiguration = createConfiguration();
 export const bffApi = new CommonApi(bffConfiguration);
+
+const playlistConfiguration = createConfiguration();
+export const playlistApi = new PlaylistApi(playlistConfiguration);

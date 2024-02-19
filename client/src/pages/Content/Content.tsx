@@ -28,14 +28,24 @@ import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { useLocation } from 'react-router-dom';
 import ReportContentModal from 'components/ReportContentModal';
+import AddToPlaylistModal from 'components/AddToPlaylistModal';
+import { getAuthTokenPayload } from 'utils/auth';
 
 const Video = () => {
   const { t } = useTranslation();
+  const user = getAuthTokenPayload();
   const theme = useTheme();
   const location = useLocation();
   const contentRef = useRef<HTMLDivElement>(null);
   const { data: content, isLoading, refetch } = useContentDetails();
   const createdAt = content?.createdAt;
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+  const query = useQuery();
+  const playlistId = query.get('playlistData');
+
   const formattedCreatedDate = content
     ? new Date(createdAt as string).toLocaleDateString('en-us', {
         year: 'numeric',
@@ -47,10 +57,13 @@ const Video = () => {
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [subtitleUrl, setSubtitleUrl] = useState('');
   const [subtitleIsLoading, setSubtitleIsLoading] = useState(true);
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
+  const [userId, setUserId] = useState('');
+
   let youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
@@ -89,6 +102,15 @@ const Video = () => {
     setSubtitleUrl(content?.vttFileUrl?.playerInfo?.publicUrl || '');
   }, [content]);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getAuthTokenPayload();
+      setUserId((user as any).sub);
+    };
+
+    fetchUser();
+  }, [user]);
+
   // after editing subtitles, refetch content and set subtitleUrl again to
   // prevent stale data from being displayed
   useEffect(() => {
@@ -119,10 +141,14 @@ const Video = () => {
     setIsSuitableForChildrenModalOpen(false);
     setIsEmbedModalOpen(false);
     setIsReportContentModalOpen(false);
+    setIsPlaylistModalOpen(false);
   }
 
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
+  };
+  const openPlaylistModal = () => {
+    setIsPlaylistModalOpen(true);
   };
   const openReportContentModal = () => {
     setIsReportContentModalOpen(true);
@@ -243,6 +269,14 @@ const Video = () => {
         onClose={handleClose}
         embedContentType={content?.type || ''}
       />
+
+      <AddToPlaylistModal
+        isOpen={isPlaylistModalOpen}
+        onClose={handleClose}
+        contentId={content?.id || ''}
+        profileId={loggedInProfileId || ''}
+        userId={userId || ''}
+      />
       <ReportContentModal
         isOpen={isReportContentModalOpen}
         onClose={handleClose}
@@ -298,6 +332,12 @@ const Video = () => {
                 <CodeIcon />
                 <s.Action to={''} onClick={openEmbedModal}>
                   Embed
+                </s.Action>
+              </s.ActionsWrapper>
+              <s.ActionsWrapper>
+                <CodeIcon />
+                <s.Action to={''} onClick={openPlaylistModal}>
+                  Add to Playlist
                 </s.Action>
               </s.ActionsWrapper>
               <s.ActionsWrapper>
@@ -447,6 +487,7 @@ const Video = () => {
               <MoreContent
                 profileId={profileId}
                 excludeId={content?.id || ''}
+                // playlistId={playlistId || ''} feature on hold
               />
             )}
           </s.Sidebar>

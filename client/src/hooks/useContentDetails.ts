@@ -2,11 +2,13 @@ import { getContentDetails } from 'api/content';
 import { useQuery, QueryFunctionContext } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { ContentStorage } from '@cubeca/cube-svc-client-oas-axios';
+import { queryClient } from 'providers/QueryProvider/QueryProvider';
 
 interface ContentDetailsResponse {
   isLoading: boolean;
   isError: boolean;
-  data?: ContentStorage;
+  data?: any;
+  fetchContentDetails: (id: string) => Promise<ContentStorage>;
 }
 interface ExtendedContentDetailsResponse extends ContentDetailsResponse {
   data?: ContentStorage & {
@@ -51,11 +53,19 @@ const useContentDetails = (): ExtendedContentDetailsResponse => {
     { enabled: !!id, refetchOnMount: true, staleTime: 0 }
   );
 
+  const fetchContentDetails = async (id: string) => {
+    const response = await queryClient.fetchQuery(['content-details', id], () =>
+      getContentDetails(id)
+    );
+    return response.data as unknown as ContentStorage; // Extract data from response
+  };
+
   return {
     isLoading,
     isError,
     data: data?.data as unknown as ContentStorage,
-    refetch
+    refetch,
+    fetchContentDetails
   } as unknown as ExtendedContentDetailsResponse;
 };
 

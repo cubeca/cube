@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import ProfileMenuItem from './ProfileMenuItem';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import { PlaylistAdd } from '@mui/icons-material/';
 import UpdateEmailDialog from './UpdateEmailDialog';
 import { useContext, useState } from 'react';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
@@ -82,6 +83,13 @@ const ProfileMenu = ({
             onClick={() => handleProfile(`/profile/${profile.tag}`)}
             text={t('My Profile')}
             icon={<AccountBoxIcon />}
+          />
+        )}
+        {!profileId && (
+          <ProfileMenuItem
+            onClick={() => handleProfile(`/user/${user?.uuid}`)}
+            text={t('My Playlists')}
+            icon={<PlaylistAdd />}
           />
         )}
         <ProfileMenuItem

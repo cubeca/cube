@@ -9,6 +9,8 @@ import ForgotPassword from './ForgotPassword';
 import NotFound from './NotFound';
 import SubtitleEditor from './SubtitleEditor';
 import EmbeddedContent from './EmbeddedContent';
+import Playlist from './Playlist';
+import User from './User';
 
 export {
   Home,
@@ -21,5 +23,7 @@ export {
   ResetPassword,
   ForgotPassword,
   SubtitleEditor,
-  EmbeddedContent
+  EmbeddedContent,
+  Playlist,
+  User
 };
