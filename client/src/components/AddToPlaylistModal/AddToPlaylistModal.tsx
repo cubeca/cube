@@ -135,8 +135,7 @@ const AddToPlaylistModal = ({
       contentIds: updatedContentIds
     };
 
-    // handleUpdatePlaylist(playlistId, updatedPlaylistData);
-    handleAddContentToPlaylist(playlistId, { contentId });
+    handleUpdatePlaylist(playlistId, updatedPlaylistData);
     setShowSuccessMessage(true);
 
     // change icon to checkmark
