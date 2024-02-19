@@ -18,6 +18,10 @@ export const updateContent = async (data: any, contentId: string) => {
   return updatedContent[1][0];
 };
 
+export const deleteContentByIdList = async (contentIdList: string[]) => {
+  return await Content.destroy({ where: { id: contentIdList } });
+};
+
 export const deleteContent = async (contentId: string) => {
   const content = await Content.findOne({ where: { id: contentId } });
   if (!content) {

@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 
 import * as db from './db/queries/profile';
+import * as contentQueries from './db/queries/content';
 
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { getProfileData } from './utils/utils';
@@ -176,13 +177,25 @@ profile.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async 
 });
 
 // Route for deleting a profile by its ID
-profile.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
+profile.delete('/profiles/:profileId', allowIfAnyOf('active', 'userAdmin'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId;
 
   if (!profileId) {
     return res.status(400).send('Profile ID is not provided.');
   }
 
+  const user = extractUser(req);
+  const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
+  if (!isUserAssociated) {
+    return res.status(403).send('User does not have permission to modify this profile');
+  }
+
+  const contentList = await contentQueries.listContentByProfileId(0, 100000, {}, profileId);
+  if (contentList && contentList.length > 0) {
+    const contentIds = contentList.map((content) => content.id!);
+    await contentQueries.deleteContentByIdList(contentIds);
+  }
+
   await db.deleteProfile(profileId);
-  res.status(200);
+  res.status(200).send('Profile de-activated successfully');
 });

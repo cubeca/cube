@@ -47,7 +47,9 @@ File.init(
     modelName: 'File',
     tableName: 'files',
     paranoid: true,
-    timestamps: false
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   }
 );
 
@@ -90,8 +92,10 @@ Content.init(
     sequelize,
     modelName: 'Content',
     tableName: 'content',
-    timestamps: false,
-    paranoid: true
+    paranoid: true,
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   }
 );
 
@@ -123,7 +127,7 @@ Vtt.init(
     modelName: 'Vtt',
     tableName: 'vtt',
     paranoid: true,
-    timestamps: false
+    timestamps: true
   }
 );
 
@@ -208,8 +212,8 @@ User.init(
     sequelize,
     modelName: 'User',
     tableName: 'users',
-    paranoid: true,
-    timestamps: false
+    timestamps: true,
+    paranoid: true
   }
 );
 
@@ -284,8 +288,8 @@ Profile.init(
     sequelize,
     modelName: 'Profile',
     tableName: 'profiles',
-    paranoid: true,
-    timestamps: false
+    timestamps: true,
+    paranoid: true
   }
 );
 
@@ -328,7 +332,9 @@ Playlist.init(
     sequelize,
     modelName: 'Playlist',
     tableName: 'playlists',
-    timestamps: false,
-    paranoid: true
+    paranoid: true,
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   }
 );
