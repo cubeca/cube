@@ -7,7 +7,7 @@ import { queryClient } from 'providers/QueryProvider/QueryProvider';
 interface ContentDetailsResponse {
   isLoading: boolean;
   isError: boolean;
-  data?: any;
+  data?: ContentStorage;
   fetchContentDetails: (id: string) => Promise<ContentStorage>;
 }
 interface ExtendedContentDetailsResponse extends ContentDetailsResponse {
