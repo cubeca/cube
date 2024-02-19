@@ -148,22 +148,24 @@ const Profile = () => {
               >
                 {t('Content')}
               </Typography>
-              <Typography
-                component="h3"
-                variant="h3"
-                style={{
-                  borderBottom: '2px solid',
-                  borderColor:
-                    selectedPanel === 'playlists' ? '#95F5CB' : 'transparent',
-                  paddingBottom: '5px',
-                  cursor: 'pointer'
-                }}
-                onClick={() =>
-                  !isLoading ? setSelectedPanel('playlists') : null
-                }
-              >
-                {t('Playlists')}
-              </Typography>
+              {isLoading ? (
+                <Lottie animationData={LoadingCircle} loop autoplay />
+              ) : (
+                <Typography
+                  component="h3"
+                  variant="h3"
+                  style={{
+                    borderBottom: '2px solid',
+                    borderColor:
+                      selectedPanel === 'playlists' ? '#95F5CB' : 'transparent',
+                    paddingBottom: '5px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setSelectedPanel('playlists')}
+                >
+                  {t('Playlists')}
+                </Typography>
+              )}
 
               <Button onClick={openPlaylistModal} fullWidth={false}>
                 {t('+ Playlist')}
