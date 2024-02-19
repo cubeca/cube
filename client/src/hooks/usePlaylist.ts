@@ -3,10 +3,13 @@ import {
   addPlaylist,
   deletePlaylist,
   getPlaylist,
-  updatePlaylist
+  updatePlaylist,
+  addContentToPlaylist,
+  removeContentFromPlaylist
 } from 'api/playlist';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
+  AddContentToPlaylistRequest,
   AddPlaylistRequest,
   AddPlaylistResponse,
   GetPlaylistByIdResponse,
@@ -75,6 +78,22 @@ const usePlaylist = (profileId: string, userId: string) => {
     });
   };
 
+  const handleAddContentToPlaylist = async (
+    id: string,
+    payload: AddContentToPlaylistRequest
+  ) => {
+    await addContentToPlaylist(id, payload);
+    refetchPlaylist();
+  };
+
+  const handleRemoveContentFromPlaylist = async (
+    id: string,
+    contentId: any
+  ) => {
+    await removeContentFromPlaylist(id, contentId);
+    refetchPlaylist();
+  };
+
   const handleUpdatePlaylist = async (
     id: string,
     payload: UpdatePlaylistResponse
@@ -98,6 +117,8 @@ const usePlaylist = (profileId: string, userId: string) => {
     deleteResponse,
     addResponseData: addResponse,
     addPlaylist: handleAddPlaylist,
+    addContentToPlaylist: handleAddContentToPlaylist,
+    removeContentFromPlaylist: handleRemoveContentFromPlaylist,
     deletePlaylist: handleDeletePlaylist,
     getPlaylist: handleGetPlaylist,
     updatePlaylist: handleUpdatePlaylist

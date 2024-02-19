@@ -1,4 +1,7 @@
-import { AddPlaylistRequest } from '@cubeca/cube-svc-client-oas-axios';
+import {
+  AddContentToPlaylistRequest,
+  AddPlaylistRequest
+} from '@cubeca/cube-svc-client-oas-axios';
 import { playlistApi } from '.';
 import { upload } from './upload';
 
@@ -18,6 +21,17 @@ export const addPlaylist = async ({
   // return await playlistApi.addPlaylist(payload);
   const response = await playlistApi.addPlaylist(payload);
   return response;
+};
+
+export const addContentToPlaylist = async (
+  id: string,
+  payload: AddContentToPlaylistRequest
+) => {
+  return await playlistApi.addContentToPlaylist(id, payload);
+};
+
+export const removeContentFromPlaylist = async (id: string, contentId: any) => {
+  return await playlistApi.removeContentFromPlaylist(id, contentId);
 };
 
 export const deletePlaylist = async (id: string) => {

@@ -53,9 +53,11 @@ const AddToPlaylistModal = ({
     addResponseData,
     playlists,
     addPlaylist: handleAddPlaylist,
+    addContentToPlaylist: handleAddContentToPlaylist,
     deletePlaylist: handleDeletePlaylist,
     getPlaylist: handleGetPlaylist,
     isLoading: playlistLoading,
+
     updatePlaylist: handleUpdatePlaylist
   } = usePlaylist(profileId, userId);
   const { data: moreContent } = useProfileContent(profileId);
@@ -133,7 +135,8 @@ const AddToPlaylistModal = ({
       contentIds: updatedContentIds
     };
 
-    handleUpdatePlaylist(playlistId, updatedPlaylistData);
+    // handleUpdatePlaylist(playlistId, updatedPlaylistData);
+    handleAddContentToPlaylist(playlistId, { contentId });
     setShowSuccessMessage(true);
 
     // change icon to checkmark
@@ -145,6 +148,7 @@ const AddToPlaylistModal = ({
       setIsAdded((prevIsAdded) => ({ ...prevIsAdded, [playlistId]: true }));
     }, 500);
   };
+
   const createNewPlaylistAndAddContent = async (
     playlistName: string,
     playlistDesc: string,
