@@ -187,8 +187,10 @@ const PlaylistPanel: React.FC<Props> = ({
         });
         if (cameFromSinglePlaylist && profileId) {
           window.location.href = `/profile/${profileId}`;
-        } else {
+        } else if (cameFromSinglePlaylist && userId) {
           window.location.href = `/user/${userId}`;
+        } else {
+          return;
         }
       })
       .catch((error) => {
