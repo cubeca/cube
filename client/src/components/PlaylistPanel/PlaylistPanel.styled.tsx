@@ -3,6 +3,26 @@ import { styled } from 'theme/utils';
 import RemoveIcon from '@mui/icons-material/Remove';
 import CloseIcon from '@mui/icons-material/Close';
 export const UserProfile = styled(Box)``;
+
+export const DeletePlaylistContainer = styled(Box)`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+`;
+export const DeletePlaylistText = styled(Typography)`
+  color: #d9ffee;
+  font-size: 18px !important;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 26px !important; /* 144.444% */
+  letter-spacing: 0.234px;
+  padding-bottom: 10px;
+  text-decoration: underline;
+  margin-bottom: 0;
+  cursor: pointer;
+`;
 export const CustomDialog = styled(Dialog)(({ theme }) => ({
   marginBottom: '24px',
   '& .MuiDialog-paper': {

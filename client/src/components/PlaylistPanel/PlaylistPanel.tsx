@@ -1,4 +1,10 @@
-import { Box, TextField } from '@mui/material';
+import {
+  Box,
+  DialogActions,
+  DialogTitle,
+  TextField,
+  Typography
+} from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -17,6 +23,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import usePlaylist from 'hooks/usePlaylist';
 import useProfileContent from 'hooks/useProfileContent';
 import { Content } from 'types/content';
+import Button from 'components/Button';
 
 interface Playlist {
   id: string;
@@ -79,6 +86,7 @@ const PlaylistPanel: React.FC<Props> = ({
   const [isCreatePlaylistModalOpen, setIsCreatePlaylistModalOpen] =
     useState(false);
   const [localMoreContent, setLocalMoreContent] = useState<any>(moreContent);
+  const [open, setOpen] = useState(false);
 
   const {
     addPlaylist: handleAddPlaylist,
@@ -144,6 +152,7 @@ const PlaylistPanel: React.FC<Props> = ({
 
   function handleClose() {
     setIsCreatePlaylistModalOpen(false);
+    setOpen(false);
   }
 
   const deletePlaylistItem = (playlistId: string, contentId: string) => {
@@ -164,8 +173,49 @@ const PlaylistPanel: React.FC<Props> = ({
     }
   };
 
+  const deletePlaylist = (id: string) => {
+    handleDeletePlaylist(id);
+    setOpen(false);
+    // remove playlist from local state
+    setLocalPlaylists((prevPlaylists: any) => {
+      return prevPlaylists.filter((playlist: any) => playlist.id !== id);
+    });
+  };
+
+  useEffect(() => {
+    console.log(editMode, 'editMode');
+  }, [editMode]);
+
   return (
     <Grid container>
+      <s.CustomDialog
+        title={'Are you sure?'}
+        id={'alert-dialog-title'}
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          sx={{ fontFamily: 'Inter', fontWeight: '400', maxWidth: '250px' }}
+        >
+          {'Are you sure you want to delete this playlist?'}
+        </DialogTitle>
+        <DialogActions
+          sx={{ justifyContent: 'space-evenly', alignItems: 'center' }}
+        >
+          <Button onClick={handleClose} color="secondary">
+            No
+          </Button>
+          <Button
+            onClick={() => deletePlaylist(editMode || '')}
+            color="secondary"
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </s.CustomDialog>
       <AddToPlaylistModal
         isOpen={isCreatePlaylistModalOpen}
         onClose={handleClose}
@@ -379,6 +429,13 @@ const PlaylistPanel: React.FC<Props> = ({
                       )}
                     </Droppable>
                   </DragDropContext>
+                  {editMode === playlist.id && (
+                    <s.DeletePlaylistContainer>
+                      <s.DeletePlaylistText onClick={() => setOpen(true)}>
+                        Delete Playlist
+                      </s.DeletePlaylistText>
+                    </s.DeletePlaylistContainer>
+                  )}
                 </Box>
               </Box>
             ))
