@@ -150,13 +150,12 @@ const AddToPlaylistModal = ({
     setShowSuccessMessage(true);
 
     // change icon to checkmark
-    setTimeout(() => {
-      setIsLoading((prevIsLoading) => ({
-        ...prevIsLoading,
-        [playlistId]: false
-      }));
-      setIsAdded((prevIsAdded) => ({ ...prevIsAdded, [playlistId]: true }));
-    }, 500);
+
+    setIsLoading((prevIsLoading) => ({
+      ...prevIsLoading,
+      [playlistId]: false
+    }));
+    setIsAdded((prevIsAdded) => ({ ...prevIsAdded, [playlistId]: true }));
   };
 
   const createNewPlaylistAndAddContent = async (
