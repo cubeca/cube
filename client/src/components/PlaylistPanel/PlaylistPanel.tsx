@@ -17,13 +17,6 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import usePlaylist from 'hooks/usePlaylist';
 import useProfileContent from 'hooks/useProfileContent';
 import { Content } from 'types/content';
-interface ImageInfo {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  storageType: string;
-  playerInfo: any;
-}
 
 interface Playlist {
   id: string;

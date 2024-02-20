@@ -3,13 +3,13 @@ import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
 import useProfile from 'hooks/useProfile';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { getAuthTokenPayload } from 'utils/auth';
 import Button from 'components/Button';
 import Footer from 'components/layout/Footer';
 import Lottie from 'lottie-react';
-import LoadingCircle from 'assets/animations/loading-circle.json';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './User.styled';
 import useAuth from 'hooks/useAuth';
 import PlaylistPanel from 'components/PlaylistPanel';
@@ -40,7 +40,8 @@ const User = () => {
   const {
     playlists,
     addPlaylist: handleAddPlaylist,
-    deletePlaylist: handleDeletePlaylist
+    deletePlaylist: handleDeletePlaylist,
+    isLoading
   } = usePlaylist('', userId);
 
   const location = useLocation();
@@ -62,31 +63,34 @@ const User = () => {
     setIsPlaylistModalOpen(true);
   };
 
-  const createPlaylist = async () => {
-    const newPlaylistt = {
-      title: 'Playlist of dreams and testing',
-      description: 'lorem ipsum dolor sit amet and all that jazz',
-      profileId: '',
-      userId: '4ce80f0b-48d1-45db-92f3-587485480409',
-      contentIds: [
-        '27c31a1f-8a84-4016-9d8f-66e1d867ce2e',
-        'fbc173fe-0e48-4411-bf17-97f3c5d7ef58',
-        '80179c0d-896b-4773-92d1-93a60ce9d16f'
-      ]
-    };
-
-    try {
-      await handleAddPlaylist(newPlaylistt);
-      console.log('Playlist created successfully');
-    } catch (error) {
-      console.error('Failed to create playlist', error);
-    }
-  };
-
   return (
     <Box>
       <Grid container>
         <Grid xs={10} xsOffset={1} md={7}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'baseline'
+            }}
+          >
+            <Typography
+              component="h3"
+              variant="h3"
+              style={{
+                borderBottom: '2px solid',
+                borderColor: '#95F5CB',
+                paddingBottom: '5px',
+                cursor: 'pointer'
+              }}
+              onClick={() => setSelectedPanel('playlists')}
+            >
+              {t('Your Playlists')}
+            </Typography>
+            <Button onClick={openPlaylistModal} fullWidth={false}>
+              {t('+ Playlist')}
+            </Button>
+          </Box>
           {playlists && (
             <PlaylistPanel
               playlists={playlists?.data || []}
@@ -94,6 +98,26 @@ const User = () => {
               profileId={''}
               userId={userId}
             />
+          )}
+          {isLoading && (
+            <Lottie
+              animationData={LoadingCubes}
+              loop
+              autoplay
+              style={{ height: '500px', width: '500px' }}
+            />
+          )}
+          {!playlists?.data && !isLoading && (
+            <Typography
+              component="p"
+              variant="body2"
+              align="left"
+              sx={{ padding: '50px 0' }}
+            >
+              No playlists found. Click the + Playlist button above to create a
+              new playlist. You can also create a new playlist directly from the
+              play page.
+            </Typography>
           )}
         </Grid>
       </Grid>
