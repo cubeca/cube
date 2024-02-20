@@ -24,6 +24,7 @@ import usePlaylist from 'hooks/usePlaylist';
 import useProfileContent from 'hooks/useProfileContent';
 import { Content } from 'types/content';
 import Button from 'components/Button';
+import { Link } from 'react-router-dom';
 
 interface Playlist {
   id: string;
@@ -43,13 +44,15 @@ interface Props {
   test?: Playlist[];
   profileId: string;
   userId: string;
+  cameFromSinglePlaylist?: boolean;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
   playlists,
   test,
   profileId,
-  userId
+  userId,
+  cameFromSinglePlaylist
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [loading, setLoading] = useState(false);
@@ -174,12 +177,23 @@ const PlaylistPanel: React.FC<Props> = ({
   };
 
   const deletePlaylist = (id: string) => {
-    handleDeletePlaylist(id);
-    setOpen(false);
-    // remove playlist from local state
-    setLocalPlaylists((prevPlaylists: any) => {
-      return prevPlaylists.filter((playlist: any) => playlist.id !== id);
-    });
+    handleDeletePlaylist(id)
+      .then(() => {
+        handleClose();
+        setOpen(false);
+        // remove playlist from local state
+        setLocalPlaylists((prevPlaylists: any) => {
+          return prevPlaylists.filter((playlist: any) => playlist.id !== id);
+        });
+        if (cameFromSinglePlaylist && profileId) {
+          window.location.href = `/profile/${profileId}`;
+        } else {
+          window.location.href = `/user/${userId}`;
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   useEffect(() => {
@@ -317,11 +331,17 @@ const PlaylistPanel: React.FC<Props> = ({
                         </s.IconContainer>
                       </s.TextFieldContainer>
                     ) : (
-                      <s.PlaylistTitle>
-                        {editedTitles[playlist.id] ||
-                          localPlaylists.find((p: any) => p.id === playlist.id)
-                            ?.data.title}
-                      </s.PlaylistTitle>
+                      <Link
+                        to={`/playlist/${playlist.id}`}
+                        style={{ textDecoration: 'inherit' }}
+                      >
+                        <s.PlaylistTitle>
+                          {editedTitles[playlist.id] ||
+                            localPlaylists.find(
+                              (p: any) => p.id === playlist.id
+                            )?.data.title}
+                        </s.PlaylistTitle>
+                      </Link>
                     )}
                   </s.PlaylistTitleSubContainer>
                   {editMode !== playlist.id && (

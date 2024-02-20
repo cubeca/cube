@@ -43,7 +43,7 @@ const Playlist = () => {
   }, [profileId]);
 
   useEffect(() => {
-    if (localPlaylist) {
+    if (localPlaylist && profileId) {
       setProfileId(localPlaylist[0].data.profileId);
     }
   }, [localPlaylist]);
@@ -102,6 +102,7 @@ const Playlist = () => {
               profileId={profileId}
               userId={userId}
               playlists={playlist?.data}
+              cameFromSinglePlaylist={true}
             />
           </div>
         ) : (
