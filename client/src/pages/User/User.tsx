@@ -128,6 +128,7 @@ const User = () => {
         profileId={''}
         userId={userId}
         onlyCreate
+        userVersion={true}
       />
 
       <Footer />

@@ -19,6 +19,8 @@ import usePlaylist from 'hooks/usePlaylist';
 import useProfileContent from 'hooks/useProfileContent';
 import UploadInput from 'components/form/UploadInput/UploadInput';
 import { AddContentResponseData } from '@cubeca/cube-svc-client-oas-axios';
+import UserContent from 'pages/Profile/UserContent';
+import SearchContent from 'pages/Playlist/SearchContent';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -27,6 +29,7 @@ interface AddToPlaylistModalProps {
   contentId?: string;
   profileId: string;
   userId: string;
+  userVersion?: boolean;
 }
 
 const AddToPlaylistModal = ({
@@ -35,7 +38,8 @@ const AddToPlaylistModal = ({
   contentId,
   onlyCreate = false,
   profileId,
-  userId
+  userId,
+  userVersion: userVersion = false
 }: AddToPlaylistModalProps) => {
   const {
     control,
@@ -76,6 +80,7 @@ const AddToPlaylistModal = ({
     useState(false);
   const [addedItems, setAddedItems] = useState<{ [key: string]: boolean }>({});
   const [tab, setTab] = useState(0);
+  const [postCreateTab, setPostCreateTab] = useState(0);
   const [prevLength, setPrevLength] = useState(0);
   const [localPlaylistsHasUpdated, setLocalPlaylistsHasUpdated] =
     useState(false);
@@ -115,6 +120,12 @@ const AddToPlaylistModal = ({
 
   const handleTabChange = (event: any, newValue: SetStateAction<number>) => {
     setTab(newValue);
+  };
+  const handlePostCreateTabChange = (
+    event: any,
+    newValue: SetStateAction<number>
+  ) => {
+    setPostCreateTab(newValue);
   };
 
   const addToExistingPlaylist = async (
@@ -278,7 +289,8 @@ const AddToPlaylistModal = ({
             {isAddSuccess && newPlaylistId && (
               <>
                 <Typography component="h6" variant="h6" sx={{ mb: 1 }}>
-                  Your playlist has been created.
+                  Your playlist, {watchAllFields.playlistName}, has been
+                  created.
                 </Typography>
                 <Typography component="p" variant="body2">
                   Click{' '}
@@ -288,8 +300,9 @@ const AddToPlaylistModal = ({
                   >
                     here
                   </Link>{' '}
-                  to view it. Or, add more content to this playlist from your
-                  recent uploads below.
+                  to view it.{' '}
+                  {!userVersion &&
+                    'Or, add more content to this playlist below - either by searching through all content on the site, or from a list of your most recent uploads.'}
                 </Typography>
               </>
             )}
@@ -419,13 +432,56 @@ const AddToPlaylistModal = ({
               </s.PlaylistItemContainer>
             ))}
           {playlistCreated && isAddSuccess && newPlaylistId && (
-            <Typography component="h6" variant="h6" sx={{ mt: 4 }}>
-              Add More To This Playlist from Recent Uploads:
-            </Typography>
+            <>
+              <Tabs
+                value={postCreateTab}
+                onChange={handlePostCreateTabChange}
+                TabIndicatorProps={{
+                  style: {
+                    backgroundColor: 'black',
+                    textAlign: 'left',
+                    alignItems: 'flex-start',
+                    justifyContent: 'flex-start',
+                    padding: '0'
+                  }
+                }}
+                sx={{
+                  lineHeight: '20px !important',
+                  height: '20px !important',
+                  marginBottom: '50px'
+                }}
+              >
+                <Tab
+                  label="Search Content"
+                  sx={{
+                    color: 'black !important',
+                    borderColor: 'black',
+                    textTransform: 'capitalize',
+                    padding: '0',
+                    marginRight: '12px'
+                  }}
+                />
+                {!userVersion && (
+                  <Tab
+                    label="Recent Uploads"
+                    sx={{
+                      color: 'black !important',
+                      textTransform: 'capitalize',
+                      padding: '0',
+                      marginRight: '20px'
+                    }}
+                  />
+                )}
+              </Tabs>
+              {/* <Typography component="h6" variant="h6" sx={{ mt: 4 }}>
+                Add More To This Playlist from Recent Uploads:
+              </Typography> */}
+            </>
           )}
           {playlistCreated &&
             isAddSuccess &&
             newPlaylistId &&
+            postCreateTab === 1 &&
             localMoreContent &&
             localMoreContent
               .filter(
@@ -454,6 +510,19 @@ const AddToPlaylistModal = ({
                   </s.PlaylistItemSubContainer>
                 </s.PlaylistItemContainer>
               ))}
+          {playlistCreated &&
+            isAddSuccess &&
+            newPlaylistId &&
+            postCreateTab === 0 && (
+              <SearchContent
+                isAddSuccess={isAddSuccess}
+                playlistCreated={playlistCreated}
+                newPlaylistId={newPlaylistId}
+                addedItems={addedItems}
+                setAddedItems={setAddedItems}
+                addToExistingPlaylist={addToExistingPlaylist}
+              />
+            )}
         </>
       </s.ModalContainer>
     </Dialog>
