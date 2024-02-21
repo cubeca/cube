@@ -75,6 +75,15 @@ export const searchContent = async (offset: number, limit: number, filters: any,
                   }
                 }
               ]
+            : []),
+          ...(filters.tags
+            ? [
+                {
+                  'data.tags': {
+                    [Op.overlap]: filters.tags
+                  }
+                }
+              ]
             : [])
         ]
       }

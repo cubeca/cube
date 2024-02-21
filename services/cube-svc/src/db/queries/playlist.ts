@@ -73,6 +73,15 @@ export const searchPlaylist = async (offset: number, limit: number, filters: any
                   }
                 }
               ]
+            : []),
+          ...(filters.contentId
+            ? [
+                {
+                  'data.contentIds': {
+                    [Op.contains]: [filters.contentId]
+                  }
+                }
+              ]
             : [])
         ]
       }
