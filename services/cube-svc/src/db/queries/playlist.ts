@@ -78,7 +78,7 @@ export const searchPlaylist = async (offset: number, limit: number, filters: any
             ? [
                 {
                   'data.contentIds': {
-                    [Op.contains]: [filters.contentId]
+                    [Op.iLike]: `%${filters.contentId}%`
                   }
                 }
               ]
