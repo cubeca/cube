@@ -38,8 +38,10 @@ export const searchContent = async (offset: number, limit: number, filters: any,
     .map((term) => term.trim())
     .filter((term) => term);
 
+  const tagSearch = filters.tags ? filters.tags.split(',') : [];
+
   const whereClause: any = {
-    [Op.and]: [
+    [searchTerm ? Op.and : Op.or]: [
       {
         [Op.and]: [
           ...searchTerms.map((term: string) => ({
@@ -75,18 +77,18 @@ export const searchContent = async (offset: number, limit: number, filters: any,
                   }
                 }
               ]
-            : []),
-          ...(filters.tags
-            ? [
-                {
-                  'data.tags': {
-                    [Op.overlap]: filters.tags
-                  }
-                }
-              ]
             : [])
         ]
-      }
+      },
+      ...(filters.tags
+        ? [
+            ...tagSearch.map((term: string) => ({
+              data: {
+                [Op.or]: [{ tags: { [Op.iLike]: `%${term}%` } }]
+              }
+            }))
+          ]
+        : [])
     ]
   };
 
@@ -118,16 +120,6 @@ export const listContentByProfileId = async (offset: number, limit: number, filt
                 {
                   'data.category': {
                     [Op.contains]: JSON.stringify(filters.category)
-                  }
-                }
-              ]
-            : []),
-
-          ...(filters.tags
-            ? [
-                {
-                  'data.tags': {
-                    [Op.contains]: JSON.stringify(filters.tags)
                   }
                 }
               ]
