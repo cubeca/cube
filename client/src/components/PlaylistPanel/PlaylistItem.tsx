@@ -93,7 +93,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
       </s.CustomDialog>
 
       <s.PlaylistItemLink
-        href={`/content/${url}`}
+        href={`/content/${url}?playlist=${playlistId}`}
         target="_blank"
         rel="noopener noreferrer"
         onClick={(e: { preventDefault: () => void }) => {

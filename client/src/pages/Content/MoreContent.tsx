@@ -2,25 +2,36 @@ import { Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ContentList from 'components/ContentList';
 import { ContentLoader } from 'components/Loaders';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import useProfileContent from 'hooks/useProfileContent';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
+import { searchContent } from 'api/search';
+import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
+import { set } from 'date-fns';
 
 interface MoreContentProps {
   profileId: string;
   excludeId: string;
   playlistId?: any;
+  tags?: any;
 }
 
 const MoreContent = ({
   profileId,
   excludeId,
-  playlistId
+  playlistId,
+  tags
 }: PropsWithChildren<MoreContentProps>) => {
   const [moreContent, setMoreContent] = useState<any>([]);
-  const [allContent, setAllContent] = useState<any>([]);
+  const [profileContent, setProfileContent] = useState<any>([]);
   const [randomContent, setRandomContent] = useState([]);
   const [playlistData, setPlaylistData] = useState<any>([]);
+  const [combinedContent, setCombinedContent] = useState<any>([]);
+  const [uniqueCombinedContent, setUniqueCombinedContent] = useState<any>([]);
+  const [combinedTags, setCombinedTags] = useState<any>('');
+  const [tagContent, setTagContent] = useState<any>([]);
+  const [isFromPlaylist, setIsFromPlaylist] = useState<boolean>(playlistId);
+
   const { t } = useTranslation();
   const { data: content, isLoading } = useProfileContent(profileId);
 
@@ -29,13 +40,43 @@ const MoreContent = ({
     return shuffled.slice(0, count);
   }
 
-  const { playlist, handleGetPlaylist, isSuccess } = useSinglePlaylist(
-    playlistId ? playlistId : ''
-  );
+  const {
+    playlist,
+    handleGetPlaylist,
+    isSuccess,
+    isLoading: isPlaylistLoading
+  } = useSinglePlaylist(playlistId ? playlistId : '');
 
   useEffect(() => {
-    handleGetPlaylist();
-  }, []);
+    const tagsString = tags.length > 0 ? tags.join(' ') : '';
+    setCombinedTags(tagsString);
+  }, [tags]);
+
+  const fetchContentByTags = useCallback(async () => {
+    try {
+      const searchFilters: SearchFilters = {
+        // tags: combinedTags
+        tags: tags
+      };
+      const results = await searchContent('', 0, 5, searchFilters);
+      console.log(results);
+      const newResults = Array.isArray(results) ? results : [];
+      setTagContent(newResults);
+    } catch (error) {
+      console.error('An error occurred during the search:', error);
+    }
+  }, [tags]);
+
+  useEffect(() => {
+    fetchContentByTags();
+    setTagContent(getRandomContent(tagContent, 3) as never[]);
+  }, [combinedTags]);
+
+  useEffect(() => {
+    if (playlistId !== '') {
+      handleGetPlaylist();
+    }
+  }, [playlistId]);
 
   useEffect(() => {
     if (playlist) {
@@ -43,39 +84,83 @@ const MoreContent = ({
     }
   }, [playlist]);
 
+  // get profile content
   useEffect(() => {
     if (content) {
       const filteredContent = (content as unknown as Array<any>).filter(
         (c: any) => c.id !== excludeId
       );
-      setAllContent(filteredContent);
+      setProfileContent(getRandomContent(filteredContent, 3) as never[]);
     }
   }, [content, excludeId]);
 
-  // this feature is on hold while i rethink
+  // get playlist content
   // useEffect(() => {
-  //   if (isSuccess && playlistData[0].contentItems) {
-  //     // setAllContent(playlistData[0].contentItems);
-  //     setRandomContent(playlistData[0].contentItems);
-  //     console.log(allContent, 'allContent');
-  //   } else {
-  //     setMoreContent(allContent);
-  //     console.log(allContent, 'allContent');
-  //     setRandomContent(getRandomContent(allContent, 5) as never[]);
+  //   if (
+  //     isSuccess &&
+  //     playlistId !== '' &&
+  //     !isPlaylistLoading &&
+  //     playlistData[0]
+  //   ) {
+  //     setPlaylistData(content);
   //   }
-  // }, [allContent, playlistData]);
+  // }, [excludeId]);
 
+  // combine all three content sources
   useEffect(() => {
-    setMoreContent(allContent);
-    setRandomContent(getRandomContent(allContent, 3) as never[]);
-  }, [allContent]);
+    // get index of current content within playlist
+    const currentContentIndex = playlistData[0]?.contentItems?.findIndex(
+      (item: { id: string }) => item.id === excludeId
+    );
+    console.log(currentContentIndex, 'currentContentIndex');
+    // get content after current content
+    const contentItemsAfterCurrent =
+      currentContentIndex >= 0
+        ? playlistData[0]?.contentItems?.slice(currentContentIndex + 1)
+        : [];
+    const contentItemsBeforeCurrent =
+      currentContentIndex >= 0
+        ? playlistData[0]?.contentItems?.slice(0, currentContentIndex)
+        : [];
+    // if at the end of the playlist, start from the beginning ? or show random content ?
+    if (isFromPlaylist && contentItemsAfterCurrent.length <= 0) {
+      console.log('at end of playlist');
+      setCombinedContent([...profileContent, ...tagContent]);
+      // setCombinedContent([contentItemsBeforeCurrent]);
+    } else if (isFromPlaylist) {
+      // if not at the end, show the remaining items
+      console.log('not at end of playlist');
+      setCombinedContent([...contentItemsAfterCurrent]);
+    } else {
+      console.log('not from playlist');
+      // if not from playlist, show random content
+      setCombinedContent([
+        ...contentItemsAfterCurrent,
+        ...tagContent,
+        ...profileContent
+      ]);
+    }
+  }, [playlistData, profileContent, randomContent]);
+
+  // filter out any duplicates pulled in by grabbing content from multiple sources
+  useEffect(() => {
+    const uniqueCombinedContent = combinedContent.filter(
+      (item: { id: any }, index: any, self: any[]) =>
+        index === self.findIndex((t) => t.id === item.id)
+    );
+    const firstFiveUniqueContent = uniqueCombinedContent.slice(0, 5);
+
+    console.log(uniqueCombinedContent, 'uniqueCombinedContent');
+    setUniqueCombinedContent(firstFiveUniqueContent);
+  }, [combinedContent]);
 
   return (
     <Stack>
-      {!isLoading && (moreContent.length > 0 || playlistData) ? (
+      {combinedContent.length > 0 ? (
         <ContentList
           heading={t('More Content Like This')}
-          content={randomContent}
+          content={uniqueCombinedContent}
+          playlistId={playlistId}
         />
       ) : (
         <Stack direction="column" spacing={2}>

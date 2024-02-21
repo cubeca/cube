@@ -44,7 +44,7 @@ const Video = () => {
     return new URLSearchParams(useLocation().search);
   }
   const query = useQuery();
-  const playlistId = query.get('playlistData');
+  const playlistId = query.get('playlist');
 
   const formattedCreatedDate = content
     ? new Date(createdAt as string).toLocaleDateString('en-us', {
@@ -511,7 +511,8 @@ const Video = () => {
               <MoreContent
                 profileId={profileId}
                 excludeId={content?.id || ''}
-                // playlistId={playlistId || ''} feature on hold
+                playlistId={playlistId || ''} // from query string for related content from same playlist
+                tags={content?.tags || []}
               />
             )}
           </s.Sidebar>
