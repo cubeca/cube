@@ -11,6 +11,8 @@ import { getAuthTokenPayload } from 'utils/auth';
 import useProfileContent from 'hooks/useProfileContent';
 import { GetProfileResponseData } from '@cubeca/cube-svc-client-oas-axios';
 import { getProfile } from 'api/profile';
+import CodeIcon from '@mui/icons-material/Code';
+import EmbedModal from 'components/EmbedModal';
 import * as s from './Playlist.styled';
 import { Link } from 'react-router-dom';
 
@@ -20,10 +22,32 @@ const Playlist = () => {
   const { playlist, handleGetPlaylist } = useSinglePlaylist(id || '');
   const [userId, setUserId] = useState('');
   const [profileId, setProfileId] = useState('');
-  const [profile, setProfile] = useState<any>();
+  const [localProfile, setLocalProfile] = useState<any>();
   const [localPlaylist, setLocalPlaylist] = useState<any>();
+  const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  const [showEmbedModal, setShowEmbedModal] = useState(false);
   const playlists: never[] = [];
+  const embedContentWhitelist: unknown = [];
 
+  const { data: profile, isLoading, refetch } = useProfile();
+
+  function handleClose() {
+    setIsEmbedModalOpen(false);
+  }
+
+  useEffect(() => {
+    if (
+      embedContentWhitelist === undefined ||
+      (embedContentWhitelist as any[])?.length === 0
+    ) {
+      setShowEmbedModal(true);
+    } else {
+      setShowEmbedModal(false);
+    }
+  }, [embedContentWhitelist]);
+  const openEmbedModal = () => {
+    setIsEmbedModalOpen(true);
+  };
   useEffect(() => {
     if (playlist) {
       setLocalPlaylist(playlist.data);
@@ -34,8 +58,7 @@ const Playlist = () => {
     const fetchProfile = async () => {
       if (profileId) {
         const fetchedProfile = await getProfile(profileId);
-        console.log(fetchedProfile, 'fetchedProfile');
-        setProfile(fetchedProfile.data);
+        setLocalProfile(fetchedProfile.data);
       }
     };
 
@@ -47,6 +70,10 @@ const Playlist = () => {
       setProfileId(localPlaylist[0].data.profileId);
     }
   }, [localPlaylist]);
+
+  useEffect(() => {
+    setProfileId(profile?.profileId || '');
+  }, [localProfile]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -62,6 +89,11 @@ const Playlist = () => {
 
   return (
     <Grid container>
+      <EmbedModal
+        isOpen={isEmbedModalOpen}
+        onClose={handleClose}
+        embedContentType={'playlist'}
+      />
       <Grid xs={10} xsOffset={1} md={8}>
         {profile && (
           <Link to={`/profile/${profile.tag}`} style={{ color: 'inherit' }}>
@@ -104,6 +136,22 @@ const Playlist = () => {
               playlists={playlist?.data}
               cameFromSinglePlaylist={true}
             />
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'flex-end'
+              }}
+            >
+              {showEmbedModal && (
+                <s.ActionsWrapper>
+                  <CodeIcon />
+                  <s.Action to={''} onClick={openEmbedModal}>
+                    Embed
+                  </s.Action>
+                </s.ActionsWrapper>
+              )}
+            </Box>
           </div>
         ) : (
           'Loading...'

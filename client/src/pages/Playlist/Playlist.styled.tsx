@@ -1,5 +1,27 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Link, Stack } from '@mui/material';
 import { styled } from 'theme/utils';
+
+export const Action = styled(Link)`
+  color: ${(props) => props.theme.palette.primary.light} !important;
+  font-weight: 500;
+  margin-left: 0.5rem;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
+export const ActionsWrapper = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+`;
 
 export const ViewSection = styled(Stack)`
   position: relative;
