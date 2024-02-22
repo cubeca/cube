@@ -369,7 +369,9 @@ const AddToPlaylistModal = ({
                 }}
                 fullWidth={false}
                 disabled={
-                  !watchAllFields.playlistName || !watchAllFields.playlistDesc
+                  !watchAllFields.playlistName ||
+                  !watchAllFields.playlistDesc ||
+                  !isPlaylistThumbUploadReady
                 }
                 sx={{
                   mt: 2,
