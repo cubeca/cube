@@ -148,7 +148,8 @@ const Profile = () => {
                 {t('Content')}
               </Typography>
               {isLoading ? (
-                <Lottie animationData={LoadingCircle} loop autoplay />
+                // <Lottie animationData={LoadingCircle} loop autoplay />
+                <></>
               ) : (
                 <Typography
                   component="h3"
@@ -183,6 +184,7 @@ const Profile = () => {
               test={detailedPlaylists}
               profileId={profileId}
               userId={userId}
+              isLoading={isLoading}
             />
           )}
         </Grid>

@@ -46,6 +46,7 @@ interface Props {
   profileId: string;
   userId: string;
   cameFromSinglePlaylist?: boolean;
+  isLoading?: boolean;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
@@ -53,7 +54,8 @@ const PlaylistPanel: React.FC<Props> = ({
   test,
   profileId,
   userId,
-  cameFromSinglePlaylist
+  cameFromSinglePlaylist,
+  isLoading: isPlaylistDataLoading
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [loading, setLoading] = useState(false);
@@ -243,7 +245,7 @@ const PlaylistPanel: React.FC<Props> = ({
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
-          {loading || isLoading ? (
+          {loading || isLoading || isPlaylistDataLoading ? (
             <Lottie
               className="loading-cubes"
               animationData={LoadingCubes}
