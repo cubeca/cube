@@ -147,25 +147,21 @@ const Profile = () => {
               >
                 {t('Content')}
               </Typography>
-              {isLoading ? (
-                // <Lottie animationData={LoadingCircle} loop autoplay />
-                <></>
-              ) : (
-                <Typography
-                  component="h3"
-                  variant="h3"
-                  style={{
-                    borderBottom: '2px solid',
-                    borderColor:
-                      selectedPanel === 'playlists' ? '#95F5CB' : 'transparent',
-                    paddingBottom: '5px',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => setSelectedPanel('playlists')}
-                >
-                  {t('Playlists')}
-                </Typography>
-              )}
+              <Typography
+                component="h3"
+                variant="h3"
+                style={{
+                  borderBottom: '2px solid',
+                  borderColor:
+                    selectedPanel === 'playlists' ? '#95F5CB' : 'transparent',
+                  paddingBottom: '5px',
+                  cursor: 'pointer'
+                }}
+                onClick={() => setSelectedPanel('playlists')}
+              >
+                {t('Playlists')}
+              </Typography>
+              {/* )} */}
 
               <Button onClick={openPlaylistModal} fullWidth={false}>
                 {t('+ Playlist')}
@@ -180,7 +176,7 @@ const Profile = () => {
             <UserContent profile={profile} />
           ) : (
             <PlaylistPanel
-              playlists={playlists?.data || []}
+              playlists={playlists?.data}
               test={detailedPlaylists}
               profileId={profileId}
               userId={userId}

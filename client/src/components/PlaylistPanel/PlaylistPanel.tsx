@@ -61,24 +61,28 @@ const PlaylistPanel: React.FC<Props> = ({
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState<string | null>(null);
   const [editedTitles, setEditedTitles] = useState<{ [id: string]: string }>(
-    playlists.reduce(
-      (acc: any, playlist: any) => ({
-        ...acc,
-        [playlist.id]: playlist.data.name
-      }),
-      {}
-    )
+    isPlaylistDataLoading
+      ? {}
+      : playlists.reduce(
+          (acc: any, playlist: any) => ({
+            ...acc,
+            [playlist.id]: playlist.data.name
+          }),
+          {}
+        )
   );
   const [editedDescription, setEditedDescription] = useState<{
     [id: string]: string;
   }>(
-    playlists.reduce(
-      (acc: any, playlist: any) => ({
-        ...acc,
-        [playlist.id]: playlist.data.description
-      }),
-      {}
-    )
+    isPlaylistDataLoading
+      ? {}
+      : playlists.reduce(
+          (acc: any, playlist: any) => ({
+            ...acc,
+            [playlist.id]: playlist.data.description
+          }),
+          {}
+        )
   );
 
   const [tempTitles, setTempTitles] = useState<{ [id: string]: string }>({});
@@ -131,6 +135,12 @@ const PlaylistPanel: React.FC<Props> = ({
       setEditedPlaylistId(undefined);
     }
   }, [localPlaylists, editedPlaylistId]);
+
+  useEffect(() => {
+    if (playlists) {
+      setLocalPlaylists(playlists);
+    }
+  }, [playlists]);
 
   const handleUpdateLocalPlaylist = (
     playlistId: string,
@@ -206,6 +216,7 @@ const PlaylistPanel: React.FC<Props> = ({
     console.log(editMode, 'editMode');
   }, [editMode]);
 
+  console.log(localPlaylists, 'localPlaylists');
   return (
     <Grid container>
       <s.CustomDialog
