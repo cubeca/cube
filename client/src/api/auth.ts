@@ -2,7 +2,8 @@ import {
   getAuthToken,
   removeAuthToken,
   setAuthToken,
-  setProfileId
+  setProfileId,
+  setUser
 } from '../utils/auth';
 import { authApi } from '.';
 
@@ -25,9 +26,11 @@ export const login = async (email: string, password: string) => {
 
   removeAuthToken();
   setAuthToken(jwt);
-  if ((user as any).profile_id) setProfileId((user as any).profile_id);
+  setUser(user);
 
-  return user;
+  if ((user as any).profile_id) {
+    setProfileId((user as any).profile_id);
+  }
 };
 
 export const updateEmail = async (userId: string, email: string) => {
@@ -63,7 +66,7 @@ export const updatePassword = async ({
 };
 
 export const forgotPassword = async (email: string) => {
-  const anonToken = await getAuthToken();
+  const anonToken = getAuthToken();
   return await authApi.forgotPassword(
     { email },
     { headers: { Authorization: `Bearer ${anonToken}` } }
@@ -111,7 +114,7 @@ export const userSignup = async (
   });
 
 export const resendEmailVerification = async (email: string) => {
-  const authToken = await getAuthToken();
+  const authToken = getAuthToken();
   return await authApi.resendEmailVerification(
     { email },
     { headers: { Authorization: `Bearer ${authToken}` } }
@@ -124,7 +127,7 @@ export const contactUs = async (
   desc: string,
   ticketId: string
 ) => {
-  const authToken = await getAuthToken();
+  const authToken = getAuthToken();
   return await authApi.contactUs(
     { name, email, desc, ticketId },
     { headers: { Authorization: `Bearer ${authToken}` } }

@@ -41,7 +41,7 @@ export const searchContent = async (offset: number, limit: number, filters: any,
   const tagSearch = filters.tags ? filters.tags.split(',') : [];
 
   const whereClause: any = {
-    [searchTerm ? Op.and : Op.or]: [
+    [Op.and]: [
       {
         [Op.and]: [
           ...searchTerms.map((term: string) => ({

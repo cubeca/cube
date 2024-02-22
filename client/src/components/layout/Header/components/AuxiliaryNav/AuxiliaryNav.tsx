@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as s from './AuxiliaryNav.styled';
 import useAuth from 'hooks/useAuth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MainMenu } from 'components/layout/MainMenu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Profile } from '../Profile';
