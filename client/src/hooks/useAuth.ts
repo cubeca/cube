@@ -20,6 +20,7 @@ const useAuth = () => {
           logout();
         }
 
+        setIsLoggedIn(false);
         await getAnonymousToken();
       }
     };
