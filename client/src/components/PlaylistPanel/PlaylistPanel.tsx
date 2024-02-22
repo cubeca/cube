@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PlaylistItem from './PlaylistItem';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import usePlaylist from 'hooks/usePlaylist';
@@ -47,6 +48,7 @@ interface Props {
   userId: string;
   cameFromSinglePlaylist?: boolean;
   isLoading?: boolean;
+  refetchPlaylist?: any;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
@@ -55,7 +57,8 @@ const PlaylistPanel: React.FC<Props> = ({
   profileId,
   userId,
   cameFromSinglePlaylist,
-  isLoading: isPlaylistDataLoading
+  isLoading: isPlaylistDataLoading,
+  refetchPlaylist
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [loading, setLoading] = useState(false);
@@ -170,6 +173,9 @@ const PlaylistPanel: React.FC<Props> = ({
   function handleClose() {
     setIsCreatePlaylistModalOpen(false);
     setOpen(false);
+    if (refetchPlaylist) {
+      refetchPlaylist();
+    }
   }
 
   const deletePlaylistItem = (playlistId: string, contentId: string) => {
@@ -253,6 +259,9 @@ const PlaylistPanel: React.FC<Props> = ({
         onlyCreate={true}
         profileId={profileId}
         userId={userId}
+        playlistId={cameFromSinglePlaylist ? playlists[0].id : undefined}
+        passedPlaylistId={cameFromSinglePlaylist ? playlists[0].id : undefined}
+        cameFromSinglePlaylist={cameFromSinglePlaylist}
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
@@ -361,6 +370,21 @@ const PlaylistPanel: React.FC<Props> = ({
                       </Link>
                     )}
                   </s.PlaylistTitleSubContainer>
+                  <s.EditWrapper>
+                    {playlist.data.profileId === profileId &&
+                    playlist.data.userId === userId &&
+                    cameFromSinglePlaylist ? (
+                      <>
+                        <button
+                          onClick={() => {
+                            setIsCreatePlaylistModalOpen(true);
+                          }}
+                        >
+                          <AddIcon />
+                        </button>
+                      </>
+                    ) : null}
+                  </s.EditWrapper>
                   {editMode !== playlist.id && (
                     <s.EditWrapper>
                       {playlist.data.profileId === profileId &&

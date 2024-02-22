@@ -16,7 +16,7 @@ const useSinglePlaylist = (playlistId: string) => {
     return playlist;
   };
 
-  return { playlist, handleGetPlaylist, isLoading, isSuccess };
+  return { playlist, handleGetPlaylist, isLoading, isSuccess, refetchPlaylist };
 };
 
 export default useSinglePlaylist;

@@ -19,7 +19,9 @@ import { Link } from 'react-router-dom';
 const Playlist = () => {
   const user = getAuthTokenPayload();
   const { id } = useParams<{ id: string }>();
-  const { playlist, handleGetPlaylist } = useSinglePlaylist(id || '');
+  const { playlist, handleGetPlaylist, refetchPlaylist } = useSinglePlaylist(
+    id || ''
+  );
   const [userId, setUserId] = useState('');
   const [profileId, setProfileId] = useState('');
   const [localProfile, setLocalProfile] = useState<any>();
@@ -135,6 +137,7 @@ const Playlist = () => {
               userId={userId}
               playlists={playlist?.data}
               cameFromSinglePlaylist={true}
+              refetchPlaylist={refetchPlaylist}
             />
             <Box
               sx={{

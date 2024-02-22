@@ -189,6 +189,9 @@ export const UserContentHeader = styled(Stack)`
 
 export const EditWrapper = styled(Box)`
   position: relative;
+  display: flex;
+  gap: 10px;
+  margin-left: 10px;
   button,
   label {
     display: block;

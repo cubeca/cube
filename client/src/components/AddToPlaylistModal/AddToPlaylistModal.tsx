@@ -31,6 +31,9 @@ interface AddToPlaylistModalProps {
   profileId: string;
   userId: string;
   userVersion?: boolean;
+  playlistId?: string;
+  passedPlaylistId?: string;
+  cameFromSinglePlaylist?: boolean;
 }
 
 const AddToPlaylistModal = ({
@@ -40,6 +43,9 @@ const AddToPlaylistModal = ({
   onlyCreate = false,
   profileId,
   userId,
+  playlistId,
+  passedPlaylistId,
+  cameFromSinglePlaylist,
   userVersion: userVersion = false
 }: AddToPlaylistModalProps) => {
   const {
@@ -113,12 +119,25 @@ const AddToPlaylistModal = ({
     }
   }, [isAddSuccess, addResponseData]);
 
+  useEffect(() => {
+    if (playlistId) {
+      setNewPlaylistId(playlistId);
+      setPlaylistCreated(true);
+      setShowSuccessMessage(true);
+    }
+  }, [playlistId, newPlaylistId, cameFromSinglePlaylist, isAddSuccess]);
+
   const onCloseAndReset = () => {
-    setShowSuccessMessage(false);
-    reset();
-    onClose();
-    if (playlistCreated && newPlaylistId) {
-      navigate(`/playlist/${newPlaylistId}`);
+    if (cameFromSinglePlaylist) {
+      setShowSuccessMessage(true);
+      onClose();
+    } else {
+      setShowSuccessMessage(false);
+      reset();
+      onClose();
+      if (playlistCreated && newPlaylistId) {
+        navigate(`/playlist/${newPlaylistId}`);
+      }
     }
   };
 
@@ -219,7 +238,11 @@ const AddToPlaylistModal = ({
   return isOpen ? (
     <Dialog
       id={'add-to-playlist'}
-      title={onlyCreate ? 'Create a playlist' : 'Add to playlist'}
+      title={
+        onlyCreate && !cameFromSinglePlaylist
+          ? 'Create a playlist'
+          : 'Add to playlist'
+      }
       onClose={onCloseAndReset}
       open={isOpen}
     >
@@ -268,7 +291,7 @@ const AddToPlaylistModal = ({
           </Tabs>
         ) : null}
         {showSuccessMessage && tab === 0 && (
-          <Box sx={{ py: 6 }}>
+          <Box sx={{ py: 0 }}>
             {isAddLoading && (
               <Box
                 style={{
@@ -290,7 +313,7 @@ const AddToPlaylistModal = ({
             )}
             {isAddError && <p>error...</p>}
             {isAddSuccess && newPlaylistId && (
-              <>
+              <Box>
                 <Typography component="h6" variant="h6" sx={{ mb: 1 }}>
                   Your playlist, {watchAllFields.playlistName}, has been
                   created.
@@ -334,7 +357,7 @@ const AddToPlaylistModal = ({
                     </Button>
                   </Box>
                 )}
-              </>
+              </Box>
             )}
           </Box>
         )}
@@ -463,55 +486,54 @@ const AddToPlaylistModal = ({
                 </s.PlaylistItemSubContainer>
               </s.PlaylistItemContainer>
             ))}
-          {playlistCreated && isAddSuccess && newPlaylistId && (
-            <>
-              <Tabs
-                value={postCreateTab}
-                onChange={handlePostCreateTabChange}
-                TabIndicatorProps={{
-                  style: {
-                    backgroundColor: 'black',
-                    textAlign: 'left',
-                    alignItems: 'flex-start',
-                    justifyContent: 'flex-start',
-                    padding: '0'
-                  }
-                }}
-                sx={{
-                  lineHeight: '20px !important',
-                  height: '20px !important',
-                  marginBottom: '50px'
-                }}
-              >
-                <Tab
-                  label="Search Content"
-                  sx={{
-                    color: 'black !important',
-                    borderColor: 'black',
-                    textTransform: 'capitalize',
-                    padding: '0',
-                    marginRight: '12px'
+          <>
+            {playlistCreated &&
+              newPlaylistId &&
+              (cameFromSinglePlaylist || isAddSuccess) && (
+                <Tabs
+                  value={postCreateTab}
+                  onChange={handlePostCreateTabChange}
+                  TabIndicatorProps={{
+                    style: {
+                      backgroundColor: 'black',
+                      textAlign: 'left',
+                      alignItems: 'flex-start',
+                      justifyContent: 'flex-start',
+                      padding: '0'
+                    }
                   }}
-                />
-                {!userVersion && (
+                  sx={{
+                    lineHeight: '20px !important',
+                    height: '20px !important',
+                    marginBottom: '50px'
+                  }}
+                >
                   <Tab
-                    label="Recent Uploads"
+                    label="Search Content"
                     sx={{
                       color: 'black !important',
+                      borderColor: 'black',
                       textTransform: 'capitalize',
                       padding: '0',
-                      marginRight: '20px'
+                      marginRight: '12px'
                     }}
                   />
-                )}
-              </Tabs>
-              {/* <Typography component="h6" variant="h6" sx={{ mt: 4 }}>
-                Add More To This Playlist from Recent Uploads:
-              </Typography> */}
-            </>
-          )}
-          {playlistCreated &&
-            isAddSuccess &&
+                  {!userVersion && (
+                    <Tab
+                      label="Recent Uploads"
+                      sx={{
+                        color: 'black !important',
+                        textTransform: 'capitalize',
+                        padding: '0',
+                        marginRight: '20px'
+                      }}
+                    />
+                  )}
+                </Tabs>
+              )}
+          </>
+          {(isAddSuccess || cameFromSinglePlaylist) &&
+            playlistCreated &&
             newPlaylistId &&
             postCreateTab === 1 &&
             localMoreContent &&
@@ -542,8 +564,8 @@ const AddToPlaylistModal = ({
                   </s.PlaylistItemSubContainer>
                 </s.PlaylistItemContainer>
               ))}
-          {playlistCreated &&
-            isAddSuccess &&
+          {(isAddSuccess || cameFromSinglePlaylist) &&
+            playlistCreated &&
             newPlaylistId &&
             postCreateTab === 0 && (
               <SearchContent
