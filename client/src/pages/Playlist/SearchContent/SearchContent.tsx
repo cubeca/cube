@@ -42,7 +42,7 @@ const SearchContent = ({
   const [offset, setOffset] = useState<number>(0);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const { t } = useTranslation();
-  const [limit, setLimit] = useState<number>(12);
+  const [limit, setLimit] = useState<number>(15);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
   const isInitialMount = useRef(true);
 
@@ -129,7 +129,6 @@ const SearchContent = ({
 
       <s.UserContent>
         {isLoading && hasSearched ? (
-          // <></>
           <Box
             sx={{
               display: 'flex',
@@ -176,11 +175,20 @@ const SearchContent = ({
           ))
         )}
         {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
-          <s.LoadMore onClick={handleLoadMore}>
-            <span className="inner">
-              <span className="label">{t('Load More Results')}</span>
-            </span>
-          </s.LoadMore>
+          <s.LoadMoreContainer>
+            <s.LoadMore onClick={handleLoadMore}>
+              <span
+                className="inner"
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                <span className="label">{t('Load More Results')}</span>
+              </span>
+            </s.LoadMore>
+          </s.LoadMoreContainer>
         )}
       </s.UserContent>
     </s.UserContentWrapper>

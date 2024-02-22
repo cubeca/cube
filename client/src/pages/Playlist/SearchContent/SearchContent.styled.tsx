@@ -63,6 +63,12 @@ export const UserContent = styled(Box)`
   }
 `;
 
+export const LoadMoreContainer = styled(Box)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
 export const LoadMore = styled(Link)`
   display: block;
   text-decoration: none !important;
@@ -81,9 +87,7 @@ export const LoadMore = styled(Link)`
   }
 
   .inner {
-    position: relative;
     display: block;
-    padding-bottom: 100%;
     background-color: ${(props) => props.theme.palette.primary.main};
     border-radius: 5px;
     color: ${(props) => props.theme.palette.background.default};
@@ -91,13 +95,11 @@ export const LoadMore = styled(Link)`
 
   .label {
     display: block;
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     line-height: 100%;
-    padding: 60px 15px 0;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
@@ -106,10 +108,8 @@ export const LoadMore = styled(Link)`
     &::before {
       display: block;
       content: '';
-      position: absolute;
       top: 50%;
       left: 50%;
-      margin: -22px 0 0 -26px;
       width: 52px;
       height: 44px;
       background: no-repeat center/contain;
