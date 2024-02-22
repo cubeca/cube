@@ -25,6 +25,7 @@ import useProfileContent from 'hooks/useProfileContent';
 import { Content } from 'types/content';
 import Button from 'components/Button';
 import { Link } from 'react-router-dom';
+import { getProfileTag } from 'utils/auth';
 
 interface Playlist {
   id: string;
@@ -98,6 +99,7 @@ const PlaylistPanel: React.FC<Props> = ({
     isLoading,
     isError
   } = usePlaylist(profileId, userId);
+  const profileTag = getProfileTag();
 
   // drag and drop items
   const onDragEnd = (result: any) => {
@@ -186,7 +188,7 @@ const PlaylistPanel: React.FC<Props> = ({
           return prevPlaylists.filter((playlist: any) => playlist.id !== id);
         });
         if (cameFromSinglePlaylist && profileId) {
-          window.location.href = `/profile/${profileId}`;
+          window.location.href = `/profile/${profileTag}`;
         } else if (cameFromSinglePlaylist && userId) {
           window.location.href = `/user/${userId}`;
         } else {
