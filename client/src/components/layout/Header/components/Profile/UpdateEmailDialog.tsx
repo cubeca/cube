@@ -10,18 +10,14 @@ import { useState } from 'react';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import Grid from '@mui/system/Unstable_Grid';
 import { Box } from '@mui/system';
+import { getUser } from 'utils/auth';
 
 interface UpdateEmailDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  userId: string;
 }
 
-const UpdateEmailDialog = ({
-  isOpen,
-  onClose,
-  userId
-}: UpdateEmailDialogProps) => {
+const UpdateEmailDialog = ({ isOpen, onClose }: UpdateEmailDialogProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
@@ -43,7 +39,7 @@ const UpdateEmailDialog = ({
     }
 
     try {
-      await updateEmail(userId, newEmail);
+      await updateEmail(getUser().uuid, newEmail);
       reset();
       setIsSubmitted(true);
     } catch (e: any) {

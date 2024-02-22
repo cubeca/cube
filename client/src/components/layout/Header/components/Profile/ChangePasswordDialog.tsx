@@ -2,12 +2,11 @@ import Dialog from 'components/Dialog';
 import { useTranslation } from 'react-i18next';
 import { Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { updatePassword } from 'api/auth';
 import * as s from 'components/form/PasswordInput/PasswordInput.styled';
 import { FieldValues, useForm } from 'react-hook-form';
 import ErrorMessage from 'components/form/ErrorMessage';
-import { UserContext } from 'providers/UserProvider';
 import { Box } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
@@ -15,18 +14,15 @@ import HCaptcha from '@hcaptcha/react-hcaptcha';
 interface ChangePasswordDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  email: string;
 }
 
 const ChangePasswordDialog = ({
   isOpen,
-  onClose,
-  email
+  onClose
 }: ChangePasswordDialogProps) => {
   const { t } = useTranslation();
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
-  const { user } = useContext(UserContext);
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as s from './AuxiliaryNav.styled';
 import useAuth from 'hooks/useAuth';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MainMenu } from 'components/layout/MainMenu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Profile } from '../Profile';
@@ -13,6 +13,7 @@ const AuxiliaryNav = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const open = Boolean(anchorEl);
 
   const handleLogin = () => {
@@ -23,6 +24,14 @@ const AuxiliaryNav = () => {
       navigate('/login');
     }
   };
+
+  useEffect(() => {
+    if (isLoggedIn !== undefined) {
+      setIsLoading(false);
+    } else {
+      setIsLoading(true);
+    }
+  }, [isLoggedIn]);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -41,12 +50,19 @@ const AuxiliaryNav = () => {
           <s.StyledHomeIcon />
         </s.StyledLink>
       )}
-      {isLoggedIn ? (
-        <Profile />
+
+      {isLoading ? (
+        <p>Loading...</p>
       ) : (
-        <s.AuxButton variant="outlined" onClick={handleLogin}>
-          {t('Login')}
-        </s.AuxButton>
+        <>
+          {isLoggedIn ? (
+            <Profile />
+          ) : (
+            <s.AuxButton variant="outlined" onClick={handleLogin}>
+              {t('Login')}
+            </s.AuxButton>
+          )}
+        </>
       )}
 
       <s.AuxMenuTrigger

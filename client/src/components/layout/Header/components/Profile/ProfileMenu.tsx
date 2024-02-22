@@ -10,7 +10,6 @@ import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PasswordIcon from '@mui/icons-material/Password';
 import ChangePasswordDialog from './ChangePasswordDialog';
 import useAuth from 'hooks/useAuth';
-import { UserContext } from 'providers/UserProvider';
 import * as s from './Profile.styled';
 import { GetProfileByTagData } from '@cubeca/cube-svc-client-oas-axios';
 
@@ -37,7 +36,6 @@ const ProfileMenu = ({
   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] =
     useState(false);
   const { logout } = useAuth();
-  const { user } = useContext(UserContext);
 
   const handleLogout = () => {
     logout();
@@ -111,12 +109,10 @@ const ProfileMenu = ({
       <UpdateEmailDialog
         isOpen={isUpdateEmailDialogOpen}
         onClose={handleEmailUpdateDialogClose}
-        userId={user?.uuid || ''}
       />
       <ChangePasswordDialog
         isOpen={isChangePasswordDialogOpen}
         onClose={handleChangePasswordDialogClose}
-        email={user?.email || ''}
       />
     </>
   );

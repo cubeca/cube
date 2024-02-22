@@ -127,7 +127,6 @@ For more documentation on using react-i18next, [see documentation](https://react
 - Custom providers the provide global data to the app. Key ones are:
   - QueryProvider: Provides the Query Client to the app for ReactQuery. Will be used by hooks within the app.
   - SnackbarProvider: Provides the snackbar to the app for handling notification messages and error message to the user
-  - UserProvider: Provides the functionality for setting the userData after login, and accesing the user data across the app as needed.
 
 ### theme
 
