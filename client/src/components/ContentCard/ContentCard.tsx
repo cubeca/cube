@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import ListItemIcon from '@mui/icons-material/List';
 import LinkIcon from '@mui/icons-material/Link';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
+import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
 import * as s from './ContentCard.styled';
 
 export interface ContentCardProps {
@@ -52,6 +54,8 @@ const ContentCard: FC<ContentCardProps> = ({
               <MenuBookIcon fontSize="small" />
             ) : icon === 'link' ? (
               <LinkIcon fontSize="small" />
+            ) : icon === 'playlist' ? (
+              <ListItemIcon fontSize="small" />
             ) : (
               <></>
             )}

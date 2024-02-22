@@ -12,7 +12,7 @@ interface ContentListProps {
   handleNewMedia?: () => void;
 }
 
-const ContentList: FC<ContentListProps> = ({
+const ContentListPlaylists: FC<ContentListProps> = ({
   heading,
   content,
   isLoggedIn = false,
@@ -20,7 +20,7 @@ const ContentList: FC<ContentListProps> = ({
   handleNewMedia
 }) => {
   const { t } = useTranslation();
-
+  console.log(content);
   return (
     <Stack>
       {heading && (
@@ -33,20 +33,14 @@ const ContentList: FC<ContentListProps> = ({
           <ContentCard
             key={c.id}
             image={
-              c.coverImageUrl?.playerInfo?.publicUrl ||
+              c.data?.coverImageUrl?.playerInfo?.publicUrl ||
               c.coverImageExternalUrl ||
               ''
             }
-            title={c.title}
-            creator={c.creator}
-            url={
-              playlistId
-                ? `/content/${c.id}?playlist=${playlistId}`
-                : `/content/${c.id}`
-            }
-            icon={c.type}
-            hasSignLanguage={c.hasSignLanguage}
-            coverImageAltText={c.coverImageText}
+            title={c.data.title}
+            url={`/playlist/${c.id}`}
+            icon={'playlist'}
+            coverImageAltText={c.data.title}
           />
         ))}
       </Stack>
@@ -54,4 +48,4 @@ const ContentList: FC<ContentListProps> = ({
   );
 };
 
-export default ContentList;
+export default ContentListPlaylists;

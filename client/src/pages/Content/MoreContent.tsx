@@ -5,9 +5,10 @@ import { ContentLoader } from 'components/Loaders';
 import { PropsWithChildren, useCallback, useEffect, useState } from 'react';
 import useProfileContent from 'hooks/useProfileContent';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
-import { searchContent } from 'api/search';
+import { searchContent, searchPlaylists } from 'api/search';
 import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
 import { set } from 'date-fns';
+import ContentListPlaylists from 'components/ContentListPlaylists';
 
 interface MoreContentProps {
   profileId: string;
@@ -30,6 +31,7 @@ const MoreContent = ({
   const [uniqueCombinedContent, setUniqueCombinedContent] = useState<any>([]);
   const [combinedTags, setCombinedTags] = useState<any>('');
   const [tagContent, setTagContent] = useState<any>([]);
+  const [playlistContent, setPlaylistContent] = useState<any>([]);
   const [isFromPlaylist, setIsFromPlaylist] = useState<boolean>(playlistId);
 
   const { t } = useTranslation();
@@ -48,20 +50,32 @@ const MoreContent = ({
   } = useSinglePlaylist(playlistId ? playlistId : '');
 
   useEffect(() => {
-    const tagsString = tags.length > 0 ? tags.join(' ') : '';
+    const tagsString = tags.length > 0 ? tags.join(', ') : '';
     setCombinedTags(tagsString);
   }, [tags]);
 
   const fetchContentByTags = useCallback(async () => {
+    const tagsString = tags.length > 0 ? tags.join(', ') : '';
     try {
       const searchFilters: SearchFilters = {
-        // tags: combinedTags
-        tags: tags
+        tags: tagsString
       };
       const results = await searchContent('', 0, 5, searchFilters);
-      console.log(results);
       const newResults = Array.isArray(results) ? results : [];
       setTagContent(newResults);
+    } catch (error) {
+      console.error('An error occurred during the search:', error);
+    }
+  }, [tags]);
+
+  const fetchPlaylistsByContentId = useCallback(async () => {
+    try {
+      const searchFilters: SearchFilters = {
+        contentId: excludeId
+      };
+      const results = await searchPlaylists('', 0, 5, searchFilters);
+      const newResults = Array.isArray(results) ? results : [];
+      setPlaylistContent(newResults);
     } catch (error) {
       console.error('An error occurred during the search:', error);
     }
@@ -71,6 +85,10 @@ const MoreContent = ({
     fetchContentByTags();
     setTagContent(getRandomContent(tagContent, 3) as never[]);
   }, [combinedTags]);
+
+  useEffect(() => {
+    fetchPlaylistsByContentId();
+  }, [excludeId]);
 
   useEffect(() => {
     if (playlistId !== '') {
@@ -94,25 +112,13 @@ const MoreContent = ({
     }
   }, [content, excludeId]);
 
-  // get playlist content
-  // useEffect(() => {
-  //   if (
-  //     isSuccess &&
-  //     playlistId !== '' &&
-  //     !isPlaylistLoading &&
-  //     playlistData[0]
-  //   ) {
-  //     setPlaylistData(content);
-  //   }
-  // }, [excludeId]);
-
   // combine all three content sources
   useEffect(() => {
     // get index of current content within playlist
     const currentContentIndex = playlistData[0]?.contentItems?.findIndex(
       (item: { id: string }) => item.id === excludeId
     );
-    console.log(currentContentIndex, 'currentContentIndex');
+
     // get content after current content
     const contentItemsAfterCurrent =
       currentContentIndex >= 0
@@ -124,15 +130,11 @@ const MoreContent = ({
         : [];
     // if at the end of the playlist, start from the beginning ? or show random content ?
     if (isFromPlaylist && contentItemsAfterCurrent.length <= 0) {
-      console.log('at end of playlist');
       setCombinedContent([...profileContent, ...tagContent]);
-      // setCombinedContent([contentItemsBeforeCurrent]);
     } else if (isFromPlaylist) {
       // if not at the end, show the remaining items
-      console.log('not at end of playlist');
       setCombinedContent([...contentItemsAfterCurrent]);
     } else {
-      console.log('not from playlist');
       // if not from playlist, show random content
       setCombinedContent([
         ...contentItemsAfterCurrent,
@@ -140,7 +142,7 @@ const MoreContent = ({
         ...profileContent
       ]);
     }
-  }, [playlistData, profileContent, randomContent]);
+  }, [playlistData, profileContent, tagContent]);
 
   // filter out any duplicates pulled in by grabbing content from multiple sources
   useEffect(() => {
@@ -149,8 +151,6 @@ const MoreContent = ({
         index === self.findIndex((t) => t.id === item.id)
     );
     const firstFiveUniqueContent = uniqueCombinedContent.slice(0, 5);
-
-    console.log(uniqueCombinedContent, 'uniqueCombinedContent');
     setUniqueCombinedContent(firstFiveUniqueContent);
   }, [combinedContent]);
 
@@ -166,6 +166,12 @@ const MoreContent = ({
         <Stack direction="column" spacing={2}>
           <ContentLoader size={1} />
         </Stack>
+      )}
+      {playlistContent.length > 0 && (
+        <ContentListPlaylists
+          heading={t('Playlists with this content')}
+          content={playlistContent}
+        />
       )}
     </Stack>
   );

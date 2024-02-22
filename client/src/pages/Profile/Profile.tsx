@@ -68,7 +68,6 @@ const Profile = () => {
   };
 
   const handleUploadComplete = () => {
-    console.log('refetching');
     refetch();
   };
   function handleClose() {
