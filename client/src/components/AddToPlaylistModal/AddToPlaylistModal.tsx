@@ -21,6 +21,7 @@ import UploadInput from 'components/form/UploadInput/UploadInput';
 import { AddContentResponseData } from '@cubeca/cube-svc-client-oas-axios';
 import UserContent from 'pages/Profile/UserContent';
 import SearchContent from 'pages/Playlist/SearchContent';
+import { useNavigate } from 'react-router-dom';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -84,7 +85,7 @@ const AddToPlaylistModal = ({
   const [prevLength, setPrevLength] = useState(0);
   const [localPlaylistsHasUpdated, setLocalPlaylistsHasUpdated] =
     useState(false);
-
+  const navigate = useNavigate();
   const watchAllFields = watch();
 
   const handlePlaylistImageUpload = (files: File[]) => {
@@ -116,6 +117,9 @@ const AddToPlaylistModal = ({
     setShowSuccessMessage(false);
     reset();
     onClose();
+    if (playlistCreated && newPlaylistId) {
+      navigate(`/playlist/${newPlaylistId}`);
+    }
   };
 
   const handleTabChange = (event: any, newValue: SetStateAction<number>) => {
@@ -303,6 +307,33 @@ const AddToPlaylistModal = ({
                   {!userVersion &&
                     'Or, add more content to this playlist below - either by searching through all content on the site, or from a list of your most recent uploads.'}
                 </Typography>
+                {playlistCreated && (
+                  <Box
+                    sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'flex-end'
+                    }}
+                  >
+                    <Button
+                      color={'secondary'}
+                      onClick={() => {
+                        onCloseAndReset();
+                        navigate(`/playlist/${newPlaylistId}`);
+                      }}
+                      fullWidth={false}
+                      sx={{
+                        mt: 2,
+                        '&.Mui-disabled': {
+                          color: 'white',
+                          backgroundColor: '#585858'
+                        }
+                      }}
+                    >
+                      Done
+                    </Button>
+                  </Box>
+                )}
               </>
             )}
           </Box>
