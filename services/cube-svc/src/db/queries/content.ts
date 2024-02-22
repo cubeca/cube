@@ -33,64 +33,55 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
 };
 
 export const searchContent = async (offset: number, limit: number, filters: any, searchTerm: string) => {
-  const searchTerms = searchTerm
-    .split('&')
-    .map((term) => term.trim())
-    .filter((term) => term);
+  let whereClause: any = {};
 
-  const tagSearch = filters.tags ? filters.tags.split(',') : [];
+  if (searchTerm.trim() !== '') {
+    const searchTerms = searchTerm
+      .split('&')
+      .map((term) => term.trim())
+      .filter((term) => term);
 
-  const whereClause: any = {
-    [Op.and]: [
-      {
-        [Op.and]: [
-          ...searchTerms.map((term: string) => ({
-            data: {
-              [Op.or]: [
-                { title: { [Op.iLike]: `%${term}%` } },
-                { type: { [Op.iLike]: `%${term}%` } },
-                { tags: { [Op.iLike]: `%${term}%` } },
-                { description: { [Op.iLike]: `%${term}%` } },
-                { coverImageText: { [Op.iLike]: `%${term}%` } },
-                {
-                  contributors: {
-                    [Op.iLike]: `%${term}%`
-                  }
-                }
-              ]
-            }
-          })),
-          ...(filters.category
-            ? [
-                {
-                  'data.category': {
-                    [Op.iLike]: `%${filters.category}%`
-                  }
-                }
-              ]
-            : []),
-          ...(filters.profileId
-            ? [
-                {
-                  'data.profileId': {
-                    [Op.eq]: filters.profileId
-                  }
-                }
-              ]
-            : [])
-        ]
-      },
-      ...(filters.tags
-        ? [
-            ...tagSearch.map((term: string) => ({
-              data: {
-                [Op.or]: [{ tags: { [Op.iLike]: `%${term}%` } }]
-              }
-            }))
-          ]
-        : [])
-    ]
-  };
+    whereClause[Op.and] = searchTerms.map((term: string) => ({
+      [Op.or]: [
+        { title: { [Op.iLike]: `%${term}%` } },
+        { type: { [Op.iLike]: `%${term}%` } },
+        { tags: { [Op.iLike]: `%${term}%` } },
+        { description: { [Op.iLike]: `%${term}%` } },
+        { coverImageText: { [Op.iLike]: `%${term}%` } },
+        { contributors: { [Op.iLike]: `%${term}%` } }
+      ]
+    }));
+  }
+
+  if (filters.category) {
+    whereClause[Op.and] = whereClause[Op.and] || [];
+    whereClause[Op.and].push({
+      'data.category': {
+        [Op.iLike]: `%${filters.category}%`
+      }
+    });
+  }
+
+  if (filters.profileId) {
+    whereClause[Op.and] = whereClause[Op.and] || [];
+    whereClause[Op.and].push({
+      'data.profileId': {
+        [Op.eq]: filters.profileId
+      }
+    });
+  }
+
+  if (filters.tags) {
+    const tagSearch = filters.tags.split(',');
+    if (!whereClause[Op.and]) {
+      whereClause[Op.and] = [];
+    }
+    whereClause[Op.and].push({
+      [Op.or]: tagSearch.map((term: string) => ({
+        'data.tags': { [Op.iLike]: `%${term.trim()}%` }
+      }))
+    });
+  }
 
   const contentList = await Content.findAll({
     where: whereClause,
