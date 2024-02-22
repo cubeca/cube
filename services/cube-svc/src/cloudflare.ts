@@ -12,7 +12,7 @@ import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { VideoPlayerInfo, NonVideoPlayerInfo } from './types/cloudflare';
 
 export const cloudflare = express.Router();
-cloudflare.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+cloudflare.post('/upload/video-tus-reservation', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const fileId = req.query.fileId as string;
 
   if (!fileId) {
@@ -91,7 +91,7 @@ cloudflare.post('/upload/video-tus-reservation', allowIfAnyOf('contentEditor'), 
   }
 });
 
-cloudflare.post('/upload/s3-presigned-url', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+cloudflare.post('/upload/s3-presigned-url', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const {
     profileId,
     upload: { fileName, fileSizeBytes, mimeType, urlValidDurationSeconds = 30 * 60 }
