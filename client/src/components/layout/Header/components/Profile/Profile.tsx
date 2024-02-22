@@ -1,21 +1,17 @@
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import ProfileMenu from './ProfileMenu';
-import { useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './Profile.styled';
-import { UserContext } from 'providers/UserProvider';
-import { getProfileId, getProfileTag } from 'utils/auth';
+import { getProfileId, getProfileTag, getUser } from 'utils/auth';
 import { GetProfileByTagData } from '@cubeca/cube-svc-client-oas-axios';
 import useProfile from 'hooks/useProfile';
 
 const Profile = () => {
-  const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const { user } = useContext(UserContext);
   const profileId = getProfileId();
   const { data: profile } = useProfile(getProfileTag());
 
@@ -28,11 +24,7 @@ const Profile = () => {
   };
 
   const menuId = 'profile-menu';
-
-  let username = t('Profile');
-  if (user && !user.permission_ids.includes('contentEditor')) {
-    username = user.name.split(' ')[0];
-  }
+  const username = getUser()?.name.split(' ')[0] || '';
 
   return (
     <Box>

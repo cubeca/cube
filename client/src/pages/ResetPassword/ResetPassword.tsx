@@ -1,18 +1,17 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
 import ErrorMessage from 'components/form/ErrorMessage';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { updatePassword } from 'api/auth';
-import { UserContext } from 'providers/UserProvider';
 import PasswordInput from 'components/form/PasswordInput';
 
 const ResetPassword = () => {
   const { t } = useTranslation('common');
   const { token } = useParams();
-  const { control, handleSubmit, reset } = useForm();
+  const { control, handleSubmit } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
 
   const onSubmit = async (data: FieldValues) => {
@@ -25,20 +24,22 @@ const ResetPassword = () => {
     }
 
     try {
-      await updatePassword({newPassword, token});
-    } catch(e: any) {
-      setErrorMessage(e.response.data)
+      await updatePassword({ newPassword, token });
+    } catch (e: any) {
+      setErrorMessage(e.response.data);
     }
   };
 
   return (
-    <Grid container direction="column"
-    alignItems="center"
-    justifyContent="center">
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Grid item>
-
-      <Stack direction="column">
-        <Typography component="h2">{t('Update Your Password')}</Typography>
+        <Stack direction="column">
+          <Typography component="h2">{t('Update Your Password')}</Typography>
           <PasswordInput
             name="newPassword"
             id="newPassword"
@@ -61,7 +62,7 @@ const ResetPassword = () => {
               {t('Update Password')}
             </Button>
           </Stack>
-      </Stack>
+        </Stack>
       </Grid>
     </Grid>
   );

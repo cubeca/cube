@@ -16,14 +16,14 @@ export const UPLOAD_TUS_ENDPOINT = `${CUBE_SVC_URL}/upload/video-tus-reservation
 export const getUploadTusEndpoint = async (fileId: string): Promise<string> => {
   const url = new URL(UPLOAD_TUS_ENDPOINT);
   url.searchParams.set('fileId', fileId);
-  url.searchParams.set('authorization', (await getAuthToken()) || '');
+  url.searchParams.set('authorization', getAuthToken() || '');
   return url.toString();
 };
 
 const createConfiguration = () =>
   new Configuration({
     basePath: CUBE_SVC_URL,
-    accessToken: async () => String(await getAuthToken())
+    accessToken: async () => String(getAuthToken())
   });
 
 const authConfiguration = createConfiguration();

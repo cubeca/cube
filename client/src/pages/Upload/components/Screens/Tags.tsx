@@ -3,8 +3,13 @@ import {
   Box,
   TextField,
   Typography,
-  useTheme
+  Accordion,
+  useTheme,
+  AccordionSummary,
+  AccordionDetails,
+  Link
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/system/Unstable_Grid';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
@@ -423,18 +428,55 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
         rules={{
           required: false,
           pattern: {
-            value: /^(?!ftp|http|https|www)([^,"]+(?:,[^,"]+)*)$/,
+            value:
+              /^(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(,\s*(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})*$/,
             message:
-              'Only list the domain name, e.g. example.com, not the full URL.'
+              'Include only the domain name (e.g., example.com), not the full URL.'
           }
         }}
       />
-      <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
-        <strong>{t('You must separate websites with a comma. ')}</strong>
-        {t(
-          'Would you like to be the only ones who can embed this content on your website. Input your URL here to restrict any other site from embedding it.'
-        )}
-      </Typography>
+      <Box my={theme.spacing(2.5)}>
+        <Accordion
+          style={{ backgroundColor: theme.palette.background.default }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1-content"
+            id="panel1-header"
+          >
+            <Box>
+              <strong>{t('You must separate websites with a comma. ')}</strong>
+              {t(
+                'Would you like this content to only be embeddable on the websites you choose? Paste the URL here to restrict any other site from embedding it. Tap the arrow to see the code you can use to embed this content on your site, however you will have to develop your own trigger to send to correct message from your site to CubeCommons. To learn how to generate a trigger using AI tap the link below to see our video tutorial.'
+              )}
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography component="p" variant="body2">
+              {t('View code for embedding content')}{' '}
+              <Link
+                href="https://codesandbox.io/p/sandbox/embed-content-d79nck"
+                sx={{ color: 'inherit' }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                here.
+              </Link>
+            </Typography>
+            <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+              {t('View video tutorial for generating embed code via AI')}{' '}
+              <Link
+                href="https://www.youtube.com/watch?v=ELJzUcYrAIQ"
+                sx={{ color: 'inherit' }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                here.
+              </Link>
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
+      </Box>
 
       <Box my={theme.spacing(5)}>
         <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>

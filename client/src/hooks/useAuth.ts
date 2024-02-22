@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   getAnonymousToken,
   hasSessionToken,
@@ -6,11 +6,9 @@ import {
   removeAuthToken
 } from 'utils/auth';
 import { login as authLogin } from 'api/auth';
-import { UserContext } from 'providers/UserProvider';
 
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     const checkIsUserLoggedIn = async () => {
@@ -18,10 +16,11 @@ const useAuth = () => {
       setIsLoggedIn(isLoggedIn);
 
       if (!isLoggedIn) {
-        if (await hasSessionToken()) {
+        if (hasSessionToken()) {
           logout();
         }
 
+        setIsLoggedIn(false);
         await getAnonymousToken();
       }
     };
@@ -30,14 +29,11 @@ const useAuth = () => {
   });
 
   const login = async (email: string, password: string) => {
-    const user = await authLogin(email, password);
-    setUser(user);
-    return user;
+    await authLogin(email, password);
   };
 
   const logout = () => {
     setIsLoggedIn(false);
-    setUser(undefined);
     removeAuthToken();
   };
 
