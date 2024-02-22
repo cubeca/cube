@@ -133,42 +133,45 @@ const Profile = () => {
               justifyContent="space-between"
               alignItems="center"
             >
-              <Typography
-                component="h3"
-                variant="h3"
-                style={{
-                  borderBottom: '2px solid',
-                  borderColor:
-                    selectedPanel === 'content' ? '#95F5CB' : 'transparent',
-                  paddingBottom: '5px',
-                  cursor: 'pointer'
-                }}
-                onClick={() => setSelectedPanel('content')}
-              >
-                {t('Content')}
-              </Typography>
-              <Typography
-                component="h3"
-                variant="h3"
-                style={{
-                  borderBottom: '2px solid',
-                  borderColor:
-                    selectedPanel === 'playlists' ? '#95F5CB' : 'transparent',
-                  paddingBottom: '5px',
-                  cursor: 'pointer'
-                }}
-                onClick={() => setSelectedPanel('playlists')}
-              >
-                {t('Playlists')}
-              </Typography>
+              <s.UserContentSubWrapper>
+                <Typography
+                  component="h3"
+                  variant="h3"
+                  style={{
+                    borderBottom: '2px solid',
+                    borderColor:
+                      selectedPanel === 'content' ? '#95F5CB' : 'transparent',
+                    paddingBottom: '5px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setSelectedPanel('content')}
+                >
+                  {t('Content')}
+                </Typography>
+                <Typography
+                  component="h3"
+                  variant="h3"
+                  style={{
+                    borderBottom: '2px solid',
+                    borderColor:
+                      selectedPanel === 'playlists' ? '#95F5CB' : 'transparent',
+                    paddingBottom: '5px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setSelectedPanel('playlists')}
+                >
+                  {t('Playlists')}
+                </Typography>
+              </s.UserContentSubWrapper>
               {/* )} */}
-
-              <Button onClick={openPlaylistModal} fullWidth={false}>
-                {t('+ Playlist')}
-              </Button>
-              <Button onClick={handleNewMedia} fullWidth={false}>
-                {t('+ Upload')}
-              </Button>
+              <s.UserContentSubWrapper>
+                <Button onClick={openPlaylistModal} fullWidth={false}>
+                  {t('+ Playlist')}
+                </Button>
+                <Button onClick={handleNewMedia} fullWidth={false}>
+                  {t('+ Upload')}
+                </Button>
+              </s.UserContentSubWrapper>
             </s.UserContentHeader>
           )}
 

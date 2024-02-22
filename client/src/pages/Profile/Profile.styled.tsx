@@ -75,6 +75,10 @@ export const UserHeroBg = styled(Box)`
   }
 `;
 
+export const UserContentSubWrapper = styled(Box)`
+  display: flex;
+  gap: 30px;
+`;
 export const UserContentHeader = styled(Stack)`
   padding-top: 60px;
 
