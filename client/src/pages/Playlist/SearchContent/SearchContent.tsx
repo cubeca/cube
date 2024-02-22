@@ -2,6 +2,7 @@ import ContentCard from 'components/ContentCard';
 import UserContentFilter from './SearchContentFilter';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
+import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './SearchContent.styled';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
@@ -11,6 +12,7 @@ import { searchContent } from 'api/search';
 import { ReactComponent as PlaylistIcon } from '../../../assets/icons/playlist.svg';
 import { ReactComponent as PlusIcon } from '../../../assets/icons/plus.svg';
 import CheckIcon from '@mui/icons-material/Check';
+import { Box } from '@mui/material';
 
 interface SearchContentProps {
   profile?: any;
@@ -46,13 +48,17 @@ const SearchContent = ({
 
   const fetchContent = useCallback(
     async (newOffset: number) => {
+      if (debouncedSearchTerm.trim() === '') {
+        return;
+      }
+
       setIsLoading(true);
       try {
         const searchFilters: SearchFilters = {
           category: categoryFilter === 'all' ? undefined : categoryFilter,
           profileId: profile?.id
         };
-
+        setHasSearched(true);
         const results = await searchContent(
           debouncedSearchTerm.trim(),
           newOffset,
@@ -64,7 +70,6 @@ const SearchContent = ({
           setHasMoreToLoad(false);
         }
 
-        setHasSearched(true);
         if (newOffset === 0) {
           setSearchContentResults(newResults);
         } else {
@@ -84,7 +89,6 @@ const SearchContent = ({
     },
     [debouncedSearchTerm, categoryFilter]
   );
-
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
@@ -92,6 +96,21 @@ const SearchContent = ({
       fetchContent(0);
     }
   }, [fetchContent, debouncedSearchTerm]);
+
+  useEffect(() => {
+    setSearchContentResults([]);
+    setIsLoading(true);
+  }, [debouncedSearchTerm]);
+
+  useEffect(() => {
+    if (debouncedSearchTerm.trim() !== '') {
+      setSearchContentResults([]);
+      setIsLoading(true);
+      fetchContent(0);
+    } else {
+      setHasSearched(false);
+    }
+  }, [debouncedSearchTerm, fetchContent]);
 
   const handleLoadMore = () => {
     fetchContent(offset);
@@ -109,14 +128,23 @@ const SearchContent = ({
       />
 
       <s.UserContent>
-        {isLoading && !hasSearched ? (
-          <></>
-        ) : // <Lottie
-        //   className="loading-cubes"
-        //   animationData={LoadingCubes}
-        //   loop={true}
-        // />
-        error ? (
+        {isLoading && hasSearched ? (
+          // <></>
+          <Box
+            sx={{
+              display: 'flex',
+              width: '100%',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <Lottie
+              className="loading-circle"
+              animationData={LoadingCircle}
+              loop={true}
+            />
+          </Box>
+        ) : error ? (
           <p>{error}</p>
         ) : (
           playlistCreated &&

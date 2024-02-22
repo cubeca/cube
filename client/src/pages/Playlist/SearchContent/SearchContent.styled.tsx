@@ -38,7 +38,7 @@ export const UserContent = styled(Box)`
     align-content: flex-start;
     flex-flow: row wrap;
     margin: -15px;
-    min-height: 200px;
+    /* min-height: 200px; */
 
     .content-card {
       flex: 0 0 calc(33.3333% - 30px);
