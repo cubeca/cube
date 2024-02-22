@@ -163,7 +163,6 @@ const Profile = () => {
                   {t('Playlists')}
                 </Typography>
               </s.UserContentSubWrapper>
-              {/* )} */}
               <s.UserContentSubWrapper>
                 <Button onClick={openPlaylistModal} fullWidth={false}>
                   {t('+ Playlist')}
