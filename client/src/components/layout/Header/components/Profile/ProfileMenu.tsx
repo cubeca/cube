@@ -12,6 +12,7 @@ import ChangePasswordDialog from './ChangePasswordDialog';
 import useAuth from 'hooks/useAuth';
 import * as s from './Profile.styled';
 import { GetProfileByTagData } from '@cubeca/cube-svc-client-oas-axios';
+import { getUser } from 'utils/auth';
 
 interface ProfileMenuProps {
   open: boolean;
@@ -85,7 +86,7 @@ const ProfileMenu = ({
         )}
         {!profileId && (
           <ProfileMenuItem
-            onClick={() => handleProfile(`/user/${user?.uuid}`)}
+            onClick={() => handleProfile(`/user/${getUser().uuid}`)}
             text={t('My Playlists')}
             icon={<PlaylistAdd />}
           />
