@@ -146,10 +146,13 @@ const MoreContent = ({
 
   // filter out any duplicates pulled in by grabbing content from multiple sources
   useEffect(() => {
-    const uniqueCombinedContent = combinedContent.filter(
-      (item: { id: any }, index: any, self: any[]) =>
-        index === self.findIndex((t) => t.id === item.id)
-    );
+    const uniqueCombinedContent = combinedContent
+      .filter(
+        (item: { id: any }, index: any, self: any[]) =>
+          index === self.findIndex((t) => t.id === item.id)
+      )
+      .filter((item: { id: string }) => item.id !== excludeId); // filter the currently playing content
+
     const firstFiveUniqueContent = uniqueCombinedContent.slice(0, 5);
     setUniqueCombinedContent(firstFiveUniqueContent);
   }, [combinedContent]);
