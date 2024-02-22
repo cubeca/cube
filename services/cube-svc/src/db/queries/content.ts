@@ -42,14 +42,16 @@ export const searchContent = async (offset: number, limit: number, filters: any,
       .filter((term) => term);
 
     whereClause[Op.and] = searchTerms.map((term: string) => ({
-      [Op.or]: [
-        { title: { [Op.iLike]: `%${term}%` } },
-        { type: { [Op.iLike]: `%${term}%` } },
-        { tags: { [Op.iLike]: `%${term}%` } },
-        { description: { [Op.iLike]: `%${term}%` } },
-        { coverImageText: { [Op.iLike]: `%${term}%` } },
-        { contributors: { [Op.iLike]: `%${term}%` } }
-      ]
+      data: {
+        [Op.or]: [
+          { title: { [Op.iLike]: `%${term}%` } },
+          { type: { [Op.iLike]: `%${term}%` } },
+          { tags: { [Op.iLike]: `%${term}%` } },
+          { description: { [Op.iLike]: `%${term}%` } },
+          { coverImageText: { [Op.iLike]: `%${term}%` } },
+          { contributors: { [Op.iLike]: `%${term}%` } }
+        ]
+      }
     }));
   }
 
