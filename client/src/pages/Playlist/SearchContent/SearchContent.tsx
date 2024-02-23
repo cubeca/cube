@@ -22,6 +22,7 @@ interface SearchContentProps {
   addedItems: any;
   setAddedItems: any;
   addToExistingPlaylist: any;
+  cameFromSinglePlaylist?: boolean;
 }
 
 const SearchContent = ({
@@ -31,7 +32,8 @@ const SearchContent = ({
   newPlaylistId,
   addedItems,
   setAddedItems,
-  addToExistingPlaylist
+  addToExistingPlaylist,
+  cameFromSinglePlaylist
 }: SearchContentProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState();
@@ -55,8 +57,8 @@ const SearchContent = ({
       setIsLoading(true);
       try {
         const searchFilters: SearchFilters = {
-          category: categoryFilter === 'all' ? undefined : categoryFilter,
-          profileId: profile?.id
+          category: categoryFilter === 'all' ? undefined : categoryFilter
+          // profileId: profile?.id
         };
         setHasSearched(true);
         const results = await searchContent(
@@ -65,6 +67,7 @@ const SearchContent = ({
           limit,
           searchFilters
         );
+        console.log(results, 'results');
         const newResults = Array.isArray(results) ? results : [];
         if (newResults.length <= 12) {
           setHasMoreToLoad(false);
@@ -146,8 +149,8 @@ const SearchContent = ({
         ) : error ? (
           <p>{error}</p>
         ) : (
+          (isAddSuccess || cameFromSinglePlaylist) &&
           playlistCreated &&
-          isAddSuccess &&
           newPlaylistId &&
           displayContent &&
           displayContent.map((item: { id: string; title: any }) => (
