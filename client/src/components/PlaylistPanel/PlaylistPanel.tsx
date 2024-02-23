@@ -49,6 +49,7 @@ interface Props {
   cameFromSinglePlaylist?: boolean;
   isLoading?: boolean;
   refetchPlaylist?: any;
+  refetchPlaylists?: any;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
@@ -58,7 +59,8 @@ const PlaylistPanel: React.FC<Props> = ({
   userId,
   cameFromSinglePlaylist,
   isLoading: isPlaylistDataLoading,
-  refetchPlaylist
+  refetchPlaylist,
+  refetchPlaylists
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [loading, setLoading] = useState(false);
@@ -93,6 +95,7 @@ const PlaylistPanel: React.FC<Props> = ({
   const [editedPlaylistId, setEditedPlaylistId] = useState<string | undefined>(
     undefined
   );
+  const [currentEditedPlaylist, setCurrentEditedPlaylist] = useState<any>();
   const [textFieldDescriptionValue, setTextFieldDescriptionValue] =
     useState<string>('');
   const [editingPlaylist, setEditingPlaylist] = useState('');
@@ -205,6 +208,7 @@ const PlaylistPanel: React.FC<Props> = ({
         setLocalPlaylists((prevPlaylists: any) => {
           return prevPlaylists.filter((playlist: any) => playlist.id !== id);
         });
+        console.log(window.location.pathname, 'window.location.pathname');
         if (cameFromSinglePlaylist && profileId) {
           window.location.href = `/profile/${profileTag}`;
         } else if (cameFromSinglePlaylist && userId) {
@@ -261,7 +265,10 @@ const PlaylistPanel: React.FC<Props> = ({
         userId={userId}
         playlistId={cameFromSinglePlaylist ? playlists[0].id : undefined}
         passedPlaylistId={cameFromSinglePlaylist ? playlists[0].id : undefined}
+        currentEditedPlaylist={currentEditedPlaylist}
+        setCurrentEditedPlaylist={setCurrentEditedPlaylist}
         cameFromSinglePlaylist={cameFromSinglePlaylist}
+        refetchPlaylists={refetchPlaylists}
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
@@ -372,12 +379,12 @@ const PlaylistPanel: React.FC<Props> = ({
                   </s.PlaylistTitleSubContainer>
                   <s.EditWrapper>
                     {playlist.data.profileId === profileId &&
-                    playlist.data.userId === userId &&
-                    cameFromSinglePlaylist ? (
+                    playlist.data.userId === userId ? (
                       <>
                         <button
                           onClick={() => {
                             setIsCreatePlaylistModalOpen(true);
+                            setCurrentEditedPlaylist(playlist.id);
                           }}
                         >
                           <AddIcon />

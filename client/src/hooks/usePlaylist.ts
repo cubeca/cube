@@ -116,6 +116,7 @@ const usePlaylist = (profileId: string, userId: string) => {
     isDeleteSuccess,
     deleteResponse,
     addResponseData: addResponse,
+    refetchPlaylists,
     addPlaylist: handleAddPlaylist,
     addContentToPlaylist: handleAddContentToPlaylist,
     removeContentFromPlaylist: handleRemoveContentFromPlaylist,

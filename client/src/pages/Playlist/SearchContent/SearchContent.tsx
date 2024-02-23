@@ -23,6 +23,7 @@ interface SearchContentProps {
   setAddedItems: any;
   addToExistingPlaylist: any;
   cameFromSinglePlaylist?: boolean;
+  currentEditedPlaylist?: any;
 }
 
 const SearchContent = ({
@@ -33,7 +34,8 @@ const SearchContent = ({
   addedItems,
   setAddedItems,
   addToExistingPlaylist,
-  cameFromSinglePlaylist
+  cameFromSinglePlaylist,
+  currentEditedPlaylist
 }: SearchContentProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState();
@@ -149,7 +151,7 @@ const SearchContent = ({
         ) : error ? (
           <p>{error}</p>
         ) : (
-          (isAddSuccess || cameFromSinglePlaylist) &&
+          (isAddSuccess || cameFromSinglePlaylist || currentEditedPlaylist) &&
           playlistCreated &&
           newPlaylistId &&
           displayContent &&

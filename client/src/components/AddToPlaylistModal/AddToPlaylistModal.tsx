@@ -37,6 +37,7 @@ interface AddToPlaylistModalProps {
   cameFromSinglePlaylist?: boolean;
   currentEditedPlaylist?: string;
   setCurrentEditedPlaylist?: (playlistId: string) => void;
+  refetchPlaylists?: () => void;
 }
 
 const AddToPlaylistModal = ({
@@ -51,7 +52,8 @@ const AddToPlaylistModal = ({
   cameFromSinglePlaylist,
   currentEditedPlaylist,
   setCurrentEditedPlaylist,
-  userVersion: userVersion = false
+  userVersion: userVersion = false,
+  refetchPlaylists
 }: AddToPlaylistModalProps) => {
   const {
     control,
@@ -132,17 +134,32 @@ const AddToPlaylistModal = ({
       setPlaylistCreated(true);
       setShowSuccessMessage(true);
     }
-  }, [playlistId, newPlaylistId, cameFromSinglePlaylist, isAddSuccess]);
+    if (currentEditedPlaylist) {
+      setNewPlaylistId(currentEditedPlaylist);
+      setPlaylistCreated(true);
+      setShowSuccessMessage(true);
+    }
+  }, [
+    playlistId,
+    newPlaylistId,
+    cameFromSinglePlaylist,
+    isAddSuccess,
+    currentEditedPlaylist
+  ]);
 
   const onCloseAndReset = () => {
     if (cameFromSinglePlaylist) {
       setShowSuccessMessage(true);
       onClose();
+      setCurrentEditedPlaylist && setCurrentEditedPlaylist('');
+      refetchPlaylists && refetchPlaylists();
     } else {
       setShowSuccessMessage(false);
       reset();
       onClose();
-      if (playlistCreated && newPlaylistId) {
+      setCurrentEditedPlaylist && setCurrentEditedPlaylist('');
+      refetchPlaylists && refetchPlaylists();
+      if (playlistCreated && newPlaylistId && !currentEditedPlaylist) {
         navigate(`/playlist/${newPlaylistId}`);
       }
     }
@@ -178,7 +195,7 @@ const AddToPlaylistModal = ({
 
     handleUpdatePlaylist(playlistId, updatedPlaylistData);
     setShowSuccessMessage(true);
-
+    refetchPlaylists && refetchPlaylists();
     // change icon to checkmark
 
     setIsLoading((prevIsLoading) => ({
@@ -210,6 +227,7 @@ const AddToPlaylistModal = ({
       if (isAddSuccess) {
         setPlaylistCreated(true);
         setShowSuccessMessage(true);
+        refetchPlaylists && refetchPlaylists();
         const newTempPlaylist = {
           id: newPlaylistId
         };
@@ -246,7 +264,7 @@ const AddToPlaylistModal = ({
     <Dialog
       id={'add-to-playlist'}
       title={
-        onlyCreate && !cameFromSinglePlaylist
+        onlyCreate && !cameFromSinglePlaylist && !currentEditedPlaylist
           ? 'Create a playlist'
           : 'Add to playlist'
       }
@@ -504,7 +522,9 @@ const AddToPlaylistModal = ({
               newPlaylistId &&
               !userVersion &&
               isProfile !== null &&
-              (cameFromSinglePlaylist || isAddSuccess) && (
+              (cameFromSinglePlaylist ||
+                isAddSuccess ||
+                currentEditedPlaylist) && (
                 <Tabs
                   value={postCreateTab}
                   onChange={handlePostCreateTabChange}
@@ -549,7 +569,7 @@ const AddToPlaylistModal = ({
                 </Tabs>
               )}
           </>
-          {(isAddSuccess || cameFromSinglePlaylist) &&
+          {(isAddSuccess || cameFromSinglePlaylist || currentEditedPlaylist) &&
             playlistCreated &&
             newPlaylistId &&
             postCreateTab === 1 &&
@@ -581,7 +601,7 @@ const AddToPlaylistModal = ({
                   </s.PlaylistItemSubContainer>
                 </s.PlaylistItemContainer>
               ))}
-          {(isAddSuccess || cameFromSinglePlaylist) &&
+          {(isAddSuccess || cameFromSinglePlaylist || currentEditedPlaylist) &&
             playlistCreated &&
             newPlaylistId &&
             postCreateTab === 0 && (
@@ -593,6 +613,7 @@ const AddToPlaylistModal = ({
                 setAddedItems={setAddedItems}
                 addToExistingPlaylist={addToExistingPlaylist}
                 cameFromSinglePlaylist={cameFromSinglePlaylist}
+                currentEditedPlaylist={currentEditedPlaylist}
               />
             )}
         </>

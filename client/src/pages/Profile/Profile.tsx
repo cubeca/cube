@@ -47,7 +47,8 @@ const Profile = () => {
   const {
     playlists,
     addPlaylist: handleAddPlaylist,
-    deletePlaylist: handleDeletePlaylist
+    deletePlaylist: handleDeletePlaylist,
+    refetchPlaylists: refetchPlaylists
   } = usePlaylist(profileId, '');
 
   const location = useLocation();
@@ -183,6 +184,7 @@ const Profile = () => {
               profileId={profileId}
               userId={userId}
               isLoading={isLoading}
+              refetchPlaylists={refetchPlaylists}
             />
           )}
         </Grid>
