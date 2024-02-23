@@ -22,6 +22,7 @@ import { AddContentResponseData } from '@cubeca/cube-svc-client-oas-axios';
 import UserContent from 'pages/Profile/UserContent';
 import SearchContent from 'pages/Playlist/SearchContent';
 import { useNavigate } from 'react-router-dom';
+import { getProfileId } from 'utils/auth';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -34,6 +35,8 @@ interface AddToPlaylistModalProps {
   playlistId?: string;
   passedPlaylistId?: string;
   cameFromSinglePlaylist?: boolean;
+  currentEditedPlaylist?: string;
+  setCurrentEditedPlaylist?: (playlistId: string) => void;
 }
 
 const AddToPlaylistModal = ({
@@ -46,6 +49,8 @@ const AddToPlaylistModal = ({
   playlistId,
   passedPlaylistId,
   cameFromSinglePlaylist,
+  currentEditedPlaylist,
+  setCurrentEditedPlaylist,
   userVersion: userVersion = false
 }: AddToPlaylistModalProps) => {
   const {
@@ -93,6 +98,8 @@ const AddToPlaylistModal = ({
     useState(false);
   const navigate = useNavigate();
   const watchAllFields = watch();
+  const isProfile = getProfileId();
+  console.log(isProfile, 'isProfile');
 
   const handlePlaylistImageUpload = (files: File[]) => {
     setPlaylistImageFile(files[0]);
@@ -266,7 +273,7 @@ const AddToPlaylistModal = ({
             sx={{
               lineHeight: '20px !important',
               height: '20px !important',
-              marginBottom: '50px'
+              marginBottom: '20px'
             }}
           >
             <Tab
@@ -362,12 +369,15 @@ const AddToPlaylistModal = ({
           </Box>
         )}
         {tab === 0 && !showSuccessMessage && (
-          <>
-            <Typography component="h6" variant="h6">
-              Create a new playlist:
-            </Typography>
-
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-evenly'
+            }}
+          >
             <TextInput
+              label="Title"
               colormode="dark"
               defaultValue={''}
               name="playlistName"
@@ -378,6 +388,7 @@ const AddToPlaylistModal = ({
               placeholder="Title"
             />
             <TextInput
+              label="Description"
               colormode="dark"
               defaultValue={''}
               name="playlistDesc"
@@ -389,16 +400,9 @@ const AddToPlaylistModal = ({
               variant="outlined"
               placeholder="Description"
             />
-            <Box>
-              <UploadInput
-                style="dark"
-                text={'Thumbnail image (required)'}
-                onDrop={handleThumbnailOnDrop}
-                maxFiles={1}
-                isUploadReady={isPlaylistThumbUploadReady}
-              />
-            </Box>
+
             <TextInput
+              label="Embed Whitelist"
               colormode="dark"
               defaultValue={''}
               name="whitelist"
@@ -408,6 +412,15 @@ const AddToPlaylistModal = ({
               variant="outlined"
               placeholder="Allow embed only on these URLs (optional)"
             />
+            <Box sx={{ marginBottom: '10px' }}>
+              <UploadInput
+                style="dark"
+                text={'Thumbnail image (required)'}
+                onDrop={handleThumbnailOnDrop}
+                maxFiles={1}
+                isUploadReady={isPlaylistThumbUploadReady}
+              />
+            </Box>
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             <s.ButtonContainer>
               <Button
@@ -438,7 +451,7 @@ const AddToPlaylistModal = ({
                 + Add
               </Button>
             </s.ButtonContainer>
-          </>
+          </Box>
         )}
 
         <>
@@ -489,6 +502,8 @@ const AddToPlaylistModal = ({
           <>
             {playlistCreated &&
               newPlaylistId &&
+              !userVersion &&
+              isProfile !== null &&
               (cameFromSinglePlaylist || isAddSuccess) && (
                 <Tabs
                   value={postCreateTab}
@@ -508,17 +523,19 @@ const AddToPlaylistModal = ({
                     marginBottom: '50px'
                   }}
                 >
-                  <Tab
-                    label="Search Content"
-                    sx={{
-                      color: 'black !important',
-                      borderColor: 'black',
-                      textTransform: 'capitalize',
-                      padding: '0',
-                      marginRight: '12px'
-                    }}
-                  />
-                  {!userVersion && (
+                  {!userVersion && isProfile !== null && (
+                    <Tab
+                      label="Search Content"
+                      sx={{
+                        color: 'black !important',
+                        borderColor: 'black',
+                        textTransform: 'capitalize',
+                        padding: '0',
+                        marginRight: '12px'
+                      }}
+                    />
+                  )}
+                  {!userVersion && isProfile !== null && (
                     <Tab
                       label="Recent Uploads"
                       sx={{
@@ -575,6 +592,7 @@ const AddToPlaylistModal = ({
                 addedItems={addedItems}
                 setAddedItems={setAddedItems}
                 addToExistingPlaylist={addToExistingPlaylist}
+                cameFromSinglePlaylist={cameFromSinglePlaylist}
               />
             )}
         </>

@@ -100,12 +100,21 @@ const User = () => {
             />
           )}
           {isLoading && (
-            <Lottie
-              animationData={LoadingCubes}
-              loop
-              autoplay
-              style={{ height: '500px', width: '500px' }}
-            />
+            <Box
+              sx={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Lottie
+                animationData={LoadingCubes}
+                loop
+                autoplay
+                style={{ height: '500px', width: '500px' }}
+              />
+            </Box>
           )}
           {!playlists?.data && !isLoading && (
             <Typography
