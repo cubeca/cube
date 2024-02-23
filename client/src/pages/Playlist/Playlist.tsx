@@ -70,7 +70,7 @@ const Playlist = () => {
   }, [profileId]);
 
   useEffect(() => {
-    if (localPlaylist && profileId) {
+    if (localPlaylist) {
       setProfileId(localPlaylist[0].data.profileId);
     }
   }, [localPlaylist]);
@@ -99,19 +99,22 @@ const Playlist = () => {
         embedContentType={'playlist'}
       />
       <Grid xs={10} xsOffset={1} md={8}>
-        {profile && (
-          <Link to={`/profile/${profile.tag}`} style={{ color: 'inherit' }}>
+        {localProfile && !profile.profileId && (
+          <Link
+            to={`/profile/${localProfile.tag}`}
+            style={{ color: 'inherit' }}
+          >
             <s.ViewSection>
               <s.Header>
                 <s.ImageWrapper>
                   <s.ImageInner
-                    title={profile!.organization}
+                    title={localProfile!.organization}
                     target="_blank"
                     style={{ cursor: 'pointer' }}
                   >
-                    {profile.logoUrl && (
+                    {localProfile.logoUrl && (
                       <img
-                        src={profile!.logoUrl}
+                        src={localProfile!.logoUrl}
                         alt="user profile thumbnail"
                       />
                     )}
@@ -119,13 +122,13 @@ const Playlist = () => {
                 </s.ImageWrapper>
 
                 <Typography component="h5" variant="h5">
-                  {profile!.organization || ''}
+                  {localProfile!.organization || ''}
 
                   <small>
-                    {profile!.tag &&
-                      (profile!.tag.includes('@')
-                        ? profile!.tag
-                        : `@${profile!.tag}`)}
+                    {localProfile!.tag &&
+                      (localProfile!.tag.includes('@')
+                        ? localProfile!.tag
+                        : `@${localProfile!.tag}`)}
                   </small>
                 </Typography>
               </s.Header>

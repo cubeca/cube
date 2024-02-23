@@ -51,6 +51,7 @@ interface Props {
   refetchPlaylist?: any;
   refetchPlaylists?: any;
   currentPlaylistId?: string;
+  isLoggedIn?: boolean;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
@@ -62,7 +63,8 @@ const PlaylistPanel: React.FC<Props> = ({
   isLoading: isPlaylistDataLoading,
   refetchPlaylist,
   refetchPlaylists,
-  currentPlaylistId
+  currentPlaylistId,
+  isLoggedIn
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [loading, setLoading] = useState(false);

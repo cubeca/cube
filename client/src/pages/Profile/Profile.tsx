@@ -185,6 +185,7 @@ const Profile = () => {
               userId={userId}
               isLoading={isLoading}
               refetchPlaylists={refetchPlaylists}
+              isLoggedIn={isLoggedIn}
             />
           )}
         </Grid>
