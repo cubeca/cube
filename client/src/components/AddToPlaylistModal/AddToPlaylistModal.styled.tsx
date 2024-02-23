@@ -5,7 +5,7 @@ import { Box, IconButton, TextField, Typography } from '@mui/material';
 export const ModalContainer = styled(Box)`
   width: 100%;
   max-width: 600px;
-  padding: 20px;
+  padding: 0 20px;
   border-radius: 10px;
   overflow: auto;
   height: 100%;

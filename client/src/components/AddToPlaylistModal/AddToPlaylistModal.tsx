@@ -101,7 +101,6 @@ const AddToPlaylistModal = ({
   const navigate = useNavigate();
   const watchAllFields = watch();
   const isProfile = getProfileId();
-  console.log(isProfile, 'isProfile');
 
   const handlePlaylistImageUpload = (files: File[]) => {
     setPlaylistImageFile(files[0]);
@@ -355,33 +354,6 @@ const AddToPlaylistModal = ({
                   {!userVersion &&
                     'Or, add more content to this playlist below - either by searching through all content on the site, or from a list of your most recent uploads.'}
                 </Typography>
-                {playlistCreated && (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      display: 'flex',
-                      justifyContent: 'flex-end'
-                    }}
-                  >
-                    <Button
-                      color={'secondary'}
-                      onClick={() => {
-                        onCloseAndReset();
-                        navigate(`/playlist/${newPlaylistId}`);
-                      }}
-                      fullWidth={false}
-                      sx={{
-                        mt: 2,
-                        '&.Mui-disabled': {
-                          color: 'white',
-                          backgroundColor: '#585858'
-                        }
-                      }}
-                    >
-                      Done
-                    </Button>
-                  </Box>
-                )}
               </Box>
             )}
           </Box>
@@ -617,6 +589,33 @@ const AddToPlaylistModal = ({
               />
             )}
         </>
+        {playlistCreated && (
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'flex-end'
+            }}
+          >
+            <Button
+              color={'secondary'}
+              onClick={() => {
+                onCloseAndReset();
+                navigate(`/playlist/${newPlaylistId}`);
+              }}
+              fullWidth={false}
+              sx={{
+                mt: 2,
+                '&.Mui-disabled': {
+                  color: 'white',
+                  backgroundColor: '#585858'
+                }
+              }}
+            >
+              Done
+            </Button>
+          </Box>
+        )}
       </s.ModalContainer>
     </Dialog>
   ) : null;
