@@ -6,6 +6,7 @@ import PlaylistPanel from 'components/PlaylistPanel';
 import useProfile from 'hooks/useProfile';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { GetPlaylistResponse } from '@cubeca/cube-svc-client-oas-axios';
 import { getAuthTokenPayload } from 'utils/auth';
 import useProfileContent from 'hooks/useProfileContent';
@@ -15,6 +16,7 @@ import CodeIcon from '@mui/icons-material/Code';
 import EmbedModal from 'components/EmbedModal';
 import * as s from './Playlist.styled';
 import { Link } from 'react-router-dom';
+import Lottie from 'lottie-react';
 
 const Playlist = () => {
   const user = getAuthTokenPayload();
@@ -157,7 +159,14 @@ const Playlist = () => {
             </Box>
           </div>
         ) : (
-          'Loading...'
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Lottie
+              animationData={LoadingCubes}
+              loop
+              autoplay
+              style={{ height: '500px', width: '500px' }}
+            />
+          </Box>
         )}
       </Grid>
     </Grid>
