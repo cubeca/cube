@@ -20,7 +20,6 @@ import useContentDetails from 'hooks/useContentDetails';
 const User = () => {
   const user = getAuthTokenPayload();
   const { t } = useTranslation();
-  // console.log(profile);
   const [playlist, setPlaylist] = useState(null);
   const [detailedPlaylists, setDetailedPlaylists] = useState<any[]>([]);
   const [transformedPlaylists, setTransformedPlaylists] = useState<any[]>([]);

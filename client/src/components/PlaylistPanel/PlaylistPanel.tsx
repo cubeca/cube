@@ -208,7 +208,6 @@ const PlaylistPanel: React.FC<Props> = ({
         setLocalPlaylists((prevPlaylists: any) => {
           return prevPlaylists.filter((playlist: any) => playlist.id !== id);
         });
-        console.log(window.location.pathname, 'window.location.pathname');
         if (cameFromSinglePlaylist && profileId) {
           window.location.href = `/profile/${profileTag}`;
         } else if (cameFromSinglePlaylist && userId) {
@@ -222,11 +221,6 @@ const PlaylistPanel: React.FC<Props> = ({
       });
   };
 
-  useEffect(() => {
-    console.log(editMode, 'editMode');
-  }, [editMode]);
-
-  console.log(localPlaylists, 'localPlaylists');
   return (
     <Grid container>
       <s.CustomDialog

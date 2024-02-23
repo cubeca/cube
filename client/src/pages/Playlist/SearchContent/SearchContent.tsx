@@ -69,7 +69,6 @@ const SearchContent = ({
           limit,
           searchFilters
         );
-        console.log(results, 'results');
         const newResults = Array.isArray(results) ? results : [];
         if (newResults.length <= 12) {
           setHasMoreToLoad(false);
