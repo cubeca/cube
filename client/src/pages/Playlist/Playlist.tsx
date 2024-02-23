@@ -140,6 +140,7 @@ const Playlist = () => {
               playlists={playlist?.data}
               cameFromSinglePlaylist={true}
               refetchPlaylist={refetchPlaylist}
+              currentPlaylistId={id}
             />
             <Box
               sx={{

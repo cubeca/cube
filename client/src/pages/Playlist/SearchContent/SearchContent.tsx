@@ -24,6 +24,7 @@ interface SearchContentProps {
   addToExistingPlaylist: any;
   cameFromSinglePlaylist?: boolean;
   currentEditedPlaylist?: any;
+  playlistContents?: any;
 }
 
 const SearchContent = ({
@@ -35,7 +36,8 @@ const SearchContent = ({
   setAddedItems,
   addToExistingPlaylist,
   cameFromSinglePlaylist,
-  currentEditedPlaylist
+  currentEditedPlaylist,
+  playlistContents
 }: SearchContentProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState();
@@ -161,7 +163,13 @@ const SearchContent = ({
                 <s.PlaylistItemTitle>{item.title}</s.PlaylistItemTitle>
               </s.PlaylistItemSubContainer>
               <s.PlaylistItemSubContainer>
-                {addedItems[item.id] ? (
+                {addedItems[item.id] ||
+                (playlistContents &&
+                  playlistContents[0].contentItems &&
+                  playlistContents[0].contentItems.length > 0 && // fix to check if content is already added
+                  playlistContents[0].contentItems.some(
+                    (plItem: any) => plItem.id === item.id
+                  )) ? (
                   <CheckIcon />
                 ) : (
                   <PlusIcon

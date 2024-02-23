@@ -18,11 +18,16 @@ import Lottie from 'lottie-react';
 import usePlaylist from 'hooks/usePlaylist';
 import useProfileContent from 'hooks/useProfileContent';
 import UploadInput from 'components/form/UploadInput/UploadInput';
-import { AddContentResponseData } from '@cubeca/cube-svc-client-oas-axios';
+import {
+  AddContentResponseData,
+  AddContentToPlaylistRequest
+} from '@cubeca/cube-svc-client-oas-axios';
 import UserContent from 'pages/Profile/UserContent';
 import SearchContent from 'pages/Playlist/SearchContent';
 import { useNavigate } from 'react-router-dom';
 import { getProfileId } from 'utils/auth';
+import { addContentToPlaylist, getPlaylist } from 'api/playlist';
+import useSinglePlaylist from 'hooks/useSinglePlaylist';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -38,6 +43,7 @@ interface AddToPlaylistModalProps {
   currentEditedPlaylist?: string;
   setCurrentEditedPlaylist?: (playlistId: string) => void;
   refetchPlaylists?: () => void;
+  currentPlaylistId?: string;
 }
 
 const AddToPlaylistModal = ({
@@ -53,7 +59,8 @@ const AddToPlaylistModal = ({
   currentEditedPlaylist,
   setCurrentEditedPlaylist,
   userVersion: userVersion = false,
-  refetchPlaylists
+  refetchPlaylists,
+  currentPlaylistId
 }: AddToPlaylistModalProps) => {
   const {
     control,
@@ -98,9 +105,37 @@ const AddToPlaylistModal = ({
   const [prevLength, setPrevLength] = useState(0);
   const [localPlaylistsHasUpdated, setLocalPlaylistsHasUpdated] =
     useState(false);
+  const [playlistContents, setPlaylistContents] = useState<any>();
   const navigate = useNavigate();
   const watchAllFields = watch();
   const isProfile = getProfileId();
+
+  const {
+    playlist,
+    handleGetPlaylist: getCurrentPlaylist,
+    refetchPlaylist
+  } = useSinglePlaylist(
+    newPlaylistId
+      ? newPlaylistId
+      : playlistId
+        ? playlistId
+        : currentPlaylistId
+          ? currentPlaylistId
+          : ''
+  );
+
+  useEffect(() => {
+    if (newPlaylistId) {
+      getCurrentPlaylist();
+      setPlaylistContents(playlist?.data);
+    } else if (playlistId) {
+      getCurrentPlaylist();
+      setPlaylistContents(playlist?.data);
+    } else if (currentPlaylistId) {
+      getCurrentPlaylist();
+      setPlaylistContents(playlist?.data);
+    }
+  }, [newPlaylistId]);
 
   const handlePlaylistImageUpload = (files: File[]) => {
     setPlaylistImageFile(files[0]);
@@ -192,7 +227,8 @@ const AddToPlaylistModal = ({
       contentIds: updatedContentIds
     };
 
-    handleUpdatePlaylist(playlistId, updatedPlaylistData);
+    addContentToPlaylist(playlistId, { contentId });
+    // handleUpdatePlaylist(playlistId, updatedPlaylistData);
     setShowSuccessMessage(true);
     refetchPlaylists && refetchPlaylists();
     // change icon to checkmark
@@ -391,7 +427,7 @@ const AddToPlaylistModal = ({
               placeholder="Description"
             />
 
-            <TextInput
+            {/* <TextInput
               label="Embed Whitelist"
               colormode="dark"
               defaultValue={''}
@@ -401,7 +437,7 @@ const AddToPlaylistModal = ({
               fullWidth
               variant="outlined"
               placeholder="Allow embed only on these URLs (optional)"
-            />
+            /> */}
             <Box sx={{ marginBottom: '10px' }}>
               <UploadInput
                 style="dark"
@@ -557,7 +593,13 @@ const AddToPlaylistModal = ({
                     <s.PlaylistItemTitle>{item.title}</s.PlaylistItemTitle>
                   </s.PlaylistItemSubContainer>
                   <s.PlaylistItemSubContainer>
-                    {addedItems[item.id] ? (
+                    {addedItems[item.id] ||
+                    (playlistContents &&
+                      playlistContents[0].contentItems &&
+                      playlistContents[0].contentItems.length > 0 && // fix to check if content is already added
+                      playlistContents[0].contentItems.some(
+                        (plItem: any) => plItem.id === item.id
+                      )) ? (
                       <CheckIcon />
                     ) : (
                       <PlusIcon
@@ -586,6 +628,7 @@ const AddToPlaylistModal = ({
                 addToExistingPlaylist={addToExistingPlaylist}
                 cameFromSinglePlaylist={cameFromSinglePlaylist}
                 currentEditedPlaylist={currentEditedPlaylist}
+                playlistContents={playlistContents}
               />
             )}
         </>

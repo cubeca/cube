@@ -50,6 +50,7 @@ interface Props {
   isLoading?: boolean;
   refetchPlaylist?: any;
   refetchPlaylists?: any;
+  currentPlaylistId?: string;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
@@ -60,7 +61,8 @@ const PlaylistPanel: React.FC<Props> = ({
   cameFromSinglePlaylist,
   isLoading: isPlaylistDataLoading,
   refetchPlaylist,
-  refetchPlaylists
+  refetchPlaylists,
+  currentPlaylistId
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [loading, setLoading] = useState(false);
@@ -263,6 +265,7 @@ const PlaylistPanel: React.FC<Props> = ({
         setCurrentEditedPlaylist={setCurrentEditedPlaylist}
         cameFromSinglePlaylist={cameFromSinglePlaylist}
         refetchPlaylists={refetchPlaylists}
+        currentPlaylistId={currentPlaylistId}
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
