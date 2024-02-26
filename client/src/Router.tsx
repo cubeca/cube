@@ -11,7 +11,8 @@ import {
   EmbeddedContent,
   SubtitleEditor,
   Playlist,
-  User
+  User,
+  EmbeddedPlaylist
 } from 'pages';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -34,6 +35,7 @@ const Router = () => {
         element={<SubtitleEditor />}
       />
       <Route path="/embed/:id" element={<EmbeddedContent />} />
+      <Route path="/embedPlaylist/:id" element={<EmbeddedPlaylist />} />
       <Route
         path="/verified"
         element={<Navigate to="/login?verified=true" />}

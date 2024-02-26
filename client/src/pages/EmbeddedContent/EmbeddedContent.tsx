@@ -71,13 +71,6 @@ const Video = () => {
         .replace(/(^\w+:|^)\/\//, '')
         .toLowerCase();
 
-      console.log(
-        normalizedDomain,
-        normalizedInputUrl,
-        normalizedInputUrl === normalizedDomain,
-        normalizedInputUrl === `www.${normalizedDomain}`
-      );
-
       return (
         normalizedInputUrl === normalizedDomain ||
         normalizedInputUrl === `www.${normalizedDomain}`

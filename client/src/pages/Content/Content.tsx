@@ -140,10 +140,6 @@ const Video = () => {
   }, [content?.isSuitableForChildren]);
 
   useEffect(() => {
-    console.log(
-      embedContentWhitelist === undefined,
-      embedContentWhitelist?.length === 0
-    );
     if (
       embedContentWhitelist === undefined ||
       embedContentWhitelist?.length === 0

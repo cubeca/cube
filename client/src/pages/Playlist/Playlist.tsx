@@ -13,7 +13,7 @@ import useProfileContent from 'hooks/useProfileContent';
 import { GetProfileResponseData } from '@cubeca/cube-svc-client-oas-axios';
 import { getProfile } from 'api/profile';
 import CodeIcon from '@mui/icons-material/Code';
-import EmbedModal from 'components/EmbedModal';
+import EmbedModal from 'components/EmbedPlaylistModal/EmbedPlaylistModal';
 import * as s from './Playlist.styled';
 import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
@@ -81,7 +81,7 @@ const Playlist = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await getAuthTokenPayload();
+      const user = getAuthTokenPayload();
       setUserId((user as any).sub);
     };
     fetchUser();
@@ -93,11 +93,7 @@ const Playlist = () => {
 
   return (
     <Grid container>
-      <EmbedModal
-        isOpen={isEmbedModalOpen}
-        onClose={handleClose}
-        embedContentType={'playlist'}
-      />
+      <EmbedModal isOpen={isEmbedModalOpen} onClose={handleClose} />
       <Grid xs={10} xsOffset={1} md={8}>
         {localProfile && !profile.profileId && (
           <Link

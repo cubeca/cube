@@ -28,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
 import { getProfileId } from 'utils/auth';
 import { addContentToPlaylist, getPlaylist } from 'api/playlist';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
+import WhitelistInput from 'components/form/WhitelistInput';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -243,14 +244,18 @@ const AddToPlaylistModal = ({
   const createNewPlaylistAndAddContent = async (
     playlistName: string,
     playlistDesc: string,
-    contentId?: string
+    contentId?: string,
+    whitelist?: string
   ) => {
     const newPlaylist = {
       title: playlistName,
       description: playlistDesc,
       profileId: profileId,
       userId: userId,
-      contentIds: contentId ? [contentId] : []
+      contentIds: contentId ? [contentId] : [],
+      embedPlaylistWhitelist: whitelist
+        ?.split(',')
+        .map((tag: string) => tag.trim())
     };
 
     try {
@@ -427,17 +432,24 @@ const AddToPlaylistModal = ({
               placeholder="Description"
             />
 
-            {/* <TextInput
+            <WhitelistInput
+              control={control}
               label="Embed Whitelist"
-              colormode="dark"
-              defaultValue={''}
               name="whitelist"
               id="whitelist"
-              control={control}
               fullWidth
-              variant="outlined"
-              placeholder="Allow embed only on these URLs (optional)"
-            /> */}
+              placeholder="Embedded Playlist Whitelist"
+              rules={{
+                required: false,
+                pattern: {
+                  value:
+                    /^(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(,\s*(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})*$/,
+                  message:
+                    'Include only the domain name (e.g., example.com), not the full URL.'
+                }
+              }}
+            />
+
             <Box sx={{ marginBottom: '10px' }}>
               <UploadInput
                 style="dark"
@@ -455,7 +467,8 @@ const AddToPlaylistModal = ({
                   createNewPlaylistAndAddContent(
                     watchAllFields.playlistName,
                     watchAllFields.playlistDesc,
-                    contentId!
+                    contentId!,
+                    watchAllFields.whitelist!
                   );
                   setShowSuccessMessage(true);
                   setPlaylistCreated(true);

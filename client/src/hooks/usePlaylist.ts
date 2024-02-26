@@ -66,7 +66,6 @@ const usePlaylist = (profileId: string, userId: string) => {
     refetchPlaylist();
     return playlist;
   };
-  // embedPlaylistWhitelist = ['https://www.youtube.com/embed/'];
 
   const handleAddPlaylist = (
     payload: AddPlaylistRequest,
