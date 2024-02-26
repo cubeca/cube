@@ -1,18 +1,9 @@
-import {
-  Box,
-  DialogActions,
-  DialogTitle,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Box, DialogActions, DialogTitle, TextField } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
-import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './PlaylistPanel.styled';
-import useAuth from 'hooks/useAuth';
-import { useForm } from 'react-hook-form';
 import { ReactComponent as PlaySymbol } from '../../assets/icons/play-circle.svg';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistItem from './PlaylistItem';
@@ -56,15 +47,13 @@ interface Props {
 
 const PlaylistPanel: React.FC<Props> = ({
   playlists,
-  test,
   profileId,
   userId,
   cameFromSinglePlaylist,
   isLoading: isPlaylistDataLoading,
   refetchPlaylist,
   refetchPlaylists,
-  currentPlaylistId,
-  isLoggedIn
+  currentPlaylistId
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [loading, setLoading] = useState(false);

@@ -1,7 +1,5 @@
-import ContentCard from 'components/ContentCard';
 import UserContentFilter from './SearchContentFilter';
 import Lottie from 'lottie-react';
-import LoadingCubes from 'assets/animations/loading-cubes.json';
 import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './SearchContent.styled';
 import { useCallback, useEffect, useState, useRef } from 'react';
@@ -28,7 +26,6 @@ interface SearchContentProps {
 }
 
 const SearchContent = ({
-  profile,
   isAddSuccess,
   playlistCreated,
   newPlaylistId,

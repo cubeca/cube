@@ -3,11 +3,10 @@ import { Tab, Tabs, Typography } from '@mui/material';
 import Dialog from 'components/Dialog';
 import * as s from './AddToPlaylistModal.styled';
 import Button from 'components/Button';
-import { FieldValues, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import TextInput from 'components/form/TextInput';
 import { Link } from 'react-router-dom';
 import LoadingCircle from 'assets/animations/loading-circle.json';
-import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { SetStateAction, useEffect, useState } from 'react';
 import ErrorMessage from 'components/form/ErrorMessage';
 import { Box } from '@mui/system';
@@ -18,15 +17,10 @@ import Lottie from 'lottie-react';
 import usePlaylist from 'hooks/usePlaylist';
 import useProfileContent from 'hooks/useProfileContent';
 import UploadInput from 'components/form/UploadInput/UploadInput';
-import {
-  AddContentResponseData,
-  AddContentToPlaylistRequest
-} from '@cubeca/cube-svc-client-oas-axios';
-import UserContent from 'pages/Profile/UserContent';
 import SearchContent from 'pages/Playlist/SearchContent';
 import { useNavigate } from 'react-router-dom';
 import { getProfileId } from 'utils/auth';
-import { addContentToPlaylist, getPlaylist } from 'api/playlist';
+import { addContentToPlaylist } from 'api/playlist';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
 import WhitelistInput from 'components/form/WhitelistInput';
 
@@ -55,7 +49,6 @@ const AddToPlaylistModal = ({
   profileId,
   userId,
   playlistId,
-  passedPlaylistId,
   cameFromSinglePlaylist,
   currentEditedPlaylist,
   setCurrentEditedPlaylist,
@@ -251,8 +244,8 @@ const AddToPlaylistModal = ({
       userId: userId,
       contentIds: contentId ? [contentId] : [],
       embedPlaylistWhitelist: whitelist
-        ?.split(',')
-        .map((tag: string) => tag.trim())
+        ? whitelist?.split(',').map((domain: string) => domain.trim())
+        : []
     };
 
     try {

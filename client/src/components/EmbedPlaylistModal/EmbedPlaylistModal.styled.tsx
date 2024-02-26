@@ -1,13 +1,6 @@
 import { styled } from 'theme/utils';
 import Button from 'components/Button';
-import {
-  Box,
-  Dialog as MuiDialog,
-  DialogTitle,
-  IconButton,
-  TextField,
-  Typography
-} from '@mui/material';
+import { IconButton, TextField } from '@mui/material';
 
 export const ModalButton = styled(Button)`
   margin: 20px;
@@ -21,7 +14,6 @@ export const Close = styled(IconButton)`
 `;
 
 export const EmbedTextField = styled(TextField)`
-
   .MuiInputBase-root {
     margin-bottom: 10px;
   }
@@ -52,6 +44,5 @@ export const EmbedTextField = styled(TextField)`
     & label {
       color: ${(props) => props.theme.palette.background.default};
     }
-
   }
 `;

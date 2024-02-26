@@ -11,6 +11,7 @@ export const DeletePlaylistContainer = styled(Box)`
   width: 100%;
   padding: 10px 0;
 `;
+
 export const DeletePlaylistText = styled(Typography)`
   color: #d9ffee;
   font-size: 18px !important;
@@ -23,6 +24,7 @@ export const DeletePlaylistText = styled(Typography)`
   margin-bottom: 0;
   cursor: pointer;
 `;
+
 export const CustomDialog = styled(Dialog)(({ theme }) => ({
   marginBottom: '24px',
   '& .MuiDialog-paper': {
@@ -34,6 +36,7 @@ export const CustomDialog = styled(Dialog)(({ theme }) => ({
     paddingRight: '12px'
   }
 }));
+
 export const StyledRemoveIcon = styled(RemoveIcon)({
   zIndex: 100,
   position: 'absolute',
@@ -71,6 +74,7 @@ export const StyledCloseIcon = styled(CloseIcon)({
 export const RelativeBox = styled(Box)`
   position: relative;
 `;
+
 export const TextFieldContainer = styled(Box)`
   position: relative;
   width: 100%;
@@ -132,6 +136,7 @@ export const PlaylistDescriptionContainer = styled(Box)`
   padding-bottom: 15px;
   border-bottom: 1px solid #57838b;
 `;
+
 export const PlaylistDescription = styled(Typography)`
   color: #d9ffee;
   font-size: 18px !important;
@@ -168,6 +173,7 @@ export const PlaylistItemSubContainer = styled(Box)`
   display: flex;
   align-items: center;
 `;
+
 export const PlaylistItemThumbnail = styled(Box)<{ bgUrl: string }>`
   display: flex;
   width: 30px;

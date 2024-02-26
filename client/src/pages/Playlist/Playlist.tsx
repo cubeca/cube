@@ -1,16 +1,12 @@
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
-import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import PlaylistPanel from 'components/PlaylistPanel';
 import useProfile from 'hooks/useProfile';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
-import { GetPlaylistResponse } from '@cubeca/cube-svc-client-oas-axios';
 import { getAuthTokenPayload } from 'utils/auth';
-import useProfileContent from 'hooks/useProfileContent';
-import { GetProfileResponseData } from '@cubeca/cube-svc-client-oas-axios';
 import { getProfile } from 'api/profile';
 import CodeIcon from '@mui/icons-material/Code';
 import EmbedModal from 'components/EmbedPlaylistModal/EmbedPlaylistModal';
@@ -30,10 +26,13 @@ const Playlist = () => {
   const [localPlaylist, setLocalPlaylist] = useState<any>();
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
   const [showEmbedModal, setShowEmbedModal] = useState(false);
-  const playlists: never[] = [];
-  const embedContentWhitelist: unknown = [];
 
-  const { data: profile, isLoading, refetch } = useProfile();
+  // @ts-ignore
+  const embedPlaylistWhitelist = playlist?.data[0].data.embedPlaylistWhitelist;
+
+  const { data: profile } = useProfile();
+
+  console.log(playlist);
 
   function handleClose() {
     setIsEmbedModalOpen(false);
@@ -41,14 +40,15 @@ const Playlist = () => {
 
   useEffect(() => {
     if (
-      embedContentWhitelist === undefined ||
-      (embedContentWhitelist as any[])?.length === 0
+      embedPlaylistWhitelist === undefined ||
+      embedPlaylistWhitelist.length === 0
     ) {
       setShowEmbedModal(true);
     } else {
       setShowEmbedModal(false);
     }
-  }, [embedContentWhitelist]);
+  }, [embedPlaylistWhitelist]);
+
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
   };

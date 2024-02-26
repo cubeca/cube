@@ -47,7 +47,9 @@ export const FieldWrapper = styled(Box)`
       colormode === 'dark'
         ? `#e4002a !important`
         : theme.palette.primary.error};
-  } //
+    margin-top: -20px;
+    margin-bottom: 20px;
+  }
 
   & label {
     color: ${({ theme, colormode }) =>
