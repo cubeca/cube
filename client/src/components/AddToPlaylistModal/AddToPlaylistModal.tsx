@@ -63,13 +63,10 @@ const AddToPlaylistModal = ({
   refetchPlaylists,
   currentPlaylistId
 }: AddToPlaylistModalProps) => {
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    watch
-  } = useForm();
+  const { control, handleSubmit, reset, formState, watch } = useForm({
+    mode: 'onChange',
+    criteriaMode: 'all'
+  });
 
   const [errorMessage, setErrorMessage] = useState('');
   const {
@@ -435,6 +432,7 @@ const AddToPlaylistModal = ({
             <WhitelistInput
               control={control}
               label="Embed Whitelist"
+              colormode="dark"
               name="whitelist"
               id="whitelist"
               fullWidth
