@@ -636,7 +636,7 @@ const AddToPlaylistModal = ({
               />
             )}
         </>
-        {playlistCreated && (
+        {playlistCreated && isAddSuccess && (
           <Box
             sx={{
               width: '100%',
