@@ -68,27 +68,16 @@ const EmbeddedPlaylist = () => {
   return isDomainAllowed && playlist ? (
     <Grid container>
       <Grid xs={10} xsOffset={1} md={8}>
-        {playlist?.data ? (
-          <div>
-            <PlaylistPanel
-              profileId={''}
-              userId={''}
-              playlists={playlist?.data}
-              cameFromSinglePlaylist={true}
-              refetchPlaylist={refetchPlaylist}
-              currentPlaylistId={id}
-            />
-          </div>
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Lottie
-              animationData={LoadingCubes}
-              loop
-              autoplay
-              style={{ height: '500px', width: '500px' }}
-            />
-          </Box>
-        )}
+        <div>
+          <PlaylistPanel
+            profileId={''}
+            userId={''}
+            playlists={playlist?.data}
+            cameFromSinglePlaylist={true}
+            refetchPlaylist={refetchPlaylist}
+            currentPlaylistId={id}
+          />
+        </div>
       </Grid>
     </Grid>
   ) : (
