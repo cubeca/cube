@@ -56,7 +56,6 @@ const PlaylistPanel: React.FC<Props> = ({
   currentPlaylistId
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
-  const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState<string | null>(null);
   const [editedTitles, setEditedTitles] = useState<{ [id: string]: string }>(
     isPlaylistDataLoading
@@ -260,7 +259,7 @@ const PlaylistPanel: React.FC<Props> = ({
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
-          {loading || isLoading || isPlaylistDataLoading ? (
+          {isLoading || isPlaylistDataLoading ? (
             <Lottie
               className="loading-cubes"
               animationData={LoadingCubes}

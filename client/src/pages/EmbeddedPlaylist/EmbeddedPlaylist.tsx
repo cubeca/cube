@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import PlaylistPanel from 'components/PlaylistPanel';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
-import LoadingCubes from 'assets/animations/loading-cubes.json';
-import Lottie from 'lottie-react';
 
 const EmbeddedPlaylist = () => {
   const { id } = useParams<{ id: string }>();
@@ -70,8 +68,8 @@ const EmbeddedPlaylist = () => {
       <Grid xs={10} xsOffset={1} md={8}>
         <div>
           <PlaylistPanel
-            profileId={''}
-            userId={''}
+            profileId={'d088639f-4fec-4077-8306-db018ba168b9'}
+            userId={'d088639f-4fec-4077-8306-db018ba168b9'}
             playlists={playlist?.data}
             cameFromSinglePlaylist={true}
             refetchPlaylist={refetchPlaylist}
