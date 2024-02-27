@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 import PlaylistPanel from 'components/PlaylistPanel';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
-import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { getAuthTokenPayload } from 'utils/auth';
-import Lottie from 'lottie-react';
 
 const EmbeddedPlaylist = () => {
   const user = getAuthTokenPayload();
@@ -21,8 +19,10 @@ const EmbeddedPlaylist = () => {
   const embedPlaylistWhitelist = playlist?.data[0].data.embedPlaylistWhitelist;
 
   useEffect(() => {
+    console.log('i am here', embedPlaylistWhitelist);
     if (embedPlaylistWhitelist) {
       setIsDomainAllowed(false);
+
       const handleParentMessage = (event: { origin: string }) => {
         checkIsDomainAllowed(event.origin);
       };
