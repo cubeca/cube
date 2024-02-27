@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import PlaylistPanel from 'components/PlaylistPanel';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
+import { getAuthTokenPayload } from 'utils/auth';
 
 const EmbeddedPlaylist = () => {
   const { id } = useParams<{ id: string }>();
+  const user = getAuthTokenPayload();
   const { playlist, isLoading, handleGetPlaylist, refetchPlaylist } =
     useSinglePlaylist(id || '');
+  const [userId, setUserId] = useState('');
 
   const [isDomainAllowed, setIsDomainAllowed] = useState(true);
 
@@ -63,13 +66,20 @@ const EmbeddedPlaylist = () => {
     handleGetPlaylist();
   }, []);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      setUserId((user as any).sub);
+    };
+    fetchUser();
+  }, [user]);
+
   return isDomainAllowed && playlist ? (
     <Grid container>
       <Grid xs={10} xsOffset={1} md={8}>
         <div>
           <PlaylistPanel
-            profileId={'d088639f-4fec-4077-8306-db018ba168b9'}
-            userId={'d088639f-4fec-4077-8306-db018ba168b9'}
+            profileId={''}
+            userId={userId}
             playlists={playlist?.data}
             cameFromSinglePlaylist={true}
             refetchPlaylist={refetchPlaylist}
