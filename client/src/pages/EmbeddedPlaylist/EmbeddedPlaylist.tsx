@@ -21,6 +21,8 @@ const EmbeddedPlaylist = () => {
 
   useEffect(() => {
     if (!isLoading && embedPlaylistWhitelist) {
+      setIsDomainAllowed(false);
+
       const handleParentMessage = (event: { origin: string }) => {
         checkIsDomainAllowed(event.origin);
       };
@@ -30,10 +32,8 @@ const EmbeddedPlaylist = () => {
       return () => {
         window.removeEventListener('message', handleParentMessage);
       };
-    } else {
-      setIsDomainAllowed(true);
     }
-  }, [isLoading, embedPlaylistWhitelist]);
+  }, [playlist, isLoading, embedPlaylistWhitelist]);
 
   function checkIsDomainAllowed(domain: string) {
     if (
@@ -61,7 +61,6 @@ const EmbeddedPlaylist = () => {
     );
 
     setIsDomainAllowed(checkEmbedWhitelist);
-    console.log('isDomainAllowed2', isDomainAllowed);
   }
 
   useEffect(() => {
