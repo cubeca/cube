@@ -21,9 +21,6 @@ const EmbeddedPlaylist = () => {
 
   useEffect(() => {
     if (!isLoading && embedPlaylistWhitelist) {
-      setIsDomainAllowed(false);
-      console.log('isDomainAllowed1', isDomainAllowed);
-
       const handleParentMessage = (event: { origin: string }) => {
         checkIsDomainAllowed(event.origin);
       };
@@ -33,8 +30,10 @@ const EmbeddedPlaylist = () => {
       return () => {
         window.removeEventListener('message', handleParentMessage);
       };
+    } else {
+      setIsDomainAllowed(true);
     }
-  }, [playlist, isLoading, embedPlaylistWhitelist]);
+  }, [isLoading, embedPlaylistWhitelist]);
 
   function checkIsDomainAllowed(domain: string) {
     if (
