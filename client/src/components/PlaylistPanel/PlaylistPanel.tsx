@@ -62,7 +62,7 @@ const PlaylistPanel: React.FC<Props> = ({
   refetchPlaylist,
   refetchPlaylists,
   currentPlaylistId,
-  embed
+  embed = false
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [editMode, setEditMode] = useState<string | null>(null);
@@ -276,7 +276,8 @@ const PlaylistPanel: React.FC<Props> = ({
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
-          {isLoading || isPlaylistDataLoading || !embed ? (
+          {(!embed && (isLoading || isPlaylistDataLoading)) ||
+          (embed && isLoading && isPlaylistDataLoading) ? (
             <Lottie
               className="loading-cubes"
               animationData={LoadingCubes}
