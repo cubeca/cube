@@ -31,7 +31,6 @@ const Video = () => {
   const linkUrl = content?.externalUrl;
   const linkTitle = content?.title;
   const mediaType = content?.type;
-  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
   const subtitleUrl = content?.vttFileUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
 

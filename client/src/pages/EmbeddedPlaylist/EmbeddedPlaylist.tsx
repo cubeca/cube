@@ -9,9 +9,8 @@ import { getAuthTokenPayload } from 'utils/auth';
 const EmbeddedPlaylist = () => {
   const user = getAuthTokenPayload();
   const { id } = useParams<{ id: string }>();
-  const { playlist, handleGetPlaylist, refetchPlaylist } = useSinglePlaylist(
-    id || ''
-  );
+  const { playlist, isLoading, handleGetPlaylist, refetchPlaylist } =
+    useSinglePlaylist(id || '');
   const [userId, setUserId] = useState('');
   const [isDomainAllowed, setIsDomainAllowed] = useState(true);
 
@@ -20,7 +19,7 @@ const EmbeddedPlaylist = () => {
 
   useEffect(() => {
     console.log('i am here', embedPlaylistWhitelist);
-    if (embedPlaylistWhitelist) {
+    if (!isLoading && embedPlaylistWhitelist) {
       setIsDomainAllowed(false);
 
       const handleParentMessage = (event: { origin: string }) => {
@@ -33,7 +32,7 @@ const EmbeddedPlaylist = () => {
         window.removeEventListener('message', handleParentMessage);
       };
     }
-  }, [playlist, embedPlaylistWhitelist]);
+  }, [playlist, isLoading, embedPlaylistWhitelist]);
 
   function checkIsDomainAllowed(domain: string) {
     if (
