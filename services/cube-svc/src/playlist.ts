@@ -26,6 +26,10 @@ playlist.get('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   const profileId = req.query.profileId as string;
   const userId = req.query.userId as string;
 
+  if (!profileId || !userId) {
+    return res.status(404).send('Invlaid input parameters');
+  }
+
   const dbResult = await db.listPlaylistsByProfileAndUserId(offset, limit, profileId, userId);
   const playlistList = dbResult.map((item) => item.dataValues);
   const transformedPlaylist = await transformPlaylist(playlistList);
