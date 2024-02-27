@@ -150,6 +150,9 @@ const AddToPlaylistModal = ({
     if (isAddSuccess) {
       // @ts-ignore
       setNewPlaylistId(addResponseData?.data?.id);
+      if (refetchPlaylist) {
+        refetchPlaylist();
+      }
     }
   }, [isAddSuccess, addResponseData]);
 
@@ -158,11 +161,13 @@ const AddToPlaylistModal = ({
       setNewPlaylistId(playlistId);
       setPlaylistCreated(true);
       setShowSuccessMessage(true);
+      refetchPlaylists && refetchPlaylists();
     }
     if (currentEditedPlaylist) {
       setNewPlaylistId(currentEditedPlaylist);
       setPlaylistCreated(true);
       setShowSuccessMessage(true);
+      refetchPlaylists && refetchPlaylists();
     }
   }, [
     playlistId,
@@ -287,6 +292,7 @@ const AddToPlaylistModal = ({
       const addResponse = addResponseData;
       // @ts-ignore
       setNewPlaylistId(addResponse?.data?.id);
+      refetchPlaylists && refetchPlaylists();
     }
   }, [newPlaylistId, isAddSuccess]);
 

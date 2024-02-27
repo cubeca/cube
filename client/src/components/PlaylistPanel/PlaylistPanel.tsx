@@ -445,6 +445,17 @@ const PlaylistPanel: React.FC<Props> = ({
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
+                          {!playlist.contentItems && (
+                            <Box
+                              sx={{ display: 'flex', justifyContent: 'center' }}
+                            >
+                              <Lottie
+                                animationData={LoadingCubes}
+                                loop={true}
+                                style={{ height: '200px', width: '200px' }}
+                              />
+                            </Box>
+                          )}
                           {playlist.contentItems &&
                             playlist.contentItems.map(
                               (content: any, index: any) => (
