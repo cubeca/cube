@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
-import useProfile from 'hooks/useProfile';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -10,7 +9,6 @@ import Button from 'components/Button';
 import Footer from 'components/layout/Footer';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
-import * as s from './User.styled';
 import useAuth from 'hooks/useAuth';
 import PlaylistPanel from 'components/PlaylistPanel';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
@@ -40,7 +38,8 @@ const User = () => {
     playlists,
     addPlaylist: handleAddPlaylist,
     deletePlaylist: handleDeletePlaylist,
-    isLoading
+    isLoading,
+    refetchPlaylists
   } = usePlaylist('', userId);
 
   const location = useLocation();
@@ -96,6 +95,7 @@ const User = () => {
               test={detailedPlaylists}
               profileId={''}
               userId={userId}
+              refetchPlaylist={refetchPlaylists}
             />
           )}
           {isLoading && (

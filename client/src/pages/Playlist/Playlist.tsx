@@ -32,8 +32,6 @@ const Playlist = () => {
 
   const { data: profile } = useProfile();
 
-  console.log(playlist);
-
   function handleClose() {
     setIsEmbedModalOpen(false);
   }

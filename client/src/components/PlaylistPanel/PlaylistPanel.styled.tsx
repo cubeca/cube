@@ -229,7 +229,7 @@ export const EditWrapper = styled(Box)`
 
 export const PlaylistStack = styled(Stack)`
   margin-bottom: 64px !important;
-  margin-top: 100px;
+  margin-top: 20px;
   gap: 40px;
   display: flex;
   flex-flow: column nowrap;
