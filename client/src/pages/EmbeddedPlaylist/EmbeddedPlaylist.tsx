@@ -43,6 +43,8 @@ const EmbeddedPlaylist = () => {
       setIsDomainAllowed(true);
     }
 
+    console.log(domain, embedPlaylistWhitelist);
+
     const normalizedInputUrl = domain
       .replace(/(^\w+:|^)\/\//, '')
       .toLowerCase();
@@ -90,13 +92,8 @@ const EmbeddedPlaylist = () => {
             />
           </div>
         ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Lottie
-              animationData={LoadingCubes}
-              loop
-              autoplay
-              style={{ height: '500px', width: '500px' }}
-            />
+          <Box>
+            <h1>This playlist is not allowed to be embedded.</h1>
           </Box>
         )}
       </Grid>
