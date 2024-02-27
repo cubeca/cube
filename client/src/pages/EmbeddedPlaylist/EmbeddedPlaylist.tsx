@@ -31,7 +31,7 @@ const EmbeddedPlaylist = () => {
         window.removeEventListener('message', handleParentMessage);
       };
     }
-  }, [playlist, isLoading, embedPlaylistWhitelist]);
+  }, [isLoading, embedPlaylistWhitelist]);
 
   function checkIsDomainAllowed(domain: string) {
     if (

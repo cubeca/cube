@@ -1,6 +1,6 @@
 import { getPlaylist } from 'api/playlist';
-import { useQuery, useMutation } from '@tanstack/react-query';
-import { GetPlaylistByIdResponse } from '@cubeca/cube-svc-client-oas-axios';
+import { useQuery } from '@tanstack/react-query';
+
 const useSinglePlaylist = (playlistId: string) => {
   const {
     data: playlist,
