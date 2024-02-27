@@ -79,28 +79,6 @@ const Profile = () => {
     setIsPlaylistModalOpen(true);
   };
 
-  // for testing purposes, quickly create a test playlist
-  const createPlaylist = async () => {
-    const newPlaylistt = {
-      title: 'Playlist of dreams and testing',
-      description: 'lorem ipsum dolor sit amet and all that jazz',
-      profileId: profileId,
-      userId: userId,
-      contentIds: [
-        '27c31a1f-8a84-4016-9d8f-66e1d867ce2e',
-        'fbc173fe-0e48-4411-bf17-97f3c5d7ef58',
-        '80179c0d-896b-4773-92d1-93a60ce9d16f'
-      ]
-    };
-
-    try {
-      await handleAddPlaylist(newPlaylistt);
-      console.log('Playlist created successfully');
-    } catch (error) {
-      console.error('Failed to create playlist', error);
-    }
-  };
-
   return (
     <Box>
       <s.UserHeroBg>
