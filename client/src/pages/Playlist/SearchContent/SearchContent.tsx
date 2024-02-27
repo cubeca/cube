@@ -45,44 +45,43 @@ const SearchContent = ({
   const [offset, setOffset] = useState<number>(0);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000);
   const { t } = useTranslation();
-  const [limit, setLimit] = useState<number>(15);
+  const [limit, setLimit] = useState<number>(12);
   const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
   const isInitialMount = useRef(true);
 
   const fetchContent = useCallback(
     async (newOffset: number) => {
-      if (debouncedSearchTerm.trim() === '') {
+      if (isInitialMount.current) {
         return;
       }
-
       setIsLoading(true);
       try {
         const searchFilters: SearchFilters = {
           category: categoryFilter === 'all' ? undefined : categoryFilter
-          // profileId: profile?.id
         };
-        setHasSearched(true);
+
         const results = await searchContent(
           debouncedSearchTerm.trim(),
           newOffset,
-          limit,
+          newOffset === 0 ? 11 : limit,
           searchFilters
         );
+
         const newResults = Array.isArray(results) ? results : [];
-        if (newResults.length <= 12) {
-          setHasMoreToLoad(false);
-        }
 
         if (newOffset === 0) {
-          setSearchContentResults(newResults);
+          setSearchContentResults(results);
         } else {
           setSearchContentResults((prevResults: any) => [
             ...prevResults,
-            ...newResults
+            ...results
           ]);
-        }
 
-        setOffset(newOffset + limit);
+          if (newResults.length <= 0) {
+            setHasMoreToLoad(false);
+          }
+        }
+        setOffset(newOffset + (newOffset === 0 ? 11 : limit));
       } catch (error) {
         console.error('An error occurred during the search:', error);
         setError('Failed to load search results');
@@ -92,6 +91,7 @@ const SearchContent = ({
     },
     [debouncedSearchTerm, categoryFilter]
   );
+
   useEffect(() => {
     if (isInitialMount.current) {
       isInitialMount.current = false;
@@ -183,7 +183,7 @@ const SearchContent = ({
             </s.PlaylistItemContainer>
           ))
         )}
-        {!isLoading && debouncedSearchTerm.trim() !== '' && hasMoreToLoad && (
+        {!isLoading && hasMoreToLoad && (
           <s.LoadMoreContainer>
             <s.LoadMore onClick={handleLoadMore}>
               <span

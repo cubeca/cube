@@ -1,4 +1,10 @@
-import { Box, DialogActions, DialogTitle, TextField } from '@mui/material';
+import {
+  Box,
+  DialogActions,
+  DialogTitle,
+  TextField,
+  Typography
+} from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
@@ -18,6 +24,7 @@ import { Content } from 'types/content';
 import Button from 'components/Button';
 import { Link } from 'react-router-dom';
 import { getProfileTag } from 'utils/auth';
+import useSinglePlaylist from 'hooks/useSinglePlaylist';
 
 interface Playlist {
   id: string;
@@ -43,6 +50,7 @@ interface Props {
   refetchPlaylists?: any;
   currentPlaylistId?: string;
   isLoggedIn?: boolean;
+  embed?: boolean;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
@@ -53,12 +61,18 @@ const PlaylistPanel: React.FC<Props> = ({
   isLoading: isPlaylistDataLoading,
   refetchPlaylist,
   refetchPlaylists,
-  currentPlaylistId
+  currentPlaylistId,
+  embed
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [editMode, setEditMode] = useState<string | null>(null);
+  const {
+    playlist,
+    handleGetPlaylist: getCurrentPlaylist,
+    refetchPlaylist: refetchCurrentPlaylist
+  } = useSinglePlaylist(embed ? currentPlaylistId || '' : '');
   const [editedTitles, setEditedTitles] = useState<{ [id: string]: string }>(
-    isPlaylistDataLoading
+    isPlaylistDataLoading || embed
       ? {}
       : playlists.reduce(
           (acc: any, playlist: any) => ({
@@ -71,7 +85,7 @@ const PlaylistPanel: React.FC<Props> = ({
   const [editedDescription, setEditedDescription] = useState<{
     [id: string]: string;
   }>(
-    isPlaylistDataLoading
+    isPlaylistDataLoading || embed
       ? {}
       : playlists.reduce(
           (acc: any, playlist: any) => ({
@@ -83,7 +97,9 @@ const PlaylistPanel: React.FC<Props> = ({
   );
 
   const [tempTitles, setTempTitles] = useState<{ [id: string]: string }>({});
-  const [localPlaylists, setLocalPlaylists] = useState(playlists);
+  const [localPlaylists, setLocalPlaylists] = useState(
+    embed ? playlist : playlists
+  );
   const [editedPlaylistId, setEditedPlaylistId] = useState<string | undefined>(
     undefined
   );
@@ -103,6 +119,7 @@ const PlaylistPanel: React.FC<Props> = ({
     isLoading,
     isError
   } = usePlaylist(profileId, userId);
+
   const profileTag = getProfileTag();
 
   // drag and drop items

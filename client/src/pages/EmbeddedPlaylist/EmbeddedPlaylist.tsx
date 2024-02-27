@@ -5,6 +5,8 @@ import PlaylistPanel from 'components/PlaylistPanel';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
 import { getAuthTokenPayload } from 'utils/auth';
+import Lottie from 'lottie-react';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
 
 const EmbeddedPlaylist = () => {
   const { id } = useParams<{ id: string }>();
@@ -76,16 +78,28 @@ const EmbeddedPlaylist = () => {
   return isDomainAllowed && playlist ? (
     <Grid container>
       <Grid xs={10} xsOffset={1} md={8}>
-        <div>
-          <PlaylistPanel
-            profileId={''}
-            userId={userId}
-            playlists={playlist?.data}
-            cameFromSinglePlaylist={true}
-            refetchPlaylist={refetchPlaylist}
-            currentPlaylistId={id}
-          />
-        </div>
+        {isDomainAllowed && playlist ? (
+          <div>
+            <PlaylistPanel
+              profileId={''}
+              userId={userId}
+              playlists={playlist?.data}
+              cameFromSinglePlaylist={true}
+              refetchPlaylist={refetchPlaylist}
+              currentPlaylistId={id}
+              embed={true}
+            />
+          </div>
+        ) : (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Lottie
+              animationData={LoadingCubes}
+              loop
+              autoplay
+              style={{ height: '500px', width: '500px' }}
+            />
+          </Box>
+        )}
       </Grid>
     </Grid>
   ) : (
