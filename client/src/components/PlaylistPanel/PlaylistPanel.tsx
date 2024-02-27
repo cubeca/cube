@@ -64,11 +64,7 @@ const PlaylistPanel: React.FC<Props> = ({
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [editMode, setEditMode] = useState<string | null>(null);
-  const {
-    playlist,
-    handleGetPlaylist: getCurrentPlaylist,
-    refetchPlaylist: refetchCurrentPlaylist
-  } = useSinglePlaylist(currentPlaylistId || '');
+
   const [editedTitles, setEditedTitles] = useState<{ [id: string]: string }>(
     isPlaylistDataLoading
       ? {}
@@ -109,14 +105,15 @@ const PlaylistPanel: React.FC<Props> = ({
   const [open, setOpen] = useState(false);
 
   const {
+    isLoading,
+    isAddLoading,
+    isDeleteLoading,
     addPlaylist: handleAddPlaylist,
     deletePlaylist: handleDeletePlaylist,
-    updatePlaylist: handleUpdatePlaylist,
-    isLoading,
-    isError
+    updatePlaylist: handleUpdatePlaylist
   } = usePlaylist(profileId, userId);
 
-  console.log(profileId, userId, 'profileId, userId');
+  console.log(isLoading, isAddLoading, isDeleteLoading);
   const profileTag = getProfileTag();
 
   // drag and drop items
@@ -275,7 +272,7 @@ const PlaylistPanel: React.FC<Props> = ({
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
-          {isLoading || isPlaylistDataLoading ? (
+          {(isLoading && (profileId || userId)) || isPlaylistDataLoading ? (
             <Lottie
               className="loading-cubes"
               animationData={LoadingCubes}

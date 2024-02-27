@@ -35,7 +35,7 @@ const Router = () => {
         element={<SubtitleEditor />}
       />
       <Route path="/embed/:id" element={<EmbeddedContent />} />
-      <Route path="/embedPlaylist/:id" element={<EmbeddedPlaylist />} />
+      <Route path="/embedPlaylist/:playlistId" element={<EmbeddedPlaylist />} />
       <Route
         path="/verified"
         element={<Navigate to="/login?verified=true" />}

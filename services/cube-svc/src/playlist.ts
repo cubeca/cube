@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import * as db from './db/queries/playlist';
-import { getApiResultFromDbRow, transformPlaylist } from './utils/utils';
+import { UUID_REGEXP, getApiResultFromDbRow, transformPlaylist } from './utils/utils';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 
 export const playlist = express.Router();
@@ -9,6 +9,10 @@ playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
   const playlistId = req.params.playlistId;
   if (!playlistId) {
     return res.status(400).send('Invalid playlist Id');
+  }
+
+  if (!UUID_REGEXP.test(playlistId)) {
+    return res.status(400).send(`Invalid parameter, must be in UUID format.`);
   }
 
   const dbResult = await db.getPlaylistById(playlistId);
@@ -25,10 +29,6 @@ playlist.get('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = req.query.profileId as string;
   const userId = req.query.userId as string;
-
-  if (!profileId || !userId) {
-    return res.status(404).send('Invlaid input parameters');
-  }
 
   const dbResult = await db.listPlaylistsByProfileAndUserId(offset, limit, profileId, userId);
   const playlistList = dbResult.map((item) => item.dataValues);

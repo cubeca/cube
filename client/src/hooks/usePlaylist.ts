@@ -43,6 +43,7 @@ const usePlaylist = (profileId: string, userId: string) => {
       refetchPlaylists();
     }
   });
+
   const {
     mutate: deletePlaylistMutation,
     isError: isDeleteError,

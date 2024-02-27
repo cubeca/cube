@@ -8,9 +8,9 @@ import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 
 const EmbeddedPlaylist = () => {
-  const { id } = useParams<{ id: string }>();
+  const { playlistId } = useParams<{ playlistId: string }>();
   const { playlist, isLoading, handleGetPlaylist, refetchPlaylist } =
-    useSinglePlaylist(id || '');
+    useSinglePlaylist(playlistId || '');
 
   const [isDomainAllowed, setIsDomainAllowed] = useState(true);
 
@@ -65,7 +65,7 @@ const EmbeddedPlaylist = () => {
     handleGetPlaylist();
   }, []);
 
-  return playlist ? (
+  return isDomainAllowed && playlist ? (
     <Grid container>
       <Grid xs={10} xsOffset={1} md={8}>
         {playlist ? (
@@ -76,7 +76,7 @@ const EmbeddedPlaylist = () => {
               playlists={playlist?.data}
               cameFromSinglePlaylist={true}
               refetchPlaylist={refetchPlaylist}
-              currentPlaylistId={id}
+              currentPlaylistId={playlistId}
             />
           </div>
         ) : (
