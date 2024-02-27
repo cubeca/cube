@@ -276,17 +276,7 @@ const PlaylistPanel: React.FC<Props> = ({
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
-          {(!embed && (isLoading || isPlaylistDataLoading)) ||
-          (embed && isLoading && isPlaylistDataLoading) ? (
-            <Lottie
-              className="loading-cubes"
-              animationData={LoadingCubes}
-              loop={true}
-              autoplay={true}
-              style={{ height: '500px' }}
-            />
-          ) : (
-            localPlaylists &&
+          {localPlaylists &&
             localPlaylists.map((playlist: any) => (
               <Box key={playlist.id}>
                 <s.PlaylistTitleContainer key={playlist.id}>
@@ -511,8 +501,7 @@ const PlaylistPanel: React.FC<Props> = ({
                   )}
                 </Box>
               </Box>
-            ))
-          )}
+            ))}
         </s.PlaylistStack>
       </Grid>
     </Grid>
