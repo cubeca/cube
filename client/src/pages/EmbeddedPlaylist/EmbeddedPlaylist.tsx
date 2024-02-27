@@ -22,6 +22,7 @@ const EmbeddedPlaylist = () => {
   useEffect(() => {
     if (!isLoading && embedPlaylistWhitelist) {
       setIsDomainAllowed(false);
+      console.log('isDomainAllowed1', isDomainAllowed);
 
       const handleParentMessage = (event: { origin: string }) => {
         checkIsDomainAllowed(event.origin);
@@ -43,8 +44,6 @@ const EmbeddedPlaylist = () => {
       setIsDomainAllowed(true);
     }
 
-    console.log(domain, embedPlaylistWhitelist);
-
     const normalizedInputUrl = domain
       .replace(/(^\w+:|^)\/\//, '')
       .toLowerCase();
@@ -55,9 +54,6 @@ const EmbeddedPlaylist = () => {
           .replace(/(^\w+:|^)\/\//, '')
           .toLowerCase();
 
-        console.log(normalizedInputUrl === normalizedDomain);
-        console.log(normalizedInputUrl === `www.${normalizedDomain}`);
-
         return (
           normalizedInputUrl === normalizedDomain ||
           normalizedInputUrl === `www.${normalizedDomain}`
@@ -66,6 +62,7 @@ const EmbeddedPlaylist = () => {
     );
 
     setIsDomainAllowed(checkEmbedWhitelist);
+    console.log('isDomainAllowed2', isDomainAllowed);
   }
 
   useEffect(() => {
