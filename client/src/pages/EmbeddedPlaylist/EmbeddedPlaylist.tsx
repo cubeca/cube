@@ -68,7 +68,7 @@ const EmbeddedPlaylist = () => {
   return isDomainAllowed && playlist ? (
     <Grid container>
       <Grid xs={10} xsOffset={1} md={8}>
-        {playlist ? (
+        {playlist?.data ? (
           <div>
             <PlaylistPanel
               profileId={''}
