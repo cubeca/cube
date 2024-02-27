@@ -38,7 +38,8 @@ const User = () => {
     playlists,
     addPlaylist: handleAddPlaylist,
     deletePlaylist: handleDeletePlaylist,
-    isLoading
+    isLoading,
+    refetchPlaylists
   } = usePlaylist('', userId);
 
   const location = useLocation();
@@ -94,6 +95,7 @@ const User = () => {
               test={detailedPlaylists}
               profileId={''}
               userId={userId}
+              refetchPlaylist={refetchPlaylists}
             />
           )}
           {isLoading && (
