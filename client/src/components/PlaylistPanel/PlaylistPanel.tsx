@@ -276,7 +276,7 @@ const PlaylistPanel: React.FC<Props> = ({
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
-          {isLoading || isPlaylistDataLoading ? (
+          {isLoading || isPlaylistDataLoading || !embed ? (
             <Lottie
               className="loading-cubes"
               animationData={LoadingCubes}
