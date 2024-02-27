@@ -50,7 +50,6 @@ interface Props {
   refetchPlaylists?: any;
   currentPlaylistId?: string;
   isLoggedIn?: boolean;
-  embed?: boolean;
 }
 
 const PlaylistPanel: React.FC<Props> = ({
@@ -61,8 +60,7 @@ const PlaylistPanel: React.FC<Props> = ({
   isLoading: isPlaylistDataLoading,
   refetchPlaylist,
   refetchPlaylists,
-  currentPlaylistId,
-  embed = false
+  currentPlaylistId
 }: Props) => {
   const { data: moreContent } = useProfileContent(profileId);
   const [editMode, setEditMode] = useState<string | null>(null);
@@ -70,9 +68,9 @@ const PlaylistPanel: React.FC<Props> = ({
     playlist,
     handleGetPlaylist: getCurrentPlaylist,
     refetchPlaylist: refetchCurrentPlaylist
-  } = useSinglePlaylist(embed ? currentPlaylistId || '' : '');
+  } = useSinglePlaylist(currentPlaylistId || '');
   const [editedTitles, setEditedTitles] = useState<{ [id: string]: string }>(
-    isPlaylistDataLoading || embed
+    isPlaylistDataLoading
       ? {}
       : playlists.reduce(
           (acc: any, playlist: any) => ({
@@ -85,7 +83,7 @@ const PlaylistPanel: React.FC<Props> = ({
   const [editedDescription, setEditedDescription] = useState<{
     [id: string]: string;
   }>(
-    isPlaylistDataLoading || embed
+    isPlaylistDataLoading
       ? {}
       : playlists.reduce(
           (acc: any, playlist: any) => ({
@@ -97,9 +95,7 @@ const PlaylistPanel: React.FC<Props> = ({
   );
 
   const [tempTitles, setTempTitles] = useState<{ [id: string]: string }>({});
-  const [localPlaylists, setLocalPlaylists] = useState(
-    embed ? playlist : playlists
-  );
+  const [localPlaylists, setLocalPlaylists] = useState(playlists);
   const [editedPlaylistId, setEditedPlaylistId] = useState<string | undefined>(
     undefined
   );
@@ -120,6 +116,7 @@ const PlaylistPanel: React.FC<Props> = ({
     isError
   } = usePlaylist(profileId, userId);
 
+  console.log(profileId, userId, 'profileId, userId');
   const profileTag = getProfileTag();
 
   // drag and drop items
@@ -230,6 +227,8 @@ const PlaylistPanel: React.FC<Props> = ({
       });
   };
 
+  console.log(isLoading, isPlaylistDataLoading, 'loading');
+
   return (
     <Grid container>
       <s.CustomDialog
@@ -276,7 +275,16 @@ const PlaylistPanel: React.FC<Props> = ({
       />
       <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
         <s.PlaylistStack>
-          {localPlaylists &&
+          {isLoading || isPlaylistDataLoading ? (
+            <Lottie
+              className="loading-cubes"
+              animationData={LoadingCubes}
+              loop={true}
+              autoplay={true}
+              style={{ height: '500px' }}
+            />
+          ) : (
+            localPlaylists &&
             localPlaylists.map((playlist: any) => (
               <Box key={playlist.id}>
                 <s.PlaylistTitleContainer key={playlist.id}>
@@ -501,7 +509,8 @@ const PlaylistPanel: React.FC<Props> = ({
                   )}
                 </Box>
               </Box>
-            ))}
+            ))
+          )}
         </s.PlaylistStack>
       </Grid>
     </Grid>

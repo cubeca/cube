@@ -11,12 +11,8 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   AddContentToPlaylistRequest,
   AddPlaylistRequest,
-  AddPlaylistResponse,
-  GetPlaylistByIdResponse,
   UpdatePlaylistResponse
 } from '@cubeca/cube-svc-client-oas-axios';
-import { useState } from 'react';
-import { add } from 'date-fns';
 
 const usePlaylist = (profileId: string, userId: string) => {
   const {
@@ -35,7 +31,6 @@ const usePlaylist = (profileId: string, userId: string) => {
     () => getPlaylist(profileId),
     { enabled: false }
   );
-  const [createdPlaylistId, setCreatedPlaylistId] = useState(null);
 
   const {
     mutate: addPlaylistMutation,
