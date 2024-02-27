@@ -5,6 +5,8 @@ import PlaylistPanel from 'components/PlaylistPanel';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
 import { getAuthTokenPayload } from 'utils/auth';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
+import Lottie from 'lottie-react';
 
 const EmbeddedPlaylist = () => {
   const user = getAuthTokenPayload();
@@ -18,7 +20,6 @@ const EmbeddedPlaylist = () => {
   const embedPlaylistWhitelist = playlist?.data[0].data.embedPlaylistWhitelist;
 
   useEffect(() => {
-    console.log('i am here', embedPlaylistWhitelist);
     if (!isLoading && embedPlaylistWhitelist) {
       setIsDomainAllowed(false);
 
@@ -54,6 +55,9 @@ const EmbeddedPlaylist = () => {
           .replace(/(^\w+:|^)\/\//, '')
           .toLowerCase();
 
+        console.log(normalizedInputUrl === normalizedDomain);
+        console.log(normalizedInputUrl === `www.${normalizedDomain}`);
+
         return (
           normalizedInputUrl === normalizedDomain ||
           normalizedInputUrl === `www.${normalizedDomain}`
@@ -76,10 +80,10 @@ const EmbeddedPlaylist = () => {
     handleGetPlaylist();
   }, []);
 
-  return (
+  return isDomainAllowed ? (
     <Grid container>
       <Grid xs={10} xsOffset={1} md={8}>
-        {isDomainAllowed && playlist ? (
+        {playlist ? (
           <div>
             <PlaylistPanel
               profileId={''}
@@ -91,12 +95,21 @@ const EmbeddedPlaylist = () => {
             />
           </div>
         ) : (
-          <Box>
-            <h1>This playlist is not allowed to be embedded.</h1>
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Lottie
+              animationData={LoadingCubes}
+              loop
+              autoplay
+              style={{ height: '500px', width: '500px' }}
+            />
           </Box>
         )}
       </Grid>
     </Grid>
+  ) : (
+    <Box>
+      <h1>This playlist is not allowed to be embedded.</h1>
+    </Box>
   );
 };
 
