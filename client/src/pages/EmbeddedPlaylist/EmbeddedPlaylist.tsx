@@ -21,8 +21,6 @@ const EmbeddedPlaylist = () => {
 
   useEffect(() => {
     if (!isLoading && embedPlaylistWhitelist) {
-      setIsDomainAllowed(false);
-
       const handleParentMessage = (event: { origin: string }) => {
         checkIsDomainAllowed(event.origin);
       };
