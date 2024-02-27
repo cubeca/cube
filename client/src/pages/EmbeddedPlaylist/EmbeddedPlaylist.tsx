@@ -87,6 +87,7 @@ const EmbeddedPlaylist = () => {
               cameFromSinglePlaylist={true}
               refetchPlaylist={refetchPlaylist}
               currentPlaylistId={id}
+              embed={true}
             />
           </div>
         ) : (
