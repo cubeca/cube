@@ -5,7 +5,7 @@ import { allowIfAnyOf, extractUser } from './middleware/auth';
 
 export const playlist = express.Router();
 
-playlist.get('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
   const playlistId = req.params.playlistId;
   if (!playlistId) {
     return res.status(400).send('Invalid playlist Id');
