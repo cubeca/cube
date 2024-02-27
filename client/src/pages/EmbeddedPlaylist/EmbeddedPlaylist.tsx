@@ -4,16 +4,14 @@ import { useEffect, useState } from 'react';
 import PlaylistPanel from 'components/PlaylistPanel';
 import { useParams } from 'react-router-dom';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
-import { getAuthTokenPayload } from 'utils/auth';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import Lottie from 'lottie-react';
 
 const EmbeddedPlaylist = () => {
-  const user = getAuthTokenPayload();
   const { id } = useParams<{ id: string }>();
   const { playlist, isLoading, handleGetPlaylist, refetchPlaylist } =
     useSinglePlaylist(id || '');
-  const [userId, setUserId] = useState('');
+
   const [isDomainAllowed, setIsDomainAllowed] = useState(true);
 
   // @ts-ignore
@@ -21,6 +19,8 @@ const EmbeddedPlaylist = () => {
 
   useEffect(() => {
     if (!isLoading && embedPlaylistWhitelist) {
+      setIsDomainAllowed(false);
+
       const handleParentMessage = (event: { origin: string }) => {
         checkIsDomainAllowed(event.origin);
       };
@@ -62,25 +62,17 @@ const EmbeddedPlaylist = () => {
   }
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const user = getAuthTokenPayload();
-      setUserId((user as any).sub);
-    };
-    fetchUser();
-  }, [user]);
-
-  useEffect(() => {
     handleGetPlaylist();
   }, []);
 
-  return isDomainAllowed ? (
+  return isDomainAllowed && playlist ? (
     <Grid container>
       <Grid xs={10} xsOffset={1} md={8}>
         {playlist ? (
           <div>
             <PlaylistPanel
               profileId={''}
-              userId={userId}
+              userId={''}
               playlists={playlist?.data}
               cameFromSinglePlaylist={true}
               refetchPlaylist={refetchPlaylist}
