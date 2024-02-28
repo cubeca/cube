@@ -113,7 +113,6 @@ const PlaylistPanel: React.FC<Props> = ({
     updatePlaylist: handleUpdatePlaylist
   } = usePlaylist(profileId, userId);
 
-  console.log(isLoading, isAddLoading, isDeleteLoading);
   const profileTag = getProfileTag();
 
   // drag and drop items
@@ -148,15 +147,9 @@ const PlaylistPanel: React.FC<Props> = ({
   useEffect(() => {
     if (playlists) {
       setLocalPlaylists(playlists);
-      console.log(playlists);
     }
   }, [playlists]);
 
-  useEffect(() => {
-    if (localPlaylists) {
-      console.log(localPlaylists);
-    }
-  }, [localPlaylists]);
   const handleUpdateLocalPlaylist = (
     playlistId: string,
     newTitle: string,
@@ -229,8 +222,6 @@ const PlaylistPanel: React.FC<Props> = ({
         console.error(error);
       });
   };
-
-  console.log(isLoading, isPlaylistDataLoading, 'loading');
 
   return (
     <Grid container>
