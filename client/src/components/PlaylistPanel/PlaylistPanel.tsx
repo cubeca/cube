@@ -148,9 +148,15 @@ const PlaylistPanel: React.FC<Props> = ({
   useEffect(() => {
     if (playlists) {
       setLocalPlaylists(playlists);
+      console.log(playlists);
     }
   }, [playlists]);
 
+  useEffect(() => {
+    if (localPlaylists) {
+      console.log(localPlaylists);
+    }
+  }, [localPlaylists]);
   const handleUpdateLocalPlaylist = (
     playlistId: string,
     newTitle: string,
@@ -475,8 +481,9 @@ const PlaylistPanel: React.FC<Props> = ({
                                       <PlaylistItem
                                         type={content.category[0].toLowerCase()}
                                         bgUrl={
-                                          content.coverImageUrl.playerInfo
-                                            .publicUrl
+                                          content.coverImageUrl?.playerInfo
+                                            ?.publicUrl ||
+                                          content.coverImageExternalUrl
                                         }
                                         alt={content.title}
                                         title={content.title}
