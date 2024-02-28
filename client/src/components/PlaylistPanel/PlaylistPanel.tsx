@@ -113,7 +113,6 @@ const PlaylistPanel: React.FC<Props> = ({
     updatePlaylist: handleUpdatePlaylist
   } = usePlaylist(profileId, userId);
 
-  console.log(isLoading, isAddLoading, isDeleteLoading);
   const profileTag = getProfileTag();
 
   // drag and drop items
@@ -223,8 +222,6 @@ const PlaylistPanel: React.FC<Props> = ({
         console.error(error);
       });
   };
-
-  console.log(isLoading, isPlaylistDataLoading, 'loading');
 
   return (
     <Grid container>

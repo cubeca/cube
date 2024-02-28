@@ -13,11 +13,11 @@ export const getPlaylistById = async (playlistId: string) => {
   });
 };
 
-export const listPlaylistsByProfileAndUserId = async (offset: number, limit: number, profileId?: string, userId?: string) => {
+export const listPlaylistsByProfileOrUserId = async (offset: number, limit: number, profileId?: string, userId?: string) => {
   const whereClause: any = {
     [Op.and]: [
       {
-        [Op.and]: [
+        [Op.or]: [
           profileId
             ? [
                 {
