@@ -64,7 +64,10 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
       console.error('Email already exists', error);
       res.status(400).send('Email already exists');
     } else {
-      console.error('Error creating identity', error);
+      console.error(
+        'Error creating account. Are you sure this profile does not already exist? Or that you have used this email for another account on CubeCommons?',
+        error
+      );
       res.status(500).send('Error creating identity');
     }
   }
