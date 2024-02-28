@@ -472,8 +472,9 @@ const PlaylistPanel: React.FC<Props> = ({
                                       <PlaylistItem
                                         type={content.category[0].toLowerCase()}
                                         bgUrl={
-                                          content.coverImageUrl.playerInfo
-                                            .publicUrl
+                                          content.coverImageUrl?.playerInfo
+                                            ?.publicUrl ||
+                                          content.coverImageExternalUrl
                                         }
                                         alt={content.title}
                                         title={content.title}

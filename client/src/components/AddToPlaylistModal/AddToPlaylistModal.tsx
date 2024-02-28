@@ -376,10 +376,15 @@ const AddToPlaylistModal = ({
             {isAddSuccess && newPlaylistId && (
               <Box>
                 <Typography component="h6" variant="h6" sx={{ mb: 1 }}>
-                  Your playlist, {watchAllFields.playlistName}, has been
-                  created.
+                  Your {watchAllFields.playlistName} playlist has been created
+                  successfully.
                 </Typography>
-                <Typography component="p" variant="body2">
+
+                <Typography
+                  component="p"
+                  variant="body2"
+                  sx={{ fontSize: '18px' }}
+                >
                   Click{' '}
                   <Link
                     style={{ color: 'black' }}
@@ -387,9 +392,8 @@ const AddToPlaylistModal = ({
                   >
                     here
                   </Link>{' '}
-                  to view it.{' '}
-                  {!userVersion &&
-                    'Or, add more content to this playlist below - either by searching through all content on the site, or from a list of your most recent uploads.'}
+                  to view it or add content below via Search
+                  {userVersion ? '.' : ' or Recent Uploads.'}
                 </Typography>
               </Box>
             )}

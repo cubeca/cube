@@ -183,22 +183,24 @@ const SearchContent = ({
             </s.PlaylistItemContainer>
           ))
         )}
-        {!isLoading && hasMoreToLoad && (
-          <s.LoadMoreContainer>
-            <s.LoadMore onClick={handleLoadMore}>
-              <span
-                className="inner"
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                <span className="label">{t('Load More Results')}</span>
-              </span>
-            </s.LoadMore>
-          </s.LoadMoreContainer>
-        )}
+        {!isLoading &&
+          (debouncedSearchTerm.trim() !== '' || categoryFilter) &&
+          hasMoreToLoad && (
+            <s.LoadMoreContainer>
+              <s.LoadMore onClick={handleLoadMore}>
+                <span
+                  className="inner"
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <span className="label">{t('Load More Results')}</span>
+                </span>
+              </s.LoadMore>
+            </s.LoadMoreContainer>
+          )}
       </s.UserContent>
     </s.UserContentWrapper>
   );

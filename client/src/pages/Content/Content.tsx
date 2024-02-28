@@ -30,8 +30,10 @@ import { useLocation } from 'react-router-dom';
 import ReportContentModal from 'components/ReportContentModal';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import { getAuthTokenPayload } from 'utils/auth';
+import useAuth from 'hooks/useAuth';
 
 const Video = () => {
+  const { isLoggedIn } = useAuth();
   const { t } = useTranslation();
   const user = getAuthTokenPayload();
   const theme = useTheme();
@@ -161,7 +163,11 @@ const Video = () => {
     setIsEmbedModalOpen(true);
   };
   const openPlaylistModal = () => {
-    setIsPlaylistModalOpen(true);
+    if (isLoggedIn) {
+      setIsPlaylistModalOpen(true);
+    } else {
+      window.location.href = '/login';
+    }
   };
 
   const openReportContentModal = () => {
