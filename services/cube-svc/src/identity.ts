@@ -68,7 +68,9 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
         'Error creating account. Are you sure this profile does not already exist? Or that you have used this email for another account on CubeCommons?',
         error
       );
-      res.status(500).send('Error creating identity');
+      res
+        .status(500)
+        .send('Error creating account. Are you sure this profile does not already exist? Or that you have used this email for another account on CubeCommons?');
     }
   }
 });
