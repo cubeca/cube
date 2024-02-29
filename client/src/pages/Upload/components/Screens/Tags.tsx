@@ -431,18 +431,18 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
             <Typography
               component="p"
               mr={theme.spacing(10)}
-              mt={theme.spacing(3)}
+              mt={theme.spacing(5)}
             >
-              Enable the embed modal on the content page:
+              Enable the embed modal on the content page. This is ignored if a
+              whitelist is provided.
             </Typography>
           </Grid>
 
-          <Grid xs={12} sm={4}>
+          <Grid container justifyContent="flex-end" xs={12} sm={4}>
             <EmbedToggleInput
               defaultValue="true"
               control={control}
               name="embedToggleInput"
-              fullWidth
             />
           </Grid>
         </Grid>
