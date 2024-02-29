@@ -20,7 +20,6 @@ import * as s from './Tags.styled';
 import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import { Controller } from 'react-hook-form';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
-import CheckboxInput from 'components/form/CheckboxInput';
 import EmbedToggleInput from 'components/form/EmbedToggleInput';
 
 const Tags = ({ control, handleCaptchaVerification }: any) => {
@@ -440,6 +439,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
 
           <Grid xs={12} sm={4}>
             <EmbedToggleInput
+              defaultValue="true"
               control={control}
               name="embedToggleInput"
               fullWidth

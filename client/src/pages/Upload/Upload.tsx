@@ -192,8 +192,10 @@ const Upload = () => {
           ? values.audience === 'yeskids'
           : false,
         embedContentWhitelist: values.embedContentWhitelist
-          .split(',')
-          .map((tag: string) => tag.trim())
+          ? values.embedContentWhitelist
+              .split(',')
+              .map((tag: string) => tag.trim())
+          : []
       },
       coverImageFile!,
       mediaFile!,
