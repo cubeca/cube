@@ -187,6 +187,7 @@ const Upload = () => {
         contributors: contributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),
         externalUrl: values.link ? values.link : null,
+        embedToggleEnabled: values.embedToggleInput,
         isSuitableForChildren: values.audience
           ? values.audience === 'yeskids'
           : false,

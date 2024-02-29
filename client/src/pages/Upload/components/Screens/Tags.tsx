@@ -20,6 +20,8 @@ import * as s from './Tags.styled';
 import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import { Controller } from 'react-hook-form';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import CheckboxInput from 'components/form/CheckboxInput';
+import EmbedToggleInput from 'components/form/EmbedToggleInput';
 
 const Tags = ({ control, handleCaptchaVerification }: any) => {
   const { t } = useTranslation();
@@ -420,62 +422,92 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
         </Typography>
       </Box>
 
-      <TagInput
-        control={control}
-        name="embedContentWhitelist"
-        fullWidth
-        placeholder={t('Embedded Content Whitelist')}
-        rules={{
-          required: false,
-          pattern: {
-            value:
-              /^(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(,\s*(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})*$/,
-            message:
-              'Include only the domain name (e.g., example.com), not the full URL.'
-          }
-        }}
-      />
-      <Box my={theme.spacing(2.5)}>
-        <Accordion
-          style={{ backgroundColor: theme.palette.background.default }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel1-content"
-            id="panel1-header"
+      <Box my={theme.spacing(10)}>
+        <Typography component="h4" variant="h4" my={theme.spacing(0.5)}>
+          {t('Embedding Content')}
+        </Typography>
+
+        <Grid container columnSpacing={2} rowSpacing={4}>
+          <Grid xs={12} sm={8}>
+            <Typography
+              component="p"
+              mr={theme.spacing(10)}
+              mt={theme.spacing(3)}
+            >
+              Enable the embed modal on the content page:
+            </Typography>
+          </Grid>
+
+          <Grid xs={12} sm={4}>
+            <EmbedToggleInput
+              control={control}
+              name="embedToggleInput"
+              fullWidth
+            />
+          </Grid>
+        </Grid>
+
+        <TagInput
+          control={control}
+          name="embedContentWhitelist"
+          fullWidth
+          placeholder={t('Embedded Content Whitelist')}
+          hideIcon={true}
+          rules={{
+            required: false,
+            pattern: {
+              value:
+                /^(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(,\s*(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})*$/,
+              message:
+                'Include only the domain name (e.g., example.com), not the full URL.'
+            }
+          }}
+        />
+
+        <Box my={theme.spacing(2.5)}>
+          <Accordion
+            style={{ backgroundColor: theme.palette.background.default }}
           >
-            <Box>
-              <strong>{t('You must separate websites with a comma. ')}</strong>
-              {t(
-                'Would you like this content to only be embeddable on the websites you choose? Paste the URL here to restrict any other site from embedding it. Tap the arrow to see the code you can use to embed this content on your site, however you will have to develop your own trigger to send to correct message from your site to CubeCommons. To learn how to generate a trigger using AI tap the link below to see our video tutorial.'
-              )}
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography component="p" variant="body2">
-              {t('View code for embedding content')}{' '}
-              <Link
-                href="https://codesandbox.io/p/sandbox/embed-content-d79nck"
-                sx={{ color: 'inherit' }}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                here.
-              </Link>
-            </Typography>
-            <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-              {t('View video tutorial for generating embed code via AI')}{' '}
-              <Link
-                href="https://www.youtube.com/watch?v=ELJzUcYrAIQ"
-                sx={{ color: 'inherit' }}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                here.
-              </Link>
-            </Typography>
-          </AccordionDetails>
-        </Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              <Box>
+                <strong>
+                  {t('You must separate websites with a comma. ')}
+                </strong>
+                {t(
+                  'Would you like this content to only be embeddable on the websites you choose? Paste the URL here to restrict any other site from embedding it. Tap the arrow to see the code you can use to embed this content on your site, however you will have to develop your own trigger to send to correct message from your site to CubeCommons. To learn how to generate a trigger using AI tap the link below to see our video tutorial.'
+                )}
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography component="p" variant="body2">
+                {t('View code for embedding content')}{' '}
+                <Link
+                  href="https://codesandbox.io/p/sandbox/embed-content-d79nck"
+                  sx={{ color: 'inherit' }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  here.
+                </Link>
+              </Typography>
+              <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+                {t('View video tutorial for generating embed code via AI')}{' '}
+                <Link
+                  href="https://www.youtube.com/watch?v=ELJzUcYrAIQ"
+                  sx={{ color: 'inherit' }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  here.
+                </Link>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        </Box>
       </Box>
 
       <Box my={theme.spacing(5)}>
