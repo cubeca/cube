@@ -433,8 +433,9 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
               mr={theme.spacing(10)}
               mt={theme.spacing(5)}
             >
-              Enable the embed modal on the content page. This is ignored if a
-              whitelist is provided.
+              Do you want users to be able to embed this content on other
+              webpages? If you provide a whitelist URL, below, this option is
+              not longer available to them.
             </Typography>
           </Grid>
 
