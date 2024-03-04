@@ -88,6 +88,7 @@ const Video = () => {
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
+  const embedToggleEnabled = content?.embedToggleEnabled;
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -143,14 +144,14 @@ const Video = () => {
 
   useEffect(() => {
     if (
-      embedContentWhitelist === undefined ||
-      embedContentWhitelist?.length === 0
+      (embedContentWhitelist && embedContentWhitelist?.length > 0) ||
+      !embedToggleEnabled
     ) {
-      setShowEmbedModal(true);
-    } else {
       setShowEmbedModal(false);
+    } else {
+      setShowEmbedModal(true);
     }
-  }, [isLoading, embedContentWhitelist]);
+  }, [isLoading, embedContentWhitelist, embedToggleEnabled]);
 
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);

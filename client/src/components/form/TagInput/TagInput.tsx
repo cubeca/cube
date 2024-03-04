@@ -12,6 +12,7 @@ interface TagInputProps extends InputProps {
   variant?: 'standard' | 'outlined';
   rows?: string | number;
   multiline?: boolean;
+  hideIcon?: boolean;
 }
 
 const defaultRules = {
@@ -34,7 +35,8 @@ const TextInput: FC<TagInputProps> = ({
   sx,
   variant = 'outlined',
   rows,
-  multiline
+  multiline,
+  hideIcon
 }) => {
   return (
     <Controller
@@ -67,13 +69,13 @@ const TextInput: FC<TagInputProps> = ({
               multiline={multiline}
               rows={rows}
               InputProps={{
-                endAdornment: (
+                endAdornment: !hideIcon ? (
                   <InputAdornment position="end">
                     <LabelIcon
                       style={{ fill: alpha('#D9FFEE', 0.5) }}
                     ></LabelIcon>
                   </InputAdornment>
-                )
+                ) : null
               }}
               {...field}
             />
