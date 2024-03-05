@@ -23,6 +23,7 @@ import { getProfileId } from 'utils/auth';
 import { addContentToPlaylist } from 'api/playlist';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
 import WhitelistInput from 'components/form/WhitelistInput';
+import { handleFileChange } from 'utils/fileValidation';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -97,6 +98,11 @@ const AddToPlaylistModal = ({
   const [localPlaylistsHasUpdated, setLocalPlaylistsHasUpdated] =
     useState(false);
   const [playlistContents, setPlaylistContents] = useState<any>();
+  const [imageTypeAccepted, setImageTypeAccepted] = useState(false);
+  const [imageTypeError, setImageTypeError] = useState('');
+  const [isThumbUploadReady, setIsThumbUploadReady] = useState(false);
+  const [isCoverImageProperFileType, setIsCoverImageProperFileType] =
+    useState(false);
   const navigate = useNavigate();
   const watchAllFields = watch();
   const isProfile = getProfileId();
@@ -115,6 +121,11 @@ const AddToPlaylistModal = ({
           : ''
   );
 
+  const handleImageFileChange = (event: any) => {
+    const file = event[0];
+    handleFileChange(file, 'image', setImageTypeError, setImageTypeAccepted);
+  };
+
   useEffect(() => {
     if (newPlaylistId) {
       getCurrentPlaylist();
@@ -128,14 +139,23 @@ const AddToPlaylistModal = ({
     }
   }, [newPlaylistId]);
 
+  useEffect(() => {
+    if (imageTypeAccepted) {
+      setIsPlaylistThumbUploadReady(true);
+      setIsCoverImageProperFileType(true);
+    } else {
+      setIsPlaylistThumbUploadReady(false);
+      setIsCoverImageProperFileType(false);
+    }
+  });
   const handlePlaylistImageUpload = (files: File[]) => {
     setPlaylistImageFile(files[0]);
     setIsPlaylistImageSelected(true);
   };
 
   const handleThumbnailOnDrop = (files: File[]) => {
+    handleImageFileChange(files);
     handlePlaylistImageUpload(files);
-    setIsPlaylistThumbUploadReady(true);
   };
 
   useEffect(() => {
@@ -459,6 +479,11 @@ const AddToPlaylistModal = ({
                 maxFiles={1}
                 isUploadReady={isPlaylistThumbUploadReady}
               />
+              {imageTypeError && (
+                <Typography component="p" variant="body2" color="red">
+                  {imageTypeError}
+                </Typography>
+              )}
             </Box>
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
             <s.ButtonContainer>
