@@ -54,30 +54,24 @@ const CategorizedContent = () => {
           newPlaylistOffset === 0 ? 3 : playlistLimit
         );
 
-        const newContentResults = Array.isArray(contentResults)
-          ? contentResults
-          : [];
-
         if (newContentOffset === 0) {
           setContentResults(contentResults);
-        } else {
+        } else if (contentResults.length > 0) {
           setContentResults((prevContentResults) => [
             ...prevContentResults,
             ...contentResults
           ]);
+        }
 
-          if (newContentResults.length <= 0) {
-            setHasMoreContentToLoad(false);
-          }
+        if (contentResults.length === 0) {
+          setHasMoreContentToLoad(false);
+        } else {
+          setHasMoreContentToLoad(true);
         }
 
         setContentOffset(
           newContentOffset + (newContentOffset === 0 ? 11 : contentLimit)
         );
-
-        const newPlaylistResults = Array.isArray(playlistResults)
-          ? playlistResults
-          : [];
 
         if (newPlaylistOffset === 0) {
           setPlaylistResults(playlistResults);
@@ -86,10 +80,12 @@ const CategorizedContent = () => {
             ...prevPlaylistResults,
             ...playlistResults
           ]);
+        }
 
-          if (newPlaylistResults.length <= 0) {
-            setHasMorePlaylistsToLoad(false);
-          }
+        if (playlistResults.length === 0) {
+          setHasMorePlaylistsToLoad(false);
+        } else {
+          setHasMorePlaylistsToLoad(true);
         }
 
         setPlaylistOffset(
@@ -122,42 +118,50 @@ const CategorizedContent = () => {
             setCategoryFilter={setCategoryFilter}
           />
 
-          <s.ContentHeader container>
-            <Grid>
-              <Typography component="h3" variant="h3">
-                <span>Playlists</span>
-              </Typography>
-            </Grid>
-          </s.ContentHeader>
-          <s.Content>
-            {isLoading ? (
-              <Lottie
-                className="loading-cubes"
-                animationData={LoadingCubes}
-                loop={true}
-              />
-            ) : error ? (
-              <p>{error}</p>
-            ) : (
-              playlistResults?.map((key: any) => (
-                <ContentCard
-                  key={key.data.id}
-                  image={key.data.coverImageUrl?.playerInfo?.publicUrl || ''}
-                  title={key.data.title}
-                  url={`/playlist/${key.id}`}
-                  icon={'playlist'}
-                />
-              ))
-            )}
+          {(categoryFilter === 'all' ||
+            categoryFilter === 'playlist' ||
+            categoryFilter === undefined) && (
+            <>
+              <s.ContentHeader container>
+                <Grid>
+                  <Typography component="h3" variant="h3">
+                    <span>Playlists</span>
+                  </Typography>
+                </Grid>
+              </s.ContentHeader>
+              <s.Content>
+                {isLoading ? (
+                  <Lottie
+                    className="loading-cubes"
+                    animationData={LoadingCubes}
+                    loop={true}
+                  />
+                ) : error ? (
+                  <p>{error}</p>
+                ) : (
+                  playlistResults?.map((key: any) => (
+                    <ContentCard
+                      key={key.data.id}
+                      image={
+                        key.data.coverImageUrl?.playerInfo?.publicUrl || ''
+                      }
+                      title={key.data.title}
+                      url={`/playlist/${key.id}`}
+                      icon={'playlist'}
+                    />
+                  ))
+                )}
 
-            {!isLoading && hasMorePlaylistToLoad && (
-              <s.LoadMore onClick={handleLoadMore}>
-                <span className="inner">
-                  <span className="label">{t('Load More Results')}</span>
-                </span>
-              </s.LoadMore>
-            )}
-          </s.Content>
+                {!isLoading && hasMorePlaylistToLoad && (
+                  <s.LoadMore onClick={handleLoadMore}>
+                    <span className="inner">
+                      <span className="label">{t('Load More Results')}</span>
+                    </span>
+                  </s.LoadMore>
+                )}
+              </s.Content>
+            </>
+          )}
 
           {categoryFilter !== 'playlist' && (
             <>
