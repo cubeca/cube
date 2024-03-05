@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedContentFilter.styled';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
 import { FC } from 'react';
+import { Menu } from '@mui/material';
 
 interface CategorizedContentFilterProps {
   setSearchTerm: any;
@@ -71,6 +72,7 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
             {t('Has Sign Language')}
           </MenuItem.li>
+          <MenuItem.li value={'playlist'}>{t('Playlist')}</MenuItem.li>
         </Select>
       </form>
     </s.Filters>

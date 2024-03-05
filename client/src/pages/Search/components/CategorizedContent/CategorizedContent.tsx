@@ -4,56 +4,98 @@ import * as s from './CategorizedContent.styled';
 import { useCallback, useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import ContentFilter from './CategorizedContentFilter';
-import { searchContent } from 'api/search';
+import { searchContent, searchPlaylists } from 'api/search';
 import {
   ContentStorage,
+  PlaylistStorage,
   SearchFilters
 } from '@cubeca/cube-svc-client-oas-axios';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import useDebounce from '../../../../hooks/useDebounce';
 import { useTranslation } from 'react-i18next';
+import { Typography } from '@mui/material';
 
 const CategorizedContent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState();
   const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
+  const [playlistResults, setPlaylistResults] = useState<PlaylistStorage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000, '');
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
-  const [offset, setOffset] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(12);
-  const [hasMoreToLoad, setHasMoreToLoad] = useState<boolean>(true);
+  const [contentOffset, setContentOffset] = useState<number>(0);
+  const [playlistOffset, setPlaylistOffset] = useState<number>(0);
+  const [contentLimit, setContentLimit] = useState<number>(12);
+  const [playlistLimit, setPlaylistLimit] = useState<number>(4);
+  const [hasMoreContentToLoad, setHasMoreContentToLoad] =
+    useState<boolean>(true);
+  const [hasMorePlaylistToLoad, setHasMorePlaylistsToLoad] =
+    useState<boolean>(true);
 
-  const fetchContent = useCallback(
-    async (newOffset: number) => {
+  const fetchSearchResults = useCallback(
+    async (newContentOffset: number, newPlaylistOffset: number) => {
       setIsLoading(true);
       try {
         const searchFilters: SearchFilters = {
           category: categoryFilter === 'all' ? undefined : categoryFilter
         };
 
-        const results = await searchContent(
+        const contentResults = await searchContent(
           debouncedSearchTerm.trim(),
-          newOffset,
-          newOffset === 0 ? 11 : limit,
+          newContentOffset,
+          newContentOffset === 0 ? 11 : contentLimit,
           searchFilters
         );
 
-        const newResults = Array.isArray(results) ? results : [];
+        const playlistResults = await searchPlaylists(
+          debouncedSearchTerm.trim(),
+          newPlaylistOffset,
+          newPlaylistOffset === 0 ? 3 : playlistLimit
+        );
 
-        if (newOffset === 0) {
-          setContentResults(results);
+        const newContentResults = Array.isArray(contentResults)
+          ? contentResults
+          : [];
+
+        if (newContentOffset === 0) {
+          setContentResults(contentResults);
         } else {
-          setContentResults((prevResults) => [...prevResults, ...results]);
+          setContentResults((prevContentResults) => [
+            ...prevContentResults,
+            ...contentResults
+          ]);
 
-          if (newResults.length <= 0) {
-            setHasMoreToLoad(false);
+          if (newContentResults.length <= 0) {
+            setHasMoreContentToLoad(false);
           }
         }
-        setOffset(newOffset + (newOffset === 0 ? 11 : limit));
+
+        setContentOffset(
+          newContentOffset + (newContentOffset === 0 ? 11 : contentLimit)
+        );
+
+        const newPlaylistResults = Array.isArray(playlistResults)
+          ? playlistResults
+          : [];
+
+        if (newPlaylistOffset === 0) {
+          setPlaylistResults(playlistResults);
+        } else {
+          setPlaylistResults((prevPlaylistResults) => [
+            ...prevPlaylistResults,
+            ...playlistResults
+          ]);
+
+          if (newPlaylistResults.length <= 0) {
+            setHasMorePlaylistsToLoad(false);
+          }
+        }
+
+        setPlaylistOffset(
+          newPlaylistOffset + (newPlaylistOffset === 0 ? 3 : playlistLimit)
+        );
       } catch (error) {
-        console.error('An error occurred during the search:', error);
         setError('Failed to load search results');
       } finally {
         setIsLoading(false);
@@ -63,11 +105,11 @@ const CategorizedContent = () => {
   );
 
   useEffect(() => {
-    fetchContent(0); // Fetch initial content with offset 0
-  }, [fetchContent]);
+    fetchSearchResults(0, 0); // Fetch initial content and playlist with offset 0
+  }, [fetchSearchResults]);
 
   const handleLoadMore = () => {
-    fetchContent(offset);
+    fetchSearchResults(contentOffset, playlistOffset);
   };
 
   return (
@@ -80,6 +122,13 @@ const CategorizedContent = () => {
             setCategoryFilter={setCategoryFilter}
           />
 
+          <s.ContentHeader container>
+            <Grid>
+              <Typography component="h3" variant="h3">
+                <span>Playlists</span>
+              </Typography>
+            </Grid>
+          </s.ContentHeader>
           <s.Content>
             {isLoading ? (
               <Lottie
@@ -90,32 +139,71 @@ const CategorizedContent = () => {
             ) : error ? (
               <p>{error}</p>
             ) : (
-              contentResults?.map((key: any) => (
+              playlistResults?.map((key: any) => (
                 <ContentCard
-                  key={key.id}
-                  image={
-                    key.coverImageUrl?.playerInfo?.publicUrl ||
-                    key.coverImageExternalUrl ||
-                    ''
-                  }
-                  title={key.title}
-                  url={`/content/${key.id}`}
-                  icon={key.type}
-                  hasSignLanguage={key.hasSignLanguage}
+                  key={key.data.id}
+                  image={key.data.coverImageUrl?.playerInfo?.publicUrl || ''}
+                  title={key.data.title}
+                  url={`/playlist/${key.id}`}
+                  icon={'playlist'}
                 />
               ))
             )}
 
-            {!isLoading &&
-              debouncedSearchTerm.trim() !== '' &&
-              hasMoreToLoad && (
-                <s.LoadMore onClick={handleLoadMore}>
-                  <span className="inner">
-                    <span className="label">{t('Load More Results')}</span>
-                  </span>
-                </s.LoadMore>
-              )}
+            {!isLoading && hasMorePlaylistToLoad && (
+              <s.LoadMore onClick={handleLoadMore}>
+                <span className="inner">
+                  <span className="label">{t('Load More Results')}</span>
+                </span>
+              </s.LoadMore>
+            )}
           </s.Content>
+
+          {categoryFilter !== 'playlist' && (
+            <>
+              <s.ContentHeader container>
+                <Grid mt={8}>
+                  <Typography component="h3" variant="h3">
+                    <span>Content</span>
+                  </Typography>
+                </Grid>
+              </s.ContentHeader>
+              <s.Content>
+                {isLoading ? (
+                  <Lottie
+                    className="loading-cubes"
+                    animationData={LoadingCubes}
+                    loop={true}
+                  />
+                ) : error ? (
+                  <p>{error}</p>
+                ) : (
+                  contentResults?.map((key: any) => (
+                    <ContentCard
+                      key={key.id}
+                      image={
+                        key.coverImageUrl?.playerInfo?.publicUrl ||
+                        key.coverImageExternalUrl ||
+                        ''
+                      }
+                      title={key.title}
+                      url={`/content/${key.id}`}
+                      icon={key.type}
+                      hasSignLanguage={key.hasSignLanguage}
+                    />
+                  ))
+                )}
+
+                {!isLoading && hasMoreContentToLoad && (
+                  <s.LoadMore onClick={handleLoadMore}>
+                    <span className="inner">
+                      <span className="label">{t('Load More Results')}</span>
+                    </span>
+                  </s.LoadMore>
+                )}
+              </s.Content>
+            </>
+          )}
         </Grid>
       </Grid>
     </s.ContentWrapper>

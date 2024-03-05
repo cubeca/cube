@@ -65,5 +65,5 @@ export const searchPlaylists = async (
     'playlist'
   );
   const search: SearchResponse = data.data;
-  return search.playlistResults?.data;
+  return search.playlistResults.data;
 };
