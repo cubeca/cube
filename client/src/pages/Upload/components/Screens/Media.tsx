@@ -204,7 +204,7 @@ const Media = ({
             isUploadReady={isMediaUploadReady}
           />
           {mediaTypeError ? (
-            <Typography component="p" variant="body2" color="red">
+            <Typography component="p" variant="body2" color="#FFB7C4">
               {mediaTypeError}
             </Typography>
           ) : null}
@@ -224,7 +224,7 @@ const Media = ({
             isUploadReady={isThumbUploadReady}
           />
           {imageTypeError ? (
-            <Typography component="p" variant="body2" color="red">
+            <Typography component="p" variant="body2" color="#FFB7C4">
               {imageTypeError}
             </Typography>
           ) : null}
@@ -259,7 +259,7 @@ const Media = ({
             isUploadReady={isBannerUploadReady}
           />
           {bannerImageTypeError ? (
-            <Typography component="p" variant="body2" color="red">
+            <Typography component="p" variant="body2" color="#FFB7C4">
               {bannerImageTypeError}
             </Typography>
           ) : null}

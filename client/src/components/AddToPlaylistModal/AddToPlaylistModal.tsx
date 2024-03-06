@@ -480,7 +480,7 @@ const AddToPlaylistModal = ({
                 isUploadReady={isPlaylistThumbUploadReady}
               />
               {imageTypeError && (
-                <Typography component="p" variant="body2" color="red">
+                <Typography component="p" variant="body2" color="#FFB7C4">
                   {imageTypeError}
                 </Typography>
               )}
