@@ -156,15 +156,18 @@ const Profile = () => {
           {selectedPanel === 'content' ? (
             <UserContent profile={profile} />
           ) : (
-            <PlaylistPanel
-              playlists={playlists?.data}
-              test={detailedPlaylists}
-              profileId={profileId}
-              userId={userId}
-              isLoading={isLoading}
-              refetchPlaylists={refetchPlaylists}
-              isLoggedIn={isLoggedIn}
-            />
+            <>
+              <Box sx={{ mt: 5 }}></Box>
+              <PlaylistPanel
+                playlists={playlists?.data}
+                test={detailedPlaylists}
+                profileId={profileId}
+                userId={userId}
+                isLoading={isLoading}
+                refetchPlaylists={refetchPlaylists}
+                isLoggedIn={isLoggedIn}
+              />
+            </>
           )}
         </Grid>
       </Grid>
