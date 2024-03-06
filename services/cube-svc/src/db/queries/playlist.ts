@@ -43,6 +43,7 @@ export const listPlaylistsByProfileOrUserId = async (offset: number, limit: numb
 
   const playlistList = await Playlist.findAll({
     where: whereClause,
+    order: [['created_at', 'DESC']],
     offset,
     limit
   });
