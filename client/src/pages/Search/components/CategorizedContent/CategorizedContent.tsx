@@ -127,6 +127,13 @@ const CategorizedContent = () => {
                   <Typography component="h3" variant="h3">
                     <span>Playlists</span>
                   </Typography>
+                  {!isLoading && playlistResults.length === 0 && (
+                    <Grid>
+                      <Typography component="p" variant="body1" mt={2}>
+                        <span>No playlists found</span>
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </s.ContentHeader>
               <s.Content>
@@ -170,6 +177,13 @@ const CategorizedContent = () => {
                   <Typography component="h3" variant="h3">
                     <span>Content</span>
                   </Typography>
+                  {!isLoading && contentResults.length === 0 && (
+                    <Grid>
+                      <Typography component="p" variant="body1" mt={2}>
+                        <span>No content found</span>
+                      </Typography>
+                    </Grid>
+                  )}
                 </Grid>
               </s.ContentHeader>
               <s.Content>
