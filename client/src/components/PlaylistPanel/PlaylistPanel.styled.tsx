@@ -117,6 +117,9 @@ export const PlaylistTitle = styled(Typography)`
   font-weight: 400;
   line-height: 40px; /* 166.667% */
   padding: 0 !important;
+  /* white-space: nowrap; */
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   margin-bottom: 0;
 `;

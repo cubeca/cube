@@ -11,10 +11,12 @@ import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './PlaylistPanel.styled';
 import { ReactComponent as PlaySymbol } from '../../assets/icons/play-circle.svg';
+import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistItem from './PlaylistItem';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import ListIcon from '@mui/icons-material/List';
 import AddIcon from '@mui/icons-material/Add';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
@@ -267,7 +269,7 @@ const PlaylistPanel: React.FC<Props> = ({
         refetchPlaylists={refetchPlaylists}
         currentPlaylistId={currentPlaylistId}
       />
-      <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
+      <Grid xs={12} xsOffset={0} mdOffset={0} md={12}>
         <s.PlaylistStack>
           {(isLoading && (profileId || userId)) || isPlaylistDataLoading ? (
             <Lottie
@@ -283,13 +285,13 @@ const PlaylistPanel: React.FC<Props> = ({
               <Box key={playlist.id}>
                 <s.PlaylistTitleContainer key={playlist.id}>
                   <s.PlaylistTitleSubContainer>
-                    <PlaySymbol
+                    {/* <ListIcon
                       style={{
                         height: '32px',
                         width: '32px',
                         marginRight: '10px'
                       }}
-                    />
+                    /> */}
 
                     {editMode === playlist.id ? (
                       <s.TextFieldContainer>
@@ -416,7 +418,7 @@ const PlaylistPanel: React.FC<Props> = ({
                     </s.EditWrapper>
                   )}
                 </s.PlaylistTitleContainer>
-                <Box sx={{ marginLeft: '42px' }}>
+                <Box sx={{ marginLeft: '20px' }}>
                   <s.PlaylistDescriptionContainer>
                     {editMode === playlist.id ? (
                       <TextField
