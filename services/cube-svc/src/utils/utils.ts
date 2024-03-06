@@ -175,7 +175,8 @@ export async function transformPlaylist(playlistItems: any[]) {
           })
         );
 
-        const contentItems = contentData.map(getApiResultFromDbRow);
+        const filteredContentData = contentData.filter((item) => item !== undefined);
+        const contentItems = filteredContentData.map(getApiResultFromDbRow);
         const transformedContent = await transformContentSimple(contentItems);
 
         newItem.contentItems = transformedContent;
