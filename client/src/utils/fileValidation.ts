@@ -56,9 +56,9 @@ export const handleFileChange = (
   if (!mediaTypes[uploadType as keyof typeof mediaTypes].includes(file.type)) {
     setMediaTypeError(
       `Unsupported ${uploadType} type. Supported files are: ` +
-        mediaTypesExtensions[
-          uploadType as keyof typeof mediaTypesExtensions
-        ].join(', ')
+        mediaTypesExtensions[uploadType as keyof typeof mediaTypesExtensions]
+          .join(', ')
+          .toUpperCase()
     );
     setMediaTypeAccepted(false);
   } else {
