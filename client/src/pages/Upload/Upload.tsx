@@ -20,17 +20,19 @@ const getContributors = (values: FieldValues) => {
 
   // Handle 'artist' role
   for (let i = 0; values[`artistName${i}`] !== undefined; i++) {
-    if (!contributorsObject['artist']) {
-      contributorsObject['artist'] = [];
+    if (values[`artistName${i}`] !== '') {
+      if (!contributorsObject['artist']) {
+        contributorsObject['artist'] = [];
+      }
+      contributorsObject['artist'].push({
+        name: values[`artistName${i}`],
+        url: values[`artistUrl${i}`],
+        preferredTitle:
+          values[`preferredTitle`] !== 'Artist'
+            ? values[`preferredTitle`]
+            : undefined
+      });
     }
-    contributorsObject['artist'].push({
-      name: values[`artistName${i}`],
-      url: values[`artistUrl${i}`],
-      preferredTitle:
-        values[`preferredTitle`] !== 'Artist'
-          ? values[`preferredTitle`]
-          : undefined
-    });
   }
 
   // Handle 'editor' role

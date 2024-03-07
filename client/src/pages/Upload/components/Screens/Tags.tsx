@@ -216,7 +216,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                   control={control}
                   name={`preferredTitle`}
                   fullWidth
-                  rules={{ required: index === 0 }}
+                  rules={{ required: false }}
                   defaultValue="Artist"
                 />
               </Grid>
@@ -229,8 +229,8 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                 control={control}
                 name={`artistName${index}`}
                 fullWidth
-                placeholder={t('Name (required)')}
-                rules={{ required: index === 0 }}
+                placeholder={t('Name')}
+                rules={{ required: false }}
               />
             </Grid>
             <Grid xs={12} sm={4}>
