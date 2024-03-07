@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './PlaylistPanel.styled';
-import { ReactComponent as PlaySymbol } from '../../assets/icons/play-circle.svg';
 import EditIcon from '@mui/icons-material/Edit';
 import PlaylistItem from './PlaylistItem';
 import CheckIcon from '@mui/icons-material/Check';
@@ -24,7 +23,6 @@ import { Content } from 'types/content';
 import Button from 'components/Button';
 import { Link } from 'react-router-dom';
 import { getProfileTag } from 'utils/auth';
-import useSinglePlaylist from 'hooks/useSinglePlaylist';
 
 interface Playlist {
   id: string;
@@ -267,7 +265,7 @@ const PlaylistPanel: React.FC<Props> = ({
         refetchPlaylists={refetchPlaylists}
         currentPlaylistId={currentPlaylistId}
       />
-      <Grid xs={10} xsOffset={1} mdOffset={0} md={12}>
+      <Grid xs={12} xsOffset={0} mdOffset={0} md={12}>
         <s.PlaylistStack>
           {(isLoading && (profileId || userId)) || isPlaylistDataLoading ? (
             <Lottie
@@ -283,14 +281,6 @@ const PlaylistPanel: React.FC<Props> = ({
               <Box key={playlist.id}>
                 <s.PlaylistTitleContainer key={playlist.id}>
                   <s.PlaylistTitleSubContainer>
-                    <PlaySymbol
-                      style={{
-                        height: '32px',
-                        width: '32px',
-                        marginRight: '10px'
-                      }}
-                    />
-
                     {editMode === playlist.id ? (
                       <s.TextFieldContainer>
                         <TextField
@@ -416,7 +406,7 @@ const PlaylistPanel: React.FC<Props> = ({
                     </s.EditWrapper>
                   )}
                 </s.PlaylistTitleContainer>
-                <Box sx={{ marginLeft: '42px' }}>
+                <Box sx={{ marginLeft: '20px' }}>
                   <s.PlaylistDescriptionContainer>
                     {editMode === playlist.id ? (
                       <TextField

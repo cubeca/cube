@@ -111,6 +111,7 @@ const Profile = () => {
               spacing={2}
               justifyContent="space-between"
               alignItems="center"
+              flexWrap="wrap"
             >
               <s.UserContentSubWrapper>
                 <Typography
