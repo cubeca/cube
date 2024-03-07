@@ -20,7 +20,8 @@ const CategorizedContent = () => {
   const [categoryFilter, setCategoryFilter] = useState();
   const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
   const [playlistResults, setPlaylistResults] = useState<PlaylistStorage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isContentLoading, setIsContentLoading] = useState(false);
+  const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
   const debouncedSearchTerm = useDebounce(searchTerm, 1000, '');
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
@@ -33,9 +34,9 @@ const CategorizedContent = () => {
   const [hasMorePlaylistToLoad, setHasMorePlaylistsToLoad] =
     useState<boolean>(true);
 
-  const fetchSearchResults = useCallback(
-    async (newContentOffset: number, newPlaylistOffset: number) => {
-      setIsLoading(true);
+  const fetchContentSearchResults = useCallback(
+    async (newContentOffset: number) => {
+      setIsContentLoading(true);
       try {
         const searchFilters: SearchFilters = {
           category: categoryFilter === 'all' ? undefined : categoryFilter
@@ -46,12 +47,6 @@ const CategorizedContent = () => {
           newContentOffset,
           newContentOffset === 0 ? 11 : contentLimit,
           searchFilters
-        );
-
-        const playlistResults = await searchPlaylists(
-          debouncedSearchTerm.trim(),
-          newPlaylistOffset,
-          newPlaylistOffset === 0 ? 3 : playlistLimit
         );
 
         if (newContentOffset === 0) {
@@ -71,6 +66,28 @@ const CategorizedContent = () => {
 
         setContentOffset(
           newContentOffset + (newContentOffset === 0 ? 11 : contentLimit)
+        );
+      } catch (error) {
+        setError('Failed to load search results');
+      } finally {
+        setIsContentLoading(false);
+      }
+    },
+    [debouncedSearchTerm, categoryFilter]
+  );
+
+  const fetchPlaylistSearchResults = useCallback(
+    async (newPlaylistOffset: number) => {
+      setIsPlaylistLoading(true);
+      try {
+        const searchFilters: SearchFilters = {
+          category: categoryFilter === 'all' ? undefined : categoryFilter
+        };
+
+        const playlistResults = await searchPlaylists(
+          debouncedSearchTerm.trim(),
+          newPlaylistOffset,
+          newPlaylistOffset === 0 ? 3 : playlistLimit
         );
 
         if (newPlaylistOffset === 0) {
@@ -94,18 +111,26 @@ const CategorizedContent = () => {
       } catch (error) {
         setError('Failed to load search results');
       } finally {
-        setIsLoading(false);
+        setIsPlaylistLoading(false);
       }
     },
     [debouncedSearchTerm, categoryFilter]
   );
 
   useEffect(() => {
-    fetchSearchResults(0, 0); // Fetch initial content and playlist with offset 0
-  }, [fetchSearchResults]);
+    fetchContentSearchResults(0); // Fetch initial content with offset 0
+  }, [fetchContentSearchResults]);
 
-  const handleLoadMore = () => {
-    fetchSearchResults(contentOffset, playlistOffset);
+  useEffect(() => {
+    fetchPlaylistSearchResults(0); // Fetch initial content and playlist with offset 0
+  }, [fetchPlaylistSearchResults]);
+
+  const handleContentLoadMore = () => {
+    fetchContentSearchResults(contentOffset);
+  };
+
+  const handlePlaylistLoadMore = () => {
+    fetchPlaylistSearchResults(playlistOffset);
   };
 
   return (
@@ -127,7 +152,7 @@ const CategorizedContent = () => {
                   <Typography component="h3" variant="h3">
                     <span>Playlists</span>
                   </Typography>
-                  {!isLoading && playlistResults.length === 0 && (
+                  {!isPlaylistLoading && playlistResults.length === 0 && (
                     <Grid>
                       <Typography component="p" variant="body1" mt={2}>
                         <span>No playlists found</span>
@@ -137,7 +162,7 @@ const CategorizedContent = () => {
                 </Grid>
               </s.ContentHeader>
               <s.Content>
-                {isLoading ? (
+                {isPlaylistLoading ? (
                   <Lottie
                     className="loading-cubes"
                     animationData={LoadingCubes}
@@ -159,8 +184,8 @@ const CategorizedContent = () => {
                   ))
                 )}
 
-                {!isLoading && hasMorePlaylistToLoad && (
-                  <s.LoadMore onClick={handleLoadMore}>
+                {!isPlaylistLoading && hasMorePlaylistToLoad && (
+                  <s.LoadMore onClick={handlePlaylistLoadMore}>
                     <span className="inner">
                       <span className="label">{t('Load More Results')}</span>
                     </span>
@@ -177,7 +202,7 @@ const CategorizedContent = () => {
                   <Typography component="h3" variant="h3">
                     <span>Content</span>
                   </Typography>
-                  {!isLoading && contentResults.length === 0 && (
+                  {!isContentLoading && contentResults.length === 0 && (
                     <Grid>
                       <Typography component="p" variant="body1" mt={2}>
                         <span>No content found</span>
@@ -187,7 +212,7 @@ const CategorizedContent = () => {
                 </Grid>
               </s.ContentHeader>
               <s.Content>
-                {isLoading ? (
+                {isContentLoading ? (
                   <Lottie
                     className="loading-cubes"
                     animationData={LoadingCubes}
@@ -212,8 +237,8 @@ const CategorizedContent = () => {
                   ))
                 )}
 
-                {!isLoading && hasMoreContentToLoad && (
-                  <s.LoadMore onClick={handleLoadMore}>
+                {!isContentLoading && hasMoreContentToLoad && (
+                  <s.LoadMore onClick={handleContentLoadMore}>
                     <span className="inner">
                       <span className="label">{t('Load More Results')}</span>
                     </span>
