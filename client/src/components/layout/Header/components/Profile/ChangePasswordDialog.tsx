@@ -39,6 +39,7 @@ const ChangePasswordDialog = ({
       setErrorMessage(t('Passwords must match.'));
       return;
     }
+
     try {
       updatePassword({ currentPassword, newPassword });
       reset();
@@ -55,7 +56,7 @@ const ChangePasswordDialog = ({
       <Stack direction="column">
         {isPasswordUpdated ? (
           <>
-            <Typography>Password Updated</Typography>
+            <Typography>Password updated successfully!</Typography>
             <Button color="secondary" onClick={onClose}>
               {t('Ok')}
             </Button>

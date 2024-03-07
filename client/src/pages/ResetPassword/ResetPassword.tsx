@@ -7,12 +7,15 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { updatePassword } from 'api/auth';
 import PasswordInput from 'components/form/PasswordInput';
+import { useNavigate } from 'react-router-dom';
 
 const ResetPassword = () => {
   const { t } = useTranslation('common');
   const { token } = useParams();
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = async (data: FieldValues) => {
     const { newPassword, confirmPassword } = data;
@@ -23,11 +26,15 @@ const ResetPassword = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       await updatePassword({ newPassword, token });
+      reset();
     } catch (e: any) {
       setErrorMessage(e.response.data);
     }
+    setIsLoading(false);
+    navigate(`/login?password-reset=true`);
   };
 
   return (
@@ -58,8 +65,12 @@ const ResetPassword = () => {
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           <Stack direction="row" justifyContent="right">
-            <Button color="primary" onClick={handleSubmit(onSubmit)}>
-              {t('Update Password')}
+            <Button
+              color="primary"
+              disabled={isLoading}
+              onClick={handleSubmit(onSubmit)}
+            >
+              {!isLoading ? t('Update Password') : t('Updating ...')}
             </Button>
           </Stack>
         </Stack>
