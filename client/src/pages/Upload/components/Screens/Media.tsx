@@ -190,7 +190,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `What is the title of this content? This is the name that people will see when they search for and view your content. Keep it short, your content will also be searchable by the description & tags you'll add in a minute.`
+              `Your title will appear on the search page and play page. Keep it short, your content will also be searchable by the description & tags you'll add in a minute.`
             )}
           </Typography>
         </Box>
@@ -210,7 +210,7 @@ const Media = ({
           ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `Upload your file. It should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption please upload files of type: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2 GB.`
+              `The file you upload here should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2 GB.`
             )}
           </Typography>
         </Box>
