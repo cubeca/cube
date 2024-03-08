@@ -83,7 +83,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                         resolve();
                     });
                     stream.on("error", (error) => {
-                        console.log({ error });
+                        console.log("This is a steam error", { error });
                         throw new Error(error);
                     });
                 });
