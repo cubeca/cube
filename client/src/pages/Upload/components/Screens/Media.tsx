@@ -230,7 +230,7 @@ const Media = ({
           ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Upload a Thumbnail image. For best results, we recommend dimensions are 720px by 720px. The file size should not exceed 500 KB.'
+              'Upload a Thumbnail image. For best results, we recommend 720px by 720px. The file size should not exceed 500 KB.'
             )}
           </Typography>
         </Box>
