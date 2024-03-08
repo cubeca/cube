@@ -53,6 +53,8 @@ export const handleFileChange = (
   setMediaTypeError: (arg0: string) => void,
   setMediaTypeAccepted: (arg0: boolean) => void
 ) => {
+  const fileSizeInGB =
+    (file as { type: any; size: number }).size / (1024 * 1024 * 1024);
   if (!mediaTypes[uploadType as keyof typeof mediaTypes].includes(file.type)) {
     setMediaTypeError(
       `Unsupported ${uploadType} type. Supported files are: ` +
@@ -60,6 +62,9 @@ export const handleFileChange = (
           .join(', ')
           .toUpperCase()
     );
+    setMediaTypeAccepted(false);
+  } else if (fileSizeInGB > 2) {
+    setMediaTypeError('File size should not exceed 2gb.');
     setMediaTypeAccepted(false);
   } else {
     setMediaTypeError('');
