@@ -31,6 +31,15 @@ const Media = ({
   const [bannerImageTypeError, setBannerImageTypeError] = useState('');
 
   useEffect(() => {
+    setMediaTypeError('');
+    setMediaTypeAccepted(false);
+    setImageTypeError('');
+    setImageTypeAccepted(false);
+    setBannerImageTypeError('');
+    setBannerImageTypeAccepted(false);
+  }, [uploadType]);
+
+  useEffect(() => {
     if (mediaTypeAccepted) {
       setIsMediaUploadReady(true);
       setIsMediaProperFileType(true);
@@ -198,6 +207,7 @@ const Media = ({
       {showField('mediaFile') ? (
         <Box my={theme.spacing(5)}>
           <UploadInput
+            key={uploadType}
             text={t('Media file (required)')}
             onDrop={handleMediaOnDrop}
             maxFiles={1}
