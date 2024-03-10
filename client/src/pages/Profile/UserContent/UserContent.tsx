@@ -189,7 +189,7 @@ const UserContent = ({ profile }: UserContentProps) => {
             ) : error ? (
               <p>{error}</p>
             ) : (
-              searchPlaylistResults?.map((key: any) => (
+              displayPlaylists?.map((key: any) => (
                 <ContentCard
                   key={key.data.id}
                   image={key.data.coverImageUrl?.playerInfo?.publicUrl || ''}
@@ -200,13 +200,15 @@ const UserContent = ({ profile }: UserContentProps) => {
               ))
             )}
 
-            {!isPlaylistLoading && hasMorePlaylistsToLoad && (
-              <s.LoadMore onClick={handleLoadMorePlaylist}>
-                <span className="inner">
-                  <span className="label">{t('Load More Results')}</span>
-                </span>
-              </s.LoadMore>
-            )}
+            {!isPlaylistLoading &&
+              hasMorePlaylistsToLoad &&
+              debouncedSearchTerm.trim() !== '' && (
+                <s.LoadMore onClick={handleLoadMorePlaylist}>
+                  <span className="inner">
+                    <span className="label">{t('Load More Results')}</span>
+                  </span>
+                </s.LoadMore>
+              )}
           </s.UserContent>
         </>
       )}

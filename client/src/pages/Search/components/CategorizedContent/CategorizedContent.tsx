@@ -80,10 +80,6 @@ const CategorizedContent = () => {
     async (newPlaylistOffset: number) => {
       setIsPlaylistLoading(true);
       try {
-        const searchFilters: SearchFilters = {
-          category: categoryFilter === 'all' ? undefined : categoryFilter
-        };
-
         const playlistResults = await searchPlaylists(
           debouncedSearchTerm.trim(),
           newPlaylistOffset,
