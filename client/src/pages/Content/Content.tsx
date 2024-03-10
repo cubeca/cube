@@ -504,6 +504,38 @@ const Video = () => {
                           </React.Fragment>
                         ))}
                     </s.Tags>
+                    <s.Seperator />
+                  </Stack>
+                )}
+                {(content?.languageTags?.length || 0) > 0 && (
+                  <Stack>
+                    <Typography component="h5" variant="h5">
+                      {content?.languageTags && content?.languageTags.length > 1
+                        ? t('Languages')
+                        : t('Language')}
+                    </Typography>
+                    <s.Tags sx={{ display: 'flex' }}>
+                      {(content?.languageTags || [])
+                        .join(', ')
+                        .split(', ')
+                        .map((tag: string, index: number, array: string[]) => (
+                          <React.Fragment key={tag}>
+                            <s.Tag
+                              component="span"
+                              variant="body2"
+                              underline="true"
+                            >
+                              {tag}
+                              {index < array.length - 1 && ','}
+                            </s.Tag>
+                            {index < array.length - 1 && (
+                              <s.Tag component="span" variant="body2">
+                                &nbsp;
+                              </s.Tag>
+                            )}
+                          </React.Fragment>
+                        ))}
+                    </s.Tags>
                   </Stack>
                 )}
               </>
