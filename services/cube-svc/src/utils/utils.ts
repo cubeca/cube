@@ -145,13 +145,9 @@ export const getProfileData = async (profileId: string) => {
   const contentData = contentResult.map(getApiResultFromDbRow);
   const transformedContent = await transformContent(contentData);
 
-  const playlistResult = await playlist.listPlaylistsByProfileOrUserId(0, 1000, profileId, '');
-  const transformedPlaylists = await transformPlaylist(playlistResult);
-
   return {
     ...profileResult,
-    content: transformedContent,
-    playlists: transformedPlaylists
+    content: transformedContent
   };
 };
 
