@@ -1,4 +1,4 @@
-import { Box, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 
 export const ContentLoader: React.FC<{ size: number }> = ({
@@ -22,8 +22,8 @@ export const ContentLoader: React.FC<{ size: number }> = ({
 };
 
 export const MediaPlayerLoader: React.FC<{
-  type: 'audio' | 'video' | 'pdf' | 'link';
-}> = ({ type }: { type: 'audio' | 'video' | 'pdf' | 'link' }) => (
+  type: 'audio' | 'video' | 'pdf' | 'link' | 'document';
+}> = ({ type }: { type: 'audio' | 'video' | 'pdf' | 'link' | 'document' }) => (
   <Skeleton
     width="100%"
     height={type === 'audio' ? '40px' : '400px'}

@@ -8,6 +8,7 @@ import { forgotPassword } from 'api/auth';
 import Link from 'components/Link';
 import EmailInput from 'components/form/EmailInput';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { Box } from '@mui/system';
 
 const ForgotPassword = () => {
   const { t } = useTranslation('common');
@@ -25,8 +26,12 @@ const ForgotPassword = () => {
     const { email } = data;
     setErrorMessage('');
 
-    forgotPassword(email);
-    setIsEmailSubmitted(true);
+    try {
+      await forgotPassword(email);
+      setIsEmailSubmitted(true);
+    } catch (e: any) {
+      setErrorMessage('Sorry, no account found with that email address.');
+    }
   };
 
   if (isEmailSubmitted) {
@@ -69,8 +74,14 @@ const ForgotPassword = () => {
             control={control}
             variant="outlined"
             label={t('Email')}
+            fullWidth
           />
-          {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+          {errorMessage ? (
+            <Box width="90%" mt={-2} mb={4}>
+              <ErrorMessage>{errorMessage}</ErrorMessage>
+            </Box>
+          ) : null}
+
           <HCaptcha
             theme="dark"
             sitekey={hCaptchaKey}

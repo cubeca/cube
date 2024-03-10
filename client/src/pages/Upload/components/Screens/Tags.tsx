@@ -119,9 +119,9 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           )}
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
-          <strong>{t('You must separate tags with a comma. ')}</strong>
+          <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
-            'Being able to search by file type is extremely useful for people with disabilities and for educators.'
+            'Searching by file type is valuable for educators & accessibility.'
           )}
         </Typography>
         <s.StyledList>
@@ -131,10 +131,6 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
             <s.StyledListSpan>
               can refer to PDFs created for public programming.
             </s.StyledListSpan>
-          </s.StyledListItem>
-          <s.StyledListItem component="li">
-            <strong>&quot;Digital Publications&quot;</strong>{' '}
-            <s.StyledListSpan>distinguishes other PDFs.</s.StyledListSpan>
           </s.StyledListItem>
           <s.StyledListItem component="li">
             <strong>&quot;Collaborations&quot;</strong>{' '}
@@ -155,34 +151,14 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           placeholder={t('Connection Tags')}
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
-          <strong>{t('You must separate tags with a comma. ')}</strong>
+          <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
-            'These tags allow your content to build wider and deeper connections to other cultural and community content. By adding languages and community terms as tags, you make it easier for people to discover. They also express how accessible your content is. And if you want content to be bundled under an exhibition name please create that tag. Some examples to help get you started:'
+            'These tags allow your content to build wider and deeper connections. By adding languages and community terms as tags, you make it easier for people to discover. If content for a traveling exhibition is being created by different organisation, you can connect it through a shared tag. Some examples:'
           )}
         </Typography>
         <Grid container>
           <Grid xs={12} md={4}>
-            <Typography component="ul" variant="body2" my={theme.spacing(4)}>
-              <li>Live Performance</li>
-              <li>Workshop</li>
-              <li>Kids workshop</li>
-              <li>Artist Talk</li>
-              <li>Language Teaching</li>
-              <li>Cultural Teaching</li>
-              <li>Studio Visit</li>
-              <li>Gathering</li>
-              <li>Book Reading</li>
-              <li>Subtitled</li>
-              <li>Sign language</li>
-              <li>Multilingual Subtitles</li>
-              <li>How-To</li>
-            </Typography>
-          </Grid>
-          <Grid xs={12} md={4}>
-            <Typography component="h6" variant="h6" my={theme.spacing(4)}>
-              Language Tags
-            </Typography>
-            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
+            <Typography component="ul" variant="body2" mb={theme.spacing(2)}>
               <li>hən̓q̓əmin̓əm̓</li>
               <li>Kwak̓wala</li>
               <li>Sḵwx̱wú7mesh</li>
@@ -216,7 +192,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                   control={control}
                   name={`preferredTitle`}
                   fullWidth
-                  rules={{ required: index === 0 }}
+                  rules={{ required: false }}
                   defaultValue="Artist"
                 />
               </Grid>
@@ -229,8 +205,8 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                 control={control}
                 name={`artistName${index}`}
                 fullWidth
-                placeholder={t('Name (required)')}
-                rules={{ required: index === 0 }}
+                placeholder={t('Name')}
+                rules={{ required: false }}
               />
             </Grid>
             <Grid xs={12} sm={4}>
@@ -433,9 +409,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
               mr={theme.spacing(10)}
               mt={theme.spacing(5)}
             >
-              Do you want users to be able to embed this content on other
-              webpages? If you provide a whitelist URL, below, this option is
-              not longer available to them.
+              Toggle the embed code on or off for public users.
             </Typography>
           </Grid>
 
@@ -474,31 +448,27 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
               aria-controls="panel1-content"
               id="panel1-header"
             >
-              <Box>
-                <strong>
-                  {t('You must separate websites with a comma. ')}
-                </strong>
-                {t(
-                  'Would you like this content to only be embeddable on the websites you choose? Paste the URL here to restrict any other site from embedding it. Tap the arrow to see the code you can use to embed this content on your site, however you will have to develop your own trigger to send to correct message from your site to CubeCommons. To learn how to generate a trigger using AI tap the link below to see our video tutorial.'
-                )}
-              </Box>
+              <Grid container>
+                <Box>
+                  <strong>
+                    {t('You must separate websites with a comma. ')}
+                  </strong>
+                  {t(
+                    'For added security prevent users from embedding your URL by creating a Whitelist of websites where your content can be embedded. Separate websites with a comma. Tap the arrow for links to code you can use to embed your content on a Whitelisted site.'
+                  )}
+                </Box>
+                <Box mt={1}>
+                  {t(
+                    '*Note: this will require you to develop a trigger. Learn how to generate a trigger using AI. Video tutorial coming soon.'
+                  )}
+                </Box>
+              </Grid>
             </AccordionSummary>
             <AccordionDetails>
               <Typography component="p" variant="body2">
                 {t('View code for embedding content')}{' '}
                 <Link
                   href="https://codesandbox.io/p/sandbox/embed-content-d79nck"
-                  sx={{ color: 'inherit' }}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  here.
-                </Link>
-              </Typography>
-              <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-                {t('View video tutorial for generating embed code via AI')}{' '}
-                <Link
-                  href="https://www.youtube.com/watch?v=ELJzUcYrAIQ"
                   sx={{ color: 'inherit' }}
                   target="_blank"
                   rel="noopener noreferrer"
