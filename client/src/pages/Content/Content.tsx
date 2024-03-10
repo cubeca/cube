@@ -510,7 +510,9 @@ const Video = () => {
                 {(content?.languageTags?.length || 0) > 0 && (
                   <Stack>
                     <Typography component="h5" variant="h5">
-                      {t('Language')}
+                      {content?.languageTags && content?.languageTags.length > 1
+                        ? t('Languages')
+                        : t('Language')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])
