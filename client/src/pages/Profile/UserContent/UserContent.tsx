@@ -83,11 +83,17 @@ const UserContent = ({ profile }: UserContentProps) => {
   const fetchPlaylist = useCallback(
     async (newPlaylistOffset: number) => {
       setIsPlaylistLoading(true);
+
+      const searchFilters: SearchFilters = {
+        profileId: profile?.id
+      };
+
       try {
         const playlistResults = await searchPlaylists(
           debouncedSearchTerm.trim(),
           newPlaylistOffset,
-          newPlaylistOffset === 0 ? 3 : playlistLimit
+          newPlaylistOffset === 0 ? 3 : playlistLimit,
+          searchFilters
         );
 
         if (newPlaylistOffset === 0) {
@@ -191,9 +197,9 @@ const UserContent = ({ profile }: UserContentProps) => {
             ) : (
               displayPlaylists?.map((key: any) => (
                 <ContentCard
-                  key={key.data.id}
-                  image={key.data.coverImageUrl?.playerInfo?.publicUrl || ''}
-                  title={key.data.title}
+                  key={key.id}
+                  image={key.coverImageUrl?.playerInfo?.publicUrl || ''}
+                  title={key.title}
                   url={`/playlist/${key.id}`}
                   icon={'playlist'}
                 />

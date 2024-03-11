@@ -147,11 +147,12 @@ export const getProfileData = async (profileId: string) => {
 
   const playlistResult = await playlist.listPlaylistsByProfileOrUserId(0, 1000, profileId, '');
   const playlistData = playlistResult.map(getApiResultFromDbRow);
+  const transformedPlaylist = await transformPlaylistSimple(playlistData);
 
   return {
     ...profileResult,
     content: transformedContent,
-    playlists: playlistData
+    playlists: transformedPlaylist
   };
 };
 
@@ -202,6 +203,27 @@ export async function transformContentSimple(contentItems: any[]) {
       const newItem = { ...item };
 
       // Process URL fields
+      for (const [key, value] of Object.entries(urlFieldNames)) {
+        if (item[key]) {
+          newItem[value] = await getFile(item[key]);
+          delete newItem[key];
+        }
+      }
+
+      return newItem;
+    })
+  );
+}
+
+export async function transformPlaylistSimple(playlistItems: any[]) {
+  const urlFieldNames = {
+    coverImageFileId: 'coverImageUrl'
+  };
+
+  return Promise.all(
+    playlistItems.map(async (item) => {
+      const newItem = { ...item };
+
       for (const [key, value] of Object.entries(urlFieldNames)) {
         if (item[key]) {
           newItem[value] = await getFile(item[key]);
