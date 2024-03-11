@@ -144,7 +144,11 @@ const Video = () => {
 
   useEffect(() => {
     if (
-      (embedContentWhitelist && embedContentWhitelist?.length > 0) ||
+      (embedContentWhitelist &&
+        embedContentWhitelist.length > 0 &&
+        !(
+          embedContentWhitelist.length === 1 && embedContentWhitelist[0] === ''
+        )) ||
       (!embedToggleEnabled && embedToggleEnabled !== undefined)
     ) {
       setShowEmbedModal(false);
