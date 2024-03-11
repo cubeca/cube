@@ -5,7 +5,6 @@ import { body } from 'express-validator';
 import { Buffer } from 'node:buffer';
 import * as profile from '../db/queries/profile';
 import * as content from '../db/queries/content';
-import * as playlist from '../db/queries/playlist';
 import { getFile } from '../cloudflare';
 import { NonVideoPlayerInfo, UploadMetadata } from '../types/cloudflare';
 
