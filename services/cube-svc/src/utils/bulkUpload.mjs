@@ -6,13 +6,12 @@ const endpointUrl = 'https://content-ztbavieh4q-pd.a.run.app/content';
 const authToken =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJDVUJFIiwic3ViIjoiNjYzOWI2NjYtZTg5MC00ZGZkLTk5NjQtNmM4NzgyYjY1NzMzIiwiYXVkIjpbImFub255bW91cyIsImNvbnRlbnRFZGl0b3IiLCJhY3RpdmUiXSwiaWF0IjoxNzAxNDU0NDA3LCJleHAiOjE3MDE3MTM2MDd9.sNAlrGX3OShhEzAcwhk8UEqPwkLVlhaWTS4iJqmuBkc';
 
-// Replace with your actual default cover images map
+// Replace with your actual default cover images map.
 const defaultCoverImages = {
   Artengine: 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/Artengine.jpg',
   '221A': 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/221a.jpg',
   'Agnes Etherington Art Centre': 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/AgnesEtheringtonArtCentre.jpg',
-  'Morris and Helen Belkin Art Gallery':
-    'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/MorrisandHelenBelkinArtGallery.jpg',
+  'Morris and Helen Belkin Art Gallery': 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/MorrisandHelenBelkinArtGallery.jpg',
   'Museum of Anthropology': 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/MuseumofAnthropology.jpg',
   TwoRiversGalleryBC: 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/TwoRiversGallery.jpg'
 };
