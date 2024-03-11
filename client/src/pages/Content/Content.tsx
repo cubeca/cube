@@ -145,13 +145,13 @@ const Video = () => {
   useEffect(() => {
     if (
       (embedContentWhitelist && embedContentWhitelist?.length > 0) ||
-      !embedToggleEnabled
+      (!embedToggleEnabled && embedToggleEnabled !== undefined)
     ) {
       setShowEmbedModal(false);
     } else {
       setShowEmbedModal(true);
     }
-  }, [isLoading, embedContentWhitelist, embedToggleEnabled]);
+  }, [isLoading, content, embedContentWhitelist, embedToggleEnabled]);
 
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);

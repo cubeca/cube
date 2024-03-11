@@ -18,7 +18,7 @@ const EmbeddedPlaylist = () => {
   const embedPlaylistWhitelist = playlist?.data[0].data.embedPlaylistWhitelist;
 
   useEffect(() => {
-    if (!isLoading && embedPlaylistWhitelist) {
+    if (!isLoading && embedPlaylistWhitelist.length > 0) {
       setIsDomainAllowed(false);
 
       const handleParentMessage = (event: { origin: string }) => {
