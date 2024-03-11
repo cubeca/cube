@@ -30,6 +30,7 @@ const Details = ({
       video: ['description', 'vtt', 'kidsContent', 'expiry'],
       audio: ['description', 'vtt', 'expiry', 'kidsContent'],
       pdf: ['description', 'expiry', 'kidsContent'],
+      document: ['description', 'expiry', 'kidsContent'],
       link: ['description', 'expiry', 'kidsContent']
     };
     if (!uploadType) return false;

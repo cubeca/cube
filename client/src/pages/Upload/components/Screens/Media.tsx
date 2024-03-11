@@ -119,13 +119,15 @@ const Media = ({
   const audioFileTypes = ['MP3', 'WAV', 'OGG', 'AAC'];
   const pdfFileTypes = ['PDF'];
   const imageFileTypes = ['JPG', 'JPEG', 'PNG', 'GIF'];
+  const documentFileTypes = ['DOC', 'DOCX', 'ODT', 'RTF', 'TXT'];
 
   const showField = (field: string) => {
     const reqMap = {
       video: ['title', 'mediaFile', 'thumbNail', 'videoFileTypes'],
       audio: ['title', 'mediaFile', 'thumbNail', 'audioFileTypes'],
       pdf: ['title', 'thumbNail', 'mediaFile', 'pdfFileTypes'],
-      link: ['title', 'thumbNail', 'link']
+      link: ['title', 'thumbNail', 'link'],
+      document: ['title', 'mediaFile', 'thumbNail', 'documentFileTypes']
     };
     if (!uploadType) return false;
     // @ts-ignore
@@ -157,6 +159,14 @@ const Media = ({
       : pdfFileTypes.join('')
     : '';
 
+  const documentFileTypesText = showField('documentFileTypes')
+    ? documentFileTypes.length > 1
+      ? documentFileTypes.slice(0, -1).join(', ') +
+        ', or ' +
+        documentFileTypes[documentFileTypes.length - 1]
+      : documentFileTypes.join('')
+    : '';
+
   return (
     <Box className={'upload__media-screen'}>
       <Typography component="h2" variant="h2">
@@ -174,6 +184,9 @@ const Media = ({
           <MenuItem.li value={ContentTypes.Video}>{t('Video')}</MenuItem.li>
           <MenuItem.li value={ContentTypes.Audio}>{t('Audio')}</MenuItem.li>
           <MenuItem.li value={ContentTypes.PDF}>{t('PDF')}</MenuItem.li>
+          <MenuItem.li value={ContentTypes.Document}>
+            {t('Word Document')}
+          </MenuItem.li>
           <MenuItem.li value={ContentTypes.Link}>{t('Link')}</MenuItem.li>
         </Select>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
@@ -220,7 +233,7 @@ const Media = ({
           ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `The file you upload here should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2 GB.`
+              `The file you upload here should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText}${documentFileTypesText} no more than 2 GB.`
             )}
           </Typography>
         </Box>

@@ -7,6 +7,8 @@ import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
 import FlagIcon from '@mui/icons-material/Flag';
+import DownloadIcon from '@mui/icons-material/Download';
+import ListIcon from '@mui/icons-material/List';
 
 import useContentDetails from 'hooks/useContentDetails';
 
@@ -75,6 +77,7 @@ const Video = () => {
     ? content?.coverImageUrl?.playerInfo?.publicUrl
     : content?.coverImageExternalUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const docUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const bannerImage = content?.bannerImageUrl
     ? content?.bannerImageUrl?.playerInfo?.publicUrl
     : content?.bannerImageExternalUrl;
@@ -330,12 +333,14 @@ const Video = () => {
               {loggedInProfileId === profileId && (
                 // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                 <s.EditDeleteWrapper>
-                  <s.EditSubsButton
-                    component={RouterLink}
-                    to={`/subtitle-editor/${content?.id}`}
-                  >
-                    Edit Subtitles
-                  </s.EditSubsButton>
+                  {(content?.type === 'audio' || content?.type === 'video') && (
+                    <s.EditSubsButton
+                      component={RouterLink}
+                      to={`/subtitle-editor/${content?.id}`}
+                    >
+                      Edit Subtitles
+                    </s.EditSubsButton>
+                  )}
                   <DeleteContentButton contentId={content?.id || ''} />
                 </s.EditDeleteWrapper>
                 // </Box>
@@ -352,6 +357,12 @@ const Video = () => {
                 justifyContent="left"
                 sx={{ my: 3, typography: 'body2' }}
               >
+                {content?.type === 'document' && (
+                  <s.ActionsWrapper>
+                    <DownloadIcon />
+                    <s.Action to={docUrl || ''}>Download</s.Action>
+                  </s.ActionsWrapper>
+                )}
                 {showEmbedModal && (
                   <s.ActionsWrapper>
                     <CodeIcon />
@@ -361,7 +372,7 @@ const Video = () => {
                   </s.ActionsWrapper>
                 )}
                 <s.ActionsWrapper>
-                  <CodeIcon />
+                  <ListIcon />
                   <s.Action to={''} onClick={openPlaylistModal}>
                     Add to Playlist
                   </s.Action>

@@ -25,7 +25,12 @@ const mediaTypes = {
   ],
   audio: ['audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac'],
   pdf: ['application/pdf'],
-  image: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif']
+  image: ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'],
+  document: [
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'text/plain'
+  ]
 };
 
 const mediaTypesExtensions = {
@@ -44,7 +49,8 @@ const mediaTypesExtensions = {
   ],
   audio: ['mp3', 'wav', 'ogg', 'aac'],
   pdf: ['pdf'],
-  image: ['jpeg', 'png', 'jpg', 'gif']
+  image: ['jpeg', 'png', 'jpg', 'gif'],
+  document: ['doc', 'docx', 'odt', 'rtf', 'txt']
 };
 
 export const handleFileChange = (

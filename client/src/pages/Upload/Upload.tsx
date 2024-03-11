@@ -179,7 +179,6 @@ const Upload = () => {
   const onSubmit = (values: FieldValues) => {
     const contributors = getContributors(values);
     const collaborators = [profileId, values.collaborators];
-
     addContent(
       {
         profileId: profileId!,
@@ -306,7 +305,7 @@ const Upload = () => {
           !formState.isValid ||
           (screenIndex === 0 && !isMediaProperFileType) ||
           (screenIndex === 0 &&
-            mediaType === ('video' || 'audio' || 'pdf') &&
+            mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
             !isMediaProperFileType) ||
           (screenIndex === 0 &&
             mediaType === 'link' &&
@@ -328,7 +327,7 @@ const Upload = () => {
           isNextDisabled={
             !formState.isValid ||
             (screenIndex === 0 &&
-              mediaType === ('video' || 'audio' || 'pdf') &&
+              mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
               !isMediaProperFileType) ||
             (screenIndex === 0 &&
               mediaType === 'link' &&
