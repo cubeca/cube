@@ -50,3 +50,20 @@ export const searchContent = async (
   const search: SearchResponse = data.data;
   return search.contentResults.data;
 };
+
+export const searchPlaylists = async (
+  searchTerm: string,
+  offset: number,
+  limit: number,
+  filters?: SearchFilters
+) => {
+  const data = await bffApi.search(
+    searchTerm,
+    offset,
+    limit,
+    filters,
+    'playlist'
+  );
+  const search: SearchResponse = data.data;
+  return search.playlistResults.data;
+};

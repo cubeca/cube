@@ -8,6 +8,7 @@ interface ContentListProps {
   content: any[];
   heading?: string;
   isLoggedIn?: boolean;
+  playlistId?: string;
   handleNewMedia?: () => void;
 }
 
@@ -15,6 +16,7 @@ const ContentList: FC<ContentListProps> = ({
   heading,
   content,
   isLoggedIn = false,
+  playlistId,
   handleNewMedia
 }) => {
   const { t } = useTranslation();
@@ -37,8 +39,12 @@ const ContentList: FC<ContentListProps> = ({
             }
             title={c.title}
             creator={c.creator}
-            url={`/content/${c.id}`}
-            icon={c.icon}
+            url={
+              playlistId
+                ? `/content/${c.id}?playlist=${playlistId}`
+                : `/content/${c.id}`
+            }
+            icon={c.type}
             hasSignLanguage={c.hasSignLanguage}
             coverImageAltText={c.coverImageText}
           />

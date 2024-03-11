@@ -28,14 +28,26 @@ import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { useLocation } from 'react-router-dom';
 import ReportContentModal from 'components/ReportContentModal';
+import AddToPlaylistModal from 'components/AddToPlaylistModal';
+import { getAuthTokenPayload } from 'utils/auth';
+import useAuth from 'hooks/useAuth';
 
 const Video = () => {
+  const { isLoggedIn } = useAuth();
   const { t } = useTranslation();
+  const user = getAuthTokenPayload();
   const theme = useTheme();
   const location = useLocation();
   const contentRef = useRef<HTMLDivElement>(null);
   const { data: content, isLoading, refetch } = useContentDetails();
   const createdAt = content?.createdAt;
+
+  function useQuery() {
+    return new URLSearchParams(useLocation().search);
+  }
+  const query = useQuery();
+  const playlistId = query.get('playlist');
+
   const formattedCreatedDate = content
     ? new Date(createdAt as string).toLocaleDateString('en-us', {
         year: 'numeric',
@@ -47,10 +59,14 @@ const Video = () => {
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
+  const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
   const [subtitleUrl, setSubtitleUrl] = useState('');
   const [subtitleIsLoading, setSubtitleIsLoading] = useState(true);
+  const [showEmbedModal, setShowEmbedModal] = useState(false);
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
+  const [userId, setUserId] = useState('');
+
   let youtubeID = '';
 
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
@@ -71,6 +87,8 @@ const Video = () => {
   const loggedInProfileId = getProfileId();
   const videoBeingProcessed = !content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
+  const embedContentWhitelist = content?.embedContentWhitelist;
+  const embedToggleEnabled = content?.embedToggleEnabled;
 
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
@@ -88,6 +106,15 @@ const Video = () => {
   useEffect(() => {
     setSubtitleUrl(content?.vttFileUrl?.playerInfo?.publicUrl || '');
   }, [content]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getAuthTokenPayload();
+      setUserId((user as any).sub);
+    };
+
+    fetchUser();
+  }, [user]);
 
   // after editing subtitles, refetch content and set subtitleUrl again to
   // prevent stale data from being displayed
@@ -115,15 +142,39 @@ const Video = () => {
     }
   }, [content?.isSuitableForChildren]);
 
+  useEffect(() => {
+    if (
+      (embedContentWhitelist &&
+        embedContentWhitelist.length > 0 &&
+        !(
+          embedContentWhitelist.length === 1 && embedContentWhitelist[0] === ''
+        )) ||
+      (!embedToggleEnabled && embedToggleEnabled !== undefined)
+    ) {
+      setShowEmbedModal(false);
+    } else {
+      setShowEmbedModal(true);
+    }
+  }, [isLoading, content, embedContentWhitelist, embedToggleEnabled]);
+
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
     setIsEmbedModalOpen(false);
     setIsReportContentModalOpen(false);
+    setIsPlaylistModalOpen(false);
   }
 
   const openEmbedModal = () => {
     setIsEmbedModalOpen(true);
   };
+  const openPlaylistModal = () => {
+    if (isLoggedIn) {
+      setIsPlaylistModalOpen(true);
+    } else {
+      window.location.href = '/login';
+    }
+  };
+
   const openReportContentModal = () => {
     setIsReportContentModalOpen(true);
   };
@@ -238,11 +289,21 @@ const Video = () => {
         onOver18Click={onOver18Click}
         onUnder18Click={onUnder18Click}
       />
+
       <EmbedModal
         isOpen={isEmbedModalOpen}
         onClose={handleClose}
         embedContentType={content?.type || ''}
       />
+
+      <AddToPlaylistModal
+        isOpen={isPlaylistModalOpen}
+        onClose={handleClose}
+        contentId={content?.id || ''}
+        profileId={loggedInProfileId || ''}
+        userId={userId || ''}
+      />
+
       <ReportContentModal
         isOpen={isReportContentModalOpen}
         onClose={handleClose}
@@ -288,25 +349,35 @@ const Video = () => {
               {formattedCreatedDate}
             </Typography>
 
-            <Stack
-              direction="row"
-              spacing={2}
-              justifyContent="left"
-              sx={{ my: 3, typography: 'body2' }}
-            >
-              <s.ActionsWrapper>
-                <CodeIcon />
-                <s.Action to={''} onClick={openEmbedModal}>
-                  Embed
-                </s.Action>
-              </s.ActionsWrapper>
-              <s.ActionsWrapper>
-                <FlagIcon />
-                <s.Action to={''} onClick={openReportContentModal}>
-                  Report Content
-                </s.Action>
-              </s.ActionsWrapper>
-            </Stack>
+            {!isLoading && (
+              <Stack
+                direction="row"
+                spacing={2}
+                justifyContent="left"
+                sx={{ my: 3, typography: 'body2' }}
+              >
+                {showEmbedModal && (
+                  <s.ActionsWrapper>
+                    <CodeIcon />
+                    <s.Action to={''} onClick={openEmbedModal}>
+                      Embed
+                    </s.Action>
+                  </s.ActionsWrapper>
+                )}
+                <s.ActionsWrapper>
+                  <CodeIcon />
+                  <s.Action to={''} onClick={openPlaylistModal}>
+                    Add to Playlist
+                  </s.Action>
+                </s.ActionsWrapper>
+                <s.ActionsWrapper>
+                  <FlagIcon />
+                  <s.Action to={''} onClick={openReportContentModal}>
+                    Report Content
+                  </s.Action>
+                </s.ActionsWrapper>
+              </Stack>
+            )}
 
             <Typography
               component="p"
@@ -437,6 +508,38 @@ const Video = () => {
                           </React.Fragment>
                         ))}
                     </s.Tags>
+                    <s.Seperator />
+                  </Stack>
+                )}
+                {(content?.languageTags?.length || 0) > 0 && (
+                  <Stack>
+                    <Typography component="h5" variant="h5">
+                      {content?.languageTags && content?.languageTags.length > 1
+                        ? t('Languages')
+                        : t('Language')}
+                    </Typography>
+                    <s.Tags sx={{ display: 'flex' }}>
+                      {(content?.languageTags || [])
+                        .join(', ')
+                        .split(', ')
+                        .map((tag: string, index: number, array: string[]) => (
+                          <React.Fragment key={tag}>
+                            <s.Tag
+                              component="span"
+                              variant="body2"
+                              underline="true"
+                            >
+                              {tag}
+                              {index < array.length - 1 && ','}
+                            </s.Tag>
+                            {index < array.length - 1 && (
+                              <s.Tag component="span" variant="body2">
+                                &nbsp;
+                              </s.Tag>
+                            )}
+                          </React.Fragment>
+                        ))}
+                    </s.Tags>
                   </Stack>
                 )}
               </>
@@ -447,6 +550,8 @@ const Video = () => {
               <MoreContent
                 profileId={profileId}
                 excludeId={content?.id || ''}
+                playlistId={playlistId || ''} // from query string for related content from same playlist
+                tags={content?.tags || []}
               />
             )}
           </s.Sidebar>

@@ -12,6 +12,8 @@ import useAuth from 'hooks/useAuth';
 import { getProfile } from 'api/profile';
 import { resendEmailVerification } from 'api/auth';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { set } from 'date-fns';
+import { getUser } from 'utils/auth';
 
 interface LoginFormProps {
   emailVerified?: boolean;
@@ -31,7 +33,6 @@ export const LoginForm = ({
   const [isUnverifiedLogin, setIsUnverifiedLogin] = useState(false);
   const [isLinkResent, setIsLinkResent] = useState(false);
   const { login } = useAuth();
-  const [user, setUser] = useState<any>();
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
 
@@ -43,14 +44,12 @@ export const LoginForm = ({
     const { email, password } = data;
     try {
       setErrorMessage('');
-      const user = await login(email, password);
-      setUser(user);
 
-      const isEmailVerified = !!(user as any).has_verified_email;
-
+      await login(email, password);
+      const isEmailVerified = getUser().has_verified_email;
       if (isEmailVerified) {
-        if ((user as any).profile_id) {
-          const { data } = await getProfile((user as any).profile_id);
+        if (getUser().profile_id) {
+          const { data } = await getProfile(getUser().profile_id);
           localStorage.setItem('PROFILE', JSON.stringify(data));
           navigate(`/profile/${(data as any).tag}`);
         } else {
@@ -58,7 +57,6 @@ export const LoginForm = ({
         }
       } else {
         setIsUnverifiedLogin(true);
-        setUser(user);
       }
     } catch (e: any) {
       setErrorMessage(e.response?.data || t('An Error occured during login'));
@@ -66,7 +64,7 @@ export const LoginForm = ({
   };
 
   const handleResendVerification = async () => {
-    await resendEmailVerification(user.email);
+    await resendEmailVerification(getUser().email);
     setIsLinkResent(true);
   };
 

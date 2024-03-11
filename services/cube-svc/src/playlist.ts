@@ -1,14 +1,18 @@
 import express, { Request, Response } from 'express';
 import * as db from './db/queries/playlist';
-import { getApiResultFromDbRow, transformPlaylist } from './utils/utils';
+import { UUID_REGEXP, getApiResultFromDbRow, transformPlaylist } from './utils/utils';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 
 export const playlist = express.Router();
 
-playlist.get('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
+playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
   const playlistId = req.params.playlistId;
   if (!playlistId) {
     return res.status(400).send('Invalid playlist Id');
+  }
+
+  if (!UUID_REGEXP.test(playlistId)) {
+    return res.status(400).send(`Invalid parameter, must be in UUID format.`);
   }
 
   const dbResult = await db.getPlaylistById(playlistId);
@@ -23,10 +27,10 @@ playlist.get('/playlist/:playlistId', allowIfAnyOf('anonymous', 'active'), async
 playlist.get('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
-  const profileId = req.query.profileId as string;
-  const userId = req.query.userId as string;
+  const profileId = (req.query.profileId as string) || '';
+  const userId = req.query.userId as string | '';
 
-  const dbResult = await db.listPlaylistsByProfileAndUserId(offset, limit, profileId, userId);
+  const dbResult = await db.listPlaylistsByProfileOrUserId(offset, limit, profileId, userId);
   const playlistList = dbResult.map((item) => item.dataValues);
   const transformedPlaylist = await transformPlaylist(playlistList);
   res.status(200).json(transformedPlaylist);

@@ -13,11 +13,11 @@ export const getPlaylistById = async (playlistId: string) => {
   });
 };
 
-export const listPlaylistsByProfileAndUserId = async (offset: number, limit: number, profileId?: string, userId?: string) => {
+export const listPlaylistsByProfileOrUserId = async (offset: number, limit: number, profileId?: string, userId?: string) => {
   const whereClause: any = {
     [Op.and]: [
       {
-        [Op.and]: [
+        [Op.or]: [
           profileId
             ? [
                 {
@@ -43,6 +43,7 @@ export const listPlaylistsByProfileAndUserId = async (offset: number, limit: num
 
   const playlistList = await Playlist.findAll({
     where: whereClause,
+    order: [['created_at', 'DESC']],
     offset,
     limit
   });
@@ -70,6 +71,15 @@ export const searchPlaylist = async (offset: number, limit: number, filters: any
                 {
                   'data.profileId': {
                     [Op.eq]: filters.profileId
+                  }
+                }
+              ]
+            : []),
+          ...(filters.contentId
+            ? [
+                {
+                  'data.contentIds': {
+                    [Op.iLike]: `%${filters.contentId}%`
                   }
                 }
               ]

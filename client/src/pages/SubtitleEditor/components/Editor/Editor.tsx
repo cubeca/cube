@@ -1,5 +1,5 @@
 import { Typography } from '@mui/material';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Grid from '@mui/system/Unstable_Grid/Grid';
 import { getAuthToken } from '../../../../utils/auth';
 import Lottie from 'lottie-react';
@@ -12,7 +12,6 @@ import * as s from './Editor.styled';
 
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
-import { Label } from 'components/layout/Header/components/Profile/Profile.styled';
 
 const Editor = (props: { contentId: any; postUpload: any }) => {
   const { contentId, postUpload } = props;
@@ -37,7 +36,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
             setLoadError(true);
             return;
           }
-          const authToken = await getAuthToken();
+          const authToken = getAuthToken();
           axios
             .get(`${CUBE_SVC_URL}/vtt/${contentId}`, {
               headers: {
@@ -66,7 +65,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
 
   const handleSave = async () => {
     setSaveLoading(true);
-    const authToken = await getAuthToken();
+    const authToken = getAuthToken();
     const vttObject: any = {};
     vtt.forEach((row: any) => {
       vttObject[row.start] = {

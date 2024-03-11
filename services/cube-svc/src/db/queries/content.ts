@@ -33,53 +33,58 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
 };
 
 export const searchContent = async (offset: number, limit: number, filters: any, searchTerm: string) => {
-  const searchTerms = searchTerm
-    .split('&')
-    .map((term) => term.trim())
-    .filter((term) => term);
+  let whereClause: any = {};
 
-  const whereClause: any = {
-    [Op.and]: [
-      {
-        [Op.and]: [
-          ...searchTerms.map((term: string) => ({
-            data: {
-              [Op.or]: [
-                { title: { [Op.iLike]: `%${term}%` } },
-                { type: { [Op.iLike]: `%${term}%` } },
-                { tags: { [Op.iLike]: `%${term}%` } },
-                { description: { [Op.iLike]: `%${term}%` } },
-                { coverImageText: { [Op.iLike]: `%${term}%` } },
-                {
-                  contributors: {
-                    [Op.iLike]: `%${term}%`
-                  }
-                }
-              ]
-            }
-          })),
-          ...(filters.category
-            ? [
-                {
-                  'data.category': {
-                    [Op.iLike]: `%${filters.category}%`
-                  }
-                }
-              ]
-            : []),
-          ...(filters.profileId
-            ? [
-                {
-                  'data.profileId': {
-                    [Op.eq]: filters.profileId
-                  }
-                }
-              ]
-            : [])
+  if (searchTerm.trim() !== '') {
+    const searchTerms = searchTerm
+      .split('&')
+      .map((term) => term.trim())
+      .filter((term) => term);
+
+    whereClause[Op.and] = searchTerms.map((term: string) => ({
+      data: {
+        [Op.or]: [
+          { title: { [Op.iLike]: `%${term}%` } },
+          { type: { [Op.iLike]: `%${term}%` } },
+          { tags: { [Op.iLike]: `%${term}%` } },
+          { languageTags: { [Op.iLike]: `%${term}%` } },
+          { description: { [Op.iLike]: `%${term}%` } },
+          { coverImageText: { [Op.iLike]: `%${term}%` } },
+          { contributors: { [Op.iLike]: `%${term}%` } }
         ]
       }
-    ]
-  };
+    }));
+  }
+
+  if (filters.category) {
+    whereClause[Op.and] = whereClause[Op.and] || [];
+    whereClause[Op.and].push({
+      'data.category': {
+        [Op.iLike]: `%${filters.category}%`
+      }
+    });
+  }
+
+  if (filters.profileId) {
+    whereClause[Op.and] = whereClause[Op.and] || [];
+    whereClause[Op.and].push({
+      'data.profileId': {
+        [Op.eq]: filters.profileId
+      }
+    });
+  }
+
+  if (filters.tags) {
+    const tagSearch = filters.tags.split(',');
+    if (!whereClause[Op.and]) {
+      whereClause[Op.and] = [];
+    }
+    whereClause[Op.and].push({
+      [Op.or]: tagSearch.map((term: string) => ({
+        'data.tags': { [Op.iLike]: `%${term.trim()}%` }
+      }))
+    });
+  }
 
   const contentList = await Content.findAll({
     where: whereClause,
@@ -109,16 +114,6 @@ export const listContentByProfileId = async (offset: number, limit: number, filt
                 {
                   'data.category': {
                     [Op.contains]: JSON.stringify(filters.category)
-                  }
-                }
-              ]
-            : []),
-
-          ...(filters.tags
-            ? [
-                {
-                  'data.tags': {
-                    [Op.contains]: JSON.stringify(filters.tags)
                   }
                 }
               ]

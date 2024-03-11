@@ -5,14 +5,17 @@ import UploadInput from 'components/form/UploadInput';
 import { useTranslation } from 'react-i18next';
 import { ContentTypes } from 'types/enums';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import { handleFileChange } from 'utils/fileValidation';
 const Media = ({
   control,
   handleMediaUpload,
   handleCoverImageUpload,
   handleBannerImageUpload,
-  uploadType
+  uploadType,
+  setIsMediaProperFileType,
+  setIsCoverImageProperFileType,
+  setIsBannerImageProperFileType
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -20,30 +23,81 @@ const Media = ({
   const [isMediaUploadReady, setIsMediaUploadReady] = useState(false);
   const [isThumbUploadReady, setIsThumbUploadReady] = useState(false);
   const [isBannerUploadReady, setIsBannerUploadReady] = useState(false);
+  const [mediaTypeError, setMediaTypeError] = useState('');
+  const [mediaTypeAccepted, setMediaTypeAccepted] = useState(false);
+  const [imageTypeAccepted, setImageTypeAccepted] = useState(false);
+  const [bannerImageTypeAccepted, setBannerImageTypeAccepted] = useState(false);
+  const [imageTypeError, setImageTypeError] = useState('');
+  const [bannerImageTypeError, setBannerImageTypeError] = useState('');
+
+  useEffect(() => {
+    setMediaTypeError('');
+    setMediaTypeAccepted(false);
+    setImageTypeError('');
+    setImageTypeAccepted(false);
+    setBannerImageTypeError('');
+    setBannerImageTypeAccepted(false);
+  }, [uploadType]);
+
+  useEffect(() => {
+    if (mediaTypeAccepted) {
+      setIsMediaUploadReady(true);
+      setIsMediaProperFileType(true);
+    } else {
+      setIsMediaUploadReady(false);
+      setIsMediaProperFileType(false);
+    }
+  }, [mediaTypeAccepted]);
+
+  useEffect(() => {
+    if (imageTypeAccepted) {
+      setIsThumbUploadReady(true);
+      setIsCoverImageProperFileType(true);
+    } else {
+      setIsThumbUploadReady(false);
+      setIsCoverImageProperFileType(false);
+    }
+  }, [imageTypeAccepted]);
+
+  useEffect(() => {
+    if (bannerImageTypeAccepted) {
+      setIsBannerUploadReady(true);
+      setIsBannerImageProperFileType(true);
+    } else {
+      setIsBannerUploadReady(false);
+      setIsBannerImageProperFileType(false);
+    }
+  }, [bannerImageTypeAccepted]);
 
   const handleMediaOnDrop = (files: File[]) => {
+    handleFileChange(
+      files[0],
+      uploadType,
+      setMediaTypeError,
+      setMediaTypeAccepted
+    );
     handleMediaUpload(files);
-    setIsMediaUploadReady(true);
   };
 
   const handleThumbnailOnDrop = (files: File[]) => {
+    handleFileChange(
+      files[0],
+      'image',
+      setImageTypeError,
+      setImageTypeAccepted
+    );
     handleCoverImageUpload(files);
-    setIsThumbUploadReady(true);
   };
 
   const handleBannerOnDrop = (files: File[]) => {
+    handleFileChange(
+      files[0],
+      'image',
+      setBannerImageTypeError,
+      setBannerImageTypeAccepted
+    );
     handleBannerImageUpload(files);
-    setIsBannerUploadReady(true);
   };
-
-  // const [isDragOver, setIsDragOver] = useState(false);
-  // const handleDragOver = (e: any) => {
-  //   e.preventDefault();
-  //   setIsDragOver(true);
-  // };
-  // const handleDragLeave = () => {
-  //   setIsDragOver(false);
-  // };
 
   const videoFileTypes = [
     'MP4',
@@ -64,6 +118,7 @@ const Media = ({
 
   const audioFileTypes = ['MP3', 'WAV', 'OGG', 'AAC'];
   const pdfFileTypes = ['PDF'];
+  const imageFileTypes = ['JPG', 'JPEG', 'PNG', 'GIF'];
 
   const showField = (field: string) => {
     const reqMap = {
@@ -144,7 +199,7 @@ const Media = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `What is the title of this content? This is the name that people will see when they search for and view your content. Keep it short, your content will also be searchable by the description & tags you'll add in a minute.`
+              `Your title will appear on the search page and play page. Keep it short, your content will also be searchable by the description & tags you'll add in a minute.`
             )}
           </Typography>
         </Box>
@@ -152,17 +207,20 @@ const Media = ({
       {showField('mediaFile') ? (
         <Box my={theme.spacing(5)}>
           <UploadInput
+            key={uploadType}
             text={t('Media file (required)')}
             onDrop={handleMediaOnDrop}
             maxFiles={1}
             isUploadReady={isMediaUploadReady}
-            // onDragOver={handleDragOver}
-            // onDragLeave={handleDragLeave}
-            //style={`background-color: ${isDragOver ? 'red' : 'white'}`}
           />
+          {mediaTypeError ? (
+            <Typography component="p" variant="body2" color="#FFB7C4">
+              {mediaTypeError}
+            </Typography>
+          ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `Upload your file. It should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption please upload files of type: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2 GB. The arrow should change to a checkmark.`
+              `The file you upload here should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText} no more than 2 GB.`
             )}
           </Typography>
         </Box>
@@ -174,13 +232,15 @@ const Media = ({
             onDrop={handleThumbnailOnDrop}
             maxFiles={1}
             isUploadReady={isThumbUploadReady}
-            // onDragOver={handleDragOver}
-            // onDragLeave={handleDragLeave}
-            // style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
           />
+          {imageTypeError ? (
+            <Typography component="p" variant="body2" color="#FFB7C4">
+              {imageTypeError}
+            </Typography>
+          ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              'Upload a Thumbnail image. For best results, we recommend dimensions are 720px by 720px. The file size should not exceed 500 KB.'
+              'Upload a Thumbnail image. For best results, we recommend 720px by 720px. The file size should not exceed 500 KB.'
             )}
           </Typography>
         </Box>
@@ -207,10 +267,12 @@ const Media = ({
             onDrop={handleBannerOnDrop}
             maxFiles={1}
             isUploadReady={isBannerUploadReady}
-            // onDragOver={handleDragOver}
-            // onDragLeave={handleDragLeave}
-            // style={{ backgroundColor: isDragOver ? 'red' : 'white' }}
           />
+          {bannerImageTypeError ? (
+            <Typography component="p" variant="body2" color="#FFB7C4">
+              {bannerImageTypeError}
+            </Typography>
+          ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
               'Upload a Banner Image to allow users to preview your link. For best results, we recommend images dimensions are 1280px by 720px. File size should not exceed 500 KB.'

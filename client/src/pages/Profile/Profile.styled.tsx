@@ -75,6 +75,16 @@ export const UserHeroBg = styled(Box)`
   }
 `;
 
+export const UserContentSubWrapper = styled(Box)`
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  ${(props) => props.theme.breakpoints.up('md')} {
+    width: auto;
+  }
+`;
 export const UserContentHeader = styled(Stack)`
   padding-top: 60px;
 

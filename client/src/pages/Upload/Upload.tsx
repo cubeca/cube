@@ -24,17 +24,19 @@ const getContributors = (values: FieldValues) => {
 
   // Handle 'artist' role
   for (let i = 0; values[`artistName${i}`] !== undefined; i++) {
-    if (!contributorsObject['artist']) {
-      contributorsObject['artist'] = [];
+    if (values[`artistName${i}`] !== '') {
+      if (!contributorsObject['artist']) {
+        contributorsObject['artist'] = [];
+      }
+      contributorsObject['artist'].push({
+        name: values[`artistName${i}`],
+        url: values[`artistUrl${i}`],
+        preferredTitle:
+          values[`preferredTitle`] !== 'Artist'
+            ? values[`preferredTitle`]
+            : undefined
+      });
     }
-    contributorsObject['artist'].push({
-      name: values[`artistName${i}`],
-      url: values[`artistUrl${i}`],
-      preferredTitle:
-        values[`preferredTitle`] !== 'Artist'
-          ? values[`preferredTitle`]
-          : undefined
-    });
   }
 
   // Handle 'editor' role
@@ -137,6 +139,11 @@ const Upload = () => {
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
   const [isBannerImageSelected, setIsBannerImageSelected] = useState(false);
   const [isMediaSelected, setIsMediaSelected] = useState(false);
+  const [isMediaProperFileType, setIsMediaProperFileType] = useState(false);
+  const [isCoverImageProperFileType, setIsCoverImageProperFileType] =
+    useState(false);
+  const [isBannerImageProperFileType, setIsBannerImageProperFileType] =
+    useState(false);
   const [isVTTSelected, setIsVTTSelected] = useState(false);
   const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
@@ -196,10 +203,19 @@ const Upload = () => {
         collaborators: collaborators,
         contributors: contributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),
+        languageTags: values.languageTags
+          .split(',')
+          .map((tag: string) => tag.trim()),
         externalUrl: values.link ? values.link : null,
+        embedToggleEnabled: values.embedToggleInput,
         isSuitableForChildren: values.audience
           ? values.audience === 'yeskids'
-          : false
+          : false,
+        embedContentWhitelist: values.embedContentWhitelist
+          ? values.embedContentWhitelist
+              .split(',')
+              .map((tag: string) => tag.trim())
+          : []
       },
       coverImageFile!,
       mediaFile!,
@@ -218,6 +234,9 @@ const Upload = () => {
           handleMediaUpload={handleMediaUpload}
           handleCoverImageUpload={handleCoverImageUpload}
           handleBannerImageUpload={handleBannerImageUpload}
+          setIsMediaProperFileType={setIsMediaProperFileType}
+          setIsCoverImageProperFileType={setIsCoverImageProperFileType}
+          setIsBannerImageProperFileType={setIsBannerImageProperFileType}
         />
       )
     },
@@ -295,6 +314,14 @@ const Upload = () => {
         onScreenIndexChange={handleScreenChange}
         isNextDisabled={
           !formState.isValid ||
+          (screenIndex === 0 && !isMediaProperFileType) ||
+          (screenIndex === 0 &&
+            mediaType === ('video' || 'audio' || 'pdf') &&
+            !isMediaProperFileType) ||
+          (screenIndex === 0 &&
+            mediaType === 'link' &&
+            !isBannerImageProperFileType) ||
+          (screenIndex === 0 && !isCoverImageProperFileType) ||
           (screenIndex === 0 && (!isCoverImageSelected || !isMediaSelected)) ||
           (screenIndex === 1 && !isVTTSelected) ||
           vttEditorLaunched
@@ -310,6 +337,13 @@ const Upload = () => {
           handleSubmit={handleSubmit(onSubmit)}
           isNextDisabled={
             !formState.isValid ||
+            (screenIndex === 0 &&
+              mediaType === ('video' || 'audio' || 'pdf') &&
+              !isMediaProperFileType) ||
+            (screenIndex === 0 &&
+              mediaType === 'link' &&
+              !isBannerImageProperFileType) ||
+            (screenIndex === 0 && !isCoverImageProperFileType) ||
             (screenIndex === 2 && !captchaVerified) ||
             (screenIndex === 0 && !isCoverImageSelected) ||
             (!mediaLink && !isMediaSelected) ||

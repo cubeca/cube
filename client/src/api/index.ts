@@ -4,7 +4,8 @@ import {
   ContentApi,
   ProfileApi,
   CloudflareApi,
-  CommonApi
+  CommonApi,
+  PlaylistApi
 } from '@cubeca/cube-svc-client-oas-axios';
 
 import { CUBE_SVC_URL } from './settings';
@@ -16,14 +17,14 @@ export const UPLOAD_TUS_ENDPOINT = `${CUBE_SVC_URL}/upload/video-tus-reservation
 export const getUploadTusEndpoint = async (fileId: string): Promise<string> => {
   const url = new URL(UPLOAD_TUS_ENDPOINT);
   url.searchParams.set('fileId', fileId);
-  url.searchParams.set('authorization', (await getAuthToken()) || '');
+  url.searchParams.set('authorization', getAuthToken() || '');
   return url.toString();
 };
 
 const createConfiguration = () =>
   new Configuration({
     basePath: CUBE_SVC_URL,
-    accessToken: async () => String(await getAuthToken())
+    accessToken: async () => String(getAuthToken())
   });
 
 const authConfiguration = createConfiguration();
@@ -43,3 +44,6 @@ export const filesApi = new CloudflareApi(filesConfiguration);
 
 const bffConfiguration = createConfiguration();
 export const bffApi = new CommonApi(bffConfiguration);
+
+const playlistConfiguration = createConfiguration();
+export const playlistApi = new PlaylistApi(playlistConfiguration);

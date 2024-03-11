@@ -1,11 +1,11 @@
 import { anonymousJWT } from 'api/auth';
-import { get } from 'react-hook-form';
 
 const AUTH_TOKEN = 'AUTH_TOKEN';
 const PROFILE_ID = 'PROFILE_ID';
 const PROFILE = 'PROFILE';
+const USER = 'USER';
 
-export const getAuthToken = async (): Promise<string | null> => {
+export const getAuthToken = () => {
   return localStorage.getItem(AUTH_TOKEN);
 };
 
@@ -35,13 +35,25 @@ export const getProfileTag = () => {
     const profileObj = JSON.parse(profile);
     return profileObj.tag;
   }
+
   return null;
 };
 
-export const getAuthTokenPayload = async (): Promise<
-  Record<string, unknown>
-> => {
-  const tokenParts = String(await getAuthToken()).split('.');
+export const setUser = (user: any) => {
+  localStorage.setItem(USER, JSON.stringify(user));
+};
+
+export const getUser = () => {
+  const user = localStorage.getItem(USER);
+  if (user) {
+    return JSON.parse(user);
+  }
+
+  return null;
+};
+
+export const getAuthTokenPayload = () => {
+  const tokenParts = String(getAuthToken()).split('.');
   return tokenParts[1] ? JSON.parse(atob(tokenParts[1])) : {};
 };
 
@@ -54,11 +66,13 @@ export const getAnonymousToken = async () => {
 export const removeAuthToken = () => {
   localStorage.removeItem(AUTH_TOKEN);
   localStorage.removeItem(PROFILE_ID);
+  localStorage.removeItem(PROFILE);
+  localStorage.removeItem(USER);
 };
 
-export const hasSessionToken = async () => {
-  if (await getAuthToken()) {
-    const payload = await getAuthTokenPayload();
+export const hasSessionToken = () => {
+  if (getAuthToken()) {
+    const payload = getAuthTokenPayload();
     return (payload.aud as Array<string>).includes('active');
   } else {
     return false;
@@ -67,7 +81,7 @@ export const hasSessionToken = async () => {
 
 export const isAuthed = async () => {
   if (await getAuthToken()) {
-    const payload = await getAuthTokenPayload();
+    const payload = getAuthTokenPayload();
     const currentTime = Math.floor(Date.now() / 1000);
 
     return (
@@ -75,7 +89,7 @@ export const isAuthed = async () => {
       currentTime < (payload.exp as number)
     );
   } else {
-    getAnonymousToken();
+    await getAnonymousToken();
     return false;
   }
 };

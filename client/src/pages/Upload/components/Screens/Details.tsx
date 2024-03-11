@@ -55,7 +55,7 @@ const Details = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `This text will be accessible by screen reading tools as well as our search tool; it's important to remember that different accessibilities are assisted by different kinds of description, and to add paragraph breaks to make it easier to consume.`
+              `This text will be accessible by screen reading tools as well as our search tool; it's important to remember that different accessibilities are assisted by different kinds of description. Add paragraph breaks to make it easier to consume.`
             )}
           </Typography>
         </Box>
@@ -70,9 +70,9 @@ const Details = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t('Upload your VTT Subtitle file here.')}{' '}
-            <strong>{t("However if you don't have one, don't worry!")}</strong>{' '}
+            <strong>{t("If you don't have one, don't worry!")}</strong>{' '}
             {t(
-              'At the end of this process a Subtitle file will be automatically generated for you and you will be able to edit it.'
+              'At the end of this process subtitles will be generated that you can edit.'
             )}
             <br />
           </Typography>
@@ -87,7 +87,7 @@ const Details = ({
             rules={{ required: true }}
             render={({ field }) => (
               <Select
-                label={t('Is this video made for kids? (required)')}
+                label={t('Is this content suitable for kids')}
                 fullWidth={false}
                 control={control}
                 {...field}
@@ -175,7 +175,7 @@ const Details = ({
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'You can include an expiration date for content that is only licensed for a period.'
+            'Content with a defined expiry will be hidden from public search. You can update this date later.'
           )}
         </Typography>
       </Box>

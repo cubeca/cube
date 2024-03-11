@@ -3,8 +3,13 @@ import {
   Box,
   TextField,
   Typography,
-  useTheme
+  Accordion,
+  useTheme,
+  AccordionSummary,
+  AccordionDetails,
+  Link
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Grid from '@mui/system/Unstable_Grid';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
@@ -15,6 +20,7 @@ import * as s from './Tags.styled';
 import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import { Controller } from 'react-hook-form';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import EmbedToggleInput from 'components/form/EmbedToggleInput';
 
 const Tags = ({ control, handleCaptchaVerification }: any) => {
   const { t } = useTranslation();
@@ -113,9 +119,9 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           )}
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
-          <strong>{t('You must separate tags with a comma. ')}</strong>
+          <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
-            'Being able to search by file type is extremely useful for people with disabilities and for educators.'
+            'Searching by file type is valuable for educators & accessibility.'
           )}
         </Typography>
         <s.StyledList>
@@ -125,10 +131,6 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
             <s.StyledListSpan>
               can refer to PDFs created for public programming.
             </s.StyledListSpan>
-          </s.StyledListItem>
-          <s.StyledListItem component="li">
-            <strong>&quot;Digital Publications&quot;</strong>{' '}
-            <s.StyledListSpan>distinguishes other PDFs.</s.StyledListSpan>
           </s.StyledListItem>
           <s.StyledListItem component="li">
             <strong>&quot;Collaborations&quot;</strong>{' '}
@@ -148,35 +150,21 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           fullWidth
           placeholder={t('Connection Tags')}
         />
+        <TagInput
+          control={control}
+          name="languageTags"
+          fullWidth
+          placeholder={t('Language Tags')}
+        />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
-          <strong>{t('You must separate tags with a comma. ')}</strong>
+          <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
-            'These tags allow your content to build wider and deeper connections to other cultural and community content. By adding languages and community terms as tags, you make it easier for people to discover. They also express how accessible your content is. And if you want content to be bundled under an exhibition name please create that tag. Some examples to help get you started:'
+            'These tags allow your content to build wider and deeper connections. By adding languages and community terms as tags, you make it easier for people to discover. If content for a traveling exhibition is being created by different organisation, you can connect it through a shared tag. Some examples:'
           )}
         </Typography>
         <Grid container>
           <Grid xs={12} md={4}>
-            <Typography component="ul" variant="body2" my={theme.spacing(4)}>
-              <li>Live Performance</li>
-              <li>Workshop</li>
-              <li>Kids workshop</li>
-              <li>Artist Talk</li>
-              <li>Language Teaching</li>
-              <li>Cultural Teaching</li>
-              <li>Studio Visit</li>
-              <li>Gathering</li>
-              <li>Book Reading</li>
-              <li>Subtitled</li>
-              <li>Sign language</li>
-              <li>Multilingual Subtitles</li>
-              <li>How-To</li>
-            </Typography>
-          </Grid>
-          <Grid xs={12} md={4}>
-            <Typography component="h6" variant="h6" my={theme.spacing(4)}>
-              Language Tags
-            </Typography>
-            <Typography component="ul" variant="body2" my={theme.spacing(2)}>
+            <Typography component="ul" variant="body2" mb={theme.spacing(2)}>
               <li>hən̓q̓əmin̓əm̓</li>
               <li>Kwak̓wala</li>
               <li>Sḵwx̱wú7mesh</li>
@@ -210,7 +198,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                   control={control}
                   name={`preferredTitle`}
                   fullWidth
-                  rules={{ required: index === 0 }}
+                  rules={{ required: false }}
                   defaultValue="Artist"
                 />
               </Grid>
@@ -223,8 +211,8 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                 control={control}
                 name={`artistName${index}`}
                 fullWidth
-                placeholder={t('Name (required)')}
-                rules={{ required: index === 0 }}
+                placeholder={t('Name')}
+                rules={{ required: false }}
               />
             </Grid>
             <Grid xs={12} sm={4}>
@@ -413,6 +401,90 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
             'Did you work with another organization on CubeCommons? Connect this content to their profile by selecting their name.'
           )}
         </Typography>
+      </Box>
+
+      <Box my={theme.spacing(10)}>
+        <Typography component="h4" variant="h4" my={theme.spacing(0.5)}>
+          {t('Embedding Content')}
+        </Typography>
+
+        <Grid container columnSpacing={2} rowSpacing={4}>
+          <Grid xs={12} sm={8}>
+            <Typography
+              component="p"
+              mr={theme.spacing(10)}
+              mt={theme.spacing(5)}
+            >
+              Toggle the embed code on or off for public users.
+            </Typography>
+          </Grid>
+
+          <Grid container justifyContent="flex-end" xs={12} sm={4}>
+            <EmbedToggleInput
+              defaultValue="true"
+              control={control}
+              name="embedToggleInput"
+            />
+          </Grid>
+        </Grid>
+
+        <TagInput
+          control={control}
+          name="embedContentWhitelist"
+          fullWidth
+          placeholder={t('Embedded Content Whitelist')}
+          hideIcon={true}
+          rules={{
+            required: false,
+            pattern: {
+              value:
+                /^(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(,\s*(?!https?:\/\/|www\.|ftp\.)([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})*$/,
+              message:
+                'Include only the domain name (e.g., example.com), not the full URL.'
+            }
+          }}
+        />
+
+        <Box my={theme.spacing(2.5)}>
+          <Accordion
+            style={{ backgroundColor: theme.palette.background.default }}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1-content"
+              id="panel1-header"
+            >
+              <Grid container>
+                <Box>
+                  <strong>
+                    {t('You must separate websites with a comma. ')}
+                  </strong>
+                  {t(
+                    'For added security prevent users from embedding your URL by creating a Whitelist of websites where your content can be embedded. Tap the arrow for links to code you can use to embed your content on a Whitelisted site.'
+                  )}
+                </Box>
+                <Box mt={1}>
+                  {t(
+                    '*Note: this will require you to develop a trigger. Learn how to generate a trigger using AI. Video tutorial coming soon.'
+                  )}
+                </Box>
+              </Grid>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography component="p" variant="body2">
+                {t('View code for embedding content')}{' '}
+                <Link
+                  href="https://codesandbox.io/p/sandbox/embed-content-d79nck"
+                  sx={{ color: 'inherit' }}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  here.
+                </Link>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        </Box>
       </Box>
 
       <Box my={theme.spacing(5)}>

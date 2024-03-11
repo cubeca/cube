@@ -5,6 +5,7 @@ import { body } from 'express-validator';
 import { Buffer } from 'node:buffer';
 import * as profile from '../db/queries/profile';
 import * as content from '../db/queries/content';
+import * as playlist from '../db/queries/playlist';
 import { getFile } from '../cloudflare';
 import { NonVideoPlayerInfo, UploadMetadata } from '../types/cloudflare';
 
@@ -140,9 +141,9 @@ export const getProfileData = async (profileId: string) => {
     }
   }
 
-  const dbResult = await content.listContentByProfileId(0, 1000, {}, profileId);
-  const data = dbResult.map(getApiResultFromDbRow);
-  const transformedContent = await transformContent(data);
+  const contentResult = await content.listContentByProfileId(0, 1000, {}, profileId);
+  const contentData = contentResult.map(getApiResultFromDbRow);
+  const transformedContent = await transformContent(contentData);
 
   return {
     ...profileResult,
@@ -161,9 +162,9 @@ export async function transformPlaylist(playlistItems: any[]) {
       const contentIds = newItem.data.contentIds;
 
       for (const [key, value] of Object.entries(urlFieldNames)) {
-        if (item[key]) {
-          newItem[value] = await getFile(item[key]);
-          delete newItem[key];
+        if (item.data[key]) {
+          newItem.data[value] = await getFile(item.data[key]);
+          delete newItem.data[key];
         }
       }
 
@@ -175,7 +176,8 @@ export async function transformPlaylist(playlistItems: any[]) {
           })
         );
 
-        const contentItems = contentData.map(getApiResultFromDbRow);
+        const filteredContentData = contentData.filter((item) => item !== undefined);
+        const contentItems = filteredContentData.map(getApiResultFromDbRow);
         const transformedContent = await transformContentSimple(contentItems);
 
         newItem.contentItems = transformedContent;
