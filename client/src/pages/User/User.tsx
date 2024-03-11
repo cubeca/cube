@@ -82,6 +82,7 @@ const User = () => {
                 cursor: 'pointer'
               }}
               onClick={() => setSelectedPanel('playlists')}
+              mb={2}
             >
               {t('Your Playlists')}
             </Typography>

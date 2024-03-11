@@ -4,12 +4,17 @@ import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
 import { useCallback, useEffect, useState, useRef } from 'react';
-import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
+import {
+  ContentStorage,
+  PlaylistStorage,
+  SearchFilters
+} from '@cubeca/cube-svc-client-oas-axios';
 import useDebounce from '../../../hooks/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { searchContent, searchPlaylists } from 'api/search';
 import Grid from '@mui/system/Unstable_Grid';
 import { Typography } from '@mui/material';
+import { display } from '@mui/system';
 
 interface UserContentProps {
   profile?: any;
@@ -18,12 +23,15 @@ interface UserContentProps {
 const UserContent = ({ profile }: UserContentProps) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState();
-  const [searchContentResults, setSearchContentResults] = useState(
-    profile.content
+  const [displayContent, setDisplayContent] = useState<ContentStorage[]>([]);
+  const [displayPlaylists, setDisplayPlaylists] = useState<PlaylistStorage[]>(
+    []
   );
-  const [searchPlaylistResults, setSearchPlaylistResults] = useState(
-    profile.playlists
-  );
+
+  const [searchContentResults, setSearchContentResults] = useState<
+    ContentStorage[]
+  >([]);
+
   const [isContentLoading, setIsContentLoading] = useState<boolean>(false);
   const [isPlaylistLoading, setIsPlaylistLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,10 +42,21 @@ const UserContent = ({ profile }: UserContentProps) => {
   const [contentLimit, setContentLimit] = useState<number>(12);
   const [playlistLimit, setPlaylistLimit] = useState<number>(4);
   const [hasMoreContentToLoad, setHasMoreContentToLoad] =
-    useState<boolean>(true);
+    useState<boolean>(false);
   const [hasMorePlaylistsToLoad, setHasMorePlaylistsToLoad] =
-    useState<boolean>(true);
-  const isInitialMount = useRef(true);
+    useState<boolean>(false);
+
+  useEffect(() => {
+    setIsPlaylistLoading(true);
+    setIsContentLoading(true);
+    if (profile.id) {
+      setDisplayContent(profile.content);
+      setDisplayPlaylists(profile.playlists);
+
+      setIsPlaylistLoading(false);
+      setIsContentLoading(false);
+    }
+  }, [profile]);
 
   const fetchContent = useCallback(
     async (newContentOffset: number) => {
@@ -82,6 +101,7 @@ const UserContent = ({ profile }: UserContentProps) => {
 
   const fetchPlaylist = useCallback(
     async (newPlaylistOffset: number) => {
+      console.log('calling detch playlist', newPlaylistOffset);
       setIsPlaylistLoading(true);
 
       const searchFilters: SearchFilters = {
@@ -97,13 +117,15 @@ const UserContent = ({ profile }: UserContentProps) => {
         );
 
         if (newPlaylistOffset === 0) {
-          setSearchPlaylistResults(playlistResults);
+          setDisplayPlaylists(playlistResults);
         } else {
-          setSearchPlaylistResults((prevPlaylistResults: any) => [
+          setDisplayPlaylists((prevPlaylistResults: any) => [
             ...prevPlaylistResults,
             ...playlistResults
           ]);
         }
+
+        console.log('playlistResults', playlistResults);
 
         if (playlistResults.length === 0) {
           setHasMorePlaylistsToLoad(false);
@@ -123,21 +145,28 @@ const UserContent = ({ profile }: UserContentProps) => {
     [debouncedSearchTerm, categoryFilter]
   );
 
-  useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
-      fetchContent(0);
-    }
-  }, [fetchContent, debouncedSearchTerm]);
+  // useEffect(() => {
+  //   if (isInitialMount.current) {
+  //     isInitialMount.current = false;
+  //   } else {
+  //     fetchContent(0);
+  //   }
+  // }, [fetchContent, debouncedSearchTerm]);
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
+    if (debouncedSearchTerm.trim() !== '') {
       fetchPlaylist(0);
+    } else {
+      setDisplayPlaylists(profile.playlists);
     }
-  }, [fetchPlaylist, debouncedSearchTerm]);
+  }, [debouncedSearchTerm, categoryFilter]);
+
+  // useEffect(() => {
+  //   if (searchTerm.trim() === '' && categoryFilter === 'all') {
+  //     setSearchContentResults(profile.content);
+  //     setSearchPlaylistResults(profile.playlists);
+  //   }
+  // }, [debouncedSearchTerm, categoryFilter]);
 
   const handleLoadMoreContent = () => {
     fetchContent(contentOffset);
@@ -146,16 +175,6 @@ const UserContent = ({ profile }: UserContentProps) => {
   const handleLoadMorePlaylist = () => {
     fetchPlaylist(playlistOffset);
   };
-
-  const displayContent =
-    searchTerm.trim() !== '' || categoryFilter
-      ? searchContentResults
-      : profile.content;
-
-  const displayPlaylists =
-    searchTerm.trim() !== '' || categoryFilter
-      ? searchPlaylistResults
-      : profile.playlists;
 
   return (
     <s.UserContentWrapper>
@@ -175,16 +194,17 @@ const UserContent = ({ profile }: UserContentProps) => {
                 <span>Playlists</span>
               </Typography>
               {!isPlaylistLoading &&
-                debouncedSearchTerm !== '' &&
-                searchPlaylistResults.length === 0 && (
+                displayPlaylists &&
+                displayPlaylists.length === 0 && (
                   <Grid>
                     <Typography component="p" variant="body1" mt={2}>
-                      <span>No playlists found</span>
+                      <span>No playlists to display</span>
                     </Typography>
                   </Grid>
                 )}
             </Grid>
           </s.ContentHeader>
+
           <s.UserContent>
             {isPlaylistLoading ? (
               <Lottie
@@ -195,6 +215,9 @@ const UserContent = ({ profile }: UserContentProps) => {
             ) : error ? (
               <p>{error}</p>
             ) : (
+              !isPlaylistLoading &&
+              displayPlaylists &&
+              displayPlaylists.length > 0 &&
               displayPlaylists?.map((key: any) => (
                 <ContentCard
                   key={key.id}
@@ -206,20 +229,18 @@ const UserContent = ({ profile }: UserContentProps) => {
               ))
             )}
 
-            {!isPlaylistLoading &&
-              hasMorePlaylistsToLoad &&
-              debouncedSearchTerm.trim() !== '' && (
-                <s.LoadMore onClick={handleLoadMorePlaylist}>
-                  <span className="inner">
-                    <span className="label">{t('Load More Results')}</span>
-                  </span>
-                </s.LoadMore>
-              )}
+            {!isPlaylistLoading && hasMorePlaylistsToLoad && (
+              <s.LoadMore onClick={handleLoadMorePlaylist}>
+                <span className="inner">
+                  <span className="label">{t('Load More Results')}</span>
+                </span>
+              </s.LoadMore>
+            )}
           </s.UserContent>
         </>
       )}
 
-      {categoryFilter !== 'playlist' && (
+      {/* {categoryFilter !== 'playlist' && (
         <>
           <s.ContentHeader container>
             <Grid mt={4}>
@@ -263,18 +284,16 @@ const UserContent = ({ profile }: UserContentProps) => {
                 />
               ))
             )}
-            {!isContentLoading &&
-              debouncedSearchTerm.trim() !== '' &&
-              hasMoreContentToLoad && (
-                <s.LoadMore onClick={handleLoadMoreContent}>
-                  <span className="inner">
-                    <span className="label">{t('Load More Results')}</span>
-                  </span>
-                </s.LoadMore>
-              )}
+            {!isContentLoading && hasMoreContentToLoad && (
+              <s.LoadMore onClick={handleLoadMoreContent}>
+                <span className="inner">
+                  <span className="label">{t('Load More Results')}</span>
+                </span>
+              </s.LoadMore>
+            )}
           </s.UserContent>
         </>
-      )}
+      )} */}
     </s.UserContentWrapper>
   );
 };

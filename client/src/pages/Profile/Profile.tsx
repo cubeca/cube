@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import ViewSection from './View/ViewSection';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { getAuthTokenPayload } from 'utils/auth';
+import { getAuthTokenPayload, getProfileId } from 'utils/auth';
 import Button from 'components/Button';
 import UserContent from './UserContent';
 import Footer from 'components/layout/Footer';
@@ -24,6 +24,7 @@ const Profile = () => {
   const user = getAuthTokenPayload();
   const { t } = useTranslation();
   const { data: profile, isLoading, refetch } = useProfile();
+  const loggedInProfileId = getProfileId();
   const [playlist, setPlaylist] = useState(null);
   const [detailedPlaylists, setDetailedPlaylists] = useState<any[]>([]);
   const [transformedPlaylists, setTransformedPlaylists] = useState<any[]>([]);
@@ -105,7 +106,7 @@ const Profile = () => {
 
       <Grid container>
         <Grid xs={10} xsOffset={1} md={7}>
-          {isLoggedIn && (
+          {isLoggedIn && loggedInProfileId === profileId && (
             <s.UserContentHeader
               direction="row"
               spacing={2}
