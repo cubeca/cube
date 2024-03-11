@@ -65,37 +65,39 @@ const EmbeddedPlaylist = () => {
     handleGetPlaylist();
   }, []);
 
-  return isDomainAllowed && playlist ? (
-    <Grid container>
-      <Grid xs={10} xsOffset={1} md={8}>
-        {playlist ? (
-          <div>
-            <PlaylistPanel
-              profileId={''}
-              userId={''}
-              playlists={playlist?.data}
-              cameFromSinglePlaylist={true}
-              refetchPlaylist={refetchPlaylist}
-              currentPlaylistId={playlistId}
-            />
-          </div>
-        ) : (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <Lottie
-              animationData={LoadingCubes}
-              loop
-              autoplay
-              style={{ height: '500px', width: '500px' }}
-            />
-          </Box>
-        )}
+  return !isLoading ? (
+    isDomainAllowed && playlist ? (
+      <Grid container>
+        <Grid xs={10} xsOffset={1} md={8}>
+          {playlist ? (
+            <div>
+              <PlaylistPanel
+                profileId={''}
+                userId={''}
+                playlists={playlist.data}
+                cameFromSinglePlaylist={true}
+                refetchPlaylist={refetchPlaylist}
+                currentPlaylistId={playlistId}
+              />
+            </div>
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Lottie
+                animationData={LoadingCubes}
+                loop
+                autoplay
+                style={{ height: '500px', width: '500px' }}
+              />
+            </Box>
+          )}
+        </Grid>
       </Grid>
-    </Grid>
-  ) : (
-    <Box>
-      <h1>This playlist is not allowed to be embedded.</h1>
-    </Box>
-  );
+    ) : (
+      <Box>
+        <h1>This playlist is not allowed to be embedded.</h1>
+      </Box>
+    )
+  ) : null;
 };
 
 export default EmbeddedPlaylist;
