@@ -357,7 +357,7 @@ const Video = () => {
                 justifyContent="left"
                 sx={{ my: 3, typography: 'body2' }}
               >
-                {content?.type === 'document' && (
+                {(content?.type === 'document' || content?.type === 'pdf') && (
                   <s.ActionsWrapper>
                     <DownloadIcon />
                     <s.Action to={docUrl || ''}>Download</s.Action>
