@@ -14,51 +14,31 @@ import { useTranslation } from 'react-i18next';
 import { searchContent, searchPlaylists } from 'api/search';
 import Grid from '@mui/system/Unstable_Grid';
 import { Typography } from '@mui/material';
-import { display } from '@mui/system';
 
 interface UserContentProps {
   profile?: any;
 }
 
 const UserContent = ({ profile }: UserContentProps) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState();
-  const [displayContent, setDisplayContent] = useState<ContentStorage[]>([]);
-  const [displayPlaylists, setDisplayPlaylists] = useState<PlaylistStorage[]>(
-    []
-  );
-
-  const [searchContentResults, setSearchContentResults] = useState<
-    ContentStorage[]
-  >([]);
-
-  const [isContentLoading, setIsContentLoading] = useState<boolean>(false);
-  const [isPlaylistLoading, setIsPlaylistLoading] = useState<boolean>(false);
+  const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
+  const [playlistResults, setPlaylistResults] = useState<PlaylistStorage[]>([]);
+  const [isContentLoading, setIsContentLoading] = useState(false);
+  const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
+  const debouncedSearchTerm = useDebounce(searchTerm, 1000, '');
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
   const [contentOffset, setContentOffset] = useState<number>(0);
   const [playlistOffset, setPlaylistOffset] = useState<number>(0);
-  const debouncedSearchTerm = useDebounce(searchTerm, 1000);
-  const { t } = useTranslation();
   const [contentLimit, setContentLimit] = useState<number>(12);
-  const [playlistLimit, setPlaylistLimit] = useState<number>(4);
+  const [playlistLimit, setPlaylistLimit] = useState<number>(3);
   const [hasMoreContentToLoad, setHasMoreContentToLoad] =
-    useState<boolean>(false);
-  const [hasMorePlaylistsToLoad, setHasMorePlaylistsToLoad] =
-    useState<boolean>(false);
+    useState<boolean>(true);
+  const [hasMorePlaylistToLoad, setHasMorePlaylistsToLoad] =
+    useState<boolean>(true);
 
-  useEffect(() => {
-    setIsPlaylistLoading(true);
-    setIsContentLoading(true);
-    if (profile.id) {
-      setDisplayContent(profile.content);
-      setDisplayPlaylists(profile.playlists);
-
-      setIsPlaylistLoading(false);
-      setIsContentLoading(false);
-    }
-  }, [profile]);
-
-  const fetchContent = useCallback(
+  const fetchContentSearchResults = useCallback(
     async (newContentOffset: number) => {
       setIsContentLoading(true);
       try {
@@ -67,30 +47,33 @@ const UserContent = ({ profile }: UserContentProps) => {
           profileId: profile?.id
         };
 
-        const results = await searchContent(
+        console.log('i am here');
+        const contentResults = await searchContent(
           debouncedSearchTerm.trim(),
           newContentOffset,
-          contentLimit,
+          newContentOffset === 0 ? 11 : contentLimit,
           searchFilters
         );
 
-        const newResults = Array.isArray(results) ? results : [];
-        if (newResults.length <= 12) {
-          setHasMoreContentToLoad(false);
-        }
-
         if (newContentOffset === 0) {
-          setSearchContentResults(newResults);
-        } else {
-          setSearchContentResults((prevResults: any) => [
-            ...prevResults,
-            ...newResults
+          setContentResults(contentResults);
+        } else if (contentResults.length > 0) {
+          setContentResults((prevContentResults) => [
+            ...prevContentResults,
+            ...contentResults
           ]);
         }
 
-        setContentOffset(newContentOffset + contentLimit);
+        if (contentResults.length === 0) {
+          setHasMoreContentToLoad(false);
+        } else {
+          setHasMoreContentToLoad(true);
+        }
+
+        setContentOffset(
+          newContentOffset + (newContentOffset === 0 ? 11 : contentLimit)
+        );
       } catch (error) {
-        console.error('An error occurred during the search:', error);
         setError('Failed to load search results');
       } finally {
         setIsContentLoading(false);
@@ -99,9 +82,8 @@ const UserContent = ({ profile }: UserContentProps) => {
     [debouncedSearchTerm, categoryFilter]
   );
 
-  const fetchPlaylist = useCallback(
+  const fetchPlaylistSearchResults = useCallback(
     async (newPlaylistOffset: number) => {
-      console.log('calling detch playlist', newPlaylistOffset);
       setIsPlaylistLoading(true);
 
       const searchFilters: SearchFilters = {
@@ -112,20 +94,18 @@ const UserContent = ({ profile }: UserContentProps) => {
         const playlistResults = await searchPlaylists(
           debouncedSearchTerm.trim(),
           newPlaylistOffset,
-          newPlaylistOffset === 0 ? 3 : playlistLimit,
+          newPlaylistOffset === 0 ? 2 : playlistLimit,
           searchFilters
         );
 
         if (newPlaylistOffset === 0) {
-          setDisplayPlaylists(playlistResults);
+          setPlaylistResults(playlistResults);
         } else {
-          setDisplayPlaylists((prevPlaylistResults: any) => [
+          setPlaylistResults((prevPlaylistResults) => [
             ...prevPlaylistResults,
             ...playlistResults
           ]);
         }
-
-        console.log('playlistResults', playlistResults);
 
         if (playlistResults.length === 0) {
           setHasMorePlaylistsToLoad(false);
@@ -145,155 +125,136 @@ const UserContent = ({ profile }: UserContentProps) => {
     [debouncedSearchTerm, categoryFilter]
   );
 
-  // useEffect(() => {
-  //   if (isInitialMount.current) {
-  //     isInitialMount.current = false;
-  //   } else {
-  //     fetchContent(0);
-  //   }
-  // }, [fetchContent, debouncedSearchTerm]);
+  useEffect(() => {
+    fetchContentSearchResults(0); // Fetch initial content with offset 0
+  }, []);
 
   useEffect(() => {
-    if (debouncedSearchTerm.trim() !== '') {
-      fetchPlaylist(0);
-    } else {
-      setDisplayPlaylists(profile.playlists);
-    }
-  }, [debouncedSearchTerm, categoryFilter]);
+    fetchPlaylistSearchResults(0); // Fetch initial content and playlist with offset 0
+  }, []);
 
-  // useEffect(() => {
-  //   if (searchTerm.trim() === '' && categoryFilter === 'all') {
-  //     setSearchContentResults(profile.content);
-  //     setSearchPlaylistResults(profile.playlists);
-  //   }
-  // }, [debouncedSearchTerm, categoryFilter]);
-
-  const handleLoadMoreContent = () => {
-    fetchContent(contentOffset);
+  const handleContentLoadMore = () => {
+    fetchContentSearchResults(contentOffset);
   };
 
-  const handleLoadMorePlaylist = () => {
-    fetchPlaylist(playlistOffset);
+  const handlePlaylistLoadMore = () => {
+    fetchPlaylistSearchResults(playlistOffset);
   };
 
   return (
     <s.UserContentWrapper>
-      <UserContentFilter
-        setSearchTerm={setSearchTerm}
-        categoryFilter={categoryFilter}
-        setCategoryFilter={setCategoryFilter}
-      />
+      <Grid container>
+        <Grid xs={10} xsOffset={1}>
+          <UserContentFilter
+            setSearchTerm={setSearchTerm}
+            categoryFilter={categoryFilter}
+            setCategoryFilter={setCategoryFilter}
+          />
 
-      {(categoryFilter === 'all' ||
-        categoryFilter === 'playlist' ||
-        categoryFilter === undefined) && (
-        <>
-          <s.ContentHeader container>
-            <Grid>
-              <Typography component="h3" variant="h3">
-                <span>Playlists</span>
-              </Typography>
-              {!isPlaylistLoading &&
-                displayPlaylists &&
-                displayPlaylists.length === 0 && (
-                  <Grid>
-                    <Typography component="p" variant="body1" mt={2}>
-                      <span>No playlists to display</span>
-                    </Typography>
-                  </Grid>
+          {(categoryFilter === 'all' ||
+            categoryFilter === 'playlist' ||
+            categoryFilter === undefined) && (
+            <>
+              <s.ContentHeader container>
+                <Grid>
+                  <Typography component="h3" variant="h3">
+                    <span>Playlists</span>
+                  </Typography>
+                  {!isPlaylistLoading && playlistResults.length === 0 && (
+                    <Grid>
+                      <Typography component="p" variant="body1" mt={2}>
+                        <span>No playlists found</span>
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
+              </s.ContentHeader>
+              <s.UserContent>
+                {isPlaylistLoading ? (
+                  <Lottie
+                    className="loading-cubes"
+                    animationData={LoadingCubes}
+                    loop={true}
+                  />
+                ) : error ? (
+                  <p>{error}</p>
+                ) : (
+                  playlistResults?.map((key: any) => (
+                    <ContentCard
+                      key={key.id}
+                      image={key.coverImageUrl?.playerInfo?.publicUrl || ''}
+                      title={key.title}
+                      url={`/playlist/${key.id}`}
+                      icon={'playlist'}
+                    />
+                  ))
                 )}
-            </Grid>
-          </s.ContentHeader>
 
-          <s.UserContent>
-            {isPlaylistLoading ? (
-              <Lottie
-                className="loading-cubes"
-                animationData={LoadingCubes}
-                loop={true}
-              />
-            ) : error ? (
-              <p>{error}</p>
-            ) : (
-              !isPlaylistLoading &&
-              displayPlaylists &&
-              displayPlaylists.length > 0 &&
-              displayPlaylists?.map((key: any) => (
-                <ContentCard
-                  key={key.id}
-                  image={key.coverImageUrl?.playerInfo?.publicUrl || ''}
-                  title={key.title}
-                  url={`/playlist/${key.id}`}
-                  icon={'playlist'}
-                />
-              ))
-            )}
-
-            {!isPlaylistLoading && hasMorePlaylistsToLoad && (
-              <s.LoadMore onClick={handleLoadMorePlaylist}>
-                <span className="inner">
-                  <span className="label">{t('Load More Results')}</span>
-                </span>
-              </s.LoadMore>
-            )}
-          </s.UserContent>
-        </>
-      )}
-
-      {/* {categoryFilter !== 'playlist' && (
-        <>
-          <s.ContentHeader container>
-            <Grid mt={4}>
-              <Typography component="h3" variant="h3">
-                <span>Content</span>
-              </Typography>
-              {!isContentLoading &&
-                debouncedSearchTerm !== '' &&
-                searchContentResults.length === 0 && (
-                  <Grid>
-                    <Typography component="p" variant="body1" mt={2}>
-                      <span>No content found</span>
-                    </Typography>
-                  </Grid>
+                {!isPlaylistLoading && hasMorePlaylistToLoad && (
+                  <s.LoadMore onClick={handlePlaylistLoadMore}>
+                    <span className="inner">
+                      <span className="label">{t('Load More Results')}</span>
+                    </span>
+                  </s.LoadMore>
                 )}
-            </Grid>
-          </s.ContentHeader>
-          <s.UserContent>
-            {isContentLoading ? (
-              <Lottie
-                className="loading-cubes"
-                animationData={LoadingCubes}
-                loop={true}
-              />
-            ) : error ? (
-              <p>{error}</p>
-            ) : (
-              displayContent?.map((item: any) => (
-                <ContentCard
-                  key={item.id}
-                  image={
-                    item.coverImageUrl?.playerInfo?.publicUrl ||
-                    item.coverImageExternalUrl ||
-                    ''
-                  }
-                  title={item.title}
-                  url={`/content/${item.id}`}
-                  icon={item.type}
-                  hasSignLanguage={item.hasSignLanguage}
-                  coverImageAltText={item.coverImageText}
-                />
-              ))
-            )}
-            {!isContentLoading && hasMoreContentToLoad && (
-              <s.LoadMore onClick={handleLoadMoreContent}>
-                <span className="inner">
-                  <span className="label">{t('Load More Results')}</span>
-                </span>
-              </s.LoadMore>
-            )}
-          </s.UserContent>
-        </>
-      )} */}
+              </s.UserContent>
+            </>
+          )}
+
+          {categoryFilter !== 'playlist' && (
+            <>
+              <s.ContentHeader container>
+                <Grid mt={8}>
+                  <Typography component="h3" variant="h3">
+                    <span>Content</span>
+                  </Typography>
+                  {!isContentLoading && contentResults.length === 0 && (
+                    <Grid>
+                      <Typography component="p" variant="body1" mt={2}>
+                        <span>No content found</span>
+                      </Typography>
+                    </Grid>
+                  )}
+                </Grid>
+              </s.ContentHeader>
+              <s.UserContent>
+                {isContentLoading ? (
+                  <Lottie
+                    className="loading-cubes"
+                    animationData={LoadingCubes}
+                    loop={true}
+                  />
+                ) : error ? (
+                  <p>{error}</p>
+                ) : (
+                  contentResults?.map((key: any) => (
+                    <ContentCard
+                      key={key.id}
+                      image={
+                        key.coverImageUrl?.playerInfo?.publicUrl ||
+                        key.coverImageExternalUrl ||
+                        ''
+                      }
+                      title={key.title}
+                      url={`/content/${key.id}`}
+                      icon={key.type}
+                      hasSignLanguage={key.hasSignLanguage}
+                    />
+                  ))
+                )}
+
+                {!isContentLoading && hasMoreContentToLoad && (
+                  <s.LoadMore onClick={handleContentLoadMore}>
+                    <span className="inner">
+                      <span className="label">{t('Load More Results')}</span>
+                    </span>
+                  </s.LoadMore>
+                )}
+              </s.UserContent>
+            </>
+          )}
+        </Grid>
+      </Grid>
     </s.UserContentWrapper>
   );
 };
