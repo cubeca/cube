@@ -72,6 +72,7 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
           <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
             {t('Has Sign Language')}
           </MenuItem.li>
+          <MenuItem.li value={'playlist'}>{t('Playlist')}</MenuItem.li>
         </Select>
       </form>
     </s.Filters>

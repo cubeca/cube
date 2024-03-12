@@ -1,8 +1,6 @@
 import { Stack, Typography } from '@mui/material';
-import Button from 'components/Button';
 import ContentCard from 'components/ContentCard/ContentCard';
 import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 
 interface ContentListProps {
   content: any[];
@@ -12,14 +10,7 @@ interface ContentListProps {
   handleNewMedia?: () => void;
 }
 
-const ContentListPlaylists: FC<ContentListProps> = ({
-  heading,
-  content,
-  isLoggedIn = false,
-  playlistId,
-  handleNewMedia
-}) => {
-  const { t } = useTranslation();
+const ContentListPlaylists: FC<ContentListProps> = ({ heading, content }) => {
   console.log(content);
   return (
     <Stack>
@@ -33,14 +24,14 @@ const ContentListPlaylists: FC<ContentListProps> = ({
           <ContentCard
             key={c.id}
             image={
-              c.data?.coverImageUrl?.playerInfo?.publicUrl ||
+              c?.coverImageUrl?.playerInfo?.publicUrl ||
               c.coverImageExternalUrl ||
               ''
             }
-            title={c.data.title}
+            title={c.title}
             url={`/playlist/${c.id}`}
             icon={'playlist'}
-            coverImageAltText={c.data.title}
+            coverImageAltText={c.title}
           />
         ))}
       </Stack>

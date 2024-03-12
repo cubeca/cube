@@ -13,6 +13,11 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
+
+import EventEmitter from 'events';
+import { progressEmitter } from 'api/upload';
+import UploadProgress from './components/Screens/UploadProgress';
+
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
     [key: string]: { name: string; url?: string; preferredTitle?: string }[];
@@ -257,6 +262,10 @@ const Upload = () => {
     {
       label: 'Terms of Service',
       view: <TOS />
+    },
+    {
+      label: 'Upload',
+      view: <UploadProgress />
     }
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);

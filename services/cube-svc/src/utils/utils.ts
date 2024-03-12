@@ -5,7 +5,6 @@ import { body } from 'express-validator';
 import { Buffer } from 'node:buffer';
 import * as profile from '../db/queries/profile';
 import * as content from '../db/queries/content';
-import * as playlist from '../db/queries/playlist';
 import { getFile } from '../cloudflare';
 import { NonVideoPlayerInfo, UploadMetadata } from '../types/cloudflare';
 
@@ -141,17 +140,8 @@ export const getProfileData = async (profileId: string) => {
     }
   }
 
-  const contentResult = await content.listContentByProfileId(0, 1000, {}, profileId);
-  const contentData = contentResult.map(getApiResultFromDbRow);
-  const transformedContent = await transformContent(contentData);
-
-  const playlistResult = await playlist.listPlaylistsByProfileOrUserId(0, 1000, profileId, '');
-  const transformedPlaylists = await transformPlaylist(playlistResult);
-
   return {
-    ...profileResult,
-    content: transformedContent,
-    playlists: transformedPlaylists
+    ...profileResult
   };
 };
 
@@ -202,6 +192,27 @@ export async function transformContentSimple(contentItems: any[]) {
       const newItem = { ...item };
 
       // Process URL fields
+      for (const [key, value] of Object.entries(urlFieldNames)) {
+        if (item[key]) {
+          newItem[value] = await getFile(item[key]);
+          delete newItem[key];
+        }
+      }
+
+      return newItem;
+    })
+  );
+}
+
+export async function transformPlaylistSimple(playlistItems: any[]) {
+  const urlFieldNames = {
+    coverImageFileId: 'coverImageUrl'
+  };
+
+  return Promise.all(
+    playlistItems.map(async (item) => {
+      const newItem = { ...item };
+
       for (const [key, value] of Object.entries(urlFieldNames)) {
         if (item[key]) {
           newItem[value] = await getFile(item[key]);

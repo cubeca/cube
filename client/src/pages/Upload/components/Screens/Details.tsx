@@ -176,7 +176,7 @@ const Details = ({
         />
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Content with a defined expiry will disappear from search & your profile. You can update this date later.'
+            'Content with a defined expiry will be hidden from public search. You can update this date later.'
           )}
         </Typography>
       </Box>

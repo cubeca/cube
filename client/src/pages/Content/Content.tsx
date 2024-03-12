@@ -147,14 +147,18 @@ const Video = () => {
 
   useEffect(() => {
     if (
-      (embedContentWhitelist && embedContentWhitelist?.length > 0) ||
-      !embedToggleEnabled
+      (embedContentWhitelist &&
+        embedContentWhitelist.length > 0 &&
+        !(
+          embedContentWhitelist.length === 1 && embedContentWhitelist[0] === ''
+        )) ||
+      (!embedToggleEnabled && embedToggleEnabled !== undefined)
     ) {
       setShowEmbedModal(false);
     } else {
       setShowEmbedModal(true);
     }
-  }, [isLoading, embedContentWhitelist, embedToggleEnabled]);
+  }, [isLoading, content, embedContentWhitelist, embedToggleEnabled]);
 
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);

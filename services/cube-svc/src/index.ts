@@ -7,7 +7,7 @@ import * as profileQueries from './db/queries/profile';
 import * as playlistQueries from './db/queries/playlist';
 
 import { allowIfAnyOf } from './middleware/auth';
-import { getApiResultFromDbRow, transformContent, transformPlaylist } from './utils/utils';
+import { getApiResultFromDbRow, transformContent, transformPlaylistSimple } from './utils/utils';
 
 import { cloudflare } from './cloudflare';
 import { profile } from './profile';
@@ -93,7 +93,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   if (!scope || scope === 'playlist') {
     try {
       const playlistSearchResult = await playlistQueries.searchPlaylist(offset, limit, filters, searchTerm);
-      const data = playlistSearchResult.map((item) => item.dataValues);
+      const playlistData = playlistSearchResult.map(getApiResultFromDbRow);
 
       searchPlaylistResult.meta = {
         offset: offset,
@@ -102,7 +102,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
       };
 
       searchPlaylistResult.status = 200;
-      searchPlaylistResult.data = await transformPlaylist(data);
+      searchPlaylistResult.data = await transformPlaylistSimple(playlistData);
     } catch (error: any) {
       searchPlaylistResult.status = error.response?.status || 500;
       searchPlaylistResult.error = error.message;
