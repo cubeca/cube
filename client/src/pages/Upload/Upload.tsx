@@ -16,6 +16,7 @@ import { getProfileId } from 'utils/auth';
 
 import EventEmitter from 'events';
 import { progressEmitter } from 'api/upload';
+import UploadProgress from './components/Screens/UploadProgress';
 
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
@@ -184,12 +185,6 @@ const Upload = () => {
     const contributors = getContributors(values);
     const collaborators = [profileId, values.collaborators];
 
-    progressEmitter.on('progress', ({ bytesUploaded, bytesTotal }) => {
-      // Update UI with progress information
-      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-      console.log(`Upload Progress: ${percentage}%`);
-    });
-
     addContent(
       {
         profileId: profileId!,
@@ -268,6 +263,10 @@ const Upload = () => {
     {
       label: 'Terms of Service',
       view: <TOS />
+    },
+    {
+      label: 'Upload',
+      view: <UploadProgress />
     }
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
