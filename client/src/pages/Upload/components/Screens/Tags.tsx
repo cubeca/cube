@@ -150,6 +150,12 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           fullWidth
           placeholder={t('Connection Tags')}
         />
+        <TagInput
+          control={control}
+          name="languageTags"
+          fullWidth
+          placeholder={t('Language Tags')}
+        />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
           <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
@@ -454,7 +460,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
                     {t('You must separate websites with a comma. ')}
                   </strong>
                   {t(
-                    'For added security prevent users from embedding your URL by creating a Whitelist of websites where your content can be embedded. Separate websites with a comma. Tap the arrow for links to code you can use to embed your content on a Whitelisted site.'
+                    'For added security prevent users from embedding your URL by creating a Whitelist of websites where your content can be embedded. Tap the arrow for links to code you can use to embed your content on a Whitelisted site.'
                   )}
                 </Box>
                 <Box mt={1}>

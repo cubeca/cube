@@ -39,7 +39,11 @@ const Video = () => {
     useState(false);
 
   useEffect(() => {
-    if (!isLoading && embedContentWhitelist) {
+    if (
+      !isLoading &&
+      embedContentWhitelist &&
+      !(embedContentWhitelist.length === 1 && embedContentWhitelist[0] === '')
+    ) {
       setIsDomainAllowed(false);
       const handleParentMessage = (event: { origin: string }) => {
         checkIsDomainAllowed(event.origin);

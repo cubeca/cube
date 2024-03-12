@@ -193,6 +193,9 @@ const Upload = () => {
         collaborators: collaborators,
         contributors: contributors,
         tags: values.tags.split(',').map((tag: string) => tag.trim()),
+        languageTags: values.languageTags
+          .split(',')
+          .map((tag: string) => tag.trim()),
         externalUrl: values.link ? values.link : null,
         embedToggleEnabled: values.embedToggleInput,
         isSuitableForChildren: values.audience
