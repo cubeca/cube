@@ -29,7 +29,10 @@ const mediaTypes = {
   document: [
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'text/plain'
+    'text/plain',
+    'application/rtf',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
   ]
 };
 
@@ -50,7 +53,7 @@ const mediaTypesExtensions = {
   audio: ['mp3', 'wav', 'ogg', 'aac'],
   pdf: ['pdf'],
   image: ['jpeg', 'png', 'jpg', 'gif'],
-  document: ['doc', 'docx', 'odt', 'rtf', 'txt']
+  document: ['doc', 'docx', 'odt', 'rtf', 'txt', 'xls', 'xlsx']
 };
 
 export const handleFileChange = (

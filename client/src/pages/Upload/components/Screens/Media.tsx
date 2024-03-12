@@ -119,7 +119,7 @@ const Media = ({
   const audioFileTypes = ['MP3', 'WAV', 'OGG', 'AAC'];
   const pdfFileTypes = ['PDF'];
   const imageFileTypes = ['JPG', 'JPEG', 'PNG', 'GIF'];
-  const documentFileTypes = ['DOC', 'DOCX', 'ODT', 'RTF', 'TXT'];
+  const documentFileTypes = ['DOC', 'DOCX', 'ODT', 'RTF', 'TXT', 'XLS', 'XLSX'];
 
   const showField = (field: string) => {
     const reqMap = {
