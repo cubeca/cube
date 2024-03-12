@@ -5,6 +5,9 @@ import {
   ReportContentRequest
 } from '@cubeca/cube-svc-client-oas-axios';
 
+import EventEmitter from 'events';
+const progressEmitter = new EventEmitter();
+
 export type CategoryType =
   | 'all'
   | 'video'
@@ -66,6 +69,12 @@ export const addContent = async ({
 
   if (mediaFile) {
     const fileId = await upload(mediaFile, payload.profileId);
+
+    progressEmitter.on('progress', ({ bytesUploaded, bytesTotal }) => {
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+      console.log(`Upload Progress from client: ${percentage}%`);
+    });
+
     if (fileId) {
       payload.mediaFileId = fileId;
     }
