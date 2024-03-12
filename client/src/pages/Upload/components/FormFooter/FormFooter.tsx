@@ -5,6 +5,10 @@ import Button from 'components/Button';
 import * as s from './FormFooter.styled';
 import Lottie from 'lottie-react';
 import LoadingAnimation from 'assets/animations/loading-circle.json';
+import { progressEmitter } from 'api/upload';
+import { useEffect, useState } from 'react';
+import Progress from '../Progress';
+import UploadProgress from '../Screens/UploadProgress';
 
 interface FormFooterProps {
   isLoading: boolean;
@@ -26,7 +30,8 @@ const FormFooter = ({
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const lastScreen = screens.length - 1;
+  const lastScreen = screens.length - 2;
+  const onUploadScreen = screens.length - 1;
 
   const BackButton =
     screenIndex > 0 ? (
@@ -44,7 +49,10 @@ const FormFooter = ({
   const nextButton =
     screenIndex == lastScreen ? (
       <Button
-        onClick={handleSubmit}
+        onClick={() => {
+          handleSubmit();
+          onScreenIndexChange(++screenIndex);
+        }}
         fullWidth={false}
         disabled={isLoading || isNextDisabled}
       >
@@ -93,20 +101,21 @@ const FormFooter = ({
     );
 
   const Message = isLoading ? WaitMessage : SuccessMessage;
-
-  return (
-    <s.FormFooter className={'upload__footer'} my={theme.spacing(5)}>
-      <Grid container>
-        <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
-          <s.Messages>{Message}</s.Messages>
-          <s.Actions>
-            {BackButton}
-            {nextButton}
-          </s.Actions>
+  if (screenIndex !== onUploadScreen)
+    return (
+      <s.FormFooter className={'upload__footer'} my={theme.spacing(5)}>
+        <Grid container>
+          <Grid xs={10} xsOffset={1} md={6} mdOffset={3}>
+            <s.Messages>{Message}</s.Messages>
+            <s.Actions>
+              {BackButton}
+              {nextButton}
+            </s.Actions>
+          </Grid>
         </Grid>
-      </Grid>
-    </s.FormFooter>
-  );
+      </s.FormFooter>
+    );
+  else return null;
 };
 
 export default FormFooter;
