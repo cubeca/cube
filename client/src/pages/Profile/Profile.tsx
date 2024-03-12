@@ -106,7 +106,7 @@ const Profile = () => {
 
       <Grid container>
         <Grid xs={10} xsOffset={1} md={7}>
-          {isLoggedIn && loggedInProfileId === profileId && (
+          {isLoggedIn && loggedInProfileId === profile.id && (
             <s.UserContentHeader
               direction="row"
               spacing={2}
@@ -145,18 +145,22 @@ const Profile = () => {
                 </Typography>
               </s.UserContentSubWrapper>
               <s.UserContentSubWrapper>
-                <Button onClick={openPlaylistModal} fullWidth={false}>
-                  {t('+ Playlist')}
-                </Button>
-                <Button onClick={handleNewMedia} fullWidth={false}>
-                  {t('+ Upload')}
-                </Button>
+                {selectedPanel === 'playlists' ? (
+                  <Button onClick={openPlaylistModal} fullWidth={false}>
+                    {t('+ Playlist')}
+                  </Button>
+                ) : null}
+                {selectedPanel === 'content' ? (
+                  <Button onClick={handleNewMedia} fullWidth={false}>
+                    {t('+ Upload')}
+                  </Button>
+                ) : null}
               </s.UserContentSubWrapper>
             </s.UserContentHeader>
           )}
 
           {selectedPanel === 'content' ? (
-            <UserContent profile={profile} />
+            <UserContent profile={profile} isLoading={isLoading} />
           ) : (
             <>
               <Box sx={{ mt: 5 }}></Box>
