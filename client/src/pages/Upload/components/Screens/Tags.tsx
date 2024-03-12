@@ -148,13 +148,13 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           control={control}
           name="tags"
           fullWidth
-          placeholder={t('Connection Tags')}
+          placeholder={t('Connection Tags (required)')}
         />
         <TagInput
           control={control}
           name="languageTags"
           fullWidth
-          placeholder={t('Language Tags')}
+          placeholder={t('Language Tags (required)')}
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
           <strong>{t('Separate tags with a comma. ')}</strong>
