@@ -67,7 +67,7 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
           ]);
         }
 
-        if (contentResults.length < 8) {
+        if (contentResults.length < 12) {
           setHasMoreContentToLoad(false);
         } else {
           setHasMoreContentToLoad(true);
@@ -111,7 +111,7 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
           ]);
         }
 
-        if (playlistResults.length < 5) {
+        if (playlistResults.length < 3) {
           setHasMorePlaylistsToLoad(false);
         } else {
           setHasMorePlaylistsToLoad(true);
