@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import ViewSection from './View/ViewSection';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { getAuthTokenPayload } from 'utils/auth';
+import { getAuthTokenPayload, getProfileId } from 'utils/auth';
 import Button from 'components/Button';
 import UserContent from './UserContent';
 import Footer from 'components/layout/Footer';
@@ -24,6 +24,7 @@ const Profile = () => {
   const user = getAuthTokenPayload();
   const { t } = useTranslation();
   const { data: profile, isLoading, refetch } = useProfile();
+  const loggedInProfileId = getProfileId();
   const [playlist, setPlaylist] = useState(null);
   const [detailedPlaylists, setDetailedPlaylists] = useState<any[]>([]);
   const [transformedPlaylists, setTransformedPlaylists] = useState<any[]>([]);
@@ -105,12 +106,13 @@ const Profile = () => {
 
       <Grid container>
         <Grid xs={10} xsOffset={1} md={7}>
-          {isLoggedIn && (
+          {isLoggedIn && loggedInProfileId === profile.id && (
             <s.UserContentHeader
               direction="row"
               spacing={2}
               justifyContent="space-between"
               alignItems="center"
+              flexWrap="wrap"
             >
               <s.UserContentSubWrapper>
                 <Typography
@@ -143,28 +145,35 @@ const Profile = () => {
                 </Typography>
               </s.UserContentSubWrapper>
               <s.UserContentSubWrapper>
-                <Button onClick={openPlaylistModal} fullWidth={false}>
-                  {t('+ Playlist')}
-                </Button>
-                <Button onClick={handleNewMedia} fullWidth={false}>
-                  {t('+ Upload')}
-                </Button>
+                {selectedPanel === 'playlists' ? (
+                  <Button onClick={openPlaylistModal} fullWidth={false}>
+                    {t('+ Playlist')}
+                  </Button>
+                ) : null}
+                {selectedPanel === 'content' ? (
+                  <Button onClick={handleNewMedia} fullWidth={false}>
+                    {t('+ Upload')}
+                  </Button>
+                ) : null}
               </s.UserContentSubWrapper>
             </s.UserContentHeader>
           )}
 
           {selectedPanel === 'content' ? (
-            <UserContent profile={profile} />
+            <UserContent profile={profile} isLoading={isLoading} />
           ) : (
-            <PlaylistPanel
-              playlists={playlists?.data}
-              test={detailedPlaylists}
-              profileId={profileId}
-              userId={userId}
-              isLoading={isLoading}
-              refetchPlaylists={refetchPlaylists}
-              isLoggedIn={isLoggedIn}
-            />
+            <>
+              <Box sx={{ mt: 5 }}></Box>
+              <PlaylistPanel
+                playlists={playlists?.data}
+                test={detailedPlaylists}
+                profileId={profileId}
+                userId={userId}
+                isLoading={isLoading}
+                refetchPlaylists={refetchPlaylists}
+                isLoggedIn={isLoggedIn}
+              />
+            </>
           )}
         </Grid>
       </Grid>

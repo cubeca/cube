@@ -7,6 +7,8 @@ import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
 import FlagIcon from '@mui/icons-material/Flag';
+import DownloadIcon from '@mui/icons-material/Download';
+import ListIcon from '@mui/icons-material/List';
 
 import useContentDetails from 'hooks/useContentDetails';
 
@@ -75,6 +77,7 @@ const Video = () => {
     ? content?.coverImageUrl?.playerInfo?.publicUrl
     : content?.coverImageExternalUrl;
   const pdfUrl = content?.mediaUrl?.playerInfo?.publicUrl;
+  const docUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const bannerImage = content?.bannerImageUrl
     ? content?.bannerImageUrl?.playerInfo?.publicUrl
     : content?.bannerImageExternalUrl;
@@ -144,14 +147,18 @@ const Video = () => {
 
   useEffect(() => {
     if (
-      (embedContentWhitelist && embedContentWhitelist?.length > 0) ||
-      !embedToggleEnabled
+      (embedContentWhitelist &&
+        embedContentWhitelist.length > 0 &&
+        !(
+          embedContentWhitelist.length === 1 && embedContentWhitelist[0] === ''
+        )) ||
+      (!embedToggleEnabled && embedToggleEnabled !== undefined)
     ) {
       setShowEmbedModal(false);
     } else {
       setShowEmbedModal(true);
     }
-  }, [isLoading, embedContentWhitelist, embedToggleEnabled]);
+  }, [isLoading, content, embedContentWhitelist, embedToggleEnabled]);
 
   function handleClose() {
     setIsSuitableForChildrenModalOpen(false);
@@ -330,12 +337,14 @@ const Video = () => {
               {loggedInProfileId === profileId && (
                 // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                 <s.EditDeleteWrapper>
-                  <s.EditSubsButton
-                    component={RouterLink}
-                    to={`/subtitle-editor/${content?.id}`}
-                  >
-                    Edit Subtitles
-                  </s.EditSubsButton>
+                  {(content?.type === 'audio' || content?.type === 'video') && (
+                    <s.EditSubsButton
+                      component={RouterLink}
+                      to={`/subtitle-editor/${content?.id}`}
+                    >
+                      Edit Subtitles
+                    </s.EditSubsButton>
+                  )}
                   <DeleteContentButton contentId={content?.id || ''} />
                 </s.EditDeleteWrapper>
                 // </Box>
@@ -352,6 +361,12 @@ const Video = () => {
                 justifyContent="left"
                 sx={{ my: 3, typography: 'body2' }}
               >
+                {(content?.type === 'document' || content?.type === 'pdf') && (
+                  <s.ActionsWrapper>
+                    <DownloadIcon />
+                    <s.Action to={docUrl || ''}>Download</s.Action>
+                  </s.ActionsWrapper>
+                )}
                 {showEmbedModal && (
                   <s.ActionsWrapper>
                     <CodeIcon />
@@ -361,7 +376,7 @@ const Video = () => {
                   </s.ActionsWrapper>
                 )}
                 <s.ActionsWrapper>
-                  <CodeIcon />
+                  <ListIcon />
                   <s.Action to={''} onClick={openPlaylistModal}>
                     Add to Playlist
                   </s.Action>
@@ -484,6 +499,38 @@ const Video = () => {
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
+                        .join(', ')
+                        .split(', ')
+                        .map((tag: string, index: number, array: string[]) => (
+                          <React.Fragment key={tag}>
+                            <s.Tag
+                              component="span"
+                              variant="body2"
+                              underline="true"
+                            >
+                              {tag}
+                              {index < array.length - 1 && ','}
+                            </s.Tag>
+                            {index < array.length - 1 && (
+                              <s.Tag component="span" variant="body2">
+                                &nbsp;
+                              </s.Tag>
+                            )}
+                          </React.Fragment>
+                        ))}
+                    </s.Tags>
+                    <s.Seperator />
+                  </Stack>
+                )}
+                {(content?.languageTags?.length || 0) > 0 && (
+                  <Stack>
+                    <Typography component="h5" variant="h5">
+                      {content?.languageTags && content?.languageTags.length > 1
+                        ? t('Languages')
+                        : t('Language')}
+                    </Typography>
+                    <s.Tags sx={{ display: 'flex' }}>
+                      {(content?.languageTags || [])
                         .join(', ')
                         .split(', ')
                         .map((tag: string, index: number, array: string[]) => (

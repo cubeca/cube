@@ -140,13 +140,8 @@ export const getProfileData = async (profileId: string) => {
     }
   }
 
-  const dbResult = await content.listContentByProfileId(0, 1000, {}, profileId);
-  const data = dbResult.map(getApiResultFromDbRow);
-  const transformedContent = await transformContent(data);
-
   return {
-    ...profileResult,
-    content: transformedContent
+    ...profileResult
   };
 };
 
@@ -175,7 +170,8 @@ export async function transformPlaylist(playlistItems: any[]) {
           })
         );
 
-        const contentItems = contentData.map(getApiResultFromDbRow);
+        const filteredContentData = contentData.filter((item) => item !== undefined);
+        const contentItems = filteredContentData.map(getApiResultFromDbRow);
         const transformedContent = await transformContentSimple(contentItems);
 
         newItem.contentItems = transformedContent;
@@ -196,6 +192,27 @@ export async function transformContentSimple(contentItems: any[]) {
       const newItem = { ...item };
 
       // Process URL fields
+      for (const [key, value] of Object.entries(urlFieldNames)) {
+        if (item[key]) {
+          newItem[value] = await getFile(item[key]);
+          delete newItem[key];
+        }
+      }
+
+      return newItem;
+    })
+  );
+}
+
+export async function transformPlaylistSimple(playlistItems: any[]) {
+  const urlFieldNames = {
+    coverImageFileId: 'coverImageUrl'
+  };
+
+  return Promise.all(
+    playlistItems.map(async (item) => {
+      const newItem = { ...item };
+
       for (const [key, value] of Object.entries(urlFieldNames)) {
         if (item[key]) {
           newItem[value] = await getFile(item[key]);

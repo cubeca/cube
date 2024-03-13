@@ -47,6 +47,7 @@ export const searchContent = async (offset: number, limit: number, filters: any,
           { title: { [Op.iLike]: `%${term}%` } },
           { type: { [Op.iLike]: `%${term}%` } },
           { tags: { [Op.iLike]: `%${term}%` } },
+          { languageTags: { [Op.iLike]: `%${term}%` } },
           { description: { [Op.iLike]: `%${term}%` } },
           { coverImageText: { [Op.iLike]: `%${term}%` } },
           { contributors: { [Op.iLike]: `%${term}%` } }

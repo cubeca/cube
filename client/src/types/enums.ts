@@ -18,7 +18,8 @@ export enum ContentTypes {
   Video = 'video',
   Audio = 'audio',
   PDF = 'pdf',
-  Link = 'link'
+  Link = 'link',
+  Document = 'document'
 }
 
 export enum Nation {

@@ -77,7 +77,7 @@ const Content = () => {
       <s.ContentHeader container>
         <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
           <Typography component="h3" variant="h3">
-            <span>Featured content:</span>
+            <span>Featured Content</span>
           </Typography>
         </Grid>
       </s.ContentHeader>
