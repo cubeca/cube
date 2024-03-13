@@ -289,15 +289,17 @@ const Upload = () => {
 
   const activeScreenView = SCREENS[screenIndex].view;
 
-  if (isSuccess) {
-    //@ts-ignore - idk why this is not working - we can see in the node_modules it is part of the spec....
-    if (response.data.vttQueued && response?.data?.id) {
-      //@ts-ignore
-      navigate(`/subtitle-editor/${response?.data?.id}/true`);
-    } else if (!vttEditorLaunched) {
-      navigate(`/profile/${tag}`);
+  useEffect(() => {
+    if (isSuccess) {
+      //@ts-ignore - idk why this is not working - we can see in the node_modules it is part of the spec....
+      if (response.data.vttQueued && response?.data?.id) {
+        //@ts-ignore
+        navigate(`/subtitle-editor/${response?.data?.id}/true`);
+      } else if (!vttEditorLaunched) {
+        navigate(`/profile/${tag}`);
+      }
     }
-  }
+  }, [isSuccess, response, vttEditorLaunched]);
 
   if (isError) {
     console.log('Upload Error');
