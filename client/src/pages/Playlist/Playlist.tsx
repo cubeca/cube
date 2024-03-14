@@ -43,6 +43,7 @@ const Playlist = () => {
   useEffect(() => {
     if (userId === playlistCreatorUserId) {
       setShowEmbedModal(true);
+      return;
     }
 
     if (
@@ -96,7 +97,7 @@ const Playlist = () => {
       setUserId((user as any).sub);
     };
     fetchUser();
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     handleGetPlaylist();

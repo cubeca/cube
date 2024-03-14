@@ -479,6 +479,7 @@ const AddToPlaylistModal = ({
                 defaultValue="true"
                 control={control}
                 name="embedToggleInput"
+                id="embedToggleInput"
               />
             </Stack>
 
@@ -565,6 +566,7 @@ const AddToPlaylistModal = ({
                     watchAllFields.playlistName,
                     watchAllFields.playlistDesc,
                     contentId!,
+                    watchAllFields.embedToggleInput,
                     watchAllFields.whitelist!
                   );
                   setShowSuccessMessage(true);
