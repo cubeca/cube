@@ -85,7 +85,7 @@ const AddToPlaylistModal = ({
   const [localAddResponse, setLocalAddResponse] =
     useState<any>(addResponseData);
   const [localMoreContent, setLocalMoreContent] = useState<any>(moreContent);
-  const [newPlaylistId, setNewPlaylistId] = useState({} as any);
+  const [newPlaylistId, setNewPlaylistId] = useState<string>('');
   const [playlistCreated, setPlaylistCreated] = useState(false);
   const [isPlaylistImageSelected, setIsPlaylistImageSelected] = useState(false);
   const [playlistImageFile, setPlaylistImageFile] = useState<File>();
