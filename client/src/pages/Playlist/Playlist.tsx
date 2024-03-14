@@ -29,6 +29,10 @@ const Playlist = () => {
 
   // @ts-ignore
   const embedPlaylistWhitelist = playlist?.data[0].data.embedPlaylistWhitelist;
+  // @ts-ignore
+  const playlistCreatorUserId = playlist?.data[0].data.userId;
+  // @ts-ignore
+  const embedToggleEnabled = playlist?.data[0].data.embedToggleEnabled;
 
   const { data: profile } = useProfile();
 
@@ -37,13 +41,22 @@ const Playlist = () => {
   }
 
   useEffect(() => {
-    if (
-      embedPlaylistWhitelist === undefined ||
-      embedPlaylistWhitelist.length === 0
-    ) {
+    if (userId === playlistCreatorUserId) {
       setShowEmbedModal(true);
-    } else {
+    }
+
+    if (
+      (embedPlaylistWhitelist &&
+        embedPlaylistWhitelist.length > 0 &&
+        !(
+          embedPlaylistWhitelist.length === 1 &&
+          embedPlaylistWhitelist[0] === ''
+        )) ||
+      (!embedToggleEnabled && embedToggleEnabled !== undefined)
+    ) {
       setShowEmbedModal(false);
+    } else {
+      setShowEmbedModal(true);
     }
   }, [embedPlaylistWhitelist]);
 

@@ -1,6 +1,5 @@
 import { Controller } from 'react-hook-form';
 import { InputProps } from '../types';
-import { Switch } from '@mui/material';
 import * as s from './EmbedToggleInput.styled';
 
 const defaultRules = {
@@ -17,38 +16,43 @@ const EmbedToggleInput = ({
   label,
   helperText,
   helperTextId,
-  fullWidth
-}: InputProps) => (
-  <Controller
-    name={name}
-    control={control}
-    rules={{
-      ...defaultRules,
-      ...rules
-    }}
-    defaultValue={defaultValue}
-    render={({ field, fieldState: { error } }) => (
-      <s.FormWrapper
-        className={className}
-        id={id}
-        error={!!error}
-        helperText={error && error.message ? error.message : helperText}
-        helperTextId={helperTextId}
-        fullWidth={fullWidth}
-      >
-        <s.FormLabel
-          control={
-            <Switch
-              defaultChecked={true}
-              checked={field.value}
-              onChange={(e) => field.onChange(e.target.checked)}
-            />
-          }
-          label={label}
-        />
-      </s.FormWrapper>
-    )}
-  />
-);
+  fullWidth,
+  colormode = 'light'
+}: InputProps & { colormode: 'light' | 'dark' }) => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      rules={{
+        ...defaultRules,
+        ...rules
+      }}
+      defaultValue={defaultValue}
+      render={({ field, fieldState: { error } }) => (
+        <s.FormWrapper
+          className={className}
+          id={id}
+          error={!!error}
+          helperText={error && error.message ? error.message : helperText}
+          helperTextId={helperTextId}
+          fullWidth={fullWidth}
+          colormode={colormode}
+        >
+          <s.FormLabel
+            control={
+              <s.EmbedToggleSwitch
+                defaultChecked={true}
+                checked={field.value}
+                onChange={(e: any) => field.onChange(e.target.checked)}
+                colormode={colormode}
+              />
+            }
+            label={label}
+          />
+        </s.FormWrapper>
+      )}
+    />
+  );
+};
 
 export default EmbedToggleInput;
