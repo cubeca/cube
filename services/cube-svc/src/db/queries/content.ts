@@ -86,20 +86,6 @@ export const searchContent = async (offset: number, limit: number, filters: any,
     });
   }
 
-  whereClause[Op.and] = whereClause[Op.and] || [];
-  whereClause[Op.and].push({
-    'data.expiryDate': {
-      [Op.or]: [
-        {
-          [Op.eq]: null
-        },
-        {
-          [Op.gte]: new Date()
-        }
-      ]
-    }
-  });
-
   const contentList = await Content.findAll({
     where: whereClause,
     offset,
