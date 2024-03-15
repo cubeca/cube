@@ -19,6 +19,7 @@ import PlaylistPanel from 'components/PlaylistPanel';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import usePlaylist from 'hooks/usePlaylist';
 import useContentDetails from 'hooks/useContentDetails';
+import { useParams } from 'react-router-dom';
 
 const Profile = () => {
   const user = getAuthTokenPayload();
@@ -32,9 +33,15 @@ const Profile = () => {
   const [playlistData, setPlaylistData] = useState<[]>([]);
   const [userId, setUserId] = useState('');
   const [profileId, setProfileId] = useState('');
+  const { tag: navigatedProfileTag } = useParams();
+
   useEffect(() => {
     setProfileId(profile?.profileId || '');
   }, [profile]);
+
+  useEffect(() => {
+    refetch();
+  }, [navigatedProfileTag]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -159,8 +166,12 @@ const Profile = () => {
             </s.UserContentHeader>
           )}
 
-          {selectedPanel === 'content' ? (
-            <UserContent profile={profile} isLoading={isLoading} />
+          {selectedPanel === 'content' && !isLoading ? (
+            <UserContent
+              profile={profile}
+              isLoading={isLoading}
+              key={profile?.id}
+            />
           ) : (
             <>
               <Box sx={{ mt: 5 }}></Box>

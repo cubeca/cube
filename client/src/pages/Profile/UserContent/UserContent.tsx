@@ -249,20 +249,25 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
                     <p>{error}</p>
                   ) : (
                     !isContentLoading &&
-                    contentResults?.map((key: any) => (
-                      <ContentCard
-                        key={key.id}
-                        image={
-                          key.coverImageUrl?.playerInfo?.publicUrl ||
-                          key.coverImageExternalUrl ||
-                          ''
-                        }
-                        title={key.title}
-                        url={`/content/${key.id}`}
-                        icon={key.type}
-                        hasSignLanguage={key.hasSignLanguage}
-                      />
-                    ))
+                    contentResults
+                      ?.filter((key: any) => {
+                        const expiryDate = new Date(key.expiry);
+                        return expiryDate > new Date() || !key.expiry;
+                      })
+                      .map((key: any) => (
+                        <ContentCard
+                          key={key.id}
+                          image={
+                            key.coverImageUrl?.playerInfo?.publicUrl ||
+                            key.coverImageExternalUrl ||
+                            ''
+                          }
+                          title={key.title}
+                          url={`/content/${key.id}`}
+                          icon={key.type}
+                          hasSignLanguage={key.hasSignLanguage}
+                        />
+                      ))
                   )}
 
                   {!isContentLoading && hasMoreContentToLoad && (
