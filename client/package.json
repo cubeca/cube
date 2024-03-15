@@ -22,6 +22,7 @@
     "@types/react-router-hash-link": "^2.4.6",
     "axios": "^0.27.2",
     "date-fns": "^2.29.2",
+    "file-type": "^19.0.0",
     "i18next": "^21.8.4",
     "i18next-browser-languagedetector": "^6.1.4",
     "install": "^0.13.0",

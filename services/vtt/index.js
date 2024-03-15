@@ -69,19 +69,27 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                     console.log("No Cloudflare Stream UID provided");
                     return;
                 }
-                console.log({ cloudflareStreamUid });
+
                 const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
-                console.log({ mediaURL });
                 if (!mediaURL) throw new Error("No media URL provided");
 
                 const response = await axios.get(mediaURL, { responseType: "stream" });
                 const stream = response.data.pipe(fs.createWriteStream(`${outputPath}/${id}-video`));
+
+                console.log("I AM CHECKING THE STREAM TYPE");
+                try {
+                    console.log(await fileTypeFromStream(stream));
+                } catch (error) {
+                    console.log("THIS DIDNT WORK MOVE ON");
+                    console.log({ error });
+                }
 
                 await new Promise((resolve, reject) => {
                     stream.on("finish", () => {
                         console.log("File Downloaded");
                         resolve();
                     });
+
                     stream.on("error", (error) => {
                         console.log("This is a steam error", { error });
                         throw new Error(error);
