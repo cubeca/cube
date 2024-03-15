@@ -74,12 +74,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
                 if (!mediaURL) throw new Error("No media URL provided");
 
-                try {
-                    const response = await axios.get(mediaURL, { responseType: "stream" });
-                } catch (error) {
-                    console.warning("Surpressing 400 error while we wait for CF");
-                }
-
+                const response = await axios.get(mediaURL, { responseType: "stream" });
                 const stream = response.data.pipe(fs.createWriteStream(`${outputPath}/${id}-video`));
 
                 console.log("I AM CHECKING THE STREAM TYPE");
@@ -148,7 +143,6 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 return;
             }
         } catch (error) {
-            console.error({ error });
             await retry(contentID, tries);
         }
 
