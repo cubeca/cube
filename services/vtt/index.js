@@ -17,6 +17,9 @@ const { generateVTT } = require("./vtt.js");
 const maxTries = 50;
 const outputPath = "/tmp";
 
+const supportedVideoTypes = ["mp4", "mkv", "mov", "avi", "flv", "mpeg-2 ts", "mpeg-2 ps", "mxf", "3gp", "webm", "mpg"];
+const supportedAudioTypes = ["mp3", "wav", "ogg", "aac"];
+
 async function getFileTypeFromStream() {
     const { fileTypeFromStream } = await import("file-type");
     return fileTypeFromStream;
@@ -83,16 +86,14 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
 
                 await new Promise((resolve, reject) => {
                     stream.on("finish", async () => {
-                        console.log("File Downloaded");
-                        console.log("I AM CHECKING THE STREAM TYPE");
-                        try {
-                            const fileTypeFromStream = await getFileTypeFromStream();
-                            const stream = fs.createReadStream(`${outputPath}/${id}-video`);
+                        console.log("File downloaded and checking the file validity");
 
-                            console.log(await fileTypeFromStream(stream));
-                        } catch (error) {
-                            console.log("THIS DIDNT WORK MOVE ON");
-                            console.log({ error });
+                        const fileTypeFromStream = await getFileTypeFromStream();
+                        const stream = fs.createReadStream(`${outputPath}/${id}-video`);
+
+                        const { ext } = await fileTypeFromStream(stream);
+                        if (!supportedVideoTypes.contains(ext)) {
+                            throw new Error("unsupported file type");
                         }
 
                         resolve();
@@ -126,7 +127,17 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
             } else if (mediaData.type === "audio") {
                 console.log("Audio File Detected");
                 await downloadR2(cfData.data.filePathInBucket, outputPath, `${id}-audio`);
-                await new Promise((resolve, reject) => {
+                await new Promise(async (resolve, reject) => {
+                    console.log("File downloaded and checking the file validity");
+
+                    const fileTypeFromStream = await getFileTypeFromStream();
+                    const stream = fs.createReadStream(`${outputPath}/${id}-audio`);
+
+                    const { ext } = await fileTypeFromStream(stream);
+                    if (!supportedAudioTypes.contains(ext)) {
+                        throw new Error("unsupported file type");
+                    }
+
                     ffmpeg(`${outputPath}/${id}-audio`)
                         .format("mp3")
                         .audioCodec("libmp3lame")
@@ -150,6 +161,11 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 return;
             }
         } catch (error) {
+            if (error.contains("unsupported file type")) {
+                console.error("We found an unsupported file type and need to end this process");
+                return;
+            }
+
             await retry(contentID, tries);
         }
 
