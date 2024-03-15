@@ -92,7 +92,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                         const stream = fs.createReadStream(`${outputPath}/${id}-video`);
 
                         const { ext } = await fileTypeFromStream(stream);
-                        if (!supportedVideoTypes.contains(ext)) {
+                        if (!supportedVideoTypes.includes(ext)) {
                             throw new Error("unsupported file type");
                         }
 
@@ -134,7 +134,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                     const stream = fs.createReadStream(`${outputPath}/${id}-audio`);
 
                     const { ext } = await fileTypeFromStream(stream);
-                    if (!supportedAudioTypes.contains(ext)) {
+                    if (!supportedAudioTypes.includes(ext)) {
                         throw new Error("unsupported file type");
                     }
 
