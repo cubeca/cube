@@ -74,7 +74,8 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 if (!mediaURL) throw new Error("No media URL provided");
 
                 const response = await axios.get(mediaURL, { responseType: "stream" });
-                const stream = response.data.pipe(fs.createWriteStream(`${outputPath}/${id}-video`));
+                const writeSteam = fs.createWriteStream(`${outputPath}/${id}-video`);
+                const stream = response.data.pipe(writeSteam);
 
                 console.log("I AM CHECKING THE STREAM TYPE");
                 try {
@@ -83,7 +84,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                         return fileTypeFromStream;
                     }
                     const fileTypeFromStream = await getFileTypeFromStream();
-                    console.log(await fileTypeFromStream(stream));
+                    console.log(await fileTypeFromStream(writeSteam));
                 } catch (error) {
                     console.log("THIS DIDNT WORK MOVE ON");
                     console.log({ error });
