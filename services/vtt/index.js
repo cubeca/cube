@@ -17,6 +17,11 @@ const { generateVTT } = require("./vtt.js");
 const maxTries = 50;
 const outputPath = "/tmp";
 
+async function getFileTypeFromStream() {
+    const { fileTypeFromStream } = await import("file-type");
+    return fileTypeFromStream;
+}
+
 const retry = async (contentID, currentTries) => {
     if (typeof currentTries !== "number" || currentTries >= maxTries) {
         console.error("Max tries reached");
@@ -74,25 +79,22 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 if (!mediaURL) throw new Error("No media URL provided");
 
                 const response = await axios.get(mediaURL, { responseType: "stream" });
-                const writeSteam = fs.createWriteStream(`${outputPath}/${id}-video`);
-                const stream = response.data.pipe(writeSteam);
-
-                console.log("I AM CHECKING THE STREAM TYPE");
-                try {
-                    async function getFileTypeFromStream() {
-                        const { fileTypeFromStream } = await import("file-type");
-                        return fileTypeFromStream;
-                    }
-                    const fileTypeFromStream = await getFileTypeFromStream();
-                    console.log(await fileTypeFromStream(writeSteam));
-                } catch (error) {
-                    console.log("THIS DIDNT WORK MOVE ON");
-                    console.log({ error });
-                }
+                const stream = response.data.pipe(fs.createWriteStream(`${outputPath}/${id}-video`));
 
                 await new Promise((resolve, reject) => {
-                    stream.on("finish", () => {
+                    stream.on("finish", async () => {
                         console.log("File Downloaded");
+                        console.log("I AM CHECKING THE STREAM TYPE");
+                        try {
+                            const fileTypeFromStream = await getFileTypeFromStream();
+                            const stream = fs.createReadStream(`${outputPath}/${id}-video`);
+
+                            console.log(await fileTypeFromStream(stream));
+                        } catch (error) {
+                            console.log("THIS DIDNT WORK MOVE ON");
+                            console.log({ error });
+                        }
+
                         resolve();
                     });
 
