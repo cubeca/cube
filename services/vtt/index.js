@@ -1,5 +1,6 @@
 const functions = require("@google-cloud/functions-framework");
 const { PubSub } = require("@google-cloud/pubsub");
+const { fileTypeFromStream } = require("file-type");
 
 const axios = require("axios");
 const fs = require("fs");
@@ -73,7 +74,12 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
                 if (!mediaURL) throw new Error("No media URL provided");
 
-                const response = await axios.get(mediaURL, { responseType: "stream" });
+                try {
+                    const response = await axios.get(mediaURL, { responseType: "stream" });
+                } catch (error) {
+                    console.warning("Surpressing 400 error while we wait for CF");
+                }
+
                 const stream = response.data.pipe(fs.createWriteStream(`${outputPath}/${id}-video`));
 
                 console.log("I AM CHECKING THE STREAM TYPE");
