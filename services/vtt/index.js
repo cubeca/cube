@@ -1,6 +1,5 @@
 const functions = require("@google-cloud/functions-framework");
 const { PubSub } = require("@google-cloud/pubsub");
-const { fileTypeFromStream } = require("file-type");
 
 const axios = require("axios");
 const fs = require("fs");
@@ -79,6 +78,11 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
 
                 console.log("I AM CHECKING THE STREAM TYPE");
                 try {
+                    async function getFileTypeFromStream() {
+                        const { fileTypeFromStream } = await import("file-type");
+                        return fileTypeFromStream;
+                    }
+                    const fileTypeFromStream = await getFileTypeFromStream();
                     console.log(await fileTypeFromStream(stream));
                 } catch (error) {
                     console.log("THIS DIDNT WORK MOVE ON");
