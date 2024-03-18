@@ -1,5 +1,17 @@
-import { Tab, Tabs, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Grid,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+  useTheme,
+  Link as MuiLink
+} from '@mui/material';
 
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Dialog from 'components/Dialog';
 import * as s from './AddToPlaylistModal.styled';
 import Button from 'components/Button';
@@ -24,6 +36,8 @@ import { addContentToPlaylist } from 'api/playlist';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
 import WhitelistInput from 'components/form/WhitelistInput';
 import { handleFileChange } from 'utils/fileValidation';
+import EmbedToggleInput from 'components/form/EmbedToggleInput';
+import { useTranslation } from 'react-i18next';
 
 interface AddToPlaylistModalProps {
   isOpen: boolean;
@@ -106,6 +120,8 @@ const AddToPlaylistModal = ({
   const navigate = useNavigate();
   const watchAllFields = watch();
   const isProfile = getProfileId();
+  const { t } = useTranslation();
+  const theme = useTheme();
 
   const {
     playlist,
@@ -260,6 +276,7 @@ const AddToPlaylistModal = ({
     playlistName: string,
     playlistDesc: string,
     contentId?: string,
+    embedToggleEnabled?: boolean,
     whitelist?: string
   ) => {
     const newPlaylist = {
@@ -268,6 +285,7 @@ const AddToPlaylistModal = ({
       profileId: profileId,
       userId: userId,
       contentIds: contentId ? [contentId] : [],
+      embedToggleEnabled: embedToggleEnabled,
       embedPlaylistWhitelist: whitelist
         ? whitelist?.split(',').map((domain: string) => domain.trim())
         : []
@@ -452,6 +470,19 @@ const AddToPlaylistModal = ({
               placeholder="Description"
             />
 
+            <Stack direction="row" pb={2} spacing={17} alignItems="center">
+              <Typography component="p" variant="body1">
+                Show embed option to public users
+              </Typography>
+              <EmbedToggleInput
+                colormode="dark"
+                defaultValue="true"
+                control={control}
+                name="embedToggleInput"
+                id="embedToggleInput"
+              />
+            </Stack>
+
             <WhitelistInput
               control={control}
               label="Embed Whitelist"
@@ -470,6 +501,47 @@ const AddToPlaylistModal = ({
                 }
               }}
             />
+
+            <Box pb={4}>
+              <Accordion
+                style={{ backgroundColor: theme.palette.background.default }}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1-content"
+                  id="panel1-header"
+                >
+                  <Grid container>
+                    <Box>
+                      <strong>
+                        {t('You must separate websites with a comma. ')}
+                      </strong>
+                      {t(
+                        'For added security prevent users from embedding your URL by creating a Whitelist of websites where your content can be embedded. Tap the arrow for links to code you can use to embed your content on a Whitelisted site.'
+                      )}
+                    </Box>
+                    <Box mt={1}>
+                      {t(
+                        '*Note: this will require you to develop a trigger. Learn how to generate a trigger using AI. Video tutorial coming soon.'
+                      )}
+                    </Box>
+                  </Grid>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography component="p" variant="body2">
+                    {t('View code for embedding content')}{' '}
+                    <MuiLink
+                      href="https://codesandbox.io/p/sandbox/embed-content-d79nck"
+                      sx={{ color: 'inherit' }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      here.
+                    </MuiLink>
+                  </Typography>
+                </AccordionDetails>
+              </Accordion>
+            </Box>
 
             <Box sx={{ marginBottom: '10px' }}>
               <UploadInput
@@ -494,6 +566,7 @@ const AddToPlaylistModal = ({
                     watchAllFields.playlistName,
                     watchAllFields.playlistDesc,
                     contentId!,
+                    watchAllFields.embedToggleInput,
                     watchAllFields.whitelist!
                   );
                   setShowSuccessMessage(true);

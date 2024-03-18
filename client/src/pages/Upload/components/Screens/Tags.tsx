@@ -424,6 +424,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
               defaultValue="true"
               control={control}
               name="embedToggleInput"
+              colormode="light"
             />
           </Grid>
         </Grid>

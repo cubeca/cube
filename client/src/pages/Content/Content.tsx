@@ -146,6 +146,10 @@ const Video = () => {
   }, [content?.isSuitableForChildren]);
 
   useEffect(() => {
+    if (loggedInProfileId === profileId) {
+      setShowEmbedModal(true);
+    }
+
     if (
       (embedContentWhitelist &&
         embedContentWhitelist.length > 0 &&
