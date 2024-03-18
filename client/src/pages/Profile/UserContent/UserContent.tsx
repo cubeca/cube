@@ -38,7 +38,6 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
     useState<boolean>(true);
   const [hasMorePlaylistToLoad, setHasMorePlaylistsToLoad] =
     useState<boolean>(true);
-  const isInitialMount = useRef(true);
 
   const fetchContentSearchResults = useCallback(
     async (newContentOffset: number) => {
@@ -138,21 +137,11 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
   };
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      console.log('this is the initial mount');
-      isInitialMount.current = false;
-    } else {
-      console.log('this is NOT initial mount');
-      fetchPlaylistSearchResults(0);
-    }
+    fetchPlaylistSearchResults(0);
   }, [fetchPlaylistSearchResults, debouncedSearchTerm]);
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-    } else {
-      fetchContentSearchResults(0);
-    }
+    fetchContentSearchResults(0);
   }, [fetchContentSearchResults, debouncedSearchTerm]);
 
   return (
