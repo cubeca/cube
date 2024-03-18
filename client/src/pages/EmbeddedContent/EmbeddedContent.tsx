@@ -42,6 +42,7 @@ const Video = () => {
     if (
       !isLoading &&
       embedContentWhitelist &&
+      embedContentWhitelist.length > 0 &&
       !(embedContentWhitelist.length === 1 && embedContentWhitelist[0] === '')
     ) {
       setIsDomainAllowed(false);
