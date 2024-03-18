@@ -88,6 +88,7 @@ export const searchContent = async (offset: number, limit: number, filters: any,
 
   const contentList = await Content.findAll({
     where: whereClause,
+    order: [['created_at', 'DESC']],
     offset,
     limit
   });
