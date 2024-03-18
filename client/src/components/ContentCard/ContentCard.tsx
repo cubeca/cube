@@ -28,12 +28,18 @@ const ContentCard: FC<ContentCardProps> = ({
   hasSignLanguage,
   coverImageAltText
 }) => {
+  const cleanedUrl = image
+    .replace(/'/g, '%E2%80%99')
+    .replace(/\(/g, '%28')
+    .replace(/\)/g, '%29')
+    .replace(/ /g, '%20');
+
   return (
     <s.ContentCard className="content-card">
       <Link to={url} title={title}>
         <s.Thumbnail
           sx={{
-            backgroundImage: `url('${image}')`
+            backgroundImage: `url('${cleanedUrl}')`
           }}
           aria-label={coverImageAltText}
         >
