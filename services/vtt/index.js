@@ -17,6 +17,14 @@ const { generateVTT } = require("./vtt.js");
 const maxTries = 50;
 const outputPath = "/tmp";
 
+const supportedVideoTypes = ["mp4", "mkv", "mov", "avi", "flv", "mpeg-2 ts", "mpeg-2 ps", "mxf", "3gp", "webm", "mpg"];
+const supportedAudioTypes = ["mp3", "wav", "ogg", "aac"];
+
+async function getFileTypeFromStream() {
+    const { fileTypeFromStream } = await import("file-type");
+    return fileTypeFromStream;
+}
+
 const retry = async (contentID, currentTries) => {
     if (typeof currentTries !== "number" || currentTries >= maxTries) {
         console.error("Max tries reached");
@@ -69,19 +77,28 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                     console.log("No Cloudflare Stream UID provided");
                     return;
                 }
-                console.log({ cloudflareStreamUid });
+
                 const mediaURL = await downloadCloudflareStream(cloudflareStreamUid);
-                console.log({ mediaURL });
                 if (!mediaURL) throw new Error("No media URL provided");
 
                 const response = await axios.get(mediaURL, { responseType: "stream" });
                 const stream = response.data.pipe(fs.createWriteStream(`${outputPath}/${id}-video`));
 
                 await new Promise((resolve, reject) => {
-                    stream.on("finish", () => {
-                        console.log("File Downloaded");
+                    stream.on("finish", async () => {
+                        console.log("File downloaded and checking the file validity");
+
+                        const fileTypeFromStream = await getFileTypeFromStream();
+                        const stream = fs.createReadStream(`${outputPath}/${id}-video`);
+
+                        const { ext } = await fileTypeFromStream(stream);
+                        if (!supportedVideoTypes.includes(ext)) {
+                            throw new Error("unsupported file type");
+                        }
+
                         resolve();
                     });
+
                     stream.on("error", (error) => {
                         console.log("This is a steam error", { error });
                         throw new Error(error);
@@ -110,7 +127,17 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
             } else if (mediaData.type === "audio") {
                 console.log("Audio File Detected");
                 await downloadR2(cfData.data.filePathInBucket, outputPath, `${id}-audio`);
-                await new Promise((resolve, reject) => {
+                await new Promise(async (resolve, reject) => {
+                    console.log("File downloaded and checking the file validity");
+
+                    const fileTypeFromStream = await getFileTypeFromStream();
+                    const stream = fs.createReadStream(`${outputPath}/${id}-audio`);
+
+                    const { ext } = await fileTypeFromStream(stream);
+                    if (!supportedAudioTypes.includes(ext)) {
+                        throw new Error("unsupported file type");
+                    }
+
                     ffmpeg(`${outputPath}/${id}-audio`)
                         .format("mp3")
                         .audioCodec("libmp3lame")
@@ -130,11 +157,14 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 });
             } else {
                 console.error("Invalid media type");
-                console.log({ mediaData });
                 return;
             }
         } catch (error) {
-            console.error({ error });
+            if (error.contains("unsupported file type")) {
+                console.error("We found an unsupported file type and need to end this process");
+                return;
+            }
+
             await retry(contentID, tries);
         }
 
@@ -184,6 +214,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                         endTime,
                     });
                 }
+
                 console.log("Transcripts Generated");
                 transcript = {};
                 for (const set of transcripts) {
@@ -201,6 +232,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
                 console.log("Transcript Generated");
             }
+
             for (const key in transcript) {
                 const segment = transcript[key];
                 let start = parseFloat(parseFloat(key) + 0.01).toFixed(3);
@@ -209,12 +241,13 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 transcript[start] = segment;
                 delete transcript[key];
             }
-            console.log({ transcript });
+
             console.log("Transcript Generated");
 
             const vttText = generateVTT(transcript);
             fs.writeFileSync(`${outputPath}/${id}.vtt`, vttText);
             console.log("vttText Generated");
+
             //try to fetch existing vtt, if not create
             const existingVTT = await vtt.findOne({
                 where: {
@@ -264,36 +297,37 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
 functions.cloudEvent("vtt_upload", async (event) => {
     const contentID = Buffer.from(event.data.message.data, "base64").toString();
     if (!contentID) throw new Error("No content ID provided");
-    console.log({ contentID });
+
     const contentData = await content.findOne({
         where: {
             id: contentID,
         },
     });
+
     if (!contentData) throw new Error("No content data found");
     const vttData = await vtt.findOne({
         where: {
             id: contentID,
         },
     });
+
     if (!vttData) throw new Error("No VTT data found");
     const vttJSON = vttData.transcript;
-    console.log({ vttJSON });
     const vttText = generateVTT(vttJSON);
-    console.log({ vttText });
+
     if (contentData.data.vttFileId) {
         await uploadFile(contentData.data.vttFileId, vttText);
         console.log("VTT File Updated");
     } else {
         const cloudflareRecordID = uuid(); //ID needs to be generated before the record is created to determine the file path
-        console.log({ cloudflareRecordID });
+
         await uploadFile(cloudflareRecordID, vttText);
         const contentData = await content.findOne({
             where: {
                 id: contentID,
             },
         });
-        console.log({ contentData });
+
         await files.create({
             id: cloudflareRecordID,
             storage_type: "cloudflareR2",
@@ -310,7 +344,6 @@ functions.cloudEvent("vtt_upload", async (event) => {
             },
         });
 
-        console.log({ data: contentData.data });
         await contentData.update({
             data: {
                 ...contentData.data,

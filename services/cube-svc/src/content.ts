@@ -37,9 +37,10 @@ content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res
     const dbResult = r?.dataValues;
     if (!vttFileId && (type === 'video' || type === 'audio')) {
       // Publish a message to Google Pub/Sub
-      const topicName = 'vtt_transcribe'; // Replace with your actual topic name
+      const topicName = 'vtt_transcribe';
+
       //@ts-ignore
-      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 }); // Assuming dbResult.id is the ID you want to publish
+      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 });
       await pubsub.topic(topicName).publish(Buffer.from(message));
 
       //@ts-ignore

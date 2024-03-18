@@ -67,7 +67,7 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
           ]);
         }
 
-        if (contentResults.length < 12) {
+        if (contentResults.length < 8) {
           setHasMoreContentToLoad(false);
         } else {
           setHasMoreContentToLoad(true);
