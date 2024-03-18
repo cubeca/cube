@@ -170,10 +170,8 @@ const CategorizedContent = () => {
                   playlistResults?.map((key: any) => (
                     <ContentCard
                       key={key.id}
-                      image={
-                        key.data.coverImageUrl?.playerInfo?.publicUrl || ''
-                      }
-                      title={key.data.title}
+                      image={key.coverImageUrl?.playerInfo?.publicUrl || ''}
+                      title={key.title}
                       url={`/playlist/${key.id}`}
                       icon={'playlist'}
                     />
