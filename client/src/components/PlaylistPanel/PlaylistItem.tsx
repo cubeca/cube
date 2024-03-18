@@ -104,7 +104,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
           )}
           <s.PlaylistItemSubContainer>
             <s.PlaylistItemThumbnail
-              bgUrl={bgUrl.replace(/ /g, '%20')}
+              bgUrl={bgUrl
+                .replace(/'/g, '%27')
+                .replace(/\(/g, '%28')
+                .replace(/\)/g, '%29')
+                .replace(/ /g, '%20')}
               alt={alt}
             />
             <s.PlaylistItemTitle>{title}</s.PlaylistItemTitle>

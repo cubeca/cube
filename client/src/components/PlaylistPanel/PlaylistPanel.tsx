@@ -464,7 +464,8 @@ const PlaylistPanel: React.FC<Props> = ({
                                         bgUrl={
                                           content.coverImageUrl?.playerInfo
                                             ?.publicUrl ||
-                                          content.coverImageExternalUrl
+                                          content.coverImageExternalUrl ||
+                                          ''
                                         }
                                         alt={content.title}
                                         title={content.title}

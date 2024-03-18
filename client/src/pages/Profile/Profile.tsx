@@ -18,7 +18,6 @@ import EditDialog from './Edit/EditDialog';
 import PlaylistPanel from 'components/PlaylistPanel';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import usePlaylist from 'hooks/usePlaylist';
-import useContentDetails from 'hooks/useContentDetails';
 import { useParams } from 'react-router-dom';
 
 const Profile = () => {
@@ -26,11 +25,7 @@ const Profile = () => {
   const { t } = useTranslation();
   const { data: profile, isLoading, refetch } = useProfile();
   const loggedInProfileId = getProfileId();
-  const [playlist, setPlaylist] = useState(null);
   const [detailedPlaylists, setDetailedPlaylists] = useState<any[]>([]);
-  const [transformedPlaylists, setTransformedPlaylists] = useState<any[]>([]);
-  const { fetchContentDetails } = useContentDetails();
-  const [playlistData, setPlaylistData] = useState<[]>([]);
   const [userId, setUserId] = useState('');
   const [profileId, setProfileId] = useState('');
   const { tag: navigatedProfileTag } = useParams();
