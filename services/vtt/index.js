@@ -157,7 +157,6 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 });
             } else {
                 console.error("Invalid media type");
-                console.log({ mediaData });
                 return;
             }
         } catch (error) {
@@ -215,6 +214,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                         endTime,
                     });
                 }
+
                 console.log("Transcripts Generated");
                 transcript = {};
                 for (const set of transcripts) {
@@ -232,6 +232,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
                 console.log("Transcript Generated");
             }
+
             for (const key in transcript) {
                 const segment = transcript[key];
                 let start = parseFloat(parseFloat(key) + 0.01).toFixed(3);
@@ -240,12 +241,13 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 transcript[start] = segment;
                 delete transcript[key];
             }
-            console.log({ transcript });
+
             console.log("Transcript Generated");
 
             const vttText = generateVTT(transcript);
             fs.writeFileSync(`${outputPath}/${id}.vtt`, vttText);
             console.log("vttText Generated");
+
             //try to fetch existing vtt, if not create
             const existingVTT = await vtt.findOne({
                 where: {
@@ -295,36 +297,37 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
 functions.cloudEvent("vtt_upload", async (event) => {
     const contentID = Buffer.from(event.data.message.data, "base64").toString();
     if (!contentID) throw new Error("No content ID provided");
-    console.log({ contentID });
+
     const contentData = await content.findOne({
         where: {
             id: contentID,
         },
     });
+
     if (!contentData) throw new Error("No content data found");
     const vttData = await vtt.findOne({
         where: {
             id: contentID,
         },
     });
+
     if (!vttData) throw new Error("No VTT data found");
     const vttJSON = vttData.transcript;
-    console.log({ vttJSON });
     const vttText = generateVTT(vttJSON);
-    console.log({ vttText });
+
     if (contentData.data.vttFileId) {
         await uploadFile(contentData.data.vttFileId, vttText);
         console.log("VTT File Updated");
     } else {
         const cloudflareRecordID = uuid(); //ID needs to be generated before the record is created to determine the file path
-        console.log({ cloudflareRecordID });
+
         await uploadFile(cloudflareRecordID, vttText);
         const contentData = await content.findOne({
             where: {
                 id: contentID,
             },
         });
-        console.log({ contentData });
+
         await files.create({
             id: cloudflareRecordID,
             storage_type: "cloudflareR2",
@@ -341,7 +344,6 @@ functions.cloudEvent("vtt_upload", async (event) => {
             },
         });
 
-        console.log({ data: contentData.data });
         await contentData.update({
             data: {
                 ...contentData.data,
