@@ -139,8 +139,10 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
 
   useEffect(() => {
     if (isInitialMount.current) {
+      console.log('this is the initial mount');
       isInitialMount.current = false;
     } else {
+      console.log('this is NOT initial mount');
       fetchPlaylistSearchResults(0);
     }
   }, [fetchPlaylistSearchResults, debouncedSearchTerm]);
