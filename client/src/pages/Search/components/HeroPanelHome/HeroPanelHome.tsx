@@ -24,9 +24,11 @@ const HeroPanelHome = () => {
                 <span>{t('Featured in ')}</span>
                 <strong className="category">{t('Videos')}</strong>:
               </Typography> */}
-              <Typography component="h2" variant="h1">
-                Welcome to Our <br />
-                Search Page
+              <Typography component="h1" variant="h1">
+               {t('searchPage')}
+              </Typography>
+              <Typography component="h3" variant="h3">
+               {t('searchPageFR')}
               </Typography>
               {/* <a href="#TEST" className="play-button">
                 <img src={Play} alt="play" />
@@ -36,8 +38,9 @@ const HeroPanelHome = () => {
 
           <Grid xs={10} xsOffset={1} md={4} mdOffset={2}>
             <HeroCTA
-              title="How To Use CubeCommons"
-              text="Learn how to use this site and start discovering content."
+              title="Guide"
+              text={t('userGuide')}
+            frenchText={t('userGuideFR')}
               video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/1522f4bfdb5e28886e25f58c27c3d278/manifest/video.m3u8"
               image={CtaImage}
               subtitlesUrl="https://files.cubecommons.ca/3ed305be-ff47-4cf2-abb8-6c0d77bcc208/vtt.vtt"

@@ -24,7 +24,21 @@ const AccessibilityPanel = () => {
         <Typography component="h2" variant="h2" textAlign="center">
           {t('accessibility')}
         </Typography>
-        {/* <Trans i18nKey="accessibilityText"> */}
+        <Typography component="h3" variant="h3" textAlign="center">
+          {t('accessibilityFR')}
+        </Typography>
+        <Grid container justifyContent="center">
+        <Grid xs={12} md={4} padding="1rem">
+            <Typography component="p" variant="body1" textAlign="center">
+            {t('accessibilityText')}
+            </Typography>
+        </Grid>
+        <Grid xs={12} md={4} padding="1rem">
+            <Typography component="p" variant="body1" textAlign="center">
+              {t('accessibilityTextFR')}
+            </Typography>
+        </Grid>
+      </Grid>
         <Typography
           component="p"
           sx={{
@@ -33,9 +47,7 @@ const AccessibilityPanel = () => {
             margin: '0 auto'
           }}
         >
-          CubeCommons aims to be a tool that supports the accessibility of
-          online arts and cultural content, and to build in the work of Canadian
-          organizations like{' '}
+          {' '}
           <a
             href="https://deafspectrum.com/"
             target="_blank"
@@ -44,7 +56,7 @@ const AccessibilityPanel = () => {
           >
             Deaf Spectrum
           </a>{' '}
-          and{' '}
+          +{' '}
           <a
             href="https://openaccessfoundation.org/"
             target="_blank"
@@ -53,7 +65,6 @@ const AccessibilityPanel = () => {
           >
             OAFAC
           </a>
-          .
         </Typography>
         {/* </Trans> */}
         {/* <MediaPlayer
@@ -67,7 +78,7 @@ const AccessibilityPanel = () => {
           <s.IconDefinition alignItems="center">
             <SignLanguageIcon />
             <Typography component="p" variant="body2">
-              {t('Sign Language')}
+              {t('Sign Language/ Langage des Signes')}
             </Typography>
           </s.IconDefinition>
         </Grid>
@@ -75,7 +86,7 @@ const AccessibilityPanel = () => {
           <s.IconDefinition alignItems="center">
             <VoiceChatIcon />
             <Typography component="p" variant="body2">
-              {t('Text to Speech')}
+              {t('Text to Speech/ Texte pour Parler')}
             </Typography>
           </s.IconDefinition>
         </Grid>
@@ -83,7 +94,7 @@ const AccessibilityPanel = () => {
           <s.IconDefinition alignItems="center">
             <SubtitlesIcon />
             <Typography component="p" variant="body2">
-              {t('Subtitles')}
+              {t('Subtitles/ Sous-titres')}
             </Typography>
           </s.IconDefinition>
         </Grid>

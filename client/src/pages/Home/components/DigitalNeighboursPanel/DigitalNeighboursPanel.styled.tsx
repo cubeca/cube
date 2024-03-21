@@ -10,6 +10,12 @@ export const DigitalNeighboursPanel = styled(Stack)`
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 0 8.333333333333333% 120px;
   }
+  h2{
+    margin-bottom: 3px;
+  }
+  h3{
+    margin-bottom: 2rem;
+  }
 `;
 
 export const NeighbourCard = styled(Card)`
