@@ -15,10 +15,11 @@ const VirtualExperiencesPanel = () => {
         <s.VRText>
           <div id="virtual-experiences"></div>
           <Typography component="h2" variant="h2">
-            {t('virtualExperiences')}
+            {t('virtual')}
           </Typography>
-          <Typography component="p">{t('virtualExperiencesText')}</Typography>
-
+          <Typography component="p">
+            {t('virtualText')}
+            </Typography>
           <s.LinkWrapper>
             <s.ExternalLinkButton target="_blank" to="https://www.voxels.com/">
               {t('Visit Voxels')}

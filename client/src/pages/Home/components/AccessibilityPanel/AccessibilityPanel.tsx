@@ -32,10 +32,8 @@ const AccessibilityPanel = () => {
             maxWidth: '720px',
             margin: '0 auto'
           }}
-        >
-          CubeCommons aims to be a tool that supports the accessibility of
-          online arts and cultural content, and to build in the work of Canadian
-          organizations like{' '}
+        >{t('accessibilityText')}
+          {' '}
           <a
             href="https://deafspectrum.com/"
             target="_blank"

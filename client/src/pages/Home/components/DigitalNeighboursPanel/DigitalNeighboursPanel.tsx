@@ -55,7 +55,7 @@ const DigitalNeighboursPanel = () => {
   return (
     <s.DigitalNeighboursPanel>
       <Typography component="h2" variant="h2">
-        {t('Our Digital Community')}
+        {t('digitalNeighbours')}
       </Typography>
       <Typography
         component="p"

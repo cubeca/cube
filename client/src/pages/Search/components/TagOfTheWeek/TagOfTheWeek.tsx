@@ -14,12 +14,13 @@ import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-t
 import FPOThumb4 from 'assets/images/fpo/third-top-thumb.png';
 import FPOThumb5 from 'assets/images/fpo/first-bottom-thumb.png';
 import FPOThumb6 from 'assets/images/fpo/third-bottom-thumb.png';
+import { useTranslation } from 'react-i18next';
 
 register();
 
 const Content = () => {
   const { data, isLoading } = useContent('featured', ContentLists.Featured);
-
+  const { t } = useTranslation('about');
   // const content = data || [
   const content = [
     {
@@ -77,7 +78,7 @@ const Content = () => {
       <s.ContentHeader container>
         <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
           <Typography component="h3" variant="h3">
-            <span>Featured Content</span>
+            <span>{t('featuredTag')}</span>
           </Typography>
         </Grid>
       </s.ContentHeader>
