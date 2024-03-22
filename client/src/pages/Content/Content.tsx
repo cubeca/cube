@@ -345,14 +345,6 @@ const Video = () => {
               {loggedInProfileId === profileId && (
                 // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                 <s.EditDeleteWrapper>
-                  {(content?.type === 'audio' || content?.type === 'video') && (
-                    <s.EditSubsButton
-                      component={RouterLink}
-                      to={`/subtitle-editor/${content?.id}`}
-                    >
-                      Edit Subtitles
-                    </s.EditSubsButton>
-                  )}
                   <DeleteContentButton contentId={content?.id || ''} />
                 </s.EditDeleteWrapper>
                 // </Box>
