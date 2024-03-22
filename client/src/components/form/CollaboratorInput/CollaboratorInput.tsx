@@ -58,6 +58,7 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
   useEffect(() => {
     if (collaborators) {
       const newAllCollaboratorIds = [...allCollaboratorIds];
+      setFinalCollaborators(newAllCollaboratorIds);
       const newIdToNameMap: Record<string, string> = { ...idToNameMap };
       const newNameToIdMap: Record<string, string> = { ...nameToIdMap };
       const newAllCollaborators: string[] = allCollaborators.filter(
