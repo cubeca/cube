@@ -14,7 +14,7 @@ import Grid from '@mui/system/Unstable_Grid';
 import TextInput from 'components/form/TextInput';
 import TagInput from 'components/form/TagInput';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CollaboratorInput from 'components/form/CollaboratorInput';
 import * as s from './Tags.styled';
 import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
@@ -22,11 +22,22 @@ import { Controller } from 'react-hook-form';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import EmbedToggleInput from 'components/form/EmbedToggleInput';
 
-const Tags = ({ control, handleCaptchaVerification }: any) => {
+const Tags = ({
+  control,
+  handleCaptchaVerification,
+  editMode,
+  content,
+  setFinalCollaborators,
+  selectedCategories,
+  setSelectedCategories
+}: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const categories = Object.keys(SearchFiltersCategoryEnum);
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+  const [localCategories, setLocalCategories] = useState(
+    editMode && content?.category ? content?.category : []
+  );
 
   const [artists, setArtists] = useState<any[]>([
     { name: 'artist_1', url: 'artist_url_1' }
@@ -90,6 +101,29 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
     }
   };
 
+  // Helper function to get custom fields
+  const getCustomFields = (contributors: any) => {
+    const keysToExclude = ['artist', 'camera_operator', 'editor', 'sound'];
+    return Object.keys(contributors)
+      .filter((key) => !keysToExclude.includes(key))
+      .map((key) => ({ role: key, name: contributors[key][0]?.name }));
+  };
+
+  const getDefaultRole = (contributors: any) => {
+    if (contributors?.artist) {
+      return 'Artist';
+    } else if (contributors?.preferredTitle) {
+      return contributors.preferredTitle;
+    } else {
+      return '';
+    }
+  };
+
+  useEffect(() => {
+    if (content?.category) {
+      setSelectedCategories(content?.category);
+    }
+  }, [content?.category]);
   return (
     <Box className={'upload__tags-screen'}>
       <Typography component="h2" variant="h2">
@@ -105,8 +139,12 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
             <Autocomplete
               multiple
               options={categories}
-              value={field.value}
-              onChange={(_, newValue) => field.onChange(newValue)}
+              value={localCategories}
+              onChange={(_, newValue) => {
+                field.onChange(newValue);
+                setSelectedCategories(newValue);
+                setLocalCategories(newValue);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -149,12 +187,24 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           name="tags"
           fullWidth
           placeholder={t('Connection Tags (required)')}
+          defaultValue={
+            editMode && content?.tags.length > 1
+              ? content?.tags.join(', ')
+              : content?.tags[0] || ''
+          }
         />
         <TagInput
           control={control}
           name="languageTags"
           fullWidth
           placeholder={t('Language Tags (required)')}
+          defaultValue={
+            editMode &&
+            content?.languageTags &&
+            content?.languageTags.length > 1
+              ? content?.languageTags.join(', ')
+              : (content?.languageTags && content?.languageTags[0]) || ''
+          }
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
           <strong>{t('Separate tags with a comma. ')}</strong>
@@ -189,61 +239,76 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           )}
         </Typography>
 
-        {artists.map((_, index) => (
-          <Grid key={index} container columnSpacing={2} rowSpacing={4}>
-            {index === 0 ? (
-              <Grid xs={12} sm={2}>
+        {artists &&
+          artists.map((_, index) => (
+            <Grid key={index} container columnSpacing={2} rowSpacing={4}>
+              {index === 0 ? (
+                <Grid xs={12} sm={2}>
+                  <TextInput
+                    variant={'outlined'}
+                    control={control}
+                    name={`preferredTitle`}
+                    fullWidth
+                    rules={{ required: false }}
+                    defaultValue={
+                      (editMode && getDefaultRole(content?.contributors)) ||
+                      'Artist'
+                    }
+                  />
+                </Grid>
+              ) : (
+                <Grid xs={2} />
+              )}
+              <Grid xs={12} sm={4}>
                 <TextInput
                   variant={'outlined'}
                   control={control}
-                  name={`preferredTitle`}
+                  name={`artistName${index}`}
                   fullWidth
+                  placeholder={t('Name')}
                   rules={{ required: false }}
-                  defaultValue="Artist"
+                  defaultValue={
+                    editMode && content?.contributors.artist[index]
+                      ? content?.contributors.artist[index].name
+                      : ''
+                  }
                 />
               </Grid>
-            ) : (
-              <Grid xs={2} />
-            )}
-            <Grid xs={12} sm={4}>
-              <TextInput
-                variant={'outlined'}
-                control={control}
-                name={`artistName${index}`}
-                fullWidth
-                placeholder={t('Name')}
-                rules={{ required: false }}
-              />
-            </Grid>
-            <Grid xs={12} sm={4}>
-              <TextInput
-                control={control}
-                name={`artistUrl${index}`}
-                fullWidth
-                placeholder={t('URL')}
-                rules={{
-                  required: false,
-                  pattern: {
-                    value: /^(ftp|http|https):\/\/[^ "]+$/,
-                    message: 'URLs must begin with http://, https://, or ftp://'
+              <Grid xs={12} sm={4}>
+                <TextInput
+                  control={control}
+                  name={`artistUrl${index}`}
+                  defaultValue={
+                    editMode && content?.contributors.artist[index]
+                      ? content?.contributors.artist[index].url
+                      : ''
                   }
-                }}
-              />
-            </Grid>
-
-            {index === artists.length - 1 && (
-              <Grid xs={12} sm={2}>
-                <s.StyledButton
-                  sx={{ marginTop: '14px', height: '58px' }}
-                  variant="outlined"
-                  onClick={() => handleAddMore('artist', 'preferredTitle')}
-                >
-                  {t('+ more')}
-                </s.StyledButton>
+                  fullWidth
+                  placeholder={t('URL')}
+                  rules={{
+                    required: false,
+                    pattern: {
+                      value: /^(ftp|http|https):\/\/[^ "]+$/,
+                      message:
+                        'URLs must begin with http://, https://, or ftp://'
+                    }
+                  }}
+                />
               </Grid>
-            )}
-          </Grid>
-        ))}
+
+              {index === artists.length - 1 && (
+                <Grid xs={12} sm={2}>
+                  <s.StyledButton
+                    sx={{ marginTop: '14px', height: '58px' }}
+                    variant="outlined"
+                    onClick={() => handleAddMore('artist', 'preferredTitle')}
+                  >
+                    {t('+ more')}
+                  </s.StyledButton>
+                </Grid>
+              )}
+            </Grid>
+          ))}
         <Typography
           component="p"
           variant="body2"
@@ -253,139 +318,168 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           {t("Include an artist's URL to hyperlink their name in the credits.")}
         </Typography>
 
-        {editors.map((_, index) => (
-          <Grid key={index} container columnSpacing={2} rowSpacing={4}>
-            {index === 0 ? (
-              <Grid xs={12} sm={2}>
-                <Typography component="h6" variant="h6" mt={theme.spacing(3)}>
-                  Editor:
-                </Typography>
+        {editors &&
+          editors.map((_, index) => (
+            <Grid key={index} container columnSpacing={2} rowSpacing={4}>
+              {index === 0 ? (
+                <Grid xs={12} sm={2}>
+                  <Typography component="h6" variant="h6" mt={theme.spacing(3)}>
+                    Editor:
+                  </Typography>
+                </Grid>
+              ) : (
+                <Grid xs={2} />
+              )}
+              <Grid xs={12} sm={8}>
+                <TextInput
+                  control={control}
+                  name={`editorName${index}`}
+                  defaultValue={
+                    editMode && content?.contributors.editor
+                      ? content?.contributors.editor[index].name
+                      : ''
+                  }
+                  fullWidth
+                  placeholder={t('Name')}
+                  rules={{ required: false }}
+                />
               </Grid>
-            ) : (
-              <Grid xs={2} />
-            )}
-            <Grid xs={12} sm={8}>
-              <TextInput
-                control={control}
-                name={`editorName${index}`}
-                fullWidth
-                placeholder={t('Name')}
-                rules={{ required: false }}
-              />
+              {index === editors.length - 1 && (
+                <Grid xs={12} sm={2}>
+                  <s.StyledButton
+                    variant="outlined"
+                    onClick={() => handleAddMore('editor')}
+                  >
+                    {t('+ more')}
+                  </s.StyledButton>
+                </Grid>
+              )}
             </Grid>
-            {index === editors.length - 1 && (
-              <Grid xs={12} sm={2}>
-                <s.StyledButton
-                  variant="outlined"
-                  onClick={() => handleAddMore('editor')}
-                >
-                  {t('+ more')}
-                </s.StyledButton>
-              </Grid>
-            )}
-          </Grid>
-        ))}
+          ))}
 
-        {cameraOperators.map((_, index) => (
-          <Grid key={index} container columnSpacing={2} rowSpacing={4}>
-            {index === 0 ? (
-              <Grid xs={12} sm={2}>
-                <Typography component="h6" variant="h6" mt={theme.spacing(2)}>
-                  Camera Operator:
-                </Typography>
+        {cameraOperators &&
+          cameraOperators.map((_, index) => (
+            <Grid key={index} container columnSpacing={2} rowSpacing={4}>
+              {index === 0 ? (
+                <Grid xs={12} sm={2}>
+                  <Typography component="h6" variant="h6" mt={theme.spacing(2)}>
+                    Camera Operator:
+                  </Typography>
+                </Grid>
+              ) : (
+                <Grid xs={2} />
+              )}
+              <Grid xs={12} sm={8}>
+                <TextInput
+                  control={control}
+                  name={`cameraOperatorName${index}`}
+                  fullWidth
+                  placeholder={t('Name')}
+                  defaultValue={
+                    editMode && content?.contributors.camera_operator
+                      ? content?.contributors.camera_operator[index].name
+                      : ''
+                  }
+                  rules={{ required: false }}
+                />
               </Grid>
-            ) : (
-              <Grid xs={2} />
-            )}
-            <Grid xs={12} sm={8}>
-              <TextInput
-                control={control}
-                name={`cameraOperatorName${index}`}
-                fullWidth
-                placeholder={t('Name')}
-                rules={{ required: false }}
-              />
+              {index === cameraOperators.length - 1 && (
+                <Grid xs={12} sm={2}>
+                  <s.StyledButton
+                    variant="outlined"
+                    onClick={() => handleAddMore('camera_operator')}
+                  >
+                    {t('+ more')}
+                  </s.StyledButton>
+                </Grid>
+              )}
             </Grid>
-            {index === cameraOperators.length - 1 && (
-              <Grid xs={12} sm={2}>
-                <s.StyledButton
-                  variant="outlined"
-                  onClick={() => handleAddMore('camera_operator')}
-                >
-                  {t('+ more')}
-                </s.StyledButton>
-              </Grid>
-            )}
-          </Grid>
-        ))}
+          ))}
 
-        {soundTechnicians.map((_, index) => (
-          <Grid key={index} container columnSpacing={2} rowSpacing={4}>
-            {index === 0 ? (
-              <Grid xs={12} sm={2}>
-                <Typography component="h6" variant="h6" mt={theme.spacing(2)}>
-                  Sound Technician:
-                </Typography>
+        {soundTechnicians &&
+          soundTechnicians.map((_, index) => (
+            <Grid key={index} container columnSpacing={2} rowSpacing={4}>
+              {index === 0 ? (
+                <Grid xs={12} sm={2}>
+                  <Typography component="h6" variant="h6" mt={theme.spacing(2)}>
+                    Sound Technician:
+                  </Typography>
+                </Grid>
+              ) : (
+                <Grid xs={2} />
+              )}
+              <Grid xs={12} sm={8}>
+                <TextInput
+                  control={control}
+                  name={`soundTechnicianName${index}`}
+                  defaultValue={
+                    editMode && content?.contributors.sound_technician
+                      ? content?.contributors.sound_technician[index].name
+                      : ''
+                  }
+                  fullWidth
+                  placeholder={t('Name')}
+                  rules={{ required: false }}
+                />
               </Grid>
-            ) : (
-              <Grid xs={2} />
-            )}
-            <Grid xs={12} sm={8}>
-              <TextInput
-                control={control}
-                name={`soundTechnicianName${index}`}
-                fullWidth
-                placeholder={t('Name')}
-                rules={{ required: false }}
-              />
+              {index === soundTechnicians.length - 1 && (
+                <Grid xs={12} sm={2}>
+                  <s.StyledButton
+                    variant="outlined"
+                    onClick={() => handleAddMore('sound_technician')}
+                  >
+                    {t('+ more')}
+                  </s.StyledButton>
+                </Grid>
+              )}
             </Grid>
-            {index === soundTechnicians.length - 1 && (
-              <Grid xs={12} sm={2}>
-                <s.StyledButton
-                  variant="outlined"
-                  onClick={() => handleAddMore('sound_technician')}
-                >
-                  {t('+ more')}
-                </s.StyledButton>
-              </Grid>
-            )}
-          </Grid>
-        ))}
+          ))}
 
-        {otherContributors.map((_, index) => (
-          <Grid key={index} container columnSpacing={2} rowSpacing={4}>
-            <Grid xs={12} sm={2}>
-              <TextInput
-                variant={'outlined'}
-                control={control}
-                name={`other_role_${index}`}
-                fullWidth
-                placeholder={t('Role')}
-                rules={{ required: false }}
-              />
-            </Grid>
-            <Grid xs={12} sm={8}>
-              <TextInput
-                control={control}
-                name={`other_name_${index}`}
-                fullWidth
-                placeholder={t('Name')}
-                rules={{ required: false }}
-              />
-            </Grid>
-            {index === otherContributors.length - 1 && (
+        {otherContributors &&
+          otherContributors.map((_, index) => (
+            <Grid key={index} container columnSpacing={2} rowSpacing={4}>
               <Grid xs={12} sm={2}>
-                <s.StyledButton
-                  sx={{ marginTop: '14px', height: '58px' }}
-                  variant="outlined"
-                  onClick={() => handleAddMore('other')}
-                >
-                  {t('+ more')}
-                </s.StyledButton>
+                <TextInput
+                  variant={'outlined'}
+                  control={control}
+                  name={`other_role_${index}`}
+                  fullWidth
+                  placeholder={t('Role')}
+                  rules={{ required: false }}
+                  defaultValue={
+                    (editMode &&
+                      getCustomFields(content?.contributors)[index]?.role) ||
+                    ''
+                  }
+                />
               </Grid>
-            )}
-          </Grid>
-        ))}
+              <Grid xs={12} sm={8}>
+                <TextInput
+                  control={control}
+                  name={`other_name_${index}`}
+                  fullWidth
+                  placeholder={t('Name')}
+                  rules={{ required: false }}
+                  defaultValue={
+                    (editMode &&
+                      getCustomFields(content?.contributors)[index]?.name) ||
+                    ''
+                  }
+                />
+              </Grid>
+              {index === otherContributors.length - 1 && (
+                <Grid xs={12} sm={2}>
+                  <s.StyledButton
+                    sx={{ marginTop: '14px', height: '58px' }}
+                    variant="outlined"
+                    onClick={() => handleAddMore('other')}
+                  >
+                    {t('+ more')}
+                  </s.StyledButton>
+                </Grid>
+              )}
+            </Grid>
+          ))}
       </Box>
 
       <Box my={theme.spacing(5)}>
@@ -395,7 +489,15 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
           fullWidth
           placeholder={t('Collaborators')}
           rules={{ required: false }}
+          editMode={editMode}
+          setFinalCollaborators={setFinalCollaborators}
+          value={
+            editMode && content?.collaboratorDetails
+              ? content?.collaboratorDetails
+              : []
+          }
         />
+
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
             'Did you work with another organization on CubeCommons? Connect this content to their profile by selecting their name.'
@@ -421,7 +523,7 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
 
           <Grid container justifyContent="flex-end" xs={12} sm={4}>
             <EmbedToggleInput
-              defaultValue="true"
+              defaultValue={editMode ? content?.embedToggleEnabled : 'true'}
               control={control}
               name="embedToggleInput"
               colormode="light"
@@ -488,19 +590,21 @@ const Tags = ({ control, handleCaptchaVerification }: any) => {
         </Box>
       </Box>
 
-      <Box my={theme.spacing(5)}>
-        <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
-          {t('Captcha')}
-        </Typography>
-        <HCaptcha
-          theme="dark"
-          sitekey={hCaptchaKey}
-          onVerify={handleCaptchaVerification}
-        />
-        <Typography component="p" variant="body2">
-          {t('Verify you are a human being.')}
-        </Typography>
-      </Box>
+      {!editMode && (
+        <Box my={theme.spacing(5)}>
+          <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
+            {t('Captcha')}
+          </Typography>
+          <HCaptcha
+            theme="dark"
+            sitekey={hCaptchaKey}
+            onVerify={handleCaptchaVerification}
+          />
+          <Typography component="p" variant="body2">
+            {t('Verify you are a human being.')}
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

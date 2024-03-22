@@ -2,7 +2,8 @@ import { upload } from './upload';
 import { contentApi } from '.';
 import {
   AddContentRequest,
-  ReportContentRequest
+  ReportContentRequest,
+  UpdateContent
 } from '@cubeca/cube-svc-client-oas-axios';
 
 import EventEmitter from 'events';
@@ -39,6 +40,42 @@ export const getContentDetails = async (id: string) => {
 
 export const getContentByProfileId = async (profileId: string) => {
   return await contentApi.getContentByProfileid(0, 10, profileId);
+};
+
+export const updateContent = async ({
+  id,
+  payload,
+  coverImageFile,
+  bannerImageFile,
+  vttFile
+}: {
+  id: any;
+  payload: UpdateContent;
+  coverImageFile?: File;
+  bannerImageFile?: File;
+  vttFile?: File;
+}) => {
+  if (coverImageFile) {
+    const fileId = await upload(coverImageFile, payload.profileId);
+    if (fileId) {
+      payload.coverImageFileId = fileId;
+    }
+  }
+  if (bannerImageFile) {
+    const fileId = await upload(bannerImageFile, payload.profileId);
+    if (fileId) {
+      payload.bannerImageFileId = fileId;
+    }
+  }
+
+  if (vttFile) {
+    const fileId = await upload(vttFile, payload.profileId);
+    if (fileId) {
+      payload.vttFileId = fileId;
+    }
+  }
+
+  return await contentApi.updateContent(id, payload);
 };
 
 export const addContent = async ({

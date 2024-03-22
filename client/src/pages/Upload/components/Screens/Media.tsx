@@ -15,7 +15,9 @@ const Media = ({
   uploadType,
   setIsMediaProperFileType,
   setIsCoverImageProperFileType,
-  setIsBannerImageProperFileType
+  setIsBannerImageProperFileType,
+  editMode,
+  content
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -29,6 +31,8 @@ const Media = ({
   const [bannerImageTypeAccepted, setBannerImageTypeAccepted] = useState(false);
   const [imageTypeError, setImageTypeError] = useState('');
   const [bannerImageTypeError, setBannerImageTypeError] = useState('');
+  const [newImage, setNewImage] = useState<any>();
+  const [newBannerImage, setNewBannerImage] = useState<any>();
 
   useEffect(() => {
     setMediaTypeError('');
@@ -86,6 +90,12 @@ const Media = ({
       setImageTypeError,
       setImageTypeAccepted
     );
+    // get preview of new image
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewImage(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
     handleCoverImageUpload(files);
   };
 
@@ -96,6 +106,12 @@ const Media = ({
       setBannerImageTypeError,
       setBannerImageTypeAccepted
     );
+    // get preview of new image
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setNewBannerImage(reader.result);
+    };
+    reader.readAsDataURL(files[0]);
     handleBannerImageUpload(files);
   };
 
@@ -120,7 +136,6 @@ const Media = ({
   const pdfFileTypes = ['PDF'];
   const imageFileTypes = ['JPG', 'JPEG', 'PNG', 'GIF'];
   const documentFileTypes = ['DOC', 'DOCX', 'ODT', 'RTF', 'TXT', 'XLS', 'XLSX'];
-
   const showField = (field: string) => {
     const reqMap = {
       video: ['title', 'mediaFile', 'thumbNail', 'videoFileTypes'],
@@ -173,42 +188,45 @@ const Media = ({
         {t('Media')}
       </Typography>
 
-      <Box my={theme.spacing(5)}>
-        <Select
-          label={t('File Type')}
-          name="type"
-          control={control}
-          fullWidth={false}
-          defaultValue=""
-        >
-          <MenuItem.li value={ContentTypes.Video}>{t('Video')}</MenuItem.li>
-          <MenuItem.li value={ContentTypes.Audio}>{t('Audio')}</MenuItem.li>
-          <MenuItem.li value={ContentTypes.PDF}>{t('PDF')}</MenuItem.li>
-          <MenuItem.li value={ContentTypes.Document}>
-            {t('Word Document')}
-          </MenuItem.li>
-          <MenuItem.li value={ContentTypes.Link}>{t('Link')}</MenuItem.li>
-        </Select>
-        <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-          {t(
-            'What type of media are you uploading? Don’t see the type you need in this list? '
-          )}
-          <Link
-            href="mailto:ash@cubecommons.ca"
-            target="_blank"
-            rel="noopener noreferrer"
+      {!editMode && (
+        <Box my={theme.spacing(5)}>
+          <Select
+            label={t('File Type')}
+            name="type"
+            control={control}
+            fullWidth={false}
+            defaultValue=""
           >
-            {t('Contact us.')}
-          </Link>
-        </Typography>
-      </Box>
-      {showField('title') ? (
+            <MenuItem.li value={ContentTypes.Video}>{t('Video')}</MenuItem.li>
+            <MenuItem.li value={ContentTypes.Audio}>{t('Audio')}</MenuItem.li>
+            <MenuItem.li value={ContentTypes.PDF}>{t('PDF')}</MenuItem.li>
+            <MenuItem.li value={ContentTypes.Document}>
+              {t('Word Document')}
+            </MenuItem.li>
+            <MenuItem.li value={ContentTypes.Link}>{t('Link')}</MenuItem.li>
+          </Select>
+          <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+            {t(
+              'What type of media are you uploading? Don’t see the type you need in this list? '
+            )}
+            <Link
+              href="mailto:ash@cubecommons.ca"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {t('Contact us.')}
+            </Link>
+          </Typography>
+        </Box>
+      )}
+      {showField('title') || editMode ? (
         <Box my={theme.spacing(5)}>
           <TextInput
             control={control}
             name="title"
             fullWidth
-            placeholder={t('Title (required)')}
+            placeholder={'Title (required)'}
+            defaultValue={editMode ? content?.title : ''}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
@@ -217,7 +235,7 @@ const Media = ({
           </Typography>
         </Box>
       ) : null}
-      {showField('mediaFile') ? (
+      {showField('mediaFile') && !editMode ? (
         <Box my={theme.spacing(5)}>
           <UploadInput
             key={uploadType}
@@ -238,14 +256,19 @@ const Media = ({
           </Typography>
         </Box>
       ) : null}
-      {showField('thumbNail') ? (
+      {showField('thumbNail') || editMode ? (
         <Box my={theme.spacing(5)}>
           <UploadInput
             text={t('Thumbnail image (required)')}
             onDrop={handleThumbnailOnDrop}
             maxFiles={1}
-            isUploadReady={isThumbUploadReady}
+            isUploadReady={!editMode ? isThumbUploadReady : true}
+            currentImage={content?.coverImageUrl?.playerInfo?.publicUrl}
+            newImage={newImage}
+            editMode={editMode}
+            editType="Cover"
           />
+
           {imageTypeError ? (
             <Typography component="p" variant="body2" color="#FFB7C4">
               {imageTypeError}
@@ -258,12 +281,13 @@ const Media = ({
           </Typography>
         </Box>
       ) : null}
-      {showField('thumbNail') ? (
+      {showField('thumbNail') || editMode ? (
         <Box my={theme.spacing(5)}>
           <TextInput
             control={control}
             name="imageText"
             placeholder={t('Thumbnail Image alt text (required)')}
+            defaultValue={editMode ? content?.coverImageText : ''}
             fullWidth
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
@@ -279,7 +303,11 @@ const Media = ({
             text={t('Banner image (required)')}
             onDrop={handleBannerOnDrop}
             maxFiles={1}
-            isUploadReady={isBannerUploadReady}
+            isUploadReady={!editMode ? isBannerUploadReady : true}
+            currentImage={content?.bannerImageUrl?.playerInfo?.publicUrl}
+            newImage={newBannerImage}
+            editMode={editMode}
+            editType="Banner"
           />
           {bannerImageTypeError ? (
             <Typography component="p" variant="body2" color="#FFB7C4">
@@ -299,6 +327,7 @@ const Media = ({
             control={control}
             name="bannerImageText"
             placeholder={t('Banner Image alt text (required)')}
+            defaultValue={editMode ? content?.bannerImageText : ''}
             fullWidth
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
@@ -314,6 +343,7 @@ const Media = ({
             control={control}
             name="link"
             placeholder={t('Link to content (required)')}
+            defaultValue={editMode ? content?.externalUrl : ''}
             fullWidth
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>

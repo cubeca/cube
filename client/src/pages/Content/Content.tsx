@@ -9,7 +9,8 @@ import CodeIcon from '@mui/icons-material/Code';
 import FlagIcon from '@mui/icons-material/Flag';
 import DownloadIcon from '@mui/icons-material/Download';
 import ListIcon from '@mui/icons-material/List';
-
+import EditIcon from '@mui/icons-material/Edit';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
 
 import MoreContent from './MoreContent';
@@ -32,6 +33,7 @@ import { useLocation } from 'react-router-dom';
 import ReportContentModal from 'components/ReportContentModal';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import { getAuthTokenPayload } from 'utils/auth';
+import { getProfileTag } from 'utils/auth';
 import useAuth from 'hooks/useAuth';
 
 const Video = () => {
@@ -71,6 +73,8 @@ const Video = () => {
 
   let youtubeID = '';
 
+  const id = content?.id;
+  const tag = getProfileTag();
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const coverArtUrl = content?.coverImageUrl
@@ -92,7 +96,6 @@ const Video = () => {
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
   const embedToggleEnabled = content?.embedToggleEnabled;
-
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
     youtubeID = getIDfromURL(linkUrl);
@@ -108,7 +111,7 @@ const Video = () => {
   // set subtitleUrl when content changes
   useEffect(() => {
     setSubtitleUrl(content?.vttFileUrl?.playerInfo?.publicUrl || '');
-  }, [content]);
+  }, [content, content?.vttFileUrl?.playerInfo?.publicUrl]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -241,6 +244,7 @@ const Video = () => {
         </s.LoadingWrapper>
       ) : (
         <MediaPlayer
+          key={coverArtUrl}
           url={audioUrl || ''}
           coverArtUrl={coverArtUrl}
           coverImageAltText={coverImageAltText}
@@ -391,6 +395,25 @@ const Video = () => {
                     Report Content
                   </s.Action>
                 </s.ActionsWrapper>
+                {loggedInProfileId === profileId && (
+                  <>
+                    <s.ActionsWrapper>
+                      <EditIcon />
+                      <s.Action to={`/profile/${tag}/upload?contentid=${id}`}>
+                        Edit Content
+                      </s.Action>
+                    </s.ActionsWrapper>
+                    {(content?.type === 'audio' ||
+                      content?.type === 'video') && (
+                      <s.ActionsWrapper>
+                        <SubtitlesIcon />
+                        <s.Action to={`/subtitle-editor/${content?.id}`}>
+                          Edit Subtitles
+                        </s.Action>
+                      </s.ActionsWrapper>
+                    )}
+                  </>
+                )}
               </Stack>
             )}
 
