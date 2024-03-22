@@ -507,14 +507,16 @@ const Video = () => {
                         .split(', ')
                         .map((tag: string, index: number, array: string[]) => (
                           <React.Fragment key={tag}>
-                            <s.Tag
-                              component="span"
-                              variant="body2"
-                              underline="true"
-                            >
-                              {tag}
-                              {index < array.length - 1 && ','}
-                            </s.Tag>
+                            <Link href={`/search?searchTerm=${tag}`}>
+                              <s.Tag
+                                component="span"
+                                variant="body2"
+                                underline="true"
+                              >
+                                {tag}
+                                {index < array.length - 1 && ','}
+                              </s.Tag>
+                            </Link>
                             {index < array.length - 1 && (
                               <s.Tag component="span" variant="body2">
                                 &nbsp;
@@ -539,14 +541,16 @@ const Video = () => {
                         .split(', ')
                         .map((tag: string, index: number, array: string[]) => (
                           <React.Fragment key={tag}>
-                            <s.Tag
-                              component="span"
-                              variant="body2"
-                              underline="true"
-                            >
-                              {tag}
-                              {index < array.length - 1 && ','}
-                            </s.Tag>
+                            <Link href={`/search?language=${tag}`}>
+                              <s.Tag
+                                component="span"
+                                variant="body2"
+                                underline="true"
+                              >
+                                {tag}
+                                {index < array.length - 1 && ','}
+                              </s.Tag>
+                            </Link>
                             {index < array.length - 1 && (
                               <s.Tag component="span" variant="body2">
                                 &nbsp;

@@ -86,6 +86,18 @@ export const searchContent = async (offset: number, limit: number, filters: any,
     });
   }
 
+  if (filters.languageTags) {
+    const tagSearch = filters.languageTags.split(',');
+    if (!whereClause[Op.and]) {
+      whereClause[Op.and] = [];
+    }
+    whereClause[Op.and].push({
+      [Op.or]: tagSearch.map((term: string) => ({
+        'data.languageTags': { [Op.iLike]: `%${term.trim()}%` }
+      }))
+    });
+  }
+
   const contentList = await Content.findAll({
     where: whereClause,
     order: [['created_at', 'DESC']],
