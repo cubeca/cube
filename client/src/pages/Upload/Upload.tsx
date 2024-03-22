@@ -187,9 +187,13 @@ const Upload = () => {
     }
     setIsQueryParamCheckComplete(true);
     // if not content owner, redirect to profile page
-    if (profileId !== content?.profileId) {
-      navigate(`/profile/${tag}`);
-    }
+    // BUG: was trying to redirect to profile page if not content owner, but this was causing
+    // clicking Upload to redirect to profile page
+    // this is only an issue of a user manually entered the URL
+    // with the query param to content that isn't theirs
+    // if (profileId !== content?.profileId && !editMode) {
+    //   navigate(`/profile/${tag}`);
+    // }
   }, [id, contentId, location, isLoading, isContentLoading]);
 
   const mediaType = watch('type');
