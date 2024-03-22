@@ -1,4 +1,5 @@
 import { Box, Link, Typography, useTheme } from '@mui/material';
+import * as s from './Media.styled';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
 import UploadInput from 'components/form/UploadInput';
@@ -169,6 +170,22 @@ const Media = ({
 
   return (
     <Box className={'upload__media-screen'}>
+      
+      <Typography component="h1" variant="h1">
+        {t('User Notes')}
+      </Typography>
+      <s.StyledListItem>    
+      {t('Do not log-in to your account in multiple windows and try to upload many files at the same time.')}
+      </s.StyledListItem>
+      <s.StyledListItem>    
+      {t('Do not try to upload the same file in multiple windows or on multiple computers. We could pay to prevent you from doing this or you could just not.')}
+      </s.StyledListItem>
+      <s.StyledListItem>    
+      {t('Ensure the file type you select below is the same as the file type you upload.')}
+      </s.StyledListItem>
+      <Typography component="h4" variant="h4" mt={(2.5)}>
+       {t('* Your Requests Consume Energy & Resources, Be Mindful *')}
+      </Typography>
       <Typography component="h2" variant="h2">
         {t('Media')}
       </Typography>
