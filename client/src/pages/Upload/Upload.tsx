@@ -22,6 +22,7 @@ import useContentDetails from 'hooks/useContentDetails';
 import useContentDetailsByParam from 'hooks/useContentDetailsByParam';
 import Lottie from 'lottie-react';
 import { UpdateContentTypeEnum } from '@cubeca/cube-svc-client-oas-axios/dist/models/update-content';
+import useAuth from 'hooks/useAuth';
 
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
@@ -123,7 +124,7 @@ const Upload = () => {
   const queryParams = new URLSearchParams(location.search);
   let contentId = queryParams.get('contentid');
   let id = queryParams.get('contentid');
-
+  const { isLoggedIn } = useAuth();
   const {
     data: content,
     isLoading: isContentLoading,
@@ -179,6 +180,11 @@ const Upload = () => {
   );
   const [newCoverImageSelected, setNewCoverImageSelected] = useState(false);
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/');
+    }
+  });
   useEffect(() => {
     if ((contentId || id) && profileId === content?.profileId) {
       setEditMode(true);
