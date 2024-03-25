@@ -194,6 +194,7 @@ const EditProfileForm = ({
         name="profileDescription"
         id="profileDescription"
         control={control}
+        rules={{ required: false }}
         multiline
         rows={4}
         fullWidth
