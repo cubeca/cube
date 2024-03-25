@@ -160,7 +160,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 return;
             }
         } catch (error) {
-            if (error.contains("unsupported file type")) {
+            if (error.includes("unsupported file type")) {
                 console.error("We found an unsupported file type and need to end this process");
                 return;
             }
