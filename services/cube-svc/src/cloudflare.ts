@@ -185,10 +185,6 @@ export const getFile = async (fileId: string) => {
       throw new Error('File ' + fileId + ' not found.');
     }
 
-    if (!videoDetails.readyToStream) {
-      throw new Error('Video is still being processed.');
-    }
-
     playerInfo = {
       hlsUrl: videoDetails?.playback?.hls,
       dashUrl: videoDetails?.playback?.dash,
