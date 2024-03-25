@@ -208,13 +208,15 @@ const PlaylistPanel: React.FC<Props> = ({
         setLocalPlaylists((prevPlaylists: any) => {
           return prevPlaylists.filter((playlist: any) => playlist.id !== id);
         });
-        if (cameFromSinglePlaylist && profileId) {
-          window.location.href = `/profile/${profileTag}`;
-        } else if (cameFromSinglePlaylist && userId) {
-          window.location.href = `/user/${userId}`;
-        } else {
-          return;
-        }
+        setTimeout(() => {
+          if (cameFromSinglePlaylist && profileId) {
+            window.location.href = `/profile/${profileTag}`;
+          } else if (cameFromSinglePlaylist && userId) {
+            window.location.href = `/user/${userId}`;
+          } else {
+            return;
+          }
+        }, 300);
       })
       .catch((error) => {
         console.error(error);
@@ -244,7 +246,15 @@ const PlaylistPanel: React.FC<Props> = ({
             No
           </Button>
           <Button
-            onClick={() => deletePlaylist(editMode || '')}
+            onClick={() => {
+              setTimeout(() => {
+                if (currentPlaylistId) {
+                  deletePlaylist(currentPlaylistId);
+                } else {
+                  deletePlaylist(editMode || '');
+                }
+              }, 300);
+            }}
             color="secondary"
           >
             Yes
@@ -287,6 +297,7 @@ const PlaylistPanel: React.FC<Props> = ({
                           className="editInput"
                           value={editedTitles[playlist.id] || ''}
                           // value={textFieldTitleValue}
+                          placeholder="Title (required)"
                           onChange={(e) => {
                             setEditedTitles({
                               ...editedTitles,
@@ -418,6 +429,7 @@ const PlaylistPanel: React.FC<Props> = ({
                             [playlist.id]: e.target.value
                           });
                         }}
+                        placeholder="Description (required)"
                         fullWidth
                         variant="outlined"
                         multiline
