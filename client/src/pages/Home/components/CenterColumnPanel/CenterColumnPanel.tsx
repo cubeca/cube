@@ -67,11 +67,6 @@ const CenterColumnPanel = () => {
                   'daoText'
                 )}
               </Typography>
-              <Typography component="p">
-                {t(
-                  'daoSustainOp'
-                )}
-              </Typography>
               <Typography component="p" variant="h3">
                 {t(
                   'daoFR'

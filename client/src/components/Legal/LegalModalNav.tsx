@@ -61,7 +61,12 @@ const LegalModalNav = () => {
     <>
       <s.NavLink onClick={() => setLegalDisplay(true)}>
         {t(
-          'Our Code of Contact is Defined by our Terms of Service and Privacy Policy'
+          'Our Code of Conduct is Defined by our Terms of Service and Privacy Policy'
+        )}
+      </s.NavLink>
+      <s.NavLink onClick={() => setLegalDisplay(true)}>
+        {t(
+          'Notre code de conduite est défini par nos conditions d`utilisation et notre politique de confidentialité.'
         )}
       </s.NavLink>
 

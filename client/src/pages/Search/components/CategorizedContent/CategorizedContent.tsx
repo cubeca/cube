@@ -68,7 +68,7 @@ const CategorizedContent = () => {
           newContentOffset + (newContentOffset === 0 ? 11 : contentLimit)
         );
       } catch (error) {
-        setError('Failed to load search results');
+        setError('Failed to load search results/ Échec du chargement des résultats de recherche');
       } finally {
         setIsContentLoading(false);
       }
@@ -151,7 +151,7 @@ const CategorizedContent = () => {
                   {!isPlaylistLoading && playlistResults.length === 0 && (
                     <Grid>
                       <Typography component="p" variant="body1" mt={2}>
-                        <span>No playlists found</span>
+                        <span>No playlists found/ aucun playlists trouvé</span>
                       </Typography>
                     </Grid>
                   )}
@@ -199,7 +199,7 @@ const CategorizedContent = () => {
                   {!isContentLoading && contentResults.length === 0 && (
                     <Grid>
                       <Typography component="p" variant="body1" mt={2}>
-                        <span>No content found</span>
+                        <span>No content found/ aucun contenu trouvé</span>
                       </Typography>
                     </Grid>
                   )}

@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';
-import AboutPanel from '../../../../components/AboutPanel/AboutPanel';
+import AboutPanel from 'components/AboutPanel';
 import CollaborationsHero from 'assets/images/collaborations.jpg';
 import MediaPlayer from 'components/MediaPlayer';
 
@@ -17,13 +17,6 @@ const CollaborationsPanel = () => {
           <Typography component="p" sx={{ padding: '1.5rem 0' }}>
             {t('collaborationsText')}
           </Typography>
-          <MediaPlayer
-            url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
-            isAudio
-          />
-          <Box py="2rem">
-            <Button>{t('Become a content creator', { ns: 'common' })}</Button>
-          </Box>
         </Box>
       }
       imageContent={

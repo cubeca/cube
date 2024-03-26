@@ -12,6 +12,7 @@ export const DigitalNeighboursPanel = styled(Stack)`
   }
   h2{
     margin-bottom: 3px;
+    margin-top: 100px;
   }
   h3{
     margin-bottom: 2rem;
