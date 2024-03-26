@@ -7,6 +7,7 @@ import DigitalNeighboursPanel from './components/DigitalNeighboursPanel';
 import HeroPanel from './components/HeroPanel';
 import NftsPanel from './components/NftsPanel';
 import VirtualExperiencesPanel from './components/VirtualExperiencesPanel';
+import LanguagesPanel from './components/LanguagesPanel';
 
 const About = () => (
   <Stack>
@@ -14,6 +15,7 @@ const About = () => (
     <CenterColumnPanel />
     <VirtualExperiencesPanel />
     <AccessibilityPanel />
+    <LanguagesPanel/>
     {/* <CollaborationsPanel /> */}
     {/* <NftsPanel /> */}
     <DigitalNeighboursPanel />

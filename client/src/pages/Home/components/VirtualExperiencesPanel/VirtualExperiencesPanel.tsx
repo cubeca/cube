@@ -14,20 +14,29 @@ const VirtualExperiencesPanel = () => {
       textContent={
         <s.VRText>
           <div id="virtual-experiences"></div>
-          <Typography component="h2" variant="h2">
-            {t('virtualExperiences')}
+          <s.Headline>
+          <Typography variant="h1">
+            {t('virtual')}
           </Typography>
-          <Typography component="p">{t('virtualExperiencesText')}</Typography>
-
+          <Typography component="h3" variant="h3">
+            {t('virtualFR')}
+          </Typography>
+          </s.Headline>
+          <Typography component="p">
+            {t('virtualText')}
+          </Typography>
+          <Typography component="p" variant="body2">
+            {t('virtualTextFR')}
+          </Typography>
           <s.LinkWrapper>
             <s.ExternalLinkButton target="_blank" to="https://www.voxels.com/">
-              {t('Visit Voxels')}
+              {t('Voxels')}
             </s.ExternalLinkButton>
             <s.ExternalLinkText
               target="_blank"
               to="https://wiki.cryptovoxels.com/"
             >
-              {t('How to Use Voxels')}
+              {t('Voxels Guide')}
             </s.ExternalLinkText>
           </s.LinkWrapper>
         </s.VRText>

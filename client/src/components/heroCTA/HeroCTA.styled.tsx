@@ -35,6 +35,11 @@ export const CTAContent = styled(Box)`
     padding: 40px;
   }
 
+  span {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.palette.primary.main};
+  }
+
   h2 {
     font-weight: 600;
     margin-bottom: 16px;

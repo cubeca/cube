@@ -99,7 +99,8 @@ const getTheme = (mode?: 'dark' | 'light') =>
           marginBottom: '32px'
         },
         body2: {
-          fontSize: '1rem'
+          fontSize: '1rem',
+          margin: '10px, 0px, 10px',
         }
       },
       palette: {

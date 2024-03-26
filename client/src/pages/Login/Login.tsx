@@ -118,7 +118,7 @@ const Login = () => {
                     navigate('/login')
                   }
                 >
-                  {t('Login')}
+                  {t('Login/ Connexion')}
                 </Button>
 
               </s.CTAMessage>
