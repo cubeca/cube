@@ -222,7 +222,6 @@ const PlaylistPanel: React.FC<Props> = ({
         console.error(error);
       });
   };
-
   return (
     <Grid container>
       <s.CustomDialog
@@ -487,7 +486,7 @@ const PlaylistPanel: React.FC<Props> = ({
                                       {...provided.dragHandleProps}
                                     >
                                       <PlaylistItem
-                                        type={content.category[0].toLowerCase()}
+                                        type={content.type}
                                         bgUrl={
                                           content.coverImageUrl?.playerInfo
                                             ?.publicUrl ||
