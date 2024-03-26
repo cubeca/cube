@@ -6,7 +6,12 @@ import { useState } from 'react';
 
 import { useTranslation } from 'react-i18next';
 import Lottie from 'lottie-react';
-const UploadProgress = () => {
+
+type UploadProgressProps = {
+  isUploadError: boolean;
+};
+
+const UploadProgress = ({ isUploadError }: UploadProgressProps) => {
   const { t } = useTranslation();
   const [progress, setProgress] = useState('');
   const [progressInt, setProgressInt] = useState(0);

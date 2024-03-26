@@ -148,6 +148,7 @@ const Upload = () => {
   const [isVTTSelected, setIsVTTSelected] = useState(false);
   const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [isUploadingError, setIsUploadingError] = useState(false);
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -182,40 +183,44 @@ const Upload = () => {
   };
 
   const onSubmit = (values: FieldValues) => {
-    const contributors = getContributors(values);
-    const collaborators = [profileId, values.collaborators];
-    addContent(
-      {
-        profileId: profileId!,
-        title: values.title,
-        type: values.type,
-        expiry: values.expiry,
-        category: values.categories,
-        description: values.description,
-        coverImageText: values.imageText,
-        bannerImageText: values.bannerImageText,
-        collaborators: collaborators,
-        contributors: contributors,
-        tags: values.tags.split(',').map((tag: string) => tag.trim()),
-        languageTags: values.languageTags
-          .split(',')
-          .map((tag: string) => tag.trim()),
-        externalUrl: values.link ? values.link : null,
-        embedToggleEnabled: values.embedToggleInput,
-        isSuitableForChildren: values.audience
-          ? values.audience === 'yeskids'
-          : false,
-        embedContentWhitelist: values.embedContentWhitelist
-          ? values.embedContentWhitelist
-              .split(',')
-              .map((tag: string) => tag.trim())
-          : []
-      },
-      coverImageFile!,
-      mediaFile!,
-      vttFile!,
-      bannerImageFile!
-    );
+    try {
+      const contributors = getContributors(values);
+      const collaborators = [profileId, values.collaborators];
+      addContent(
+        {
+          profileId: profileId!,
+          title: values.title,
+          type: values.type,
+          expiry: values.expiry,
+          category: values.categories,
+          description: values.description,
+          coverImageText: values.imageText,
+          bannerImageText: values.bannerImageText,
+          collaborators: collaborators,
+          contributors: contributors,
+          tags: values.tags.split(',').map((tag: string) => tag.trim()),
+          languageTags: values.languageTags
+            .split(',')
+            .map((tag: string) => tag.trim()),
+          externalUrl: values.link ? values.link : null,
+          embedToggleEnabled: values.embedToggleInput,
+          isSuitableForChildren: values.audience
+            ? values.audience === 'yeskids'
+            : false,
+          embedContentWhitelist: values.embedContentWhitelist
+            ? values.embedContentWhitelist
+                .split(',')
+                .map((tag: string) => tag.trim())
+            : []
+        },
+        coverImageFile!,
+        mediaFile!,
+        vttFile!,
+        bannerImageFile!
+      );
+    } catch (error) {
+      setIsUploadingError(true);
+    }
   };
 
   const SCREENS_BASE = [
@@ -265,7 +270,7 @@ const Upload = () => {
     },
     {
       label: 'Upload',
-      view: <UploadProgress />
+      view: <UploadProgress isUploadError={isUploadingError} />
     }
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);

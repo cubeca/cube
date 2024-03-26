@@ -14,9 +14,13 @@ export const upload = async (
   const mimeType = file.type;
   if (mimeType.startsWith('video')) {
     const fileId = makeUUID();
-    const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
-    await uploadViaTus(file, uploadTusEndpoint, { profileId });
-    return fileId;
+    try {
+      const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
+      await uploadViaTus(file, uploadTusEndpoint, { profileId });
+      return fileId;
+    } catch (error) {
+      throw new Error(`Failed to process upload: ${error}`);
+    }
   } else {
     return await uploadS3(file, profileId);
   }
