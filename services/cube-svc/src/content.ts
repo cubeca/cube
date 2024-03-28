@@ -40,7 +40,7 @@ content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res
       const topicName = 'vtt_transcribe';
 
       //@ts-ignore
-      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0, language: 'en' });
+      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0, language: lang });
       await pubsub.topic(topicName).publish(Buffer.from(message));
 
       //@ts-ignore
