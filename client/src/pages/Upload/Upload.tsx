@@ -184,7 +184,8 @@ const Upload = () => {
     if (!isLoggedIn) {
       navigate('/');
     }
-  });
+  }, [isLoggedIn]);
+
   useEffect(() => {
     if ((contentId || id) && profileId === content?.profileId) {
       setEditMode(true);
