@@ -1,4 +1,5 @@
-import { Box, Stack } from '@mui/material';
+import { Box, Grid, Stack } from '@mui/material';
+import { containerClasses } from '@mui/system';
 import { styled } from 'theme/utils';
 
 export const AccessibilityPanel = styled(Box)`
@@ -11,6 +12,12 @@ export const AccessibilityPanel = styled(Box)`
   a {
     color: ${(props) => props.theme.palette.primary.main};
     display: inline;
+  }
+  h2{
+    margin-bottom: 3px;
+  }
+  h3{
+    margin-bottom: 2rem;
   }
 `;
 

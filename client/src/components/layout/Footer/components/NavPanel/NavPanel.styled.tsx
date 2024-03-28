@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { styled } from 'theme/utils';
 
 export const NavList = styled(List)`
-  columns: 2;
+  columns: 1;
   padding: 0;
   margin: 20px 0;
   font-size: 1rem;

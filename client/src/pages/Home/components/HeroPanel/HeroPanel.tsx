@@ -16,21 +16,23 @@ const HeroPanel = () => {
         <Grid xs={10} xsOffset={1} md={5}>
           <s.ContentMain>
             <Typography component="h1" variant="h1">
-              {t('Discover')}
+              {t('discover')}
             </Typography>
             <Typography component="p" variant="body1">
-              {t('heroText')}
+              {t('heroText')} <span>{t('heroTextFR')}</span>
             </Typography>
+            
             <Button href="/search" variant="contained" size="large">
-              {t('Search Content')}
+              {t('search')}
             </Button>
           </s.ContentMain>
         </Grid>
 
         <Grid xs={10} xsOffset={1} md={4} mdOffset={2}>
           <HeroCTA
-            title="Create"
+            title="Create/ Créer"
             text={t('becomeCreatorText')}
+            frenchText={t('becomeCreatorTextFR')}
             video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/43df9c06ed57348a3414802cf1d565f8/manifest/video.m3u8"
             image={CtaImage}
             subtitlesUrl="https://files.cubecommons.ca/24978756-8ad3-4d7b-8412-b1bde69ec26f/vtt.vtt"

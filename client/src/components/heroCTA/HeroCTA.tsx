@@ -7,6 +7,7 @@ import { FC } from 'react';
 interface HeroCtaProps {
   title: string;
   text: string;
+  frenchText: string;
   video: string;
   image: string;
   subtitlesUrl: string;
@@ -15,6 +16,7 @@ interface HeroCtaProps {
 const HeroCTA: FC<HeroCtaProps> = ({
   title,
   text,
+  frenchText,
   video,
   image,
   subtitlesUrl
@@ -25,7 +27,7 @@ const HeroCTA: FC<HeroCtaProps> = ({
         {title}
       </Typography>
       <Typography component="p" variant="body1" sx={{ color: '#2F4048' }}>
-        {text}
+        {text}<span>{frenchText}</span>
       </Typography>
     </s.CTAContent>
     <s.CTAVideo>
