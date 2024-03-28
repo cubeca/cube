@@ -27,11 +27,6 @@ const LanguagesPanel = () => {
             {t('languageP2')}
           </Typography>
           </s.VRTextPP>
-          <s.VRTextPP>
-          <Typography component="p" variant="body1">
-            {t('languageP3')}
-          </Typography>
-          </s.VRTextPP>
           <s.LinkWrapper>
             <s.ExternalLinkButton target="_blank" to="https://support.google.com/chrome/answer/173424?hl=en&co=GENIE.Platform%3DDesktop#:~:text=Translate%20webpages%20in%20Chrome&text=Go%20to%20a%20webpage%20written,will%20translate%20your%20current%20webpage.">
               {t('Chrome Translate')}
@@ -54,7 +49,7 @@ const LanguagesPanel = () => {
         </Typography>
         </s.FRText>
       }
-      imageContent={<s.chrome margin="0px 50px 0px 20px"/>}
+      imageContent={<s.FRText contain="content"><s.chrome/></s.FRText>}
     />
   );
 };

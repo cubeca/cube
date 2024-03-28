@@ -43,7 +43,7 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           name="searchFilter"
           control={control}
           variant="standard"
-          placeholder="Search/Rechercher"
+          placeholder="Search/ Rechercher"
           className="searchFilter"
         />
 
