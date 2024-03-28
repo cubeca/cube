@@ -229,7 +229,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                     }
                 }
             } else {
-                transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
+                transcript = await transcribe(`${outputPath}/${id}-audio.mp3`, language);
                 console.log("Transcript Generated");
             }
 
