@@ -166,7 +166,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 return;
             }
 
-            await retry(contentID, tries);
+            await retry(contentID, tries, language);
         }
 
         try {
@@ -271,7 +271,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
             console.log(`Message ${messageId} published.`);
         } catch (processingError) {
             console.error({ processingError });
-            await retry(contentID, tries);
+            await retry(contentID, tries, language);
         } finally {
             //purge all mp3, mp4, and vtt files
             //get list
@@ -290,7 +290,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
         }
     } catch (error) {
         console.error({ error });
-        await retry(contentID, tries);
+        await retry(contentID, tries, language);
     }
 });
 
