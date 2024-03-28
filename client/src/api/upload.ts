@@ -14,13 +14,9 @@ export const upload = async (
   const mimeType = file.type;
   if (mimeType.startsWith('video')) {
     const fileId = makeUUID();
-    try {
-      const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
-      await uploadViaTus(file, uploadTusEndpoint, { profileId });
-      return fileId;
-    } catch (error) {
-      throw new Error(`Failed to process upload: ${error}`);
-    }
+    const uploadTusEndpoint = await getUploadTusEndpoint(fileId);
+    await uploadViaTus(file, uploadTusEndpoint, { profileId });
+    return fileId;
   } else {
     return await uploadS3(file, profileId);
   }
@@ -64,20 +60,15 @@ export const uploadViaTus = async (
 
     const upload = new Upload(file, options);
 
-    try {
-      // Check if there are any previous uploads to continue.
-      upload.findPreviousUploads().then(function (previousUploads: any) {
-        // Found previous uploads so we select the first one.
-        if (previousUploads.length) {
-          upload.resumeFromPreviousUpload(previousUploads[0]);
-        }
+    // Check if there are any previous uploads to continue.
+    upload.findPreviousUploads().then(function (previousUploads: any) {
+      // Found previous uploads so we select the first one.
+      if (previousUploads.length) {
+        upload.resumeFromPreviousUpload(previousUploads[0]);
+      }
 
-        upload.start();
-      });
-    } catch (error) {
-      console.error('Error starting upload!!!!!!!!', error);
-      reject(error);
-    }
+      upload.start();
+    });
   });
 };
 
