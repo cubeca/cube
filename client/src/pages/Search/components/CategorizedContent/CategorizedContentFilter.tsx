@@ -5,19 +5,21 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedContentFilter.styled';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { Menu } from '@mui/material';
 
 interface CategorizedContentFilterProps {
   setSearchTerm: any;
   categoryFilter: any;
   setCategoryFilter: any;
+  tagSearchTerm?: string;
 }
 
 const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
   setSearchTerm,
   categoryFilter,
-  setCategoryFilter
+  setCategoryFilter,
+  tagSearchTerm
 }) => {
   const { control } = useForm();
   const { t } = useTranslation();
@@ -35,6 +37,12 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
     setSearchTerm(sanitizedValue);
   };
 
+  useEffect(() => {
+    if (tagSearchTerm) {
+      setSearchTerm(tagSearchTerm);
+    }
+  }, [tagSearchTerm]);
+
   return (
     <s.Filters>
       <form onChange={(e) => handleSearchTermChange(e)}>
@@ -45,6 +53,7 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           variant="standard"
           placeholder="Search/Rechercher"
           className="searchFilter"
+          defaultValue={tagSearchTerm ? tagSearchTerm : ''}
         />
 
         <Select
