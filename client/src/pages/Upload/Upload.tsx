@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import useContent from 'hooks/useContent';
 import { useEffect, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -8,15 +8,13 @@ import Progress from './components/Progress';
 import Screens from './components/Screens';
 import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
-import Accessibility from './components/Screens/Accessibility';
 import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-
-import EventEmitter from 'events';
-import { progressEmitter } from 'api/upload';
+import * as s from './components/Screens/UploadProgress.styled';
 import UploadProgress from './components/Screens/UploadProgress';
+import { useTranslation } from 'react-i18next';
 
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
@@ -148,6 +146,7 @@ const Upload = () => {
   const [isVTTSelected, setIsVTTSelected] = useState(false);
   const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const { t } = useTranslation();
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -210,6 +209,7 @@ const Upload = () => {
               .split(',')
               .map((tag: string) => tag.trim())
           : []
+        // vttLanguage: values.vttLanguage ? values.vttLanguage : null
       },
       coverImageFile!,
       mediaFile!,
@@ -246,10 +246,6 @@ const Upload = () => {
         />
       )
     },
-    // {
-    //   label: 'Accessibility',
-    //   view: <Accessibility />
-    // },
     {
       label: 'Tags',
       view: (
@@ -270,19 +266,6 @@ const Upload = () => {
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
 
-  // leaving this logic here for now for when we bring the accessibility screen back
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   if (!['video', 'audio'].includes(mediaType)) {
-  //     const tmpScreens = [...SCREENS_BASE];
-  //     //remove accessibility screen
-  //     tmpScreens.splice(2, 1);
-  //     setSCREENS(tmpScreens);
-  //   } else {
-  //     setSCREENS(SCREENS_BASE);
-  //   }
-  // }, [mediaType]);
-
   useEffect(() => {
     setSCREENS(SCREENS_BASE);
   }, [mediaType]);
@@ -301,11 +284,15 @@ const Upload = () => {
     }
   }, [isSuccess, response, vttEditorLaunched]);
 
-  if (isError) {
-    console.log('Upload Error');
-  }
-
-  return (
+  return isError ? (
+    <s.ModalContainer>
+      <s.ModalTitle variant="h1">{t('Uploading')}</s.ModalTitle>
+      <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
+        We encountered an error while uploading your content. Please try again
+        later.
+      </Typography>
+    </s.ModalContainer>
+  ) : (
     <Box className={'upload'} ref={topRef}>
       <Breadcrumb />
       <Progress
