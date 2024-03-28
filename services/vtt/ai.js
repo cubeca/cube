@@ -34,7 +34,7 @@ const transcribe = async (audioPath, language) => {
         return finalResponse;
     } catch (error) {
         console.log("Error in transcribe: ", error);
-        if (error.message.includes("unsupported")) {
+        if (error.message.includes("not supported")) {
             return;
         }
     }
