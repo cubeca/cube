@@ -13,7 +13,7 @@ export const StyledHomeIcon = styled(HomeIcon)`
   height: 30px;
   width: 30px;
   color: ${(props) => props.theme.palette.primary.main};
-  margin-right: 32px;
+  margin-right: ${(props) => (props.isLoggedIn ? '16px' : '32px')};
 `;
 
 export const Aux = styled(Stack)`

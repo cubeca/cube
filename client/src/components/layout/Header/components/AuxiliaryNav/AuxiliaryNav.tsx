@@ -45,11 +45,9 @@ const AuxiliaryNav = () => {
 
   return (
     <s.Aux component="nav" direction="row" alignItems="center" spacing={2}>
-      {!isLoggedIn && (
-        <s.StyledLink to="/search">
-          <s.StyledHomeIcon />
-        </s.StyledLink>
-      )}
+      <s.StyledLink to="/search">
+        <s.StyledHomeIcon isLoggedIn={isLoggedIn} />
+      </s.StyledLink>
 
       {isLoading ? (
         <p>Loading...</p>
