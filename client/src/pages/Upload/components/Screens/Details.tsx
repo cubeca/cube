@@ -81,7 +81,7 @@ const Details = ({
             <br />
           </Typography>
           <Controller
-            name="language"
+            name="vttLanguage"
             control={control}
             defaultValue=""
             render={({ field }) => (
