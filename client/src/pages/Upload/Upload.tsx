@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import useContent from 'hooks/useContent';
 import { useEffect, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -12,8 +12,9 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-
+import * as s from './components/Screens/UploadProgress.styled';
 import UploadProgress from './components/Screens/UploadProgress';
+import { useTranslation } from 'react-i18next';
 
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
@@ -145,6 +146,7 @@ const Upload = () => {
   const [isVTTSelected, setIsVTTSelected] = useState(false);
   const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const { t } = useTranslation();
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -283,7 +285,13 @@ const Upload = () => {
   }, [isSuccess, response, vttEditorLaunched]);
 
   return isError ? (
-    <div>something dumb has happened</div>
+    <s.ModalContainer>
+      <s.ModalTitle variant="h1">{t('Uploading')}</s.ModalTitle>
+      <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
+        We encountered an error while uploading your content. Please try again
+        later.
+      </Typography>
+    </s.ModalContainer>
   ) : (
     <Box className={'upload'} ref={topRef}>
       <Breadcrumb />
