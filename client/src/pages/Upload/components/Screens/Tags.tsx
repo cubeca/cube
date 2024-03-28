@@ -102,11 +102,18 @@ const Tags = ({
   };
 
   // Helper function to get custom fields
+  // Helper function to get custom fields
   const getCustomFields = (contributors: any) => {
     const keysToExclude = ['artist', 'camera_operator', 'editor', 'sound'];
     return Object.keys(contributors)
       .filter((key) => !keysToExclude.includes(key))
-      .map((key) => ({ role: key, name: contributors[key][0]?.name }));
+      .map((key) => {
+        if (contributors[key] && contributors[key].length > 0) {
+          return { role: key, name: contributors[key][0]?.name };
+        } else {
+          return { role: key, name: '' };
+        }
+      });
   };
 
   const getDefaultRole = (contributors: any) => {
@@ -268,9 +275,11 @@ const Tags = ({
                   placeholder={t('Name')}
                   rules={{ required: false }}
                   defaultValue={
-                    editMode && content?.contributors.artist[index]
-                      ? content?.contributors.artist[index].name
-                      : ''
+                    (editMode &&
+                      content?.contributors.artist &&
+                      content?.contributors.artist[index] &&
+                      content?.contributors.artist[index]?.name) ||
+                    ''
                   }
                 />
               </Grid>
@@ -279,9 +288,11 @@ const Tags = ({
                   control={control}
                   name={`artistUrl${index}`}
                   defaultValue={
-                    editMode && content?.contributors.artist[index]
-                      ? content?.contributors.artist[index].url
-                      : ''
+                    (editMode &&
+                      content?.contributors.artist &&
+                      content?.contributors.artist[index] &&
+                      content?.contributors.artist[index]?.url) ||
+                    ''
                   }
                   fullWidth
                   placeholder={t('URL')}

@@ -179,12 +179,12 @@ const Upload = () => {
     editMode && content?.category ? content?.category : []
   );
   const [newCoverImageSelected, setNewCoverImageSelected] = useState(false);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      navigate('/');
-    }
-  });
+  console.log(content, 'content');
+  // useEffect(() => {
+  //   if (!isLoggedIn) {
+  //     navigate('/');
+  //   }
+  // });
   useEffect(() => {
     if ((contentId || id) && profileId === content?.profileId) {
       setEditMode(true);
