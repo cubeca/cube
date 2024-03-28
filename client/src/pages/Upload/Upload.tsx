@@ -286,7 +286,7 @@ const Upload = () => {
 
   return isError ? (
     <s.ModalContainer>
-      <s.ModalTitle variant="h1">{t('Uploading')}</s.ModalTitle>
+      <s.ModalTitle variant="h1">{t('Uploading Failed')}</s.ModalTitle>
       <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
         We encountered an error while uploading your content. Please try again
         later.
