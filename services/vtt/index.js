@@ -44,7 +44,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
     const { contentID, tries, language } = JSON.parse(Buffer.from(event.data.message.data, "base64").toString()); //Decode event message
     try {
         if (!contentID) throw new Error("No content ID provided");
-        console.log({ contentID, tries });
+        console.log({ contentID, tries, language });
 
         const contentData = await content.findOne({
             where: {
