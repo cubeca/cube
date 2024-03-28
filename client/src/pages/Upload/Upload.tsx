@@ -8,14 +8,11 @@ import Progress from './components/Progress';
 import Screens from './components/Screens';
 import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
-import Accessibility from './components/Screens/Accessibility';
 import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
 
-import EventEmitter from 'events';
-import { progressEmitter } from 'api/upload';
 import UploadProgress from './components/Screens/UploadProgress';
 
 const getContributors = (values: FieldValues) => {
@@ -148,7 +145,6 @@ const Upload = () => {
   const [isVTTSelected, setIsVTTSelected] = useState(false);
   const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
-  const [isUploadingError, setIsUploadingError] = useState(false);
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -183,45 +179,41 @@ const Upload = () => {
   };
 
   const onSubmit = (values: FieldValues) => {
-    try {
-      const contributors = getContributors(values);
-      const collaborators = [profileId, values.collaborators];
-      addContent(
-        {
-          profileId: profileId!,
-          title: values.title,
-          type: values.type,
-          expiry: values.expiry,
-          category: values.categories,
-          description: values.description,
-          coverImageText: values.imageText,
-          bannerImageText: values.bannerImageText,
-          collaborators: collaborators,
-          contributors: contributors,
-          tags: values.tags.split(',').map((tag: string) => tag.trim()),
-          languageTags: values.languageTags
-            .split(',')
-            .map((tag: string) => tag.trim()),
-          externalUrl: values.link ? values.link : null,
-          embedToggleEnabled: values.embedToggleInput,
-          isSuitableForChildren: values.audience
-            ? values.audience === 'yeskids'
-            : false,
-          embedContentWhitelist: values.embedContentWhitelist
-            ? values.embedContentWhitelist
-                .split(',')
-                .map((tag: string) => tag.trim())
-            : [],
-          vttLanguage: values.vttLanguage ? values.vttLanguage : null
-        },
-        coverImageFile!,
-        mediaFile!,
-        vttFile!,
-        bannerImageFile!
-      );
-    } catch (error) {
-      setIsUploadingError(true);
-    }
+    const contributors = getContributors(values);
+    const collaborators = [profileId, values.collaborators];
+    addContent(
+      {
+        profileId: profileId!,
+        title: values.title,
+        type: values.type,
+        expiry: values.expiry,
+        category: values.categories,
+        description: values.description,
+        coverImageText: values.imageText,
+        bannerImageText: values.bannerImageText,
+        collaborators: collaborators,
+        contributors: contributors,
+        tags: values.tags.split(',').map((tag: string) => tag.trim()),
+        languageTags: values.languageTags
+          .split(',')
+          .map((tag: string) => tag.trim()),
+        externalUrl: values.link ? values.link : null,
+        embedToggleEnabled: values.embedToggleInput,
+        isSuitableForChildren: values.audience
+          ? values.audience === 'yeskids'
+          : false,
+        embedContentWhitelist: values.embedContentWhitelist
+          ? values.embedContentWhitelist
+              .split(',')
+              .map((tag: string) => tag.trim())
+          : []
+        // vttLanguage: values.vttLanguage ? values.vttLanguage : null
+      },
+      coverImageFile!,
+      mediaFile!,
+      vttFile!,
+      bannerImageFile!
+    );
   };
 
   const SCREENS_BASE = [
@@ -252,10 +244,6 @@ const Upload = () => {
         />
       )
     },
-    // {
-    //   label: 'Accessibility',
-    //   view: <Accessibility />
-    // },
     {
       label: 'Tags',
       view: (
@@ -271,23 +259,10 @@ const Upload = () => {
     },
     {
       label: 'Upload',
-      view: <UploadProgress isUploadError={isUploadingError} />
+      view: <UploadProgress />
     }
   ];
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
-
-  // leaving this logic here for now for when we bring the accessibility screen back
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   if (!['video', 'audio'].includes(mediaType)) {
-  //     const tmpScreens = [...SCREENS_BASE];
-  //     //remove accessibility screen
-  //     tmpScreens.splice(2, 1);
-  //     setSCREENS(tmpScreens);
-  //   } else {
-  //     setSCREENS(SCREENS_BASE);
-  //   }
-  // }, [mediaType]);
 
   useEffect(() => {
     setSCREENS(SCREENS_BASE);
@@ -307,11 +282,9 @@ const Upload = () => {
     }
   }, [isSuccess, response, vttEditorLaunched]);
 
-  if (isError) {
-    console.log('Upload Error');
-  }
-
-  return (
+  return isError ? (
+    <div>something dumb has happened</div>
+  ) : (
     <Box className={'upload'} ref={topRef}>
       <Breadcrumb />
       <Progress
