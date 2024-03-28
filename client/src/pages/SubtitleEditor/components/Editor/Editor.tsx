@@ -55,7 +55,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
                 setLoaded(true);
               }
             });
-        }, 5000);
+        }, 7500);
         return () => clearInterval(interval);
       } catch (error) {
         console.error({ error });
