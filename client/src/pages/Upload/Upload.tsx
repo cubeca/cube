@@ -208,8 +208,8 @@ const Upload = () => {
           ? values.embedContentWhitelist
               .split(',')
               .map((tag: string) => tag.trim())
-          : []
-        // vttLanguage: values.vttLanguage ? values.vttLanguage : null
+          : [],
+        vttLanguage: values.vttLanguage ? values.vttLanguage : null
       },
       coverImageFile!,
       mediaFile!,

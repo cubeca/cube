@@ -10,25 +10,34 @@ const transcribe = async (audioPath, language) => {
     });
     const readStream = fs.createReadStream(audioPath);
     console.log("Transcribing audio file... with language: ", language);
-    const response = await openai.audio.transcriptions.create({
-        file: readStream,
-        model: "whisper-1",
-        response_format: "verbose_json",
-        language: language,
-    });
-    const segments = response.segments;
-    const finalResponse = {};
-    for (const seg of segments) {
-        if (seg.no_speech_prob < maxNoSpeechConfidence) {
-            const { text, start, end } = seg;
-            finalResponse[start] = {
-                text,
-                start,
-                end,
-            };
+
+    try {
+        const response = await openai.audio.transcriptions.create({
+            file: readStream,
+            model: "whisper-1",
+            response_format: "verbose_json",
+            language: language,
+        });
+
+        const segments = response.segments;
+        const finalResponse = {};
+        for (const seg of segments) {
+            if (seg.no_speech_prob < maxNoSpeechConfidence) {
+                const { text, start, end } = seg;
+                finalResponse[start] = {
+                    text,
+                    start,
+                    end,
+                };
+            }
+        }
+        return finalResponse;
+    } catch (error) {
+        console.log("Error in transcribe: ", error);
+        if (error.message.includes("not supported")) {
+            return;
         }
     }
-    return finalResponse;
 };
 
 module.exports = {
