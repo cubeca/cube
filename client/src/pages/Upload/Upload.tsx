@@ -466,9 +466,9 @@ const Upload = () => {
           handleSubmit={handleSubmit(onSubmit)}
           editMode={editMode}
           isNextDisabled={
-            (editMode && !formState.isValid) ||
-            (!editMode &&
-              (!formState.isValid ||
+            editMode
+              ? false
+              : !formState.isValid ||
                 (screenIndex === 0 &&
                   mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
                   !isMediaProperFileType) ||
@@ -481,7 +481,7 @@ const Upload = () => {
                 (!mediaLink && !isMediaSelected) ||
                 (screenIndex === 1 &&
                   !isVTTSelected &&
-                  ['video', 'audio'].includes(mediaType))))
+                  mediaType in ['video', 'audio'])
           }
         />
       )}
