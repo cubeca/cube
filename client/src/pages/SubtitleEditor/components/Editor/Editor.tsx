@@ -303,11 +303,18 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         <Typography variant="h2">{t('Subtitle Editor')}</Typography>
         {/* //Error loading */}
         {loadError ? (
-          <s.StyledLoadingText variant={'h4'}>
-            {t(
-              'There was an error loading your subtitles. Please try again later.'
-            )}
-          </s.StyledLoadingText>
+          <>
+            <s.ErrorText variant={'h4'}>
+              {t(
+                'Looks like there was a hiccup with generating your subtitles. They might be taking longer than usual to process, which means they could still eventually appear with your content. However, if the file you uploaded doesn&apos;t match what you selected it could fail EX: (Correct:  Audio = .mp3, .wav ) (Incorrect:  Audio = .mov, .pdf). Check your file and give it another go.'
+              )}
+            </s.ErrorText>
+            <s.ErrorText pt={4} variant={'h4'}>
+              {t(
+                'Another possibility is that your file could be outdated. Consider uploading it to any file editor, and re-downloading it to update the file format.'
+              )}
+            </s.ErrorText>
+          </>
         ) : null}
         {/* //Normal loading //Normal loading */}
         {loaded === false && loadError === false ? (

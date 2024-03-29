@@ -209,7 +209,7 @@ const Upload = () => {
               .split(',')
               .map((tag: string) => tag.trim())
           : [],
-        vttLanguage: values.vttLanguage ? values.vttLanguage : null
+        vttLanguage: values.vttLanguage ? values.vttLanguage : 'en'
       },
       coverImageFile!,
       mediaFile!,
@@ -288,8 +288,11 @@ const Upload = () => {
     <s.ModalContainer>
       <s.ModalTitle variant="h1">{t('Uploading Failed')}</s.ModalTitle>
       <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
-        We encountered an error while uploading your content. Please try again
-        later.
+        Unfortunately, it seems we&apos;ve hit a snag while uploading your file.
+        This could be due to your internet connection. However, please make sure
+        you&apos;re not trying to upload content in multiple browsers or windows
+        at the same time. Contrary to popular belief, this just slows everything
+        down.
       </Typography>
     </s.ModalContainer>
   ) : (
