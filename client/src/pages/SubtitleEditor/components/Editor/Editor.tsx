@@ -303,11 +303,11 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
         <Typography variant="h2">{t('Subtitle Editor')}</Typography>
         {/* //Error loading */}
         {loadError ? (
-          <Typography color="error">
+          <s.StyledLoadingText variant={'h4'}>
             {t(
               'There was an error loading your subtitles. Please try again later.'
             )}
-          </Typography>
+          </s.StyledLoadingText>
         ) : null}
         {/* //Normal loading //Normal loading */}
         {loaded === false && loadError === false ? (
