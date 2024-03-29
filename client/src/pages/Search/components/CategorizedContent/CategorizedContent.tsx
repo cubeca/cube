@@ -45,7 +45,7 @@ const CategorizedContent = ({
   const contentFilterRef = useRef<any>(null);
 
   useEffect(() => {
-    if (tagSearchTerm && contentFilterRef.current) {
+    if ((tagSearchTerm || languageSearchTerm) && contentFilterRef.current) {
       const topPosition =
         contentFilterRef.current.getBoundingClientRect().top +
         window.pageYOffset -
