@@ -5,8 +5,7 @@ import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Lottie from 'lottie-react';
-
-const UploadProgress = () => {
+const UploadProgress = ({ editMode }: any) => {
   const { t } = useTranslation();
   const [progress, setProgress] = useState('');
   const [progressInt, setProgressInt] = useState(0);
@@ -40,10 +39,14 @@ const UploadProgress = () => {
         loop={true}
         style={{ width: '170px', height: '170px' }}
       />
-      <s.ModalTitle variant="h1">{t('Uploading')}</s.ModalTitle>
-      <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
-        {progress !== '' ? `${progress}% complete.` : ''}
-      </Typography>
+      <s.ModalTitle variant="h1">
+        {editMode ? t('Applying changes...') : t('Uploading')}
+      </s.ModalTitle>
+      {!editMode && (
+        <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
+          {progress !== '' ? `${progress}% complete.` : ''}
+        </Typography>
+      )}
       <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
         Don&apos;t close your browser window.
       </Typography>
