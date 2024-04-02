@@ -111,15 +111,8 @@ const Details = ({
           </Typography>
         </Box>
       ) : null}
-      <Typography
-        component="h4"
-        variant="h4"
-        mb={theme.spacing(2.5)}
-        mt={theme.spacing(5)}
-      >
-        {t('Additional Details')}
-      </Typography>
-      {showField('kidsContent') ? (
+
+      {showField('kidsContent') || editMode ? (
         <Box>
           <Controller
             name="audience"

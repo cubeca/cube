@@ -12,18 +12,15 @@ import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-
 import { useLocation } from 'react-router-dom';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
-import UploadProgress from './components/Screens/UploadProgress';
 import useContentDetailsByParam from 'hooks/useContentDetailsByParam';
 import Lottie from 'lottie-react';
 import { UpdateContentTypeEnum } from '@cubeca/cube-svc-client-oas-axios/dist/models/update-content';
-
-import * as s from './components/Screens/UploadProgress.styled';
-
-import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
+import * as s from './components/Screens/UploadProgress.styled';
+import UploadProgress from './components/Screens/UploadProgress';
+import { useTranslation } from 'react-i18next';
 
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
@@ -213,7 +210,6 @@ const Upload = () => {
     }
     setIsQueryParamCheckComplete(true);
   }, [id, contentId, location, isLoading, isContentLoading]);
-
   const { t } = useTranslation();
 
   const mediaType = watch('type');
@@ -250,7 +246,6 @@ const Upload = () => {
 
   const onSubmit = (values: FieldValues) => {
     const contributors = getContributors(values);
-
     const collaborators = [profileId, ...finalCollaborators];
     const payload = {
       profileId: profileId!,
