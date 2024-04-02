@@ -2,7 +2,7 @@ import { Box, Stack } from '@mui/material';
 import { styled } from 'theme/utils';
 import { Link as RouterLink } from 'react-router-dom';
 import VirtualExperiencesHero from 'assets/images/virtualExperiences.jpg';
-import Chrome from '../../../../assets/images/chrome.jpeg'
+import Chrome from '../../../../assets/images/chrome.png'
 
 export const VRCover = styled(Box)`
   background: url(${VirtualExperiencesHero});
@@ -71,7 +71,10 @@ export const Headline = styled(Box)`
 
 export const chrome = styled(Box)`
   background: url(${Chrome});
-  max-width: 100%;
+  max-width: 90%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
   display: flex;
   max-height: 100%;
   
