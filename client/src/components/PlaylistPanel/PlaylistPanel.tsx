@@ -222,7 +222,6 @@ const PlaylistPanel: React.FC<Props> = ({
         console.error(error);
       });
   };
-
   return (
     <Grid container>
       <s.CustomDialog
@@ -336,6 +335,21 @@ const PlaylistPanel: React.FC<Props> = ({
                               const newTitle = editedTitles[playlist.id];
                               const newDescription =
                                 editedDescription[playlist.id];
+                              // if a user tries to edit a playlist without a title or description, cancel the edit
+                              if (!newTitle || !newDescription) {
+                                setEditMode(null);
+                                setEditingPlaylist('');
+                                // reset editedTitles and editedDescription to the original title and description
+                                setEditedTitles((prevTitles) => ({
+                                  ...prevTitles,
+                                  [playlist.id]: playlist.data.title
+                                }));
+                                setEditedDescription((prevDescription) => ({
+                                  ...prevDescription,
+                                  [playlist.id]: playlist.data.description
+                                }));
+                                return;
+                              }
                               handleUpdateLocalPlaylist(
                                 playlist.id,
                                 editedTitles[playlist.id],
@@ -472,7 +486,7 @@ const PlaylistPanel: React.FC<Props> = ({
                                       {...provided.dragHandleProps}
                                     >
                                       <PlaylistItem
-                                        type={content.category[0].toLowerCase()}
+                                        type={content.type}
                                         bgUrl={
                                           content.coverImageUrl?.playerInfo
                                             ?.publicUrl ||

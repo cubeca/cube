@@ -1,7 +1,7 @@
 import Grid from '@mui/system/Unstable_Grid';
 import ContentCard from 'components/ContentCard';
 import * as s from './CategorizedContent.styled';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Lottie from 'lottie-react';
 import ContentFilter from './CategorizedContentFilter';
 import { searchContent, searchPlaylists } from 'api/search';
@@ -15,7 +15,15 @@ import useDebounce from '../../../../hooks/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { Typography } from '@mui/material';
 
-const CategorizedContent = () => {
+interface CategorizedContentProps {
+  tagSearchTerm?: string;
+  languageSearchTerm?: string;
+}
+
+const CategorizedContent = ({
+  tagSearchTerm,
+  languageSearchTerm
+}: CategorizedContentProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState();
   const [contentResults, setContentResults] = useState<ContentStorage[]>([]);
@@ -34,12 +42,25 @@ const CategorizedContent = () => {
   const [hasMorePlaylistToLoad, setHasMorePlaylistsToLoad] =
     useState<boolean>(true);
 
+  const contentFilterRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (tagSearchTerm && contentFilterRef.current) {
+      const topPosition =
+        contentFilterRef.current.getBoundingClientRect().top +
+        window.pageYOffset -
+        100;
+      window.scrollTo({ top: topPosition, behavior: 'auto' });
+    }
+  }, [tagSearchTerm, isPlaylistLoading, isContentLoading]);
+
   const fetchContentSearchResults = useCallback(
     async (newContentOffset: number) => {
       setIsContentLoading(true);
       try {
         const searchFilters: SearchFilters = {
-          category: categoryFilter === 'all' ? undefined : categoryFilter
+          category: categoryFilter === 'all' ? undefined : categoryFilter,
+          languageTags: languageSearchTerm ? [languageSearchTerm] : undefined
         };
 
         const contentResults = await searchContent(
@@ -130,13 +151,14 @@ const CategorizedContent = () => {
   };
 
   return (
-    <s.ContentWrapper>
+    <s.ContentWrapper ref={contentFilterRef}>
       <Grid container>
         <Grid xs={10} xsOffset={1}>
           <ContentFilter
             setSearchTerm={setSearchTerm}
             categoryFilter={categoryFilter}
             setCategoryFilter={setCategoryFilter}
+            tagSearchTerm={tagSearchTerm}
           />
 
           {(categoryFilter === 'all' ||

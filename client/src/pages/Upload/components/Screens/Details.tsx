@@ -13,7 +13,9 @@ const Details = ({
   handleVTTFilesUpload,
   expiryValue,
   onExpriryValueChange,
-  uploadType
+  uploadType,
+  editMode,
+  content
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -44,12 +46,13 @@ const Details = ({
       <Typography component="h2" variant="h2">
         {t('Details')}
       </Typography>
-      {showField('description') ? (
+      {showField('description') || editMode ? (
         <Box my={theme.spacing(5)}>
           <TextInput
             control={control}
             name="description"
             placeholder={t('Description (required)')}
+            defaultValue={editMode ? content?.description : ''}
             multiline
             rows={8}
             fullWidth
@@ -63,11 +66,15 @@ const Details = ({
       ) : null}
       {showField('vtt') ? (
         <Box my={theme.spacing(5)}>
+          <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
+            {t('Subtitles')}
+          </Typography>
           <UploadInput
             text={t('Subtitle File')}
             onDrop={handleVTTOnDrop}
             maxFiles={1}
-            isUploadReady={isVTTUploadReady}
+            // isUploadReady={isVTTUploadReady}
+            isUploadReady={!editMode ? isVTTUploadReady : true}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t('Upload your VTT Subtitle file here.')}{' '}
@@ -77,14 +84,46 @@ const Details = ({
             )}
             <br />
           </Typography>
+          <Controller
+            name="vttLanguage"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                label={t('Language most prevalent in the content')}
+                fullWidth={false}
+                control={control}
+                {...field}
+              >
+                {Object.keys(languageSet).map((key) => (
+                  <MenuItem.li
+                    value={languageSet[key as keyof typeof languageSet]}
+                    key={key}
+                  >
+                    {key}
+                  </MenuItem.li>
+                ))}
+              </Select>
+            )}
+          />
+          <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+            {t('Select a language.')} <br />
+          </Typography>
         </Box>
       ) : null}
-      {showField('kidsContent') ? (
-        <Box my={theme.spacing(5)}>
+
+      {showField('kidsContent') || editMode ? (
+        <Box>
           <Controller
             name="audience"
             control={control}
-            defaultValue=""
+            defaultValue={
+              editMode
+                ? content?.isSuitableForChildren
+                  ? 'yeskids'
+                  : 'nokids'
+                : ''
+            }
             rules={{ required: true }}
             render={({ field }) => (
               <Select
@@ -119,7 +158,7 @@ const Details = ({
         <Controller
           name="expiry"
           control={control}
-          defaultValue={expiryValue}
+          defaultValue={!editMode ? expiryValue : content?.expiry}
           render={({ field: { onChange, value } }) => {
             const dateValue = value
               ? value instanceof Date
@@ -185,3 +224,59 @@ const Details = ({
 };
 
 export default Details;
+
+const languageSet = {
+  Afrikaans: 'af',
+  Arabic: 'ar',
+  Armenian: 'hy',
+  Azerbaijani: 'az',
+  Belarusian: 'be',
+  Bosnian: 'bs',
+  'Catalan, Valencian': 'ca',
+  Chinese: 'zh',
+  Croatian: 'hr',
+  Czech: 'cs',
+  Danish: 'da',
+  English: 'en',
+  Estonian: 'et',
+  Finnish: 'fi',
+  French: 'fr',
+  Galician: 'gl',
+  German: 'de',
+  Greek: 'el',
+  Hebrew: 'he',
+  Hindi: 'hi',
+  Hungarian: 'hu',
+  Icelandic: 'is',
+  Indonesian: 'id',
+  Italian: 'it',
+  Japanese: 'ja',
+  Kannada: 'kn',
+  Korean: 'ko',
+  Latvian: 'lv',
+  Lithuanian: 'lt',
+  Macedonian: 'mk',
+  Malay: 'ms',
+  Maori: 'mi',
+  Nepali: 'ne',
+  Norwegian: 'no',
+  Persian: 'fa',
+  Polish: 'pl',
+  Portuguese: 'pt',
+  'Romanian, Moldavian, Moldovan': 'ro',
+  Russian: 'ru',
+  Serbian: 'sr',
+  Slovak: 'sk',
+  Slovenian: 'sl',
+  'Spanish, Castilian': 'es',
+  Swahili: 'sw',
+  Swedish: 'sv',
+  Tagalog: 'tl',
+  Tamil: 'ta',
+  Thai: 'th',
+  Turkish: 'tr',
+  Ukrainian: 'uk',
+  Urdu: 'ur',
+  Vietnamese: 'vi',
+  Welsh: 'cy'
+};

@@ -17,6 +17,7 @@ interface FormFooterProps {
   onScreenIndexChange: (screen: number) => void;
   handleSubmit: () => void;
   isNextDisabled?: boolean;
+  editMode?: boolean;
 }
 
 const FormFooter = ({
@@ -25,7 +26,8 @@ const FormFooter = ({
   screenIndex,
   onScreenIndexChange,
   handleSubmit,
-  isNextDisabled
+  isNextDisabled,
+  editMode
 }: FormFooterProps) => {
   const { t } = useTranslation();
   const theme = useTheme();

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import useContent from 'hooks/useContent';
 import { useEffect, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -8,15 +8,19 @@ import Progress from './components/Progress';
 import Screens from './components/Screens';
 import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
-import Accessibility from './components/Screens/Accessibility';
 import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
-
-import EventEmitter from 'events';
-import { progressEmitter } from 'api/upload';
+import { useLocation } from 'react-router-dom';
+import LoadingCubes from 'assets/animations/loading-cubes.json';
+import useContentDetailsByParam from 'hooks/useContentDetailsByParam';
+import Lottie from 'lottie-react';
+import { UpdateContentTypeEnum } from '@cubeca/cube-svc-client-oas-axios/dist/models/update-content';
+import useAuth from 'hooks/useAuth';
+import * as s from './components/Screens/UploadProgress.styled';
 import UploadProgress from './components/Screens/UploadProgress';
+import { useTranslation } from 'react-i18next';
 
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
@@ -114,23 +118,36 @@ const getContributors = (values: FieldValues) => {
 };
 
 const Upload = () => {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  let contentId = queryParams.get('contentid');
+  let id = queryParams.get('contentid');
+  const { isLoggedIn } = useAuth();
+  const {
+    data: content,
+    isLoading: isContentLoading,
+    fetchContentDetails,
+    refetch
+  } = useContentDetailsByParam();
+
   const { tag } = useParams();
   const navigate = useNavigate();
-  const { control, handleSubmit, formState, watch } = useForm({
-    mode: 'onChange',
-    criteriaMode: 'all'
-  });
 
   const {
     addContent,
+    updateContent,
     isUploadLoading: isLoading,
     isUploadError: isError,
     isUploadSuccess: isSuccess,
+    isUpdateSuccess,
+    isUpdateError,
+    isUpdateLoading,
     response
   } = useContent();
   const profileId = getProfileId();
   const topRef = useRef(null);
 
+  const [editMode, setEditMode] = useState(false);
   const [coverImageFile, setCoverImageFile] = useState<File>();
   const [mediaFile, setMediaFile] = useState<File>();
   const [bannerImageFile, setBannerImageFile] = useState<File>();
@@ -148,6 +165,52 @@ const Upload = () => {
   const [isVTTSelected, setIsVTTSelected] = useState(false);
   const [vttEditorLaunched, setVTTEditorLaunched] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const [isQueryParamCheckComplete, setIsQueryParamCheckComplete] =
+    useState(false);
+  const [finalCollaborators, setFinalCollaborators] = useState<any[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
+  const [newCoverImageSelected, setNewCoverImageSelected] = useState(false);
+  const [userClearedFields, setUserClearedFields] = useState(false);
+  const { control, handleSubmit, formState, watch, trigger } = useForm({
+    mode: editMode ? 'all' : 'onChange',
+    criteriaMode: 'all'
+  });
+
+  // if user is not logged in, redirect to home page
+  // setTimout is used to prevent the redirect from happening when the user is logged in
+  // but the data has not yet been returned
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const timer = setTimeout(() => {
+        if (!isLoggedIn) {
+          navigate('/');
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoggedIn, navigate]);
+
+  // manually triggering validation to allow user to be able to navigate between pages
+  // without having to adjust the form
+  useEffect(() => {
+    if (editMode && screenIndex === 0) {
+      trigger('title');
+    } else if (editMode && screenIndex === 1) {
+      trigger('description');
+    } else if (editMode && screenIndex === 2) {
+      trigger('categories');
+    }
+  }, []);
+  useEffect(() => {
+    if ((contentId || id) && profileId === content?.profileId) {
+      setEditMode(true);
+      contentId = queryParams.get('contentid');
+      id = queryParams.get('contentid');
+    }
+    setIsQueryParamCheckComplete(true);
+  }, [id, contentId, location, isLoading, isContentLoading]);
+  const { t } = useTranslation();
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -183,39 +246,88 @@ const Upload = () => {
 
   const onSubmit = (values: FieldValues) => {
     const contributors = getContributors(values);
-    const collaborators = [profileId, values.collaborators];
-    addContent(
-      {
-        profileId: profileId!,
-        title: values.title,
-        type: values.type,
-        expiry: values.expiry,
-        category: values.categories,
-        description: values.description,
-        coverImageText: values.imageText,
-        bannerImageText: values.bannerImageText,
-        collaborators: collaborators,
-        contributors: contributors,
-        tags: values.tags.split(',').map((tag: string) => tag.trim()),
-        languageTags: values.languageTags
-          .split(',')
-          .map((tag: string) => tag.trim()),
-        externalUrl: values.link ? values.link : null,
-        embedToggleEnabled: values.embedToggleInput,
-        isSuitableForChildren: values.audience
-          ? values.audience === 'yeskids'
-          : false,
-        embedContentWhitelist: values.embedContentWhitelist
-          ? values.embedContentWhitelist
-              .split(',')
-              .map((tag: string) => tag.trim())
-          : []
-      },
-      coverImageFile!,
-      mediaFile!,
-      vttFile!,
-      bannerImageFile!
-    );
+    const collaborators = [profileId, ...finalCollaborators];
+    const payload = {
+      profileId: profileId!,
+      title: values.title,
+      type: editMode ? content?.type : values.type,
+      expiry: values.expiry,
+      category: values.categories,
+      description: values.description,
+      coverImageText: values.imageText,
+      bannerImageText: values.bannerImageText,
+      collaborators: collaborators,
+      contributors: contributors,
+      tags: values.tags.split(',').map((tag: string) => tag.trim()),
+      languageTags: values.languageTags
+        .split(',')
+        .map((tag: string) => tag.trim()),
+      externalUrl: values.link ? values.link : null,
+      embedToggleEnabled: values.embedToggleInput,
+      isSuitableForChildren: values.audience
+        ? values.audience === 'yeskids'
+        : false,
+      embedContentWhitelist: values.embedContentWhitelist
+        ? values.embedContentWhitelist
+            .split(',')
+            .map((tag: string) => tag.trim())
+        : []
+    };
+    //@ts-ignore
+    const coverImageUrl = content?.coverImageUrl?.id || '';
+    const editPayload = {
+      profileId: profileId!,
+      title: values.title,
+      type: content?.type as UpdateContentTypeEnum,
+      expiry: values.expiry,
+      category: selectedCategories,
+      description: values.description,
+      coverImageText: values.imageText,
+      bannerImageText: values.bannerImageText,
+      collaborators: collaborators,
+      contributors: contributors,
+      tags: values.tags.split(',').map((tag: string) => tag.trim()),
+      languageTags: values.languageTags
+        .split(',')
+        .map((tag: string) => tag.trim()),
+      externalUrl: values.link ? values.link : null,
+      embedToggleEnabled: values.embedToggleInput,
+      isSuitableForChildren: values.audience
+        ? values.audience === 'yeskids'
+        : false,
+      embedContentWhitelist: values.embedContentWhitelist
+        ? values.embedContentWhitelist
+            .split(',')
+            .map((tag: string) => tag.trim())
+        : [],
+      //@ts-ignore
+      mediaFileId: content?.mediaUrl?.id,
+      //@ts-ignore
+      vttFileId: content?.vttFileUrl?.id,
+      updatedAt: new Date().toISOString()
+    };
+
+    if (!isCoverImageSelected) {
+      //@ts-ignore
+      editPayload.coverImageFileId = content?.coverImageUrl?.id;
+    }
+
+    if (!isBannerImageSelected) {
+      //@ts-ignore
+      editPayload.bannerImageFileId = content?.bannerImageUrl?.id;
+    }
+
+    if (editMode) {
+      updateContent(id!, editPayload, coverImageFile!, bannerImageFile!);
+    } else {
+      addContent(
+        payload,
+        coverImageFile!,
+        mediaFile!,
+        vttFile!,
+        bannerImageFile!
+      );
+    }
   };
 
   const SCREENS_BASE = [
@@ -224,13 +336,15 @@ const Upload = () => {
       view: (
         <Media
           control={control}
-          uploadType={mediaType}
+          uploadType={!editMode ? mediaType : content?.type}
           handleMediaUpload={handleMediaUpload}
           handleCoverImageUpload={handleCoverImageUpload}
           handleBannerImageUpload={handleBannerImageUpload}
           setIsMediaProperFileType={setIsMediaProperFileType}
           setIsCoverImageProperFileType={setIsCoverImageProperFileType}
           setIsBannerImageProperFileType={setIsBannerImageProperFileType}
+          editMode={editMode}
+          content={content}
         />
       )
     },
@@ -243,19 +357,23 @@ const Upload = () => {
           handleVTTFilesUpload={handleVTTFilesUpload}
           expiryValue={expiryValue}
           onExpriryValueChange={setExpiryValue}
+          editMode={editMode}
+          content={content}
         />
       )
     },
-    // {
-    //   label: 'Accessibility',
-    //   view: <Accessibility />
-    // },
     {
       label: 'Tags',
       view: (
         <Tags
           handleCaptchaVerification={handleCaptchaVerification}
           control={control}
+          editMode={editMode}
+          content={content}
+          setFinalCollaborators={setFinalCollaborators}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
+          setUserClearedFields={setUserClearedFields}
         />
       )
     },
@@ -265,23 +383,11 @@ const Upload = () => {
     },
     {
       label: 'Upload',
-      view: <UploadProgress />
+      view: <UploadProgress editMode={editMode} />
     }
   ];
-  const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
 
-  // leaving this logic here for now for when we bring the accessibility screen back
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   if (!['video', 'audio'].includes(mediaType)) {
-  //     const tmpScreens = [...SCREENS_BASE];
-  //     //remove accessibility screen
-  //     tmpScreens.splice(2, 1);
-  //     setSCREENS(tmpScreens);
-  //   } else {
-  //     setSCREENS(SCREENS_BASE);
-  //   }
-  // }, [mediaType]);
+  const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
 
   useEffect(() => {
     setSCREENS(SCREENS_BASE);
@@ -290,6 +396,9 @@ const Upload = () => {
   const activeScreenView = SCREENS[screenIndex].view;
 
   useEffect(() => {
+    if (editMode && isUpdateSuccess) {
+      navigate(`/content/${id}?edit=true`);
+    }
     if (isSuccess) {
       //@ts-ignore - idk why this is not working - we can see in the node_modules it is part of the spec....
       if (response.data.vttQueued && response?.data?.id) {
@@ -299,19 +408,39 @@ const Upload = () => {
         navigate(`/profile/${tag}`);
       }
     }
-  }, [isSuccess, response, vttEditorLaunched]);
+  }, [isSuccess, response, vttEditorLaunched, isUpdateSuccess]);
 
-  if (isError) {
-    console.log('Upload Error');
+  if ((id && isContentLoading) || !isQueryParamCheckComplete) {
+    return (
+      <Lottie
+        className="loading-cubes"
+        animationData={LoadingCubes}
+        loop={true}
+        autoplay={true}
+        style={{ height: '500px' }}
+      />
+    );
   }
 
-  return (
+  return isError ? (
+    <s.ModalContainer>
+      <s.ModalTitle variant="h1">{t('Uploading Failed')}</s.ModalTitle>
+      <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
+        Unfortunately, it seems we&apos;ve hit a snag while uploading your file.
+        This could be due to your internet connection. However, please make sure
+        you&apos;re not trying to upload content in multiple browsers or windows
+        at the same time. Contrary to popular belief, this just slows everything
+        down.
+      </Typography>
+    </s.ModalContainer>
+  ) : (
     <Box className={'upload'} ref={topRef}>
-      <Breadcrumb />
+      <Breadcrumb editMode={editMode} />
       <Progress
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
         onScreenIndexChange={handleScreenChange}
+        editMode={editMode}
         isNextDisabled={
           !formState.isValid ||
           (screenIndex === 0 && !isMediaProperFileType) ||
@@ -335,21 +464,26 @@ const Upload = () => {
           screenIndex={screenIndex}
           onScreenIndexChange={handleScreenChange}
           handleSubmit={handleSubmit(onSubmit)}
+          editMode={editMode}
           isNextDisabled={
-            !formState.isValid ||
-            (screenIndex === 0 &&
-              mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
-              !isMediaProperFileType) ||
-            (screenIndex === 0 &&
-              mediaType === 'link' &&
-              !isBannerImageProperFileType) ||
-            (screenIndex === 0 && !isCoverImageProperFileType) ||
-            (screenIndex === 2 && !captchaVerified) ||
-            (screenIndex === 0 && !isCoverImageSelected) ||
-            (!mediaLink && !isMediaSelected) ||
-            (screenIndex === 1 &&
-              !isVTTSelected &&
-              mediaType in ['video', 'audio'])
+            (editMode && formState.isValid) ||
+            (editMode && screenIndex === 2 && userClearedFields === false) ||
+            (editMode && screenIndex === 3)
+              ? false
+              : !formState.isValid ||
+                (screenIndex === 0 &&
+                  mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
+                  !isMediaProperFileType) ||
+                (screenIndex === 0 &&
+                  mediaType === 'link' &&
+                  !isBannerImageProperFileType) ||
+                (screenIndex === 0 && !isCoverImageProperFileType) ||
+                (screenIndex === 2 && !captchaVerified) ||
+                (screenIndex === 0 && !isCoverImageSelected) ||
+                (!mediaLink && !isMediaSelected) ||
+                (screenIndex === 1 &&
+                  !isVTTSelected &&
+                  mediaType in ['video', 'audio'])
           }
         />
       )}
