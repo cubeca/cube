@@ -333,6 +333,8 @@ const Video = () => {
     </s.LinkWrapper>
   );
 
+  if (edit === 'true' && isUpdatedContentLoading) return updatingContent;
+
   return (
     <Box ref={contentRef}>
       <AgeCheckModal
@@ -363,9 +365,7 @@ const Video = () => {
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
-          {edit === 'true' && isUpdatedContentLoading ? (
-            updatingContent
-          ) : isLoading ? (
+          {isLoading ? (
             <MediaPlayerLoader type={mediaType ? mediaType : 'video'} />
           ) : youtubeID != '' ? (
             youtubeContent

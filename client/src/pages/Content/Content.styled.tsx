@@ -179,8 +179,8 @@ export const UpdateWrapper = styled(Box)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 60vh;
-  background-color: #1a1919;
+  height: 50vh;
+  background-color: #28343c;
   padding: 1rem;
 `;
 export const LoadingText = styled(Typography)`
