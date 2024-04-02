@@ -55,21 +55,31 @@ const CenterColumnPanel = () => {
           <DarkContent.Wrapper>
             <s.CenterColumnTextSection>
               <Typography component="h2" variant="h2">
-                {t('We Are a DAO')}
+                {t('dao')}
               </Typography>
               <Typography component="p">
                 {t(
-                  'Creating a profile on CubeCommons makes you an owner of CubeCommons.'
+                  'daoTagline'
                 )}
               </Typography>
               <Typography component="p">
                 {t(
-                  'As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and a precarious relationships with corporations that often go obsolete or make decisions that do not align with our mandates. When organizations load their educational content onto their Cube profile, they earn governance tokens that give them the right to vote on platform changes, additions and maintenance. By pooling our resources we mean to experiment with autonomy, collective governance and new models for education and cultural archiving.'
+                  'daoText'
                 )}
               </Typography>
-              <Typography component="p">
+              <Typography component="p" variant="h3">
                 {t(
-                  'We are just getting started; our early adopters get to load as much content as they like and have a say in the development of our governance system. Our governance tokens are not a form of currency and cannot be bought or sold. Only earned through acts of knowledge sharing.'
+                  'daoFR'
+                )}
+              </Typography>
+              <Typography component="p" variant="body2">
+                {t(
+                  'daoTaglineFR'
+                )}
+              </Typography>
+              <Typography component="p" variant="body2">
+                {t(
+                  'daoTextFR'
                 )}
               </Typography>
               {/* <Button href="https://www.example.com" variant="contained">
@@ -90,12 +100,23 @@ const CenterColumnPanel = () => {
           <s.CenterColumnTextSection>
             <DarkContent.Wrapper>
               <Typography component="h2" variant="h2">
-                {t('We Are a Commons')}
+                {t('creators')}
               </Typography>
               <Typography component="p">
                 {t(
-                  'CubeCommons was developed through the partnership and collaborative brainstorming of individuals and organizations including @221A, Artengine (@Artengine), Burnaby Art Gallery (@BAG), Centre A (@CentreA), @Cinevolution, Contemporary Art Gallery (@CAG), Museum of Anthropology (@MOA), Museum of Vancouver (@MOV), New Media Gallery (@NMG), Richmond Art Gallery (@RAG), SFU Galleries (@SFUGalleries), and more, from across Canada.'
+                  'creatorsText'
                 )}
+              </Typography>
+              <Typography component="p">
+                {t(
+                  'creatorsList'
+                )}
+              </Typography>
+              <Typography component="p" variant="h3">
+                {t('creatorsFR')}
+              </Typography>
+              <Typography variant="body2">
+                {t('creatorsTextFR')}
               </Typography>
               <Button href="/signup" variant="contained">
                 Join Us

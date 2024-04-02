@@ -7,6 +7,7 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ListItemIcon from '@mui/icons-material/List';
 import LinkIcon from '@mui/icons-material/Link';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
+import DocIcon from '@mui/icons-material/Article';
 import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
 import * as s from './ContentCard.styled';
 
@@ -62,6 +63,8 @@ const ContentCard: FC<ContentCardProps> = ({
               <LinkIcon fontSize="small" />
             ) : icon === 'playlist' ? (
               <ListItemIcon fontSize="small" />
+            ) : icon === 'document' ? (
+              <DocIcon fontSize="small" />
             ) : (
               <></>
             )}

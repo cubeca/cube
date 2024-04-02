@@ -25,13 +25,13 @@ async function getFileTypeFromStream() {
     return fileTypeFromStream;
 }
 
-const retry = async (contentID, currentTries) => {
+const retry = async (contentID, currentTries, language) => {
     if (typeof currentTries !== "number" || currentTries >= maxTries) {
         console.error("Max tries reached");
         return;
     }
     let tries = currentTries + 1;
-    const dataBuffer = Buffer.from(JSON.stringify({ contentID, tries: tries + 1 }));
+    const dataBuffer = Buffer.from(JSON.stringify({ contentID, tries: tries + 1, language }));
     const sleepTime = 10;
     console.log(`Sleeping for ${sleepTime} seconds`);
     await new Promise((resolve) => setTimeout(resolve, sleepTime * 1000));
@@ -41,10 +41,10 @@ const retry = async (contentID, currentTries) => {
 
 functions.cloudEvent("vtt_transcribe", async (event) => {
     const id = Date.now().toString(); //Process ID -- Used for IO Operations
-    const { contentID, tries } = JSON.parse(Buffer.from(event.data.message.data, "base64").toString()); //Decode event message
+    const { contentID, tries, language } = JSON.parse(Buffer.from(event.data.message.data, "base64").toString()); //Decode event message
     try {
         if (!contentID) throw new Error("No content ID provided");
-        console.log({ contentID, tries });
+        console.log({ contentID, tries, language });
 
         const contentData = await content.findOne({
             where: {
@@ -160,12 +160,13 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                 return;
             }
         } catch (error) {
-            if (error.contains("unsupported file type")) {
+            console.log(error.message);
+            if (error.message.includes("unsupported file type")) {
                 console.error("We found an unsupported file type and need to end this process");
                 return;
             }
 
-            await retry(contentID, tries);
+            await retry(contentID, tries, language);
         }
 
         try {
@@ -177,7 +178,6 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
             if (mp3Size > 25) {
                 const transcripts = [];
                 const chunkCount = Math.ceil(mp3Size / 25);
-                console.log({ chunkCount });
                 const audioDuration = await new Promise((resolve, reject) => {
                     ffmpeg.ffprobe(`${outputPath}/${id}-audio.mp3`, (err, metadata) => {
                         if (err) {
@@ -209,7 +209,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                             .run();
                     });
                     transcripts.push({
-                        transcript: await transcribe(`${outputPath}/${id}-audio-${i}.mp3`),
+                        transcript: await transcribe(`${outputPath}/${id}-audio-${i}.mp3`, language),
                         startTime,
                         endTime,
                     });
@@ -229,7 +229,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
                     }
                 }
             } else {
-                transcript = await transcribe(`${outputPath}/${id}-audio.mp3`);
+                transcript = await transcribe(`${outputPath}/${id}-audio.mp3`, language);
                 console.log("Transcript Generated");
             }
 
@@ -271,7 +271,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
             console.log(`Message ${messageId} published.`);
         } catch (processingError) {
             console.error({ processingError });
-            await retry(contentID, tries);
+            await retry(contentID, tries, language);
         } finally {
             //purge all mp3, mp4, and vtt files
             //get list
@@ -290,7 +290,7 @@ functions.cloudEvent("vtt_transcribe", async (event) => {
         }
     } catch (error) {
         console.error({ error });
-        await retry(contentID, tries);
+        await retry(contentID, tries, language);
     }
 });
 

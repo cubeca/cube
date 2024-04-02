@@ -66,6 +66,9 @@ const Details = ({
       ) : null}
       {showField('vtt') ? (
         <Box my={theme.spacing(5)}>
+          <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
+            {t('Subtitles')}
+          </Typography>
           <UploadInput
             text={t('Subtitle File')}
             onDrop={handleVTTOnDrop}
@@ -81,10 +84,43 @@ const Details = ({
             )}
             <br />
           </Typography>
+          <Controller
+            name="vttLanguage"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                label={t('Language most prevalent in the content')}
+                fullWidth={false}
+                control={control}
+                {...field}
+              >
+                {Object.keys(languageSet).map((key) => (
+                  <MenuItem.li
+                    value={languageSet[key as keyof typeof languageSet]}
+                    key={key}
+                  >
+                    {key}
+                  </MenuItem.li>
+                ))}
+              </Select>
+            )}
+          />
+          <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+            {t('Select a language.')} <br />
+          </Typography>
         </Box>
       ) : null}
-      {showField('kidsContent') || editMode ? (
-        <Box my={theme.spacing(5)}>
+      <Typography
+        component="h4"
+        variant="h4"
+        mb={theme.spacing(2.5)}
+        mt={theme.spacing(5)}
+      >
+        {t('Additional Details')}
+      </Typography>
+      {showField('kidsContent') ? (
+        <Box>
           <Controller
             name="audience"
             control={control}
@@ -195,3 +231,59 @@ const Details = ({
 };
 
 export default Details;
+
+const languageSet = {
+  Afrikaans: 'af',
+  Arabic: 'ar',
+  Armenian: 'hy',
+  Azerbaijani: 'az',
+  Belarusian: 'be',
+  Bosnian: 'bs',
+  'Catalan, Valencian': 'ca',
+  Chinese: 'zh',
+  Croatian: 'hr',
+  Czech: 'cs',
+  Danish: 'da',
+  English: 'en',
+  Estonian: 'et',
+  Finnish: 'fi',
+  French: 'fr',
+  Galician: 'gl',
+  German: 'de',
+  Greek: 'el',
+  Hebrew: 'he',
+  Hindi: 'hi',
+  Hungarian: 'hu',
+  Icelandic: 'is',
+  Indonesian: 'id',
+  Italian: 'it',
+  Japanese: 'ja',
+  Kannada: 'kn',
+  Korean: 'ko',
+  Latvian: 'lv',
+  Lithuanian: 'lt',
+  Macedonian: 'mk',
+  Malay: 'ms',
+  Maori: 'mi',
+  Nepali: 'ne',
+  Norwegian: 'no',
+  Persian: 'fa',
+  Polish: 'pl',
+  Portuguese: 'pt',
+  'Romanian, Moldavian, Moldovan': 'ro',
+  Russian: 'ru',
+  Serbian: 'sr',
+  Slovak: 'sk',
+  Slovenian: 'sl',
+  'Spanish, Castilian': 'es',
+  Swahili: 'sw',
+  Swedish: 'sv',
+  Tagalog: 'tl',
+  Tamil: 'ta',
+  Thai: 'th',
+  Turkish: 'tr',
+  Ukrainian: 'uk',
+  Urdu: 'ur',
+  Vietnamese: 'vi',
+  Welsh: 'cy'
+};

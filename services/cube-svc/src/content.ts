@@ -38,9 +38,10 @@ content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res
     if (!vttFileId && (type === 'video' || type === 'audio')) {
       // Publish a message to Google Pub/Sub
       const topicName = 'vtt_transcribe';
-
+      console.log(dbResult);
       //@ts-ignore
-      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0 });
+      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0, language: dbResult.data.vttLanguage });
+
       await pubsub.topic(topicName).publish(Buffer.from(message));
 
       //@ts-ignore

@@ -55,18 +55,23 @@ const DigitalNeighboursPanel = () => {
   return (
     <s.DigitalNeighboursPanel>
       <Typography component="h2" variant="h2">
-        {t('Our Digital Community')}
+        {t('digitalNeighbours')}
       </Typography>
-      <Typography
-        component="p"
-        sx={{
-          textAlign: 'center',
-          maxWidth: '720px',
-          margin: '0 auto'
-        }}
-      >
-        {t('digitalNeighboursText')}
+      <Typography component="h3" variant="h3">
+        {t('digitalNeighboursFR')}
       </Typography>
+      <Grid container justifyContent="center">
+        <Grid xs={12} md={4} padding="1rem">
+            <Typography component="p" variant="body1" textAlign="center">
+            {t('digitalNeighboursText')}
+            </Typography>
+        </Grid>
+        <Grid xs={12} md={4} padding="1rem">
+            <Typography component="p" variant="body1" textAlign="center">
+              {t('digitalNeighboursTextFR')}
+            </Typography>
+        </Grid>
+      </Grid>
 
       <Grid container mt={8}>
         {cards.map((card, index) => (

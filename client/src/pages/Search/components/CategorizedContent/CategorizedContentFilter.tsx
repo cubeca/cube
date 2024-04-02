@@ -5,19 +5,21 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedContentFilter.styled';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
-import { FC } from 'react';
+import { FC, useEffect, useRef } from 'react';
 import { Menu } from '@mui/material';
 
 interface CategorizedContentFilterProps {
   setSearchTerm: any;
   categoryFilter: any;
   setCategoryFilter: any;
+  tagSearchTerm?: string;
 }
 
 const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
   setSearchTerm,
   categoryFilter,
-  setCategoryFilter
+  setCategoryFilter,
+  tagSearchTerm
 }) => {
   const { control } = useForm();
   const { t } = useTranslation();
@@ -35,6 +37,12 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
     setSearchTerm(sanitizedValue);
   };
 
+  useEffect(() => {
+    if (tagSearchTerm) {
+      setSearchTerm(tagSearchTerm);
+    }
+  }, [tagSearchTerm]);
+
   return (
     <s.Filters>
       <form onChange={(e) => handleSearchTermChange(e)}>
@@ -43,17 +51,18 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           name="searchFilter"
           control={control}
           variant="standard"
-          placeholder="Search"
+          placeholder="Search/Rechercher"
           className="searchFilter"
+          defaultValue={tagSearchTerm ? tagSearchTerm : ''}
         />
 
         <Select
-          label={t('Filter by content type')}
+          label={t('Filter/Filtre')}
           className="typeFilter"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e)}
         >
-          <MenuItem.li value={'all'}>{t('All')}</MenuItem.li>
+          <MenuItem.li value={'all'}>{t('All/Toute')}</MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
             {t('Video')}
           </MenuItem.li>

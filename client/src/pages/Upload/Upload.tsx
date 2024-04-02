@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import useContent from 'hooks/useContent';
 import { useEffect, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -8,17 +8,21 @@ import Progress from './components/Progress';
 import Screens from './components/Screens';
 import Media from './components/Screens/Media';
 import Details from './components/Screens/Details';
-import Accessibility from './components/Screens/Accessibility';
 import TOS from './components/Screens/TOS';
 import Tags from './components/Screens/Tags';
 import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
+
 import { useLocation } from 'react-router-dom';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import UploadProgress from './components/Screens/UploadProgress';
 import useContentDetailsByParam from 'hooks/useContentDetailsByParam';
 import Lottie from 'lottie-react';
 import { UpdateContentTypeEnum } from '@cubeca/cube-svc-client-oas-axios/dist/models/update-content';
+
+import * as s from './components/Screens/UploadProgress.styled';
+
+import { useTranslation } from 'react-i18next';
 import useAuth from 'hooks/useAuth';
 
 const getContributors = (values: FieldValues) => {
@@ -210,6 +214,8 @@ const Upload = () => {
     setIsQueryParamCheckComplete(true);
   }, [id, contentId, location, isLoading, isContentLoading]);
 
+  const { t } = useTranslation();
+
   const mediaType = watch('type');
   const mediaLink = watch('link');
 
@@ -244,6 +250,7 @@ const Upload = () => {
 
   const onSubmit = (values: FieldValues) => {
     const contributors = getContributors(values);
+
     const collaborators = [profileId, ...finalCollaborators];
     const payload = {
       profileId: profileId!,
@@ -360,10 +367,6 @@ const Upload = () => {
         />
       )
     },
-    // {
-    //   label: 'Accessibility',
-    //   view: <Accessibility />
-    // },
     {
       label: 'Tags',
       view: (
@@ -391,19 +394,6 @@ const Upload = () => {
 
   const [SCREENS, setSCREENS] = useState(SCREENS_BASE);
 
-  // leaving this logic here for now for when we bring the accessibility screen back
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   if (!['video', 'audio'].includes(mediaType)) {
-  //     const tmpScreens = [...SCREENS_BASE];
-  //     //remove accessibility screen
-  //     tmpScreens.splice(2, 1);
-  //     setSCREENS(tmpScreens);
-  //   } else {
-  //     setSCREENS(SCREENS_BASE);
-  //   }
-  // }, [mediaType]);
-
   useEffect(() => {
     setSCREENS(SCREENS_BASE);
   }, [mediaType]);
@@ -425,9 +415,6 @@ const Upload = () => {
     }
   }, [isSuccess, response, vttEditorLaunched, isUpdateSuccess]);
 
-  if (isError) {
-    console.log('Upload Error');
-  }
   if ((id && isContentLoading) || !isQueryParamCheckComplete) {
     return (
       <Lottie
@@ -440,7 +427,18 @@ const Upload = () => {
     );
   }
 
-  return (
+  return isError ? (
+    <s.ModalContainer>
+      <s.ModalTitle variant="h1">{t('Uploading Failed')}</s.ModalTitle>
+      <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
+        Unfortunately, it seems we&apos;ve hit a snag while uploading your file.
+        This could be due to your internet connection. However, please make sure
+        you&apos;re not trying to upload content in multiple browsers or windows
+        at the same time. Contrary to popular belief, this just slows everything
+        down.
+      </Typography>
+    </s.ModalContainer>
+  ) : (
     <Box className={'upload'} ref={topRef}>
       <Breadcrumb editMode={editMode} />
       <Progress
