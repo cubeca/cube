@@ -51,6 +51,7 @@ const Video = () => {
   }
   const query = useQuery();
   const playlistId = query.get('playlist');
+  const edit = query.get('edit');
 
   const formattedCreatedDate = content
     ? new Date(createdAt as string).toLocaleDateString('en-us', {
@@ -70,7 +71,8 @@ const Video = () => {
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
   const [userId, setUserId] = useState('');
-
+  const [isUpdatedContentLoading, setIsUpdatedContentLoading] = useState(false);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
   let youtubeID = '';
 
   const id = content?.id;
@@ -107,6 +109,33 @@ const Video = () => {
   const onUnder18Click = () => {
     setIsSuitableForChildrenModalOpen(false);
   };
+
+  // if coming from edit content mode
+  useEffect(() => {
+    if (edit === 'true') {
+      setIsUpdatedContentLoading(true);
+      //@ts-ignore
+      setLastUpdatedAt(content?.updatedAt);
+    }
+  }, [edit, content]);
+
+  // check if content has been updated or someone just copy/pasted the link with the edit query param
+  useEffect(() => {
+    const now = new Date();
+    const updatedAtDate =
+      lastUpdatedAt !== null ? new Date(lastUpdatedAt) : null;
+    const nowDate = new Date(now);
+    if (
+      edit === 'true' &&
+      updatedAtDate !== null &&
+      new Date(updatedAtDate) < new Date(nowDate)
+    ) {
+      setIsUpdatedContentLoading(false);
+    } else if (edit === 'true' && lastUpdatedAt !== null) {
+      // if content was edited more than two minutes ago just show the content
+      setIsUpdatedContentLoading(false);
+    }
+  }, [content]);
 
   // set subtitleUrl when content changes
   useEffect(() => {
@@ -254,6 +283,18 @@ const Video = () => {
     </s.AudioWrapper>
   );
 
+  const updatingContent = (
+    <s.UpdateWrapper>
+      <Lottie
+        className="loading-cubes"
+        animationData={LoadingCubes}
+        loop={true}
+        style={{ width: '170px', height: '170px' }}
+      />
+      <s.LoadingText>Loading your updated content...</s.LoadingText>
+    </s.UpdateWrapper>
+  );
+
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
 
   const videoContent = (
@@ -322,7 +363,9 @@ const Video = () => {
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
-          {isLoading ? (
+          {edit === 'true' && isUpdatedContentLoading ? (
+            updatingContent
+          ) : isLoading ? (
             <MediaPlayerLoader type={mediaType ? mediaType : 'video'} />
           ) : youtubeID != '' ? (
             youtubeContent

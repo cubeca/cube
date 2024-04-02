@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import useContent from 'hooks/useContent';
 import { useEffect, useRef, useState } from 'react';
 import { FieldValues, useForm } from 'react-hook-form';
@@ -15,10 +15,7 @@ import FormFooter from './components/FormFooter';
 import { getProfileId } from 'utils/auth';
 import { useLocation } from 'react-router-dom';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
-import EventEmitter from 'events';
-import { progressEmitter } from 'api/upload';
 import UploadProgress from './components/Screens/UploadProgress';
-import useContentDetails from 'hooks/useContentDetails';
 import useContentDetailsByParam from 'hooks/useContentDetailsByParam';
 import Lottie from 'lottie-react';
 import { UpdateContentTypeEnum } from '@cubeca/cube-svc-client-oas-axios/dist/models/update-content';
@@ -134,15 +131,10 @@ const Upload = () => {
 
   const { tag } = useParams();
   const navigate = useNavigate();
-  const { control, handleSubmit, formState, watch } = useForm({
-    mode: 'onChange',
-    criteriaMode: 'all'
-  });
 
   const {
     addContent,
     updateContent,
-
     isUploadLoading: isLoading,
     isUploadError: isError,
     isUploadSuccess: isSuccess,
@@ -175,17 +167,40 @@ const Upload = () => {
   const [isQueryParamCheckComplete, setIsQueryParamCheckComplete] =
     useState(false);
   const [finalCollaborators, setFinalCollaborators] = useState<any[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState(
-    editMode && content?.category ? content?.category : []
-  );
+  const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
   const [newCoverImageSelected, setNewCoverImageSelected] = useState(false);
+  const [userClearedFields, setUserClearedFields] = useState(false);
+  const { control, handleSubmit, formState, watch, trigger } = useForm({
+    mode: editMode ? 'all' : 'onChange',
+    criteriaMode: 'all'
+  });
 
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     navigate('/');
-  //   }
-  // });
+  // if user is not logged in, redirect to home page
+  // setTimout is used to prevent the redirect from happening when the user is logged in
+  // but the data has not yet been returned
+  useEffect(() => {
+    if (!isLoggedIn) {
+      const timer = setTimeout(() => {
+        if (!isLoggedIn) {
+          navigate('/');
+        }
+      }, 100);
 
+      return () => clearTimeout(timer);
+    }
+  }, [isLoggedIn, navigate]);
+
+  // manually triggering validation to allow user to be able to navigate between pages
+  // without having to adjust the form
+  useEffect(() => {
+    if (editMode && screenIndex === 0) {
+      trigger('title');
+    } else if (editMode && screenIndex === 1) {
+      trigger('description');
+    } else if (editMode && screenIndex === 2) {
+      trigger('categories');
+    }
+  }, []);
   useEffect(() => {
     if ((contentId || id) && profileId === content?.profileId) {
       setEditMode(true);
@@ -193,14 +208,6 @@ const Upload = () => {
       id = queryParams.get('contentid');
     }
     setIsQueryParamCheckComplete(true);
-    // if not content owner, redirect to profile page
-    // BUG: was trying to redirect to profile page if not content owner, but this was causing
-    // clicking Upload to redirect to profile page
-    // this is only an issue of a user manually entered the URL
-    // with the query param to content that isn't theirs
-    // if (profileId !== content?.profileId && !editMode) {
-    //   navigate(`/profile/${tag}`);
-    // }
   }, [id, contentId, location, isLoading, isContentLoading]);
 
   const mediaType = watch('type');
@@ -294,7 +301,8 @@ const Upload = () => {
       //@ts-ignore
       mediaFileId: content?.mediaUrl?.id,
       //@ts-ignore
-      vttFileId: content?.vttFileUrl?.id
+      vttFileId: content?.vttFileUrl?.id,
+      updatedAt: new Date().toISOString()
     };
 
     if (!isCoverImageSelected) {
@@ -367,6 +375,7 @@ const Upload = () => {
           setFinalCollaborators={setFinalCollaborators}
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
+          setUserClearedFields={setUserClearedFields}
         />
       )
     },
@@ -412,8 +421,6 @@ const Upload = () => {
         navigate(`/subtitle-editor/${response?.data?.id}/true`);
       } else if (!vttEditorLaunched) {
         navigate(`/profile/${tag}`);
-      } else if (editMode && isUpdateSuccess) {
-        navigate(`/content/${id}`);
       }
     }
   }, [isSuccess, response, vttEditorLaunched, isUpdateSuccess]);
@@ -466,7 +473,9 @@ const Upload = () => {
           handleSubmit={handleSubmit(onSubmit)}
           editMode={editMode}
           isNextDisabled={
-            editMode
+            (editMode && formState.isValid) ||
+            (editMode && screenIndex === 2 && userClearedFields === false) ||
+            (editMode && screenIndex === 3)
               ? false
               : !formState.isValid ||
                 (screenIndex === 0 &&

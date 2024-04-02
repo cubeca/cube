@@ -29,15 +29,23 @@ const Tags = ({
   content,
   setFinalCollaborators,
   selectedCategories,
-  setSelectedCategories
+  setSelectedCategories,
+  setUserClearedFields
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const categories = Object.keys(SearchFiltersCategoryEnum);
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+
   const [localCategories, setLocalCategories] = useState(
     editMode && content?.category ? content?.category : []
   );
+
+  useEffect(() => {
+    if (content?.category) {
+      setSelectedCategories(content?.category);
+    }
+  }, [content?.category]);
 
   const [artists, setArtists] = useState<any[]>([
     { name: 'artist_1', url: 'artist_url_1' }
@@ -102,7 +110,6 @@ const Tags = ({
   };
 
   // Helper function to get custom fields
-  // Helper function to get custom fields
   const getCustomFields = (contributors: any) => {
     const keysToExclude = ['artist', 'camera_operator', 'editor', 'sound'];
     return Object.keys(contributors)
@@ -126,11 +133,6 @@ const Tags = ({
     }
   };
 
-  useEffect(() => {
-    if (content?.category) {
-      setSelectedCategories(content?.category);
-    }
-  }, [content?.category]);
   return (
     <Box className={'upload__tags-screen'}>
       <Typography component="h2" variant="h2">
@@ -146,11 +148,19 @@ const Tags = ({
             <Autocomplete
               multiple
               options={categories}
+              // value={selectedCategories}
               value={localCategories}
               onChange={(_, newValue) => {
                 field.onChange(newValue);
-                setSelectedCategories(newValue);
                 setLocalCategories(newValue);
+                setSelectedCategories(newValue);
+
+                // manual validation to ensure a user can't leave this field empty
+                if (newValue.length === 0) {
+                  setUserClearedFields(true);
+                } else {
+                  setUserClearedFields(false);
+                }
               }}
               renderInput={(params) => (
                 <TextField

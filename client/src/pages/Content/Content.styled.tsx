@@ -174,7 +174,15 @@ export const LoadingWrapper = styled(Box)`
   height: 100%;
   background-color: #1a1919;
 `;
-
+export const UpdateWrapper = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  background-color: #1a1919;
+  padding: 1rem;
+`;
 export const LoadingText = styled(Typography)`
   color: ${(props) => props.theme.palette.primary.light};
   font-family: Inter;
