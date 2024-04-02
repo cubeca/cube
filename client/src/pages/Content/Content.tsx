@@ -60,7 +60,7 @@ const Video = () => {
         day: 'numeric'
       })
     : '';
-  console.log(content);
+
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
