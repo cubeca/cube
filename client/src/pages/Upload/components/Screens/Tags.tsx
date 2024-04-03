@@ -176,7 +176,7 @@ const Tags = ({
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
           <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
-            'Searching by file type is valuable for educators & accessibility.'
+            'These tags help educators & users with different access needs to filter content. For example, if your video has audio you should select both tags.'
           )}
         </Typography>
         <s.StyledList>
@@ -226,7 +226,7 @@ const Tags = ({
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
           <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
-            'These tags allow your content to build wider and deeper connections. By adding languages and community terms as tags, you make it easier for people to discover. If content for a traveling exhibition is being created by different organisation, you can connect it through a shared tag. Some examples:'
+            'These tags allow your content to build wider and deeper connections. By adding languages and community terms as tags, you make it easier for people to discover. If content for a traveling exhibition is being created by different organization, you can connect it through a shared tag. Some examples:'
           )}
         </Typography>
         <Grid container>
@@ -584,7 +584,7 @@ const Tags = ({
                     {t('You must separate websites with a comma. ')}
                   </strong>
                   {t(
-                    'For added security prevent users from embedding your URL by creating a Whitelist of websites where your content can be embedded. Tap the arrow for links to code you can use to embed your content on a Whitelisted site.'
+                    'For added security, create a Whitelist of the only websites where your content URL can be embedded. Tap the arrow for links to code you can use to embed your content on a Whitelisted site.'
                   )}
                 </Box>
                 <Box mt={1}>

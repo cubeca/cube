@@ -192,7 +192,7 @@ const Media = ({
           </Typography>
           <s.StyledListItem>
             {t(
-              'Do not log-in to your account in multiple windows and try to upload many files at the same time.'
+              'Only log in to your account in multiple windows and try uploading many files simultaneously, if you like watching loading GIFs.'
             )}
           </s.StyledListItem>
           <s.StyledListItem>
@@ -202,11 +202,13 @@ const Media = ({
           </s.StyledListItem>
           <s.StyledListItem>
             {t(
-              'Ensure the file type you select below is the same as the file type you upload.'
+              'Make sure the media type you select matches the file type you upload; or right when you think you’re done, you’ll have to start over.'
             )}
           </s.StyledListItem>
           <Typography component="h4" variant="h4" mt={2.5}>
-            {t('* Your Requests Consume Energy & Resources, Be Mindful *')}
+            {t(
+              '* The Internet Isn’t Magic; It’s Powered By Energy & Resources, Be Mindful *'
+            )}
           </Typography>
         </>
       )}
@@ -276,7 +278,7 @@ const Media = ({
           ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `The file you upload here should correspond with the file type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText}${documentFileTypesText} no more than 2 GB.`
+              `The file you upload here should correspond with the media type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText}${documentFileTypesText} no more than 2 GB.`
             )}
           </Typography>
         </Box>
