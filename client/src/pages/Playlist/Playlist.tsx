@@ -17,9 +17,8 @@ import Lottie from 'lottie-react';
 const Playlist = () => {
   const user = getAuthTokenPayload();
   const { id } = useParams<{ id: string }>();
-  const { playlist, handleGetPlaylist, refetchPlaylist } = useSinglePlaylist(
-    id || ''
-  );
+  const { playlist, handleGetPlaylist, refetchPlaylist, isLoading } =
+    useSinglePlaylist(id || '');
   const [userId, setUserId] = useState('');
   const [profileId, setProfileId] = useState('');
   const [localProfile, setLocalProfile] = useState<any>();
@@ -33,6 +32,8 @@ const Playlist = () => {
   const playlistCreatorUserId = playlist?.data[0].data.userId;
   // @ts-ignore
   const embedToggleEnabled = playlist?.data[0].data.embedToggleEnabled;
+  // @ts-ignore
+  const playlistCreatorProfileId = playlist?.data[0].data.profileId;
 
   const { data: profile } = useProfile();
 
@@ -72,14 +73,17 @@ const Playlist = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (profileId) {
-        const fetchedProfile = await getProfile(profileId);
+      if (profileId || playlistCreatorProfileId) {
+        const fetchedProfile = await getProfile(
+          playlistCreatorProfileId ? playlistCreatorProfileId : profileId
+        );
         setLocalProfile(fetchedProfile.data);
+        console.log(fetchedProfile.data, 'fetchedProfile');
       }
     };
 
     fetchProfile();
-  }, [profileId]);
+  }, [profileId, playlistCreatorProfileId]);
 
   useEffect(() => {
     if (localPlaylist) {
@@ -107,42 +111,47 @@ const Playlist = () => {
     <Grid container>
       <EmbedModal isOpen={isEmbedModalOpen} onClose={handleClose} />
       <Grid xs={10} xsOffset={1} md={8}>
-        {localProfile && !profile.profileId && (
-          <Link
-            to={`/profile/${localProfile.tag}`}
-            style={{ color: 'inherit' }}
-          >
-            <s.ViewSection>
-              <s.Header>
-                <s.ImageWrapper>
-                  <s.ImageInner
-                    title={localProfile!.organization}
-                    target="_blank"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {localProfile.logoUrl && (
-                      <img
-                        src={localProfile!.logoUrl}
-                        alt="user profile thumbnail"
-                      />
-                    )}
-                  </s.ImageInner>
-                </s.ImageWrapper>
+        {localProfile &&
+          !isLoading &&
+          profileId !== playlistCreatorProfileId &&
+          (!profile.profileId || playlistCreatorProfileId !== '') && (
+            <Link
+              to={`/profile/${localProfile.tag}`}
+              style={{ color: 'inherit' }}
+            >
+              <s.ViewSection>
+                <s.Header>
+                  <s.ImageWrapper>
+                    <s.ImageInner
+                      title={localProfile!.organization}
+                      target="_blank"
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {localProfile.logoUrl && (
+                        <img
+                          src={localProfile!.logoUrl}
+                          alt="user profile thumbnail"
+                        />
+                      )}
+                    </s.ImageInner>
+                  </s.ImageWrapper>
 
-                <Typography component="h5" variant="h5">
-                  {localProfile!.organization || ''}
+                  <Typography component="h5" variant="h5">
+                    {localProfile!.organization || ''}
 
-                  <small>
-                    {localProfile!.tag &&
-                      (localProfile!.tag.includes('@')
-                        ? localProfile!.tag
-                        : `@${localProfile!.tag}`)}
-                  </small>
-                </Typography>
-              </s.Header>
-            </s.ViewSection>
-          </Link>
-        )}
+                    <small>
+                      {localProfile &&
+                        localProfile.tag &&
+                        localProfile!.tag &&
+                        (localProfile!.tag.includes('@')
+                          ? localProfile!.tag
+                          : `@${localProfile!.tag}`)}
+                    </small>
+                  </Typography>
+                </s.Header>
+              </s.ViewSection>
+            </Link>
+          )}
         {playlist ? (
           <div>
             <PlaylistPanel
