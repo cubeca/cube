@@ -7,15 +7,24 @@ export const DigitalNeighboursPanel = styled(Stack)`
   text-align: center;
   align-items: center;
 
+  ${(props) => props.theme.breakpoints.up('xs')} {
+
+    padding: 20vw 0 8.333333333333334vw 0;
+    
+  }
+
   ${(props) => props.theme.breakpoints.up('md')} {
-    padding: 0 8.333333333333333% 120px;
+    padding: 10vw 8.333333333333333% 10px;
   }
   h2{
     margin-bottom: 3px;
-    margin-top: 100px;
+    margin-top: 4vw;
   }
   h3{
     margin-bottom: 2rem;
+  }
+  p{
+    margin-bottom: 0;
   }
 `;
 

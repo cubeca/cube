@@ -38,7 +38,7 @@ export const VRText = styled(Stack)`
 `;
 
 export const Headline = styled(Box)`
-  padding: 55vw 0 8.333333333333334vw 0;
+  padding: 20vw 0 8.333333333333334vw 0;
   
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 4.333333333333334vw 0 2.333333333333334vw;
@@ -64,7 +64,7 @@ export const LinkWrapper = styled(Box)`
   flex-flow: column nowrap;
   align-items: flex-start;
   gap: 8px;
-  padding: 0 0 1.5rem 0;
+  padding: 9.3vw 0rem 9.3vw;
   
   ${(props) => props.theme.breakpoints.up('md')} {
     flex-flow: row wrap;

@@ -43,9 +43,9 @@ export const Content = styled(Grid)`
 
 export const ContentMain = styled(Box)`
   height: 600px;
-  padding-top: 120px;
+  padding-top: 70px;
   padding-bottom: 120px;
-  text-align: center;
+  text-align: left;
 
   ${(props) => props.theme.breakpoints.up('md')} {
     text-align: left;
