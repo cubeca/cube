@@ -67,7 +67,6 @@ export const uploadViaTus = async (
         upload.resumeFromPreviousUpload(previousUploads[0]);
       }
 
-      // Start the upload
       upload.start();
     });
   });

@@ -51,18 +51,18 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           name="searchFilter"
           control={control}
           variant="standard"
-          placeholder="Search"
+          placeholder="Search/ Rechercher"
           className="searchFilter"
           defaultValue={tagSearchTerm ? tagSearchTerm : ''}
         />
 
         <Select
-          label={t('Filter by content type')}
+          label={t('Filter/Filtre')}
           className="typeFilter"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e)}
         >
-          <MenuItem.li value={'all'}>{t('All')}</MenuItem.li>
+          <MenuItem.li value={'all'}>{t('All/Toute')}</MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
             {t('Video')}
           </MenuItem.li>

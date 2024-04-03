@@ -186,7 +186,7 @@ export const getFile = async (fileId: string) => {
     }
 
     if (!videoDetails.readyToStream) {
-      throw new Error('Video is still being processed.');
+      return;
     }
 
     playerInfo = {

@@ -7,7 +7,8 @@ import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
+import BookIcon from '@mui/icons-material/MenuBook';
+import WorddocIcon from '@mui/icons-material/Article'
 import LinkIcon from '@mui/icons-material/Link';
 import CloseIcon from '@mui/icons-material/Close';
 import * as s from './MainMenu.styled';
@@ -52,19 +53,37 @@ const MainMenu = ({
       <MenuList sx={{ padding: '4px 4px' }}>
         <MenuItem
           onClick={() => handleMenuClick('/search')}
-          text={t('Search Content')}
+          text={t('Search')}
         />
         <s.MenuHashItem>
           <HashLink smooth to="/#virtual-experiences">
             {t('Cube VR')}
           </HashLink>
         </s.MenuHashItem>
+        <s.MenuHashItem>
+          <HashLink smooth to="/#language-translation">
+            {t('Translate Content & Buttons')}
+          </HashLink>
+        </s.MenuHashItem>
         <MenuItem
           onClick={() => handleMenuClick('/signup')}
-          text={t('Become a creator')}
+          text={t('Become a Creator')}
+        />
+        <MenuItem
+          onClick={() => handleMenuClick('/signup')}
+          text={t('Devenez un Créateur')}
         />
       </MenuList>
-      
+      <MenuItem
+          onClick={() => handleMenuClick('/search')}
+          text={t('Rechercher')}
+        />
+       <MenuItem
+          onClick={() => handleMenuClick('/home')}
+          text={t('Traduire Contenu & Boutons')}
+        />
+
+    
       <Divider />
 
       <s.Glossary>
@@ -113,10 +132,67 @@ const MainMenu = ({
         />
         <MenuItem
           text={t('PDF')}
-          icon={<MenuBookIcon fontSize="small" />}
+          icon={<BookIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Word Doc')}
+          icon={<WorddocIcon fontSize="small" />}
         />
         <MenuItem
           text={t('Link')}
+          icon={<LinkIcon fontSize="small" />}
+        />
+        <Typography
+          component="h3"
+          px="16px"
+          pt="20px"
+          fontWeight="bold"
+          m={0}
+          mb={1}
+        >
+          (FR) Glossaire des Icônes
+        </Typography>
+        
+        <Typography component="h4">
+        Accessibilité
+        </Typography>
+
+        <MenuList>
+          {/* <MenuItem
+            text={t('Text to Speech')}
+            icon={<VoiceChatIcon fontSize="small" />}
+          /> */}
+          <MenuItem
+            text={t('Langage des Signes')}
+            icon={<SignLanguageIcon fontSize="small" />}
+          />
+          <MenuItem
+            text={t('Les Sous-Titres')}
+            icon={<SubtitlesIcon fontSize="small" />}
+          />
+        </MenuList>
+        <Typography component="h4">
+        Types de Contenu
+        </Typography>
+        
+        <MenuItem
+          text={t('Vidéo')}
+          icon={<PlayArrowIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('L`Audio')}
+          icon={<VolumeUpIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('PDF')}
+          icon={<BookIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Word Doc')}
+          icon={<WorddocIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Lien')}
           icon={<LinkIcon fontSize="small" />}
         />
       </s.Glossary>

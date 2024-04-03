@@ -2,6 +2,7 @@ import { Box, Stack } from '@mui/material';
 import { styled } from 'theme/utils';
 import { Link as RouterLink } from 'react-router-dom';
 import VirtualExperiencesHero from 'assets/images/virtualExperiences.jpg';
+import Chrome from '../../../../assets/images/chrome.png'
 
 export const VRCover = styled(Box)`
   background: url(${VirtualExperiencesHero});
@@ -36,6 +37,15 @@ export const VRText = styled(Stack)`
     margin-bottom: 0;
   }
 `;
+export const VRTextPP = styled(Stack)`
+p {
+    margin-top: 20px
+}
+`;
+
+export const FRText = styled(Stack)`
+Margin: 50px;
+`;
 
 export const Headline = styled(Box)`
   padding: 55vw 0 8.333333333333334vw 0;
@@ -56,6 +66,21 @@ export const Headline = styled(Box)`
 
   h2 {
     margin: 16px 0;
+  }
+`;
+
+export const chrome = styled(Box)`
+  background: url(${Chrome});
+  max-width: 90%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  display: flex;
+  max-height: 100%;
+  
+
+  ${(props) => props.theme.breakpoints.up('md')} {
+    min-height: 10vw;
   }
 `;
 

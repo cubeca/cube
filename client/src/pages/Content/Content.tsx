@@ -9,7 +9,8 @@ import CodeIcon from '@mui/icons-material/Code';
 import FlagIcon from '@mui/icons-material/Flag';
 import DownloadIcon from '@mui/icons-material/Download';
 import ListIcon from '@mui/icons-material/List';
-
+import EditIcon from '@mui/icons-material/Edit';
+import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
 
 import MoreContent from './MoreContent';
@@ -32,6 +33,7 @@ import { useLocation } from 'react-router-dom';
 import ReportContentModal from 'components/ReportContentModal';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import { getAuthTokenPayload } from 'utils/auth';
+import { getProfileTag } from 'utils/auth';
 import useAuth from 'hooks/useAuth';
 
 const Video = () => {
@@ -49,6 +51,7 @@ const Video = () => {
   }
   const query = useQuery();
   const playlistId = query.get('playlist');
+  const edit = query.get('edit');
 
   const formattedCreatedDate = content
     ? new Date(createdAt as string).toLocaleDateString('en-us', {
@@ -68,9 +71,12 @@ const Video = () => {
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
   const [userId, setUserId] = useState('');
-
+  const [isUpdatedContentLoading, setIsUpdatedContentLoading] = useState(false);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
   let youtubeID = '';
 
+  const id = content?.id;
+  const tag = getProfileTag();
   const videoUrl = content?.mediaUrl?.playerInfo?.hlsUrl;
   const audioUrl = content?.mediaUrl?.playerInfo?.publicUrl;
   const coverArtUrl = content?.coverImageUrl
@@ -92,7 +98,6 @@ const Video = () => {
   const audioBeingProcessed = !content?.mediaUrl?.playerInfo?.publicUrl;
   const embedContentWhitelist = content?.embedContentWhitelist;
   const embedToggleEnabled = content?.embedToggleEnabled;
-
   // if content contains a link URL, check if it's a youtube link and get the ID
   if (linkUrl) {
     youtubeID = getIDfromURL(linkUrl);
@@ -105,10 +110,37 @@ const Video = () => {
     setIsSuitableForChildrenModalOpen(false);
   };
 
+  // if coming from edit content mode
+  useEffect(() => {
+    if (edit === 'true') {
+      setIsUpdatedContentLoading(true);
+      //@ts-ignore
+      setLastUpdatedAt(content?.updatedAt);
+    }
+  }, [edit, content]);
+
+  // check if content has been updated or someone just copy/pasted the link with the edit query param
+  useEffect(() => {
+    const now = new Date();
+    const updatedAtDate =
+      lastUpdatedAt !== null ? new Date(lastUpdatedAt) : null;
+    const nowDate = new Date(now);
+    if (
+      edit === 'true' &&
+      updatedAtDate !== null &&
+      new Date(updatedAtDate) < new Date(nowDate)
+    ) {
+      setIsUpdatedContentLoading(false);
+    } else if (edit === 'true' && lastUpdatedAt !== null) {
+      // if content was edited more than two minutes ago just show the content
+      setIsUpdatedContentLoading(false);
+    }
+  }, [content]);
+
   // set subtitleUrl when content changes
   useEffect(() => {
     setSubtitleUrl(content?.vttFileUrl?.playerInfo?.publicUrl || '');
-  }, [content]);
+  }, [content, content?.vttFileUrl?.playerInfo?.publicUrl]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -241,6 +273,7 @@ const Video = () => {
         </s.LoadingWrapper>
       ) : (
         <MediaPlayer
+          key={coverArtUrl}
           url={audioUrl || ''}
           coverArtUrl={coverArtUrl}
           coverImageAltText={coverImageAltText}
@@ -248,6 +281,18 @@ const Video = () => {
         />
       )}
     </s.AudioWrapper>
+  );
+
+  const updatingContent = (
+    <s.UpdateWrapper>
+      <Lottie
+        className="loading-cubes"
+        animationData={LoadingCubes}
+        loop={true}
+        style={{ width: '170px', height: '170px' }}
+      />
+      <s.LoadingText>Loading your updated content...</s.LoadingText>
+    </s.UpdateWrapper>
   );
 
   const pdfContent = <PDFReader url={pdfUrl || ''} />;
@@ -287,6 +332,8 @@ const Video = () => {
       />
     </s.LinkWrapper>
   );
+
+  if (edit === 'true' && isUpdatedContentLoading) return updatingContent;
 
   return (
     <Box ref={contentRef}>
@@ -341,14 +388,6 @@ const Video = () => {
               {loggedInProfileId === profileId && (
                 // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                 <s.EditDeleteWrapper>
-                  {(content?.type === 'audio' || content?.type === 'video') && (
-                    <s.EditSubsButton
-                      component={RouterLink}
-                      to={`/subtitle-editor/${content?.id}`}
-                    >
-                      Edit Subtitles
-                    </s.EditSubsButton>
-                  )}
                   <DeleteContentButton contentId={content?.id || ''} />
                 </s.EditDeleteWrapper>
                 // </Box>
@@ -391,6 +430,25 @@ const Video = () => {
                     Report Content
                   </s.Action>
                 </s.ActionsWrapper>
+                {loggedInProfileId === profileId && (
+                  <>
+                    <s.ActionsWrapper>
+                      <EditIcon />
+                      <s.Action to={`/profile/${tag}/upload?contentid=${id}`}>
+                        Edit Content
+                      </s.Action>
+                    </s.ActionsWrapper>
+                    {(content?.type === 'audio' ||
+                      content?.type === 'video') && (
+                      <s.ActionsWrapper>
+                        <SubtitlesIcon />
+                        <s.Action to={`/subtitle-editor/${content?.id}`}>
+                          Edit Subtitles
+                        </s.Action>
+                      </s.ActionsWrapper>
+                    )}
+                  </>
+                )}
               </Stack>
             )}
 

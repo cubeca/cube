@@ -74,6 +74,11 @@ export const ContentMain = styled(Box)`
     color: ${({ theme }) => theme.palette.primary.main};
   }
 
+  span {
+    font-size: 1rem;
+    color: ${({ theme }) => theme.palette.primary.light};
+  }
+
   .play-button {
   }
 `;
