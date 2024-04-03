@@ -454,7 +454,7 @@ const AddToPlaylistModal = ({
               control={control}
               fullWidth
               variant="outlined"
-              placeholder="Title"
+              placeholder="Title (required)"
             />
             <TextInput
               label="Description"
@@ -467,7 +467,7 @@ const AddToPlaylistModal = ({
               rows={4}
               fullWidth
               variant="outlined"
-              placeholder="Description"
+              placeholder="Description (required)"
             />
 
             <Stack direction="row" pb={2} spacing={17} alignItems="center">
