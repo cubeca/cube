@@ -6,7 +6,7 @@ export const AccessibilityPanel = styled(Box)`
   padding: 24px 8.333333333333333%;
   
   ${(props) => props.theme.breakpoints.up('md')} {
-    padding: 120px 8.333333333333333%;
+    padding: 10vw 8.333333333333333%;
   }
 
   a {
@@ -18,6 +18,9 @@ export const AccessibilityPanel = styled(Box)`
   }
   h3{
     margin-bottom: 2rem;
+  }
+  p{
+    margin-bottom: 1rem;
   }
 `;
 

@@ -25,7 +25,7 @@ export const Header = styled(Stack)`
 
 export const HomeLink = styled(Link)`
   display: block;
-  flex: 0 0 129px;
+  flex: 0 0 100px;
   width: 129px;
   height: 40px;
   background: transparent url(${CubeLogoStacked}) no-repeat center/contain;

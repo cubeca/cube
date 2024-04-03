@@ -44,11 +44,11 @@ p {
 `;
 
 export const FRText = styled(Stack)`
-Margin: 50px;
+padding: 8px 9.333333333333333%;
 `;
 
 export const Headline = styled(Box)`
-  padding: 55vw 0 8.333333333333334vw 0;
+  padding: 20vw 0 8.333333333333334vw 0;
   
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 4.333333333333334vw 0 2.333333333333334vw;
@@ -77,6 +77,7 @@ export const chrome = styled(Box)`
   background-size: contain;
   display: flex;
   max-height: 100%;
+  min-height: 20vw;
   
 
   ${(props) => props.theme.breakpoints.up('md')} {
@@ -89,7 +90,7 @@ export const LinkWrapper = styled(Box)`
   flex-flow: column nowrap;
   align-items: flex-start;
   gap: 8px;
-  padding: 0 0 1.5rem 0;
+  padding: 9.3vw 0rem 10vw;
   
   ${(props) => props.theme.breakpoints.up('md')} {
     flex-flow: row wrap;
