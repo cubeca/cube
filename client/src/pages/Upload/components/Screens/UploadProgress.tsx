@@ -2,21 +2,35 @@ import { Typography } from '@mui/material';
 import { progressEmitter } from 'api/upload';
 import * as s from './UploadProgress.styled';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Lottie from 'lottie-react';
-const UploadProgress = () => {
+const UploadProgress = ({ editMode }: any) => {
   const { t } = useTranslation();
   const [progress, setProgress] = useState('');
   const [progressInt, setProgressInt] = useState(0);
-  progressEmitter.on('progress', ({ bytesUploaded, bytesTotal }) => {
-    // Update UI with progress information
-    const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
-    const percentageInt = parseInt(percentage);
-    setProgressInt(percentageInt);
-    setProgress(percentage);
-  });
+
+  useEffect(() => {
+    const progressHandler = ({
+      bytesUploaded,
+      bytesTotal
+    }: {
+      bytesUploaded: number;
+      bytesTotal: number;
+    }) => {
+      const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+      const percentageInt = parseInt(percentage);
+      setProgressInt(percentageInt);
+      setProgress(percentage);
+    };
+
+    progressEmitter.on('progress', progressHandler);
+
+    return () => {
+      progressEmitter.off('progress', progressHandler);
+    };
+  }, []);
+
   return (
     <s.ModalContainer>
       <Lottie
@@ -25,10 +39,14 @@ const UploadProgress = () => {
         loop={true}
         style={{ width: '170px', height: '170px' }}
       />
-      <s.ModalTitle variant="h1">{t('Uploading')}</s.ModalTitle>
-      <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
-        {progress !== '' ? `${progress}% complete.` : ''}
-      </Typography>
+      <s.ModalTitle variant="h1">
+        {editMode ? t('Applying changes...') : t('Uploading')}
+      </s.ModalTitle>
+      {!editMode && (
+        <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
+          {progress !== '' ? `${progress}% complete.` : ''}
+        </Typography>
+      )}
       <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
         Don&apos;t close your browser window.
       </Typography>

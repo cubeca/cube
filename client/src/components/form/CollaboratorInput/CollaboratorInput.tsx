@@ -1,10 +1,7 @@
-import { InputAdornment, TextField as MuiTextField } from '@mui/material';
-import LabelIcon from '@mui/icons-material/Label';
+import { TextField, createFilterOptions } from '@mui/material';
 import { FC, HTMLInputTypeAttribute, useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
-import FormControl from '../FormControl';
 import { InputProps } from '../types';
-import { alpha } from '@mui/material/styles';
 import { Autocomplete } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import useCollaborators from 'hooks/useCollaborators';
@@ -15,17 +12,16 @@ interface CollaboratorInputProps extends InputProps {
   variant?: 'standard' | 'outlined';
   rows?: string | number;
   multiline?: boolean;
+  value?: any;
+  editMode?: boolean;
+  setFinalCollaborators?: any;
 }
-
-const defaultRules = {
-  required: true
-};
 
 const CollaboratorInput: FC<CollaboratorInputProps> = ({
   label,
   name,
   control,
-  defaultValue = '',
+  defaultValue,
   rules = {},
   type = 'text',
   className = '',
@@ -37,7 +33,10 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
   sx,
   variant = 'outlined',
   rows,
-  multiline
+  multiline,
+  value,
+  editMode,
+  setFinalCollaborators
 }) => {
   const { t } = useTranslation();
 
@@ -45,90 +44,116 @@ const CollaboratorInput: FC<CollaboratorInputProps> = ({
   const [collaboratorMap, setCollaboratorMap] = useState<
     Record<string, string>
   >({});
+  const [allCollaboratorIds, setAllCollaboratorIds] = useState(value || []);
+  const [initialCollaboratorIds, setInitialCollaboratorIds] = useState([]);
+  const [currentSelections, setCurrentSelections] = useState<any>([]);
+  const [idToNameMap, setIdToNameMap] = useState<Record<string, string>>({});
+  const [nameToIdMap, setNameToIdMap] = useState<Record<string, string>>({});
+  const [isLoading, setIsLoading] = useState(true);
+
   const { data: collaborators, isLoading: isCollaboratorsLoading } =
     useCollaborators();
 
+  // convert ids to names for display
   useEffect(() => {
     if (collaborators) {
-      const newCollaboratorMap = collaborators.reduce(
-        (acc: Record<string, string>, collaborator) => {
-          acc[collaborator.id] = collaborator.organization;
-          return acc;
-        },
-        {}
+      const newAllCollaboratorIds = [...allCollaboratorIds];
+      setFinalCollaborators(newAllCollaboratorIds);
+      const newIdToNameMap: Record<string, string> = { ...idToNameMap };
+      const newNameToIdMap: Record<string, string> = { ...nameToIdMap };
+      const newAllCollaborators: string[] = allCollaborators.filter(
+        (item, index, self) => self.indexOf(item) === index
       );
+      for (const collaborator of collaborators) {
+        newIdToNameMap[collaborator.id] = collaborator.organization;
+        newNameToIdMap[collaborator.organization] = collaborator.id;
+        if (!newAllCollaborators.includes(collaborator.organization)) {
+          newAllCollaborators.push(collaborator.organization);
+        }
+      }
 
-      setCollaboratorMap(newCollaboratorMap);
-      setAllCollaborators(Object.keys(newCollaboratorMap));
+      setIdToNameMap(newIdToNameMap);
+      setNameToIdMap((prevNameToIdMap) => ({
+        ...prevNameToIdMap,
+        ...newNameToIdMap
+      }));
+      setAllCollaborators(newAllCollaborators);
+
+      // remove the first value because it's the profile owner's id
+      // and doesn't need to be displayed or altered
+      const valueIds = value
+        ? value.slice(1).map((item: { organization: string | number }) => {
+            return newNameToIdMap[item.organization];
+          })
+        : [];
+
+      // If this collaborator is pre-selected and not already in allCollaboratorIds, add it
+      for (const collaborator of collaborators) {
+        if (
+          valueIds.includes(collaborator.id) &&
+          !newAllCollaboratorIds.includes(collaborator.id)
+        ) {
+          newAllCollaboratorIds.push(collaborator.id);
+        }
+      }
+
+      if (editMode && value) {
+        setAllCollaboratorIds(valueIds);
+      }
     }
-  }, [collaborators]);
+  }, [collaborators, editMode, value]);
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      rules={{
-        ...defaultRules,
-        ...rules
-      }}
-      defaultValue={defaultValue}
-      render={({ field, fieldState: { error } }) => {
-        return (
-          <FormControl
-            className={className}
-            id={id}
-            label={label}
-            error={!!error}
-            helperText={error && error.message ? error.message : helperText}
-            helperTextId={helperTextId}
-            fullWidth={fullWidth}
-          >
-            <Autocomplete
-              {...field}
-              options={allCollaborators}
-              getOptionLabel={(option) =>
-                collaboratorMap[option] ? collaboratorMap[option] : ''
+    <>
+      <Controller
+        name="collaborators"
+        control={control}
+        rules={{ required: false }}
+        key={allCollaboratorIds}
+        render={({ field }) => (
+          <Autocomplete
+            {...field}
+            multiple
+            options={allCollaborators}
+            getOptionLabel={(option) => option}
+            key={allCollaboratorIds.join(',')}
+            freeSolo={true}
+            value={
+              editMode
+                ? allCollaboratorIds.map((id: string) => idToNameMap[id])
+                : field.value
+            }
+            onChange={(event, newValue) => {
+              const newIds = newValue.map((name) => nameToIdMap[name]);
+              setAllCollaboratorIds(newIds);
+              setFinalCollaborators(newIds);
+              if (!editMode) {
+                field.onChange(newValue);
               }
-              isOptionEqualToValue={(option, value) =>
-                option.toString() === value.toString()
-              }
-              freeSolo={true}
-              value={field.value || ''}
-              onBlur={() => {
-                field.onChange(field.value);
-              }}
-              onChange={(event, value) => {
-                field.onChange(value);
-              }}
-              renderInput={(params) => (
-                <MuiTextField
-                  {...params}
-                  sx={sx}
-                  placeholder={placeholder}
-                  variant={variant}
-                  size="medium"
-                  type={type}
-                  error={!!error}
-                  fullWidth={fullWidth}
-                  multiline={multiline}
-                  rows={rows}
-                  InputProps={{
-                    ...params.InputProps,
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <LabelIcon
-                          style={{ fill: alpha('#D9FFEE', 0.5) }}
-                        ></LabelIcon>
-                      </InputAdornment>
-                    )
-                  }}
-                />
-              )}
-            />
-          </FormControl>
-        );
-      }}
-    />
+            }}
+            isOptionEqualToValue={
+              editMode
+                ? undefined
+                : (option, value) =>
+                    option.toString().startsWith(value.toString())
+            }
+            filterOptions={createFilterOptions({
+              ignoreCase: true,
+              matchFrom: 'any'
+            })}
+            autoHighlight
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label=""
+                placeholder="Collaborators"
+              />
+            )}
+          />
+        )}
+      />
+    </>
   );
 };
 

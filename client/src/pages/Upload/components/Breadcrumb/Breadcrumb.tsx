@@ -3,8 +3,11 @@ import Grid from '@mui/system/Unstable_Grid';
 import * as s from './Breadcrumb.styled';
 import { getProfileTag } from 'utils/auth';
 import { useNavigate } from 'react-router-dom';
+interface BreadcrumbProps {
+  editMode?: boolean;
+}
 
-const Breadcrumb = () => {
+const Breadcrumb = ({ editMode }: BreadcrumbProps) => {
   const navigate = useNavigate();
   const profileTag = getProfileTag();
 
@@ -22,7 +25,11 @@ const Breadcrumb = () => {
               </Button>
             </li>
             <li>
-              <Typography variant="body2">Upload new media</Typography>
+              {!editMode ? (
+                <Typography variant="body2">Upload new media</Typography>
+              ) : (
+                <Typography variant="body2">Edit content</Typography>
+              )}
             </li>
           </s.Breadcrumb>
         </Grid>
