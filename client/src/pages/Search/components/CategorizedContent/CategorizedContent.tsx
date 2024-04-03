@@ -45,22 +45,21 @@ const CategorizedContent = ({
   const contentFilterRef = useRef<any>(null);
 
   useEffect(() => {
-    if (tagSearchTerm && contentFilterRef.current) {
+    if ((tagSearchTerm || languageSearchTerm) && contentFilterRef.current) {
       const topPosition =
         contentFilterRef.current.getBoundingClientRect().top +
         window.pageYOffset -
         100;
       window.scrollTo({ top: topPosition, behavior: 'auto' });
     }
-  }, [tagSearchTerm, isPlaylistLoading, isContentLoading]);
+  }, [tagSearchTerm, languageSearchTerm, isPlaylistLoading, isContentLoading]);
 
   const fetchContentSearchResults = useCallback(
     async (newContentOffset: number) => {
       setIsContentLoading(true);
       try {
         const searchFilters: SearchFilters = {
-          category: categoryFilter === 'all' ? undefined : categoryFilter,
-          languageTags: languageSearchTerm ? [languageSearchTerm] : undefined
+          category: categoryFilter === 'all' ? undefined : categoryFilter
         };
 
         const contentResults = await searchContent(
@@ -158,7 +157,7 @@ const CategorizedContent = ({
             setSearchTerm={setSearchTerm}
             categoryFilter={categoryFilter}
             setCategoryFilter={setCategoryFilter}
-            tagSearchTerm={tagSearchTerm}
+            tagSearchTerm={tagSearchTerm || languageSearchTerm}
           />
 
           {(categoryFilter === 'all' ||
