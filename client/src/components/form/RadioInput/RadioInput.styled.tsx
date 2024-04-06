@@ -13,6 +13,10 @@ export const DarkRadioInput = styled(RadioInput)`
   .MuiRadio-root {
     color: ${(props) => props.theme.palette.background.default};
   }
+  .MuiFormLabel-root.Mui-error {
+    color: ${(props) => props.theme.palette.error.dark};
+    font-weight: 600;
+  }
 `;
 
 export const WrappingDarkRadioInput = styled(RadioInput)`
