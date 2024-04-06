@@ -9,6 +9,12 @@ import { searchContent, searchPlaylists } from 'api/search';
 import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
 import { set } from 'date-fns';
 import ContentListPlaylists from 'components/ContentListPlaylists';
+import FPOThumb1 from '../../assets/images/fpo/cont-art-gal-thumb1.png';
+import FPOThumb2 from '../../assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
+import FPOThumb3 from '../../assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
+import FPOThumb4 from '../../assets/images/fpo/third-top-thumb.png';
+import FPOThumb5 from '../../assets/images/fpo/first-bottom-thumb.png';
+import FPOThumb6 from '../../assets/images/fpo/third-bottom-thumb.png';
 
 interface MoreContentProps {
   profileId: string;
@@ -48,6 +54,82 @@ const MoreContent = ({
     isSuccess,
     isLoading: isPlaylistLoading
   } = useSinglePlaylist(playlistId ? playlistId : '');
+
+  const defaultContent = [
+    {
+      id: '4f0b89ba-9104-4806-91c4-a86cb71a2751',
+      coverImageUrl: {
+        playerInfo: {
+          publicUrl: FPOThumb1
+        }
+      },
+      title: 'Alex Morrison, Nooks and Corners',
+      url: 'https://cubecommons.ca/content/4f0b89ba-9104-4806-91c4-a86cb71a2751',
+      type: 'video',
+      hasSignLanguage: false
+    },
+    {
+      id: '9dc02c2f-6d9c-485b-971d-818f23b3267b',
+      coverImageUrl: {
+        playerInfo: {
+          publicUrl: FPOThumb2
+        }
+      },
+      title: 'Faye HeavyShield, CAG (French)',
+      url: 'https://cubecommons.ca/content/9dc02c2f-6d9c-485b-971d-818f23b3267b',
+      type: 'video',
+      hasSignLanguage: false
+    },
+    {
+      id: 'bc3610ab-9bf6-4283-81a9-ce1287a45570',
+      coverImageUrl: {
+        playerInfo: {
+          publicUrl: FPOThumb4
+        }
+      },
+      title:
+        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
+      url: 'https://www.cubecommons.ca/content/bc3610ab-9bf6-4283-81a9-ce1287a45570',
+      type: 'video',
+      hasSignLanguage: false
+    },
+    {
+      id: '642afc53-60f2-4eb7-89eb-459b8d6ce0be',
+      coverImageUrl: {
+        playerInfo: {
+          publicUrl: FPOThumb3
+        }
+      },
+      title: 'Faye HeavyShield, CAG (English)',
+      url: 'https://cubecommons.ca/content/642afc53-60f2-4eb7-89eb-459b8d6ce0be',
+      type: 'audio',
+      hasSignLanguage: false
+    },
+    {
+      id: '3f15f034-b952-4101-a64a-79b9d0dda987',
+      coverImageUrl: {
+        playerInfo: {
+          publicUrl: FPOThumb5
+        }
+      },
+      title:
+        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
+      url: 'https://www.cubecommons.ca/content/3f15f034-b952-4101-a64a-79b9d0dda987',
+      type: 'audio',
+      hasSignLanguage: false
+    },
+    {
+      id: '79cf81ff-b033-40d9-84a9-e371c15945c3',
+      coverImageUrl: {
+        playerInfo: {
+          publicUrl: FPOThumb6
+        }
+      },
+      title: 'How to feel unsafe in a safe way',
+      url: 'https://www.cubecommons.ca/content/79cf81ff-b033-40d9-84a9-e371c15945c3',
+      type: 'video'
+    }
+  ];
 
   useEffect(() => {
     const tagsString = tags.length > 0 ? tags.join(', ') : '';
@@ -155,6 +237,9 @@ const MoreContent = ({
 
     const firstFiveUniqueContent = uniqueCombinedContent.slice(0, 5);
     setUniqueCombinedContent(firstFiveUniqueContent);
+    if (firstFiveUniqueContent.length === 0) {
+      setUniqueCombinedContent(defaultContent);
+    }
   }, [combinedContent]);
 
   return (
