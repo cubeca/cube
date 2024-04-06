@@ -621,7 +621,23 @@ const Video = () => {
                 )}
               </>
             )}
-
+            {content?.expiry !== null && (
+              <Stack>
+                <s.Seperator />
+                <Typography component="h5" variant="h5">
+                  Expires
+                </Typography>
+                <Typography
+                  component="p"
+                  variant="body2"
+                  sx={{ marginBottom: 0 }}
+                >
+                  {content?.expiry
+                    ? new Date(content?.expiry).toLocaleDateString()
+                    : ''}
+                </Typography>
+              </Stack>
+            )}
             <s.Seperator />
             {profileId && (
               <MoreContent
