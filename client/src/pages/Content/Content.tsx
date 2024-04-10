@@ -61,6 +61,15 @@ const Video = () => {
       })
     : '';
 
+  const formattedExpiryDate =
+    content && content.expiry
+      ? new Date(content?.expiry as string).toLocaleDateString('en-us', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })
+      : '';
+
   const [isSuitableForChildrenModalOpen, setIsSuitableForChildrenModalOpen] =
     useState(false);
   const [isEmbedModalOpen, setIsEmbedModalOpen] = useState(false);
@@ -396,6 +405,11 @@ const Video = () => {
             <Typography component="p" variant="body2" sx={{ my: 1 }}>
               {formattedCreatedDate}
             </Typography>
+            {formattedExpiryDate && (
+              <Typography component="p" variant="body2" sx={{ my: 1 }}>
+                Expires: {formattedExpiryDate}
+              </Typography>
+            )}
 
             {!isLoading && (
               <Stack
@@ -620,23 +634,6 @@ const Video = () => {
                   </Stack>
                 )}
               </>
-            )}
-            {content?.expiry !== null && (
-              <Stack>
-                <s.Seperator />
-                <Typography component="h5" variant="h5">
-                  Expires
-                </Typography>
-                <Typography
-                  component="p"
-                  variant="body2"
-                  sx={{ marginBottom: 0 }}
-                >
-                  {content?.expiry
-                    ? new Date(content?.expiry).toLocaleDateString()
-                    : ''}
-                </Typography>
-              </Stack>
             )}
             <s.Seperator />
             {profileId && (
