@@ -197,7 +197,7 @@ const Media = ({
           </s.StyledListItem>
           <s.StyledListItem>
             {t(
-              'Do not try to upload the same file in multiple windows or on multiple computers. We could pay to prevent you from doing this or you could just not.'
+              'Do not try to upload the same file in multiple windows or on multiple computers.'
             )}
           </s.StyledListItem>
           <s.StyledListItem>
@@ -206,9 +206,7 @@ const Media = ({
             )}
           </s.StyledListItem>
           <Typography component="h4" variant="h4" mt={2.5}>
-            {t(
-              '* The Internet Isn’t Magic; It’s Powered By Energy & Resources, Be Mindful *'
-            )}
+            {t('* Every click is powered by energy & resources, be mindful *')}
           </Typography>
         </>
       )}

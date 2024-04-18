@@ -323,7 +323,7 @@ const Editor = (props: { contentId: any; postUpload: any }) => {
               <s.StyledLoadingText variant={'h4'}>
                 {postUpload
                   ? t(
-                      'We are loading your file and then generating your subtitles; this may take a few minutes.'
+                      'We have finished loading your file and are now generating your subtitles; this magic may take a few minutes.'
                     )
                   : t('Loading subtitles')}
               </s.StyledLoadingText>
