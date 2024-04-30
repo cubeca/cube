@@ -175,7 +175,13 @@ const Upload = () => {
     mode: editMode ? 'all' : 'onChange',
     criteriaMode: 'all'
   });
+  const [waitForState, setWaitForState] = useState(true);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setWaitForState(false);
+    }, 200);
+  }, []);
   // if user is not logged in, redirect to home page
   // setTimout is used to prevent the redirect from happening when the user is logged in
   // but the data has not yet been returned
@@ -413,7 +419,7 @@ const Upload = () => {
     }
   }, [isSuccess, response, vttEditorLaunched, isUpdateSuccess]);
 
-  if ((id && isContentLoading) || !isQueryParamCheckComplete) {
+  if ((id && isContentLoading) || !isQueryParamCheckComplete || waitForState) {
     return (
       <Lottie
         className="loading-cubes"
