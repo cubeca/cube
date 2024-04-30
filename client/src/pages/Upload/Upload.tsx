@@ -271,8 +271,10 @@ const Upload = () => {
         ? values.embedContentWhitelist
             .split(',')
             .map((tag: string) => tag.trim())
-        : []
+        : [],
+      vttLanguage: values.vttLanguage ? values.vttLanguage : 'en'
     };
+
     //@ts-ignore
     const coverImageUrl = content?.coverImageUrl?.id || '';
     const editPayload = {
@@ -304,6 +306,7 @@ const Upload = () => {
       mediaFileId: content?.mediaUrl?.id,
       //@ts-ignore
       vttFileId: content?.vttFileUrl?.id,
+      vttLanguage: content?.vttLanguage || 'en',
       updatedAt: new Date().toISOString()
     };
 
