@@ -67,6 +67,7 @@ export const removeAuthToken = () => {
   localStorage.removeItem(AUTH_TOKEN);
   localStorage.removeItem(PROFILE_ID);
   localStorage.removeItem(PROFILE);
+  localStorage.removeItem(USER);
 };
 
 export const hasSessionToken = () => {
