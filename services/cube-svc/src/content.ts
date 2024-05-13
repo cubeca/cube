@@ -150,6 +150,9 @@ content.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req:
     await deleteCloudflareData(contentItem.data.mediaFileId);
 
     //@ts-ignore
+    await deleteCloudflareData(contentItem.data.coverImageFileId);
+
+    //@ts-ignore
     await dbCloudflare.deleteFileById(contentItem.data.mediaFileId as string);
     return res.status(200).json(getApiResultFromDbRow(deleteContentResult));
   } catch (error) {
