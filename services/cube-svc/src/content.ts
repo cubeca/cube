@@ -4,9 +4,10 @@ const { PubSub } = require('@google-cloud/pubsub');
 const pubsub = new PubSub();
 
 import * as db from './db/queries/content';
+import * as dbCloudflare from './db/queries/cloudflare';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendReportAbuseEmail } from './middleware/email';
-import { getApiResultFromDbRow } from './utils/utils';
+import { getApiResultFromDbRow, deleteCloudflareData } from './utils/utils';
 
 import { transformContent } from './utils/utils';
 export const content = express.Router();
@@ -142,9 +143,15 @@ content.delete('/content/:contentId', allowIfAnyOf('contentEditor'), async (req:
       return res.status(403).send('User does not have permission to delete content for this profile');
     }
 
-    // Delete content in the database
-    const dbResult = await db.deleteContent(contentId);
-    return res.status(200).json(getApiResultFromDbRow(dbResult));
+    // Delete content and file record in the database
+    const deleteContentResult = await db.deleteContent(contentId);
+
+    //@ts-ignore
+    await deleteCloudflareData(contentItem.data.mediaFileId);
+
+    //@ts-ignore
+    await dbCloudflare.deleteFileById(contentItem.data.mediaFileId as string);
+    return res.status(200).json(getApiResultFromDbRow(deleteContentResult));
   } catch (error) {
     console.error('Error deleting content item', error);
     return res.status(500).send('Could not delete content item');

@@ -60,7 +60,8 @@ export const handleFileChange = (
   file: { type: any },
   uploadType: string | number,
   setMediaTypeError: (arg0: string) => void,
-  setMediaTypeAccepted: (arg0: boolean) => void
+  setMediaTypeAccepted: (arg0: boolean) => void,
+  maxFileSize: number
 ) => {
   const fileSizeInGB =
     (file as { type: any; size: number }).size / (1024 * 1024 * 1024);
@@ -72,8 +73,8 @@ export const handleFileChange = (
           .toUpperCase()
     );
     setMediaTypeAccepted(false);
-  } else if (fileSizeInGB > 2) {
-    setMediaTypeError('File size should not exceed 2gb.');
+  } else if (fileSizeInGB > maxFileSize) {
+    setMediaTypeError(`File size should not exceed ${maxFileSize}gb.`);
     setMediaTypeAccepted(false);
   } else {
     setMediaTypeError('');

@@ -22,6 +22,7 @@ const Media = ({
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const maxUploadFileSize = process.env.REACT_APP_SHOW_BANNER ? 0.01 : 2; // This env var is a proxy to determine production versus non-production
 
   const [isMediaUploadReady, setIsMediaUploadReady] = useState(false);
   const [isThumbUploadReady, setIsThumbUploadReady] = useState(false);
@@ -79,7 +80,8 @@ const Media = ({
       files[0],
       uploadType,
       setMediaTypeError,
-      setMediaTypeAccepted
+      setMediaTypeAccepted,
+      maxUploadFileSize
     );
     handleMediaUpload(files);
   };
@@ -89,7 +91,8 @@ const Media = ({
       files[0],
       'image',
       setImageTypeError,
-      setImageTypeAccepted
+      setImageTypeAccepted,
+      0.02
     );
     // get preview of new image
     const reader = new FileReader();
@@ -105,7 +108,8 @@ const Media = ({
       files[0],
       'image',
       setBannerImageTypeError,
-      setBannerImageTypeAccepted
+      setBannerImageTypeAccepted,
+      0.02
     );
     // get preview of new image
     const reader = new FileReader();
@@ -276,7 +280,7 @@ const Media = ({
           ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `The file you upload here should correspond with the media type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText}${documentFileTypesText} no more than 2 GB.`
+              `The file you upload here should correspond with the media type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText}${documentFileTypesText} no more than ${maxUploadFileSize} GB.`
             )}
           </Typography>
         </Box>

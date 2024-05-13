@@ -45,6 +45,11 @@ export const getTusUploadUrl = async (
   return { tusUploadUrl, cloudflareStreamUid };
 };
 
+export const deleteVideo = async (cloudflareStreamUid: string) => {
+  const { status } = await cloudflareApi.delete(`/${cloudflareStreamUid}`, { headers: authHeader });
+  return status === 204;
+};
+
 export const getVideoDetails = async (cloudflareStreamUid: string) => {
   const { status, data } = await cloudflareApi.get(`/${cloudflareStreamUid}`, { headers: authHeader });
   if (status === 200) {

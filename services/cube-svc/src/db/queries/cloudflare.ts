@@ -71,3 +71,12 @@ export const updateS3FileWithPresignedUrl = async (fileId: string, filePathInBuc
 export const getFileById = async (fileId: string) => {
   return await File.findOne({ where: { id: fileId } });
 };
+
+export const deleteFileById = async (fileId: string) => {
+  const file = await File.findOne({ where: { id: fileId } });
+  if (!file) {
+    throw new Error('File not found');
+  }
+
+  return await file.destroy();
+};

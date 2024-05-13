@@ -5,6 +5,8 @@ import { body } from 'express-validator';
 import { Buffer } from 'node:buffer';
 import * as profile from '../db/queries/profile';
 import * as content from '../db/queries/content';
+import * as stream from '../utils/stream';
+import * as r2 from '../utils/r2';
 import { getFile } from '../cloudflare';
 import { NonVideoPlayerInfo, UploadMetadata } from '../types/cloudflare';
 
@@ -284,5 +286,31 @@ export async function transformContent(contentItems: any[]) {
     }
 
     return collaboratorInfoList;
+  }
+}
+
+export async function deleteCloudflareData(fileId: string) {
+  try {
+    const file = await getFile(fileId as string);
+    if (!file) {
+      return `File ${fileId} not found.`;
+    }
+
+    if ('cloudflareStream' === file.storageType) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      const videoDetails = await stream.getVideoDetails(file.playerInfo.videoIdOrSignedUrl);
+      if (videoDetails) {
+        await stream.deleteVideo(videoDetails.uid);
+      }
+    }
+
+    if ('cloudflareR2' === file.storageType) {
+      const nonVideoPlayerInfo = file.playerInfo as NonVideoPlayerInfo;
+      await r2.deleteFile(nonVideoPlayerInfo.filePathInBucket);
+    }
+  } catch (e: any) {
+    console.error('Error deleting file', e);
+    throw new Error(e);
   }
 }
