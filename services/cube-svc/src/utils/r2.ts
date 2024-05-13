@@ -11,7 +11,6 @@ export const s3 = new S3Client({
 });
 
 export const deleteFile = async (filePathInBucket: string) => {
-  console.log(settings.CLOUDFLARE_R2_BUCKET_NAME, filePathInBucket);
   const deleteCommand = new DeleteObjectCommand({
     Bucket: settings.CLOUDFLARE_R2_BUCKET_NAME,
     Key: filePathInBucket
