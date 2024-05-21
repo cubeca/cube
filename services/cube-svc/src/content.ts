@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 
-const { PubSub } = require('@google-cloud/pubsub');
-const pubsub = new PubSub();
+// const { PubSub } = require('@google-cloud/pubsub');
+// const pubsub = new PubSub();
 
 import * as db from './db/queries/content';
 import * as dbCloudflare from './db/queries/cloudflare';
@@ -17,7 +17,7 @@ content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res
   try {
     const user = extractUser(req);
     const { profileId, vttFileId, ...contentData } = req.body;
-    const { type } = contentData;
+    // const { type } = contentData;
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
       return res.status(400).send('Invalid request body');
@@ -36,18 +36,18 @@ content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res
     // Insert content into database
     const r = await db.insertContent({ profileId, ...contentData });
     const dbResult = r?.dataValues;
-    if (!vttFileId && (type === 'video' || type === 'audio')) {
-      // Publish a message to Google Pub/Sub
-      const topicName = 'vtt_transcribe';
-      console.log(dbResult);
-      //@ts-ignore
-      const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0, language: dbResult.data.vttLanguage });
+    // if (!vttFileId && (type === 'video' || type === 'audio')) {
+    //   // Publish a message to Google Pub/Sub
+    //   const topicName = 'vtt_transcribe';
+    //   console.log(dbResult);
+    //   //@ts-ignore
+    //   const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0, language: dbResult.data.vttLanguage });
 
-      await pubsub.topic(topicName).publish(Buffer.from(message));
+    //   await pubsub.topic(topicName).publish(Buffer.from(message));
 
-      //@ts-ignore
-      dbResult.data.vttQueued = true;
-    }
+    //   //@ts-ignore
+    //   dbResult.data.vttQueued = true;
+    // }
 
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {

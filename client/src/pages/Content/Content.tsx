@@ -452,7 +452,8 @@ const Video = () => {
                         Edit Content
                       </s.Action>
                     </s.ActionsWrapper>
-                    {(content?.type === 'audio' ||
+                    {/* to be added back after vtt is fixed */}
+                    {/* {(content?.type === 'audio' ||
                       content?.type === 'video') && (
                       <s.ActionsWrapper>
                         <SubtitlesIcon />
@@ -460,7 +461,7 @@ const Video = () => {
                           Edit Subtitles
                         </s.Action>
                       </s.ActionsWrapper>
-                    )}
+                    )} */}
                   </>
                 )}
               </Stack>
