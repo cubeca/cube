@@ -11,7 +11,8 @@ export const insertProfile = async (organization: string, website: string, tag: 
       logofileid: '',
       description: '',
       descriptionfileid: '',
-      budget: ''
+      budget: '',
+      status: 'active'
     });
 
     return profile;
@@ -52,14 +53,6 @@ export const selectProfileByTag = async (tag: string) => {
   });
 };
 
-export const deleteProfile = async (profileId: string) => {
-  return await Profile.destroy({
-    where: {
-      id: profileId
-    }
-  });
-};
-
 export const updateProfile = async (
   profileId: string,
   organization: string,
@@ -68,7 +61,8 @@ export const updateProfile = async (
   logoFileId: string,
   description: string,
   descriptionFileId: string,
-  budget: string
+  budget: string,
+  status: string
 ) => {
   const updatedProfile = await Profile.update(
     {
@@ -78,7 +72,8 @@ export const updateProfile = async (
       logofileid: logoFileId,
       description,
       descriptionfileid: descriptionFileId,
-      budget
+      budget,
+      status
     },
     {
       where: {
@@ -102,13 +97,15 @@ export const isUserAssociatedToProfile = async (uuid: string, profileId: string)
   return !!exists;
 };
 
-export const searchProfiles = async (offset: number, limit: number, searchTerm: string) => {
+export const searchProfiles = async (offset: number, limit: number, filters: any, searchTerm: string) => {
+  let whereClauses: any = {};
+
   const searchTerms = searchTerm
     .split('&')
     .map((term) => term.trim())
     .filter((term) => term);
 
-  const whereClauses = searchTerms.map((term) => ({
+  whereClauses = searchTerms.map((term) => ({
     [Op.or]: [
       { organization: { [Op.iLike]: `%${term}%` } },
       { website: { [Op.iLike]: `%${term}%` } },
@@ -116,6 +113,15 @@ export const searchProfiles = async (offset: number, limit: number, searchTerm: 
       { description: { [Op.iLike]: `%${term}%` } }
     ]
   }));
+
+  if (filters.status) {
+    whereClauses[Op.and] = whereClauses[Op.and] || [];
+    whereClauses[Op.and].push({
+      status: {
+        [Op.iLike]: `%${filters.status}%`
+      }
+    });
+  }
 
   const options = {
     where: {

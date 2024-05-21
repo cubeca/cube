@@ -69,7 +69,8 @@ profile.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Reques
       req.body.logoFileId ||
       req.body.description ||
       req.body.descriptionFileId ||
-      req.body.budget
+      req.body.budget ||
+      req.body.status
     )
   ) {
     return res.status(500).json('You must supply at least one field to update!');
@@ -82,7 +83,7 @@ profile.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Reques
   }
 
   // Store the values for each field to be updated
-  const { organization, website, heroFileId, logoFileId, description, descriptionFileId, budget } = req.body;
+  const { organization, website, heroFileId, logoFileId, description, descriptionFileId, budget, status } = req.body;
 
   // Update the profile and return the updated profile
   try {
@@ -94,7 +95,8 @@ profile.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Reques
       logoFileId as string,
       description as string,
       descriptionFileId as string,
-      budget as string
+      budget as string,
+      status as string
     );
     res.status(200).json(dbResult);
   } catch (error) {
@@ -173,16 +175,4 @@ profile.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async 
     console.error('Error retrieving profile list', e);
     res.status(404).send('Error retrieving profile list');
   }
-});
-
-// Route for deleting a profile by its ID
-profile.delete('/profiles/:profileId', allowIfAnyOf('userAdmin'), async (req: Request, res: Response) => {
-  const profileId = req.params.profileId;
-
-  if (!profileId) {
-    return res.status(400).send('Profile ID is not provided.');
-  }
-
-  await db.deleteProfile(profileId);
-  res.status(200);
 });

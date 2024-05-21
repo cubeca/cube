@@ -16,6 +16,7 @@ CREATE TABLE public.content (
     data JSONB NOT NULL DEFAULT '{}'::JSONB,
     CONSTRAINT content_pkey PRIMARY KEY (id)
 );
+
 CREATE INDEX content_by_profile_id ON public.content ((data ->> 'profileId'));
 
 -- VTT
@@ -52,6 +53,7 @@ CREATE TABLE public.profiles (
     description VARCHAR NULL DEFAULT ''::VARCHAR,
     descriptionfileid VARCHAR NULL DEFAULT ''::VARCHAR,
     budget VARCHAR NULL DEFAULT ''::VARCHAR,
+    status VARCHAR NOT NULL DEFAULT 'active'::VARCHAR,
     CONSTRAINT profiles_organization_key UNIQUE (organization),
     CONSTRAINT profiles_pkey PRIMARY KEY (id),
     CONSTRAINT profiles_tag_key UNIQUE (tag),
@@ -66,4 +68,5 @@ CREATE TABLE public.playlists (
     data JSONB NOT NULL DEFAULT '{}'::JSONB,
     CONSTRAINT playlists_pkey PRIMARY KEY (id)
 );
+
 CREATE INDEX playlist_by_profile_id ON public.playlists ((data ->> 'profileId'));
