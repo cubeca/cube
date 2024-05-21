@@ -139,7 +139,13 @@ const AddToPlaylistModal = ({
 
   const handleImageFileChange = (event: any) => {
     const file = event[0];
-    handleFileChange(file, 'image', setImageTypeError, setImageTypeAccepted);
+    handleFileChange(
+      file,
+      'image',
+      setImageTypeError,
+      setImageTypeAccepted,
+      0.02
+    );
   };
 
   useEffect(() => {

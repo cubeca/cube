@@ -77,14 +77,15 @@ const Details = ({
             isUploadReady={!editMode ? isVTTUploadReady : true}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-            {t('Upload your VTT Subtitle file here.')}{' '}
-            <strong>{t("If you don't have one, don't worry!")}</strong>{' '}
+            {t('Upload your VTT Subtitle file here. (optional)')}{' '}
+            {/* leaving this here to be re-added once vtt is up and running */}
+            {/* <strong>{t("If you don't have one, don't worry!")}</strong>{' '}
             {t(
               'At the end of this process subtitles will be generated that you can edit.'
-            )}
-            <br />
+            )} */}
+            {/* <br /> */}
           </Typography>
-          <Controller
+          {/* <Controller
             name="vttLanguage"
             control={control}
             defaultValue=""
@@ -108,7 +109,7 @@ const Details = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t('Select a language.')} <br />
-          </Typography>
+          </Typography> */}
         </Box>
       ) : null}
 

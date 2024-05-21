@@ -35,6 +35,7 @@ export interface NonVideoPlayerInfo {
   mimeType: string;
   fileType: string;
   publicUrl: string;
+  filePathInBucket: string;
 }
 
 export interface VideoDebugInfo extends CommonDebugInfo {

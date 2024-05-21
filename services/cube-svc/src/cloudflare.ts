@@ -8,8 +8,9 @@ import * as stream from './utils/stream';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { UUID_REGEXP, parseTusUploadMetadata } from './utils/utils';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { VideoPlayerInfo, NonVideoPlayerInfo } from './types/cloudflare';
+import { s3 } from './utils/r2';
 
 export const cloudflare = express.Router();
 cloudflare.post('/upload/video-tus-reservation', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
@@ -149,15 +150,6 @@ cloudflare.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req
   }
 });
 
-const s3 = new S3Client({
-  region: 'auto',
-  endpoint: `https://${settings.CLOUDFLARE_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: `${settings.CLOUDFLARE_R2_ACCESS_KEY_ID}`,
-    secretAccessKey: `${settings.CLOUDFLARE_R2_SECRET_ACCESS_KEY}`
-  }
-});
-
 const getPresignedUploadUrl = async (filePathInBucket: string, mimeType: string, expiresIn: number) => {
   const putCommand = new PutObjectCommand({
     Bucket: settings.CLOUDFLARE_R2_BUCKET_NAME,
@@ -207,12 +199,17 @@ export const getFile = async (fileId: string) => {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
-    const publicUrl = `${settings.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL}/${dbFile.data.filePathInBucket}`;
+    const filePathInBucket = dbFile.data.filePathInBucket;
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    const publicUrl = `${settings.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL}/${filePathInBucket}`;
 
     playerInfo = {
       mimeType,
       fileType,
-      publicUrl
+      publicUrl,
+      filePathInBucket
     };
   }
 
