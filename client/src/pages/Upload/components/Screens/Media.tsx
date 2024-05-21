@@ -22,7 +22,8 @@ const Media = ({
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const maxUploadFileSize = process.env.REACT_APP_SHOW_BANNER ? 0.01 : 2; // This env var is a proxy to determine production versus non-production
+  const maxUploadFileSize =
+    process.env.REACT_APP_SHOW_BANNER === 'true' ? 0.01 : 2; // This env var is a proxy to determine production versus non-production
 
   const [isMediaUploadReady, setIsMediaUploadReady] = useState(false);
   const [isThumbUploadReady, setIsThumbUploadReady] = useState(false);
