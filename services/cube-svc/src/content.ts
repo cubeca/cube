@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 
-const { PubSub } = require('@google-cloud/pubsub');
-const pubsub = new PubSub();
+// const { PubSub } = require('@google-cloud/pubsub');
+// const pubsub = new PubSub();
 
 import * as db from './db/queries/content';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
@@ -16,7 +16,7 @@ content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res
   try {
     const user = extractUser(req);
     const { profileId, vttFileId, ...contentData } = req.body;
-    const { type } = contentData;
+    // const { type } = contentData;
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
       return res.status(400).send('Invalid request body');
