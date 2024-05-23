@@ -43,3 +43,9 @@ export const updateProfileAudioDescription = async (id: string, file: File) => {
     descriptionFileId
   });
 };
+
+export const updateProfileStatus = async (id: string, status: string) => {
+  return await profileApi.updateProfile(id, {
+    status
+  });
+};
