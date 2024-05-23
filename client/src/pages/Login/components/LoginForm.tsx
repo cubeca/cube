@@ -51,6 +51,12 @@ export const LoginForm = ({
         if (getUser().profile_id) {
           const { data } = await getProfile(getUser().profile_id);
           localStorage.setItem('PROFILE', JSON.stringify(data));
+          console.log(data, 'data');
+          // @ts-ignore
+          if (data.status === 'inactive') {
+            navigate('/reactivate-profile');
+            return;
+          }
           navigate(`/profile/${(data as any).tag}`);
         } else {
           navigate('/');

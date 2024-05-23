@@ -14,6 +14,7 @@ import {
   User,
   EmbeddedPlaylist
 } from 'pages';
+import ReactivateProfile from 'pages/ReactivateProfile';
 
 import { Navigate, Route, Routes } from 'react-router-dom';
 
@@ -25,6 +26,7 @@ const Router = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Login />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reactivate-profile" element={<ReactivateProfile />} />
       <Route path="/profile/:tag" element={<Profile />} />
       <Route path="/profile/:tag/upload" element={<Upload />} />
       <Route path="/content/:id" element={<Content />} />
