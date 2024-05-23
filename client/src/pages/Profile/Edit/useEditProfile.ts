@@ -3,7 +3,8 @@ import {
   updateProfileLogo,
   updateProfileSection,
   updateProfileHero,
-  updateProfileAudioDescription
+  updateProfileAudioDescription,
+  updateProfileStatus
 } from 'api/profile';
 import { useState } from 'react';
 
@@ -114,13 +115,18 @@ const useEditProfile = (profileTag: string) => {
     });
   };
 
+  const updateStatus = (id: string, status: string) => {
+    updateProfileStatus(id, status);
+  };
+
   return {
     updateSection,
     updateLogo,
     isUploadingHero,
     updateHero,
     isUploadingLogo,
-    updateAudioDescription
+    updateAudioDescription,
+    updateStatus
   };
 };
 

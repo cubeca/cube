@@ -6,9 +6,16 @@ import * as s from './Header.styled';
 const Header = () => {
   const location = useLocation();
   const excludeHeaderOn = '/embed';
+  const storedProfile = JSON.parse(localStorage.getItem('PROFILE') || '{}');
 
   return !location.pathname.startsWith(excludeHeaderOn) ? (
-    <s.Header component="header" direction="row">
+    <s.Header
+      component="header"
+      direction="row"
+      sx={{
+        pointerEvents: storedProfile.status === 'inactive' ? 'none' : 'auto'
+      }}
+    >
       <s.HomeLink to="/" />
       {/* leaving this here in case changes go in another direction */}
       {/* <PrimaryNav /> */}
