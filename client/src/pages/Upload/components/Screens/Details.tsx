@@ -59,7 +59,7 @@ const Details = ({
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `This text will be accessible by screen reading tools, as well as our search tool; it's important to remember that different accessibilities are assisted by different kinds of description. Add paragraph breaks to make your text easier to consume.`
+              `This text will be accessible to screen reading tools, as well as our search tool; it's important to remember that different accessibilities are assisted by different kinds of description. Add paragraph breaks to make your text easier to consume.`
             )}
           </Typography>
         </Box>
