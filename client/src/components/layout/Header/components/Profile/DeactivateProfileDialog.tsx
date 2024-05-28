@@ -85,7 +85,7 @@ const DeactivateProfileDialog = ({
             >
               <Grid xs={12} md="auto" style={{ width: '100%' }}>
                 <Typography variant="h4" sx={{ color: 'black' }}>
-                  {t('Deactivate Profile')}
+                  {t('Deactivate Your Profile')}
                 </Typography>
                 <Box mt={2}>
                   <Typography
@@ -97,7 +97,7 @@ const DeactivateProfileDialog = ({
                     }}
                   >
                     {t(
-                      'If you deactivate your profile your content will be deleted. You will have the option to reactivate your profile however your content will not be recovered. Please keep your email and password as your unique organizational tag will remain associated with this account.'
+                      'If you deactivate your profile your content will be deleted. You will have the option to reactivate your profile however your content will not be recovered. Please keep your email and password as your unique organizational tag will remain associated with this account even after deactivation.'
                     )}
                   </Typography>
                 </Box>

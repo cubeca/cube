@@ -197,7 +197,7 @@ const Media = ({
           </Typography>
           <s.StyledListItem>
             {t(
-              'Only log in to your account in multiple windows and try uploading many files simultaneously, if you like watching loading GIFs.'
+              "Don't log in to your account in multiple windows.  If you try uploading multiple files simultaneously, all you'll get is loading GIFs."
             )}
           </s.StyledListItem>
           <s.StyledListItem>
@@ -281,7 +281,12 @@ const Media = ({
           ) : null}
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
-              `The file you upload here should correspond with the media type you have selected above. This is a shared network, to reduce energy and space consumption we only accept file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText}${documentFileTypesText} no more than ${maxUploadFileSize} GB.`
+              `Based on the media type you have selected, you can upload these file types: ${pdfFileTypesText}${videoFileTypesText}${audioFileTypesText}${documentFileTypesText} no more than ${maxUploadFileSize} GB.   `
+            )}
+          </Typography>
+          <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
+            {t(
+              `This is a shared network - please reduce file size as much as possible.   `
             )}
           </Typography>
         </Box>

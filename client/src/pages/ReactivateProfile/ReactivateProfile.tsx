@@ -16,6 +16,7 @@ const ReactivateProfile = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
+  const storedProfile = JSON.parse(localStorage.getItem('PROFILE') || '{}');
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
   const { data: profile, isLoading, refetch } = useProfile();
   const { updateStatus } = useEditProfile(profile?.profileId || '');
@@ -58,10 +59,18 @@ const ReactivateProfile = () => {
           <Stack direction="column">
             <Typography component="h2">
               {t(
-                'Your profile has been reactivated.  Click below to return to the site.'
+                "Your profile has been reactivated.  Click 'OK' to go to your profile."
               )}
             </Typography>
-            <Link to="/">{t('OK')}</Link>
+
+            <Button
+              color="primary"
+              disabled={!captchaVerified}
+              onClick={onSubmit}
+              href={`/profile/${storedProfile.tag}`}
+            >
+              {t('OK')}
+            </Button>
           </Stack>
         </Grid>
       </Grid>
@@ -80,21 +89,24 @@ const ReactivateProfile = () => {
         <Typography variant="h4" my={2}>
           {t('Reactivate Profile')}
         </Typography>
-        <Stack direction="column">
+        <Stack direction="column" sx={{ maxWidth: '600px' }}>
           <Typography component="h2">
-            {t('Click below to reactivate your profile.')}
+            {t(
+              'Click below to reactivate your profile. Remember, your previous content will not reappear. Cheers to new beginnings!'
+            )}
           </Typography>
           {errorMessage ? (
             <Box width="90%" mt={-2} mb={4}>
               <ErrorMessage>{errorMessage}</ErrorMessage>
             </Box>
           ) : null}
-
-          <HCaptcha
-            theme="dark"
-            sitekey={hCaptchaKey}
-            onVerify={onCaptchaSuccess}
-          />
+          <Box mb={2}>
+            <HCaptcha
+              theme="dark"
+              sitekey={hCaptchaKey}
+              onVerify={onCaptchaSuccess}
+            />
+          </Box>
           <Button
             color="primary"
             disabled={!captchaVerified}
