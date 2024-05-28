@@ -1,6 +1,7 @@
 import {
   SearchResponse,
-  SearchFilters
+  SearchFilters,
+  DeactivateProfileRequest
 } from '@cubeca/cube-svc-client-oas-axios';
 import { bffApi } from '.';
 
@@ -66,4 +67,8 @@ export const searchPlaylists = async (
   );
   const search: SearchResponse = data.data;
   return search.playlistResults.data;
+};
+
+export const deactivateProfile = async (profileId: string) => {
+  return await bffApi.deactivateProfile({ profileId });
 };

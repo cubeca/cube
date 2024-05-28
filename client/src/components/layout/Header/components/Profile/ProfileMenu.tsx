@@ -4,7 +4,9 @@ import ProfileMenuItem from './ProfileMenuItem';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import { PlaylistAdd } from '@mui/icons-material/';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import UpdateEmailDialog from './UpdateEmailDialog';
+import DeactivateProfileDialog from './DeactivateProfileDialog';
 import { useContext, useState } from 'react';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PasswordIcon from '@mui/icons-material/Password';
@@ -36,6 +38,8 @@ const ProfileMenu = ({
   const [isUpdateEmailDialogOpen, setIsUpdateEmailDialogOpen] = useState(false);
   const [isChangePasswordDialogOpen, setIsChangePasswordDialogOpen] =
     useState(false);
+  const [isDeactivateProfileDialogOpen, setIsDeactivateProfileDialogOpen] =
+    useState(false);
   const { logout } = useAuth();
 
   const handleLogout = () => {
@@ -58,12 +62,21 @@ const ProfileMenu = ({
     onClose();
   };
 
+  const handleDeactivateProfile = () => {
+    setIsDeactivateProfileDialogOpen(true);
+    onClose();
+  };
+
   const handleChangePasswordDialogClose = () => {
     setIsChangePasswordDialogOpen(false);
   };
 
   const handleEmailUpdateDialogClose = () => {
     setIsUpdateEmailDialogOpen(false);
+  };
+
+  const handleDeactivateProfileDialogClose = () => {
+    setIsDeactivateProfileDialogOpen(false);
   };
 
   return (
@@ -102,6 +115,11 @@ const ProfileMenu = ({
           icon={<PasswordIcon />}
         />
         <ProfileMenuItem
+          onClick={handleDeactivateProfile}
+          text={t('Deactivate Profile')}
+          icon={<NotInterestedIcon />}
+        />
+        <ProfileMenuItem
           onClick={handleLogout}
           text={t('Logout')}
           icon={<LogoutIcon />}
@@ -114,6 +132,10 @@ const ProfileMenu = ({
       <ChangePasswordDialog
         isOpen={isChangePasswordDialogOpen}
         onClose={handleChangePasswordDialogClose}
+      />
+      <DeactivateProfileDialog
+        isOpen={isDeactivateProfileDialogOpen}
+        onClose={handleDeactivateProfileDialogClose}
       />
     </>
   );

@@ -223,6 +223,7 @@ interface ProfileAttributes {
   description: string;
   descriptionfileid: string;
   budget: string;
+  status: string;
 }
 
 export class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
@@ -235,6 +236,7 @@ export class Profile extends Model<ProfileAttributes> implements ProfileAttribut
   public declare description: string;
   public declare descriptionfileid: string;
   public declare budget: string;
+  public declare status: string;
 }
 
 Profile.init(
@@ -278,6 +280,10 @@ Profile.init(
     budget: {
       type: DataTypes.STRING,
       defaultValue: ''
+    },
+    status: {
+      type: DataTypes.STRING,
+      defaultValue: 'active'
     }
   },
   {

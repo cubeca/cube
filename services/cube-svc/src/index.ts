@@ -6,8 +6,8 @@ import * as contentQueries from './db/queries/content';
 import * as profileQueries from './db/queries/profile';
 import * as playlistQueries from './db/queries/playlist';
 
-import { allowIfAnyOf } from './middleware/auth';
-import { getApiResultFromDbRow, transformContent, transformPlaylistSimple } from './utils/utils';
+import { allowIfAnyOf, extractUser } from './middleware/auth';
+import { deleteCloudflareData, getApiResultFromDbRow, transformContent, transformPlaylistSimple } from './utils/utils';
 
 import { cloudflare } from './cloudflare';
 import { profile } from './profile';
@@ -74,7 +74,7 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
 
   if (!scope || scope === 'profile') {
     try {
-      const profileSearchResult = await profileQueries.searchProfiles(offset, limit, searchTerm);
+      const profileSearchResult = await profileQueries.searchProfiles(offset, limit, filters, searchTerm);
 
       searchProfileResult.meta = {
         offset: offset,
@@ -139,6 +139,54 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   }
 
   return res.status(200).json(responsePayload);
+});
+
+app.post('/deactivateProfile', allowIfAnyOf('active'), async (req: Request, res: Response) => {
+  const user = extractUser(req);
+  const { profileId } = req.body;
+
+  if (!profileId) {
+    return res.status(400).send('Profile ID not provided');
+  }
+
+  const profile = await profileQueries.selectProfileByID(profileId);
+
+  if (profile) {
+    //@ts-ignore
+    const isUserAssociated = await profileQueries.isUserAssociatedToProfile(user.uuid, profileId);
+    if (!isUserAssociated) {
+      return res.status(403).send('User does not have permission to deactivate this profile');
+    }
+
+    try {
+      await profileQueries.updateProfile(
+        profileId,
+        profile.organization,
+        profile.website,
+        profile.herofileid,
+        profile.logofileid,
+        profile.description,
+        profile.descriptionfileid,
+        profile.budget,
+        'inactive'
+      );
+
+      const profileContent = await contentQueries.listContentByProfileId(0, 1000, {}, profileId);
+      for (const contentItem of profileContent) {
+        // Delete content and file record in the database
+        await contentQueries.deleteContent(contentItem.id!);
+
+        // @ts-ignore
+        await deleteCloudflareData(contentItem.data.mediaFileId);
+
+        // @ts-ignore
+        await deleteCloudflareData(contentItem.data.coverImageFileId);
+      }
+      return res.status(200).send('Profile deactivated');
+    } catch (error: any) {
+      return res.status(500).send(error.message);
+    }
+  }
 });
 
 app.get('/', async (_req: Request, res: Response) => {
