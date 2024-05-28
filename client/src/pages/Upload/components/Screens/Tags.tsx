@@ -190,13 +190,15 @@ const Tags = ({
           <s.StyledListItem component="li">
             <strong>&quot;Collaborations&quot;</strong>{' '}
             <s.StyledListSpan>
-              is content traveling between multiple organizations or made with
-              other organizations.
+              refers to content traveling between multiple organizations or made
+              in collaboration.
             </s.StyledListSpan>
           </s.StyledListItem>
           <s.StyledListItem component="li">
             <strong>&quot;Sign Language&quot;</strong>{' '}
-            <s.StyledListSpan>if your content includes this.</s.StyledListSpan>
+            <s.StyledListSpan>
+              refers to content that already includes this.
+            </s.StyledListSpan>
           </s.StyledListItem>
         </s.StyledList>
         <TagInput
@@ -226,7 +228,7 @@ const Tags = ({
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
           <strong>{t('Separate tags with a comma. ')}</strong>
           {t(
-            'These tags allow your content to build wider and deeper connections. By adding languages and community terms as tags, you make it easier for people to discover. If content for a traveling exhibition is being created by different organization, you can connect it through a shared tag. Some examples:'
+            'These tags allow your content to build wider and deeper connections. By adding languages and community terms as tags, you make it easier for people to discover. If content for a traveling exhibition is being created by different organizations, you can connect it through a shared tag. Some examples:'
           )}
         </Typography>
         <Grid container>
@@ -252,7 +254,7 @@ const Tags = ({
         </Typography>
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
           {t(
-            'Credit anyone who contributed to your content. Add as many as needed, using “Add more”. Please only one name per field.'
+            'Credit anyone who contributed to your content. Add as many as needed, using “Add more”. Please add only one name per field.'
           )}
         </Typography>
 
