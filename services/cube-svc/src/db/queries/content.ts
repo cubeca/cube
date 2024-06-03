@@ -9,12 +9,12 @@ export const getContentByIdList = async (contentIdList: string[]) => {
   return await Content.findAll({ where: { id: contentIdList } });
 };
 
-export const insertContent = async (data: any) => {
-  return await Content.create({ data });
+export const insertContent = async (password: string | null, data: any) => {
+  return await Content.create({ password, data });
 };
 
-export const updateContent = async (data: any, contentId: string) => {
-  const updatedContent = await Content.update({ data }, { where: { id: contentId }, returning: true });
+export const updateContent = async (password: string | null, data: any, contentId: string) => {
+  const updatedContent = await Content.update({ password, data }, { where: { id: contentId }, returning: true });
   return updatedContent[1][0];
 };
 

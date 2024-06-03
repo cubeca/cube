@@ -10,10 +10,11 @@ import * as r2 from '../utils/r2';
 import { getFile } from '../cloudflare';
 import { NonVideoPlayerInfo, UploadMetadata } from '../types/cloudflare';
 
-export const hashPassword = async (password: string) => await bcrypt.hash(password, 10);
+export const hashString = async (password: string) => await bcrypt.hash(password, 10);
 export const comparePassword = async (password: string, hash: string) => await bcrypt.compare(password, hash);
-export const encryptString = (hash: string) => CryptoJS.AES.encrypt(hash, settings.ENCRYPT_SECRET).toString();
-export const decryptString = (hash: string) => CryptoJS.AES.decrypt(hash, settings.ENCRYPT_SECRET).toString(CryptoJS.enc.Utf8);
+export const encryptString = (hash: string, password?: string) => CryptoJS.AES.encrypt(hash, password ? password : settings.ENCRYPT_SECRET).toString();
+export const decryptString = (hash: string, password?: string) =>
+  CryptoJS.AES.decrypt(hash, password ? password : settings.ENCRYPT_SECRET).toString(CryptoJS.enc.Utf8);
 export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export const brevoTemplateIdMapping = {

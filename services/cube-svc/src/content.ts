@@ -7,47 +7,45 @@ import * as db from './db/queries/content';
 import * as dbCloudflare from './db/queries/cloudflare';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendReportAbuseEmail } from './middleware/email';
-import { getApiResultFromDbRow, deleteCloudflareData } from './utils/utils';
+import { getApiResultFromDbRow, deleteCloudflareData, hashString, encryptString, decryptString, comparePassword } from './utils/utils';
 
 import { transformContent } from './utils/utils';
 export const content = express.Router();
 
 // API endpoint for creating new content
-content.post('/content', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+content.post('/content', async (req: Request, res: Response) => {
   try {
-    const user = extractUser(req);
-    const { profileId, vttFileId, ...contentData } = req.body;
-    // const { type } = contentData;
+    // const user = extractUser(req);
+    const { profileId, vttFileId, password, ...contentData } = req.body;
+
     // Validate request body
     if (!profileId || Object.keys(contentData).length === 0) {
       return res.status(400).send('Invalid request body');
     }
 
-    // Check that the user creating content is indeed associated to the profile submitted in the request
-    const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
-    if (!isUserAssociated) {
-      return res.status(403).send('User does not have permission to create content for this profile');
-    }
+    //Check that the user creating content is indeed associated to the profile submitted in the request
+    // const isUserAssociated = await db.isUserAssociatedToProfile(user.uuid, profileId);
+    // if (!isUserAssociated) {
+    //   return res.status(403).send('User does not have permission to create content for this profile');
+    // }
 
     if (vttFileId) {
       contentData.vttFileId = vttFileId;
     }
 
+    let dataToStore = { profileId, ...contentData };
+    let encryptedPassword = null;
+
+    if (password) {
+      dataToStore = encryptString(JSON.stringify(dataToStore));
+
+      const hashedPassword = await hashString(password);
+      encryptedPassword = encryptString(hashedPassword);
+    }
+
     // Insert content into database
-    const r = await db.insertContent({ profileId, ...contentData });
+    const r = await db.insertContent(encryptedPassword, dataToStore);
     const dbResult = r?.dataValues;
-    // if (!vttFileId && (type === 'video' || type === 'audio')) {
-    //   // Publish a message to Google Pub/Sub
-    //   const topicName = 'vtt_transcribe';
-    //   console.log(dbResult);
-    //   //@ts-ignore
-    //   const message = JSON.stringify({ contentID: dbResult.id.toString(), tries: 0, language: dbResult.data.vttLanguage });
-
-    //   await pubsub.topic(topicName).publish(Buffer.from(message));
-
-    //   //@ts-ignore
-    //   dbResult.data.vttQueued = true;
-    // }
 
     return res.status(201).json(getApiResultFromDbRow(dbResult));
   } catch (error) {
@@ -92,10 +90,10 @@ content.get('/content/:contentId', async (req: Request, res: Response) => {
 });
 
 // API endpoint for updating content by content id
-content.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
+content.post('/content/:contentId', async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
-    const { profileId, ...contentData } = req.body;
+    const { profileId, password, ...contentData } = req.body;
     const { contentId } = req.params;
 
     // Validate request body and parameters
@@ -109,8 +107,26 @@ content.post('/content/:contentId', allowIfAnyOf('contentEditor'), async (req: R
       return res.status(403).send('User does not have permission to update content for this profile');
     }
 
+    const r = await db.getContentById(contentId);
+    if (!r) {
+      return res.status(404).send('Content not found');
+    }
+
+    let dataToStore = { profileId, ...contentData };
+
+    const contentItem = r.dataValues;
+    if (contentItem.password) {
+      const decryptedPassword = decryptString(contentItem.password);
+      const isValidPassword = !password ? false : await comparePassword(password, decryptedPassword);
+      if (!isValidPassword) {
+        return res.status(403).send('Invalid password');
+      }
+
+      dataToStore = encryptString(JSON.stringify(dataToStore), password);
+    }
+
     // Update content in the database
-    const dbResult = await db.updateContent({ profileId, ...contentData }, contentId);
+    const dbResult = await db.updateContent(contentItem.password ?? null, dataToStore, contentId);
 
     return res.status(200).json(getApiResultFromDbRow(dbResult));
   } catch (error) {

@@ -13,6 +13,7 @@ CREATE TABLE public.content (
     id UUID NOT NULL DEFAULT gen_random_uuid(),
     created_at TIMESTAMPTZ NULL DEFAULT current_timestamp(),
     updated_at TIMESTAMPTZ NULL DEFAULT current_timestamp(),
+    password VARCHAR NOT NULL,
     data JSONB NOT NULL DEFAULT '{}'::JSONB,
     CONSTRAINT content_pkey PRIMARY KEY (id)
 );

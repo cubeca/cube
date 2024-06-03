@@ -4,7 +4,7 @@ import he from 'he';
 import { validationResult } from 'express-validator';
 import * as jwt from 'jsonwebtoken';
 import * as db from './db/queries/identity';
-import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, UUID_REGEXP } from './utils/utils';
+import { comparePassword, encryptString, decryptString, hashString, validateUserCreateInput, UUID_REGEXP } from './utils/utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEmail, sendPasswordResetEmail } from './middleware/email';
@@ -28,7 +28,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
   const { name, email, organization, website, tag, password, hasAcceptedNewsletter = false, hasAcceptedTerms = false, isOver18 } = req.body;
 
   try {
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashString(password);
     const encryptedPassword = encryptString(hashedPassword);
     const permissionIds = ['anonymous'];
 
@@ -212,7 +212,7 @@ identity.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (
 
     // If we got to this point, either the user has provided the correct currentPassword,
     // or they're using a valid auth token without the currentPassword.
-    const hashedPassword = await hashPassword(newPassword);
+    const hashedPassword = await hashString(newPassword);
     const encryptedPassword = encryptString(hashedPassword);
 
     await db.updatePassword(userReq.uuid as string, encryptedPassword);

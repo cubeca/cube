@@ -55,6 +55,7 @@ interface ContentAttributes {
   id?: string;
   created_at?: Date;
   updated_at?: Date;
+  password?: string | null;
   data: object;
 }
 
@@ -62,6 +63,7 @@ export class Content extends Model<ContentAttributes> implements ContentAttribut
   public declare id?: string;
   public declare created_at?: Date;
   public declare updated_at?: Date;
+  public declare password?: string | null;
   public declare data: object;
 }
 
@@ -79,6 +81,10 @@ Content.init(
     updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     data: {
       type: DataTypes.JSONB,
