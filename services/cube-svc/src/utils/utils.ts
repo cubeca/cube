@@ -17,6 +17,34 @@ export const decryptString = (hash: string, password?: string) =>
   CryptoJS.AES.decrypt(hash, password ? password : settings.ENCRYPT_SECRET).toString(CryptoJS.enc.Utf8);
 export const UUID_REGEXP = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+export const encryptJson = (obj: Object, password: string) => {
+  const keysToExclude = ['title', 'bannerImageFileId', 'profileId', 'expiry'];
+
+  const encryptValue = (value: any) => {
+    if (typeof value === 'string' || Array.isArray(value)) {
+      // Convert arrays to JSON strings before encryption
+      const stringValue = Array.isArray(value) ? JSON.stringify(value) : value;
+      return encryptString(stringValue, password);
+    } else if (typeof value === 'object' && value !== null) {
+      return encryptJson(value, password); // Recursively encrypt objects
+    } else {
+      return value;
+    }
+  };
+
+  const encryptedObj: { [key: string]: any } = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (keysToExclude.includes(key)) {
+      encryptedObj[key] = value;
+    } else {
+      encryptedObj[key] = encryptValue(value);
+    }
+  }
+
+  return encryptedObj;
+};
+
 export const brevoTemplateIdMapping = {
   SEND_VERIFICATION_EMAIL: 2,
   PASSWORD_CHANGE_CONFIRMATION: 3,

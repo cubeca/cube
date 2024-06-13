@@ -7,7 +7,7 @@ import * as db from './db/queries/content';
 import * as dbCloudflare from './db/queries/cloudflare';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { sendReportAbuseEmail } from './middleware/email';
-import { getApiResultFromDbRow, deleteCloudflareData, hashString, encryptString, decryptString, comparePassword } from './utils/utils';
+import { getApiResultFromDbRow, deleteCloudflareData, hashString, encryptString, decryptString, comparePassword, encryptJson } from './utils/utils';
 
 import { transformContent } from './utils/utils';
 export const content = express.Router();
@@ -37,7 +37,7 @@ content.post('/content', async (req: Request, res: Response) => {
     let encryptedPassword = null;
 
     if (password) {
-      dataToStore = encryptString(JSON.stringify(dataToStore));
+      dataToStore = encryptJson(dataToStore, password);
 
       const hashedPassword = await hashString(password);
       encryptedPassword = encryptString(hashedPassword);
