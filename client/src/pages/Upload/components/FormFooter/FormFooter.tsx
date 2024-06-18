@@ -1,4 +1,4 @@
-import { useTheme } from '@mui/material';
+import { Box, Typography, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
@@ -114,6 +114,17 @@ const FormFooter = ({
               {nextButton}
             </s.Actions>
           </Grid>
+          <Box
+            sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          >
+            {screenIndex !== 0 && (
+              <Typography component="p" variant="body2">
+                {t(
+                  'You can click the Back button at any time to return to a previous screen and your data will be retained.'
+                )}
+              </Typography>
+            )}
+          </Box>
         </Grid>
       </s.FormFooter>
     );
