@@ -18,7 +18,9 @@ const Media = ({
   setIsCoverImageProperFileType,
   setIsBannerImageProperFileType,
   editMode,
-  content
+  content,
+  mediaFile,
+  coverImageFile
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -272,7 +274,7 @@ const Media = ({
             text={t('Media file (required)')}
             onDrop={handleMediaOnDrop}
             maxFiles={1}
-            isUploadReady={isMediaUploadReady}
+            isUploadReady={isMediaUploadReady || mediaFile}
           />
           {mediaTypeError ? (
             <Typography component="p" variant="body2" color="#FFB7C4">
@@ -297,7 +299,9 @@ const Media = ({
             text={t('Thumbnail image (required)')}
             onDrop={handleThumbnailOnDrop}
             maxFiles={1}
-            isUploadReady={!editMode ? isThumbUploadReady : true}
+            isUploadReady={
+              !editMode ? isThumbUploadReady || coverImageFile : true
+            }
             currentImage={content?.coverImageUrl?.playerInfo?.publicUrl}
             newImage={newImage}
             editMode={editMode}
