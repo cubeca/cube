@@ -133,24 +133,6 @@ const Tags = ({
     }
   };
 
-  useEffect(() => {
-    if (localCategories.length === 0) {
-      const savedCategories = localStorage.getItem('selectedCategories');
-      if (savedCategories) {
-        setSelectedCategories(JSON.parse(savedCategories));
-        setLocalCategories(JSON.parse(savedCategories));
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    // Save selected categories to local storage whenever they change so that they can be restored if a user navigates back to this screen
-    localStorage.setItem(
-      'selectedCategories',
-      JSON.stringify(selectedCategories)
-    );
-  }, [selectedCategories]);
-
   return (
     <Box className={'upload__tags-screen'}>
       <Typography component="h2" variant="h2">

@@ -274,7 +274,7 @@ const Media = ({
             text={t('Media file (required)')}
             onDrop={handleMediaOnDrop}
             maxFiles={1}
-            isUploadReady={isMediaUploadReady || mediaFile}
+            isUploadReady={isMediaUploadReady}
           />
           {mediaTypeError ? (
             <Typography component="p" variant="body2" color="#FFB7C4">

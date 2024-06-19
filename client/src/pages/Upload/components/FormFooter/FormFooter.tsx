@@ -118,9 +118,13 @@ const FormFooter = ({
             sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}
           >
             {screenIndex !== 0 && (
-              <Typography component="p" variant="body2">
+              <Typography
+                component="p"
+                variant="body2"
+                sx={{ width: '80%', maxWidth: '650px' }}
+              >
                 {t(
-                  'You can click the Back button at any time to return to a previous screen and your data will be retained.'
+                  "You can click the Back button at any time to return to a previous screen and your data will be retained - however, you'll have to reselect your media and cover image File(s)."
                 )}
               </Typography>
             )}

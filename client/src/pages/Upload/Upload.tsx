@@ -406,60 +406,6 @@ const Upload = () => {
 
   const activeScreenView = SCREENS[screenIndex].view;
 
-  const mimeTypes = {
-    video: [
-      'video/mp4',
-      'video/x-matroska',
-      'video/quicktime',
-      'video/x-msvideo',
-      'video/x-flv',
-      'video/mp2t',
-      'video/mp2p',
-      'application/mxf',
-      'video/3gpp',
-      'video/webm',
-      'video/mpeg',
-      'video/quicktime'
-    ],
-    audio: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac'],
-    pdf: ['application/pdf'],
-    image: ['image/jpeg', 'image/jpeg', 'image/png', 'image/gif'],
-    document: [
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'application/vnd.oasis.opendocument.text',
-      'application/rtf',
-      'text/plain',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    ]
-  };
-
-  // check if media file is selected and if it is the proper file type
-  // this is necessary as the state tracking the file needs to be re-updated when returning to the media screen
-  useEffect(() => {
-    setTimeout(() => {
-      if (mediaFile !== undefined && mediaFile !== null) {
-        setIsMediaSelected(true);
-        const properFileTypes = mimeTypes[mediaType as keyof typeof mimeTypes];
-
-        if (properFileTypes.includes(mediaFile.type)) {
-          setIsMediaProperFileType(true);
-        } else {
-          setIsMediaProperFileType(false);
-        }
-      }
-      if (coverImageFile !== undefined) {
-        setIsCoverImageSelected(true);
-        if (mimeTypes.image.includes(coverImageFile.type)) {
-          setIsCoverImageProperFileType(true);
-        } else {
-          setIsCoverImageProperFileType(false);
-        }
-      }
-    }, 300);
-  }, [screenIndex, mediaFile, coverImageFile]);
-
   useEffect(() => {
     if (editMode && isUpdateSuccess) {
       navigate(`/content/${id}?edit=true`);
