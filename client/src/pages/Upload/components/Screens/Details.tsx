@@ -56,6 +56,7 @@ const Details = ({
             multiline
             rows={8}
             fullWidth
+            required
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
