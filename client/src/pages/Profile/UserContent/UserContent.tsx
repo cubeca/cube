@@ -3,7 +3,7 @@ import UserContentFilter from './UserContentFilter';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
 import * as s from './UserContent.styled';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ContentStorage,
   PlaylistStorage,
@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import { searchContent, searchPlaylists } from 'api/search';
 import Grid from '@mui/system/Unstable_Grid';
 import { Typography } from '@mui/material';
+import { getProfileId } from 'utils/auth';
 
 interface UserContentProps {
   profile: any;
@@ -38,6 +39,8 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
     useState<boolean>(true);
   const [hasMorePlaylistToLoad, setHasMorePlaylistsToLoad] =
     useState<boolean>(true);
+
+  const loggedInProfileId = getProfileId();
 
   const fetchContentSearchResults = useCallback(
     async (newContentOffset: number) => {
@@ -243,7 +246,11 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
                     contentResults
                       ?.filter((key: any) => {
                         const expiryDate = new Date(key.expiry);
-                        return expiryDate > new Date() || !key.expiry;
+                        return (
+                          expiryDate >= new Date() ||
+                          !key.expiry ||
+                          key.profileId === loggedInProfileId
+                        );
                       })
                       .map((key: any) => (
                         <ContentCard
