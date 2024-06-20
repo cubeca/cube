@@ -18,9 +18,7 @@ const Media = ({
   setIsCoverImageProperFileType,
   setIsBannerImageProperFileType,
   editMode,
-  content,
-  mediaFile,
-  coverImageFile
+  content
 }: any) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -299,9 +297,7 @@ const Media = ({
             text={t('Thumbnail image (required)')}
             onDrop={handleThumbnailOnDrop}
             maxFiles={1}
-            isUploadReady={
-              !editMode ? isThumbUploadReady || coverImageFile : true
-            }
+            isUploadReady={!editMode ? isThumbUploadReady : true}
             currentImage={content?.coverImageUrl?.playerInfo?.publicUrl}
             newImage={newImage}
             editMode={editMode}

@@ -200,11 +200,11 @@ const Upload = () => {
   // manually triggering validation to allow user to be able to navigate between pages
   // without having to adjust the form
   useEffect(() => {
-    if (screenIndex === 0) {
+    if (editMode && screenIndex === 0) {
       trigger('title');
-    } else if (screenIndex === 1) {
+    } else if (editMode && screenIndex === 1) {
       trigger('description');
-    } else if (screenIndex === 2) {
+    } else if (editMode && screenIndex === 2) {
       trigger('categories');
     }
   }, []);
@@ -354,8 +354,6 @@ const Upload = () => {
           setIsBannerImageProperFileType={setIsBannerImageProperFileType}
           editMode={editMode}
           content={content}
-          mediaFile={mediaFile}
-          coverImageFile={coverImageFile}
         />
       )
     },
