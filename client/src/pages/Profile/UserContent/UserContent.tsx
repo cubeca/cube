@@ -246,10 +246,16 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
                     contentResults
                       ?.filter((key: any) => {
                         const expiryDate = new Date(key.expiry);
+                        const liveDate = new Date(key.live);
+                        // only return content that is between the date ranges of live and expiry dates to a public user
+                        // but show all content if user is the profile owner
                         return (
-                          expiryDate >= new Date() ||
-                          !key.expiry ||
-                          key.profileId === loggedInProfileId
+                          (expiryDate >= new Date() ||
+                            !key.expiry ||
+                            key.profileId === loggedInProfileId) &&
+                          (!key.live ||
+                            liveDate <= new Date() ||
+                            key.profileId === loggedInProfileId)
                         );
                       })
                       .map((key: any) => (

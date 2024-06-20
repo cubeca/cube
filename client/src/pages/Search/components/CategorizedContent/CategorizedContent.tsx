@@ -88,7 +88,9 @@ const CategorizedContent = ({
           newContentOffset + (newContentOffset === 0 ? 11 : contentLimit)
         );
       } catch (error) {
-        setError('Failed to load search results/ Échec du chargement des résultats de recherche');
+        setError(
+          'Failed to load search results/ Échec du chargement des résultats de recherche'
+        );
       } finally {
         setIsContentLoading(false);
       }
@@ -239,7 +241,12 @@ const CategorizedContent = ({
                   contentResults
                     ?.filter((key: any) => {
                       const expiryDate = new Date(key.expiry);
-                      return expiryDate > new Date() || !key.expiry;
+                      const liveDate = new Date(key.live);
+                      // show content in between the expiry and live date range
+                      return (
+                        (expiryDate > new Date() || !key.expiry) &&
+                        (!key.live || liveDate <= new Date())
+                      );
                     })
                     .map((key: any) => (
                       <ContentCard
