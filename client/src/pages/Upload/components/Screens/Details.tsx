@@ -171,6 +171,14 @@ const Details = ({
       ) : null}
 
       <Box my={theme.spacing(5)}>
+        <Typography component="h4" variant="h4" my={theme.spacing(2.5)}>
+          {t('Visibility')}
+        </Typography>
+        <Typography component="p" variant="body2">
+          {t(
+            'This section is optional but can be used to control when and for how long your content is visible to the public.  Content not falling within the specified dates will not be visible in search results. You can still share it with others directly with the content URL.'
+          )}
+        </Typography>
         <Box
           sx={{
             display: 'flex',

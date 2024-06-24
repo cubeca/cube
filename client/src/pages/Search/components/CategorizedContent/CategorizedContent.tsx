@@ -244,7 +244,7 @@ const CategorizedContent = ({
                       const liveDate = new Date(key.live);
                       // show content in between the expiry and live date range
                       return (
-                        (expiryDate > new Date() || !key.expiry) &&
+                        (expiryDate >= new Date() || !key.expiry) &&
                         (!key.live || liveDate <= new Date())
                       );
                     })
