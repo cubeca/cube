@@ -152,6 +152,7 @@ const Upload = () => {
   const [mediaFile, setMediaFile] = useState<File>();
   const [bannerImageFile, setBannerImageFile] = useState<File>();
   const [expiryValue, setExpiryValue] = useState<dateFns | null>(null);
+  const [liveValue, setLiveValue] = useState<dateFns | null>(null);
   const [vttFile, setVTTFile] = useState<File>();
   const [screenIndex, setScreenIndex] = useState(0);
   const [isCoverImageSelected, setIsCoverImageSelected] = useState(false);
@@ -171,10 +172,11 @@ const Upload = () => {
   const [selectedCategories, setSelectedCategories] = useState<any[]>([]);
   const [newCoverImageSelected, setNewCoverImageSelected] = useState(false);
   const [userClearedFields, setUserClearedFields] = useState(false);
-  const { control, handleSubmit, formState, watch, trigger } = useForm({
-    mode: editMode ? 'all' : 'onChange',
-    criteriaMode: 'all'
-  });
+  const { control, handleSubmit, formState, watch, trigger, setValue } =
+    useForm({
+      mode: editMode ? 'all' : 'onChange',
+      criteriaMode: 'all'
+    });
   const [waitForState, setWaitForState] = useState(true);
 
   useEffect(() => {
@@ -257,7 +259,8 @@ const Upload = () => {
       profileId: profileId!,
       title: values.title,
       type: editMode ? content?.type : values.type,
-      expiry: values.expiry,
+      expiry: values.expiry ? new Date(values.expiry).toISOString() : null!,
+      live: values.live ? new Date(values.live).toISOString() : null!,
       category: values.categories,
       description: values.description,
       coverImageText: values.imageText,
@@ -287,7 +290,8 @@ const Upload = () => {
       profileId: profileId!,
       title: values.title,
       type: content?.type as UpdateContentTypeEnum,
-      expiry: values.expiry,
+      expiry: values.expiry ? new Date(values.expiry).toISOString() : null!,
+      live: values.live ? new Date(values.live).toISOString() : null!,
       category: selectedCategories,
       description: values.description,
       coverImageText: values.imageText,
@@ -365,9 +369,12 @@ const Upload = () => {
           uploadType={mediaType}
           handleVTTFilesUpload={handleVTTFilesUpload}
           expiryValue={expiryValue}
+          liveValue={liveValue}
           onExpriryValueChange={setExpiryValue}
           editMode={editMode}
           content={content}
+          setValue={setValue}
+          watch={watch}
         />
       )
     },
