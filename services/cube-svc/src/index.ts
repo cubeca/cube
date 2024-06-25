@@ -7,7 +7,7 @@ import * as profileQueries from './db/queries/profile';
 import * as playlistQueries from './db/queries/playlist';
 
 import { allowIfAnyOf, extractUser } from './middleware/auth';
-import { getApiResultFromDbRow, transformContent, transformPlaylistSimple } from './utils/utils';
+import { deleteCloudflareData, getApiResultFromDbRow, transformContent, transformPlaylistSimple } from './utils/utils';
 
 import { cloudflare } from './cloudflare';
 import { profile } from './profile';
@@ -176,10 +176,10 @@ app.post('/deactivateProfile', allowIfAnyOf('active'), async (req: Request, res:
         // Delete content and file record in the database
         await contentQueries.deleteContent(contentItem.id!);
 
-        //@ts-ignore
+        // @ts-ignore
         await deleteCloudflareData(contentItem.data.mediaFileId);
 
-        //@ts-ignore
+        // @ts-ignore
         await deleteCloudflareData(contentItem.data.coverImageFileId);
       }
       return res.status(200).send('Profile deactivated');
