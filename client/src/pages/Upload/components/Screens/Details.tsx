@@ -246,6 +246,9 @@ const Details = ({
                     }
                     value={value}
                     onChange={(newValue) => {
+                      if (checkedState) {
+                        setCheckedState(false);
+                      }
                       setValue('live', newValue);
                       setLiveDate(newValue);
                     }}
@@ -339,6 +342,9 @@ const Details = ({
                     }
                     value={value}
                     onChange={(newValue) => {
+                      if (checkedState) {
+                        setCheckedState(false);
+                      }
                       setValue('expiry', newValue);
                       setLiveDate(newValue);
                     }}
