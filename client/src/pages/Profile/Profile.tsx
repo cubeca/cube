@@ -19,6 +19,7 @@ import PlaylistPanel from 'components/PlaylistPanel';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import usePlaylist from 'hooks/usePlaylist';
 import { useParams } from 'react-router-dom';
+import PrivateContent from './PrivateContent';
 
 const Profile = () => {
   const user = getAuthTokenPayload();
@@ -145,6 +146,22 @@ const Profile = () => {
                 >
                   {t('Playlists')}
                 </Typography>
+                {profileId === loggedInProfileId && (
+                  <Typography
+                    component="h3"
+                    variant="h3"
+                    style={{
+                      borderBottom: '2px solid',
+                      borderColor:
+                        selectedPanel === 'private' ? '#95F5CB' : 'transparent',
+                      paddingBottom: '5px',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => setSelectedPanel('private')}
+                  >
+                    {t('Private')}
+                  </Typography>
+                )}
               </s.UserContentSubWrapper>
               <s.UserContentSubWrapper>
                 {selectedPanel === 'playlists' ? (
@@ -152,7 +169,7 @@ const Profile = () => {
                     {t('+ Playlist')}
                   </Button>
                 ) : null}
-                {selectedPanel === 'content' ? (
+                {selectedPanel === 'content' || selectedPanel === 'private' ? (
                   <Button onClick={handleNewMedia} fullWidth={false}>
                     {t('+ Upload')}
                   </Button>
@@ -163,6 +180,12 @@ const Profile = () => {
 
           {selectedPanel === 'content' && !isLoading ? (
             <UserContent
+              profile={profile}
+              isLoading={isLoading}
+              key={profile?.id}
+            />
+          ) : selectedPanel === 'private' ? (
+            <PrivateContent
               profile={profile}
               isLoading={isLoading}
               key={profile?.id}
