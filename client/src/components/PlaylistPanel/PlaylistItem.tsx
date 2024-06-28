@@ -1,11 +1,12 @@
 import React from 'react';
 import * as s from './PlaylistPanel.styled';
-import { ReactComponent as VideoIcon } from '../../assets/icons/type-video-square.svg';
+import { ReactComponent as VideoIcon } from 'assets/icons/type-video-square.svg';
 import { ReactComponent as AudioIcon } from '../../assets/icons/audio.svg';
 import { ReactComponent as BookIcon } from '../../assets/icons/book.svg';
 import { ReactComponent as SignLanguageIcon } from '../../assets/icons/sign.svg';
 import { ReactComponent as LinkIcon } from '../../assets/icons/link.svg';
 import { ReactComponent as DocIcon } from '../../assets/icons/doc.svg';
+
 import { DialogTitle, DialogActions } from '@mui/material';
 import Button from 'components/Button';
 

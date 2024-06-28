@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import TagOfTheWeek from '../TagOfTheWeek';
 import HeroHome from 'assets/images/hero-home-page.jpeg';
 import CtaImage from 'assets/images/home-video-cover.jpeg';
-import Play from 'assets/icons/play-circle.svg';
 import HeroCTA from 'components/heroCTA';
 import * as s from './HeroPanelHome.styled';
 
@@ -25,10 +24,10 @@ const HeroPanelHome = () => {
                 <strong className="category">{t('Videos')}</strong>:
               </Typography> */}
               <Typography component="h1" variant="h1">
-               {t('searchPage')}
+                {t('searchPage')}
               </Typography>
               <Typography component="h3" variant="h3">
-               {t('searchPageFR')}
+                {t('searchPageFR')}
               </Typography>
               {/* <a href="#TEST" className="play-button">
                 <img src={Play} alt="play" />
@@ -40,7 +39,7 @@ const HeroPanelHome = () => {
             <HeroCTA
               title="Guide"
               text={t('userGuide')}
-            frenchText={t('userGuideFR')}
+              frenchText={t('userGuideFR')}
               video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/1522f4bfdb5e28886e25f58c27c3d278/manifest/video.m3u8"
               image={CtaImage}
               subtitlesUrl="https://files.cubecommons.ca/3ed305be-ff47-4cf2-abb8-6c0d77bcc208/vtt.vtt"
