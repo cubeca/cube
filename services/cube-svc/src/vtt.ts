@@ -7,6 +7,24 @@ const pubsub = new PubSub();
 
 export const vtt = express.Router();
 
+/**
+ * VTT Service
+ *
+ * This service handles operations related to VTT (Video Text Tracks) files, such as fetching
+ * and updating VTT files.
+ *
+ * @module VTTService
+ */
+
+/**
+ * Fetch a VTT file by its ID.
+ *
+ * @function
+ * @name get/vtt/:id
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} VTT file details
+ */
 vtt.get('/vtt/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -23,6 +41,15 @@ vtt.get('/vtt/:id', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * Update a VTT file by its ID.
+ *
+ * @function
+ * @name put/vtt/:id
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Updated VTT file details
+ */
 vtt.put('/vtt/:id', allowIfAnyOf('contentEditor'), async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

@@ -15,9 +15,25 @@ import * as profile from './db/queries/profile';
 import UuidEncoder from 'uuid-encoder';
 
 export const identity = express.Router();
+
 /**
- * Create a user based on provided attributes.  If an organization, website or tag is passed
+ * Identity Service
+ *
+ * This service handles operations related to user identity management, such as user creation,
+ * login, email updates, password updates, and email verification.
+ *
+ * @module IdentityService
+ */
+
+/**
+ * Create a user based on provided attributes. If an organization, website, or tag is passed,
  * also create an associated profile for the user.
+ *
+ * @function
+ * @name post/auth/user
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} User ID and JWT token
  */
 identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, async (req: Request, res: Response) => {
   const errors = validationResult(req);
@@ -77,6 +93,12 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
 
 /**
  * Log a user in based on supplied username and password.
+ *
+ * @function
+ * @name post/auth/login
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} JWT token and user details
  */
 identity.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -128,7 +150,13 @@ identity.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res
 });
 
 /**
- * Allow anonymous users to obtain a temporary authentication token
+ * Allow anonymous users to obtain a temporary authentication token.
+ *
+ * @function
+ * @name post/auth/anonymous
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} JWT token
  */
 identity.post('/auth/anonymous', async (_req: Request, res: Response) => {
   try {
@@ -150,6 +178,12 @@ identity.post('/auth/anonymous', async (_req: Request, res: Response) => {
 
 /**
  * Update an email for currently authenticated users.
+ *
+ * @function
+ * @name put/auth/email
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Status message
  */
 identity.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { uuid, email } = req.body;
@@ -181,6 +215,12 @@ identity.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Re
 
 /**
  * Update password for a user.
+ *
+ * @function
+ * @name put/auth/password
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Status message
  */
 identity.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (req: Request, res: Response) => {
   const { currentPassword, newPassword } = req.body;
@@ -210,8 +250,6 @@ identity.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (
       }
     }
 
-    // If we got to this point, either the user has provided the correct currentPassword,
-    // or they're using a valid auth token without the currentPassword.
     const hashedPassword = await hashPassword(newPassword);
     const encryptedPassword = encryptString(hashedPassword);
 
@@ -225,7 +263,13 @@ identity.put('/auth/password', allowIfAnyOf('active', 'password-reset'), async (
 });
 
 /**
- * On account creation, confirm the users email via provided link to their inbox.
+ * Confirm the user's email via a provided link to their inbox on account creation.
+ *
+ * @function
+ * @name get/auth/email/verify/:token
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Redirection URL
  */
 identity.get('/auth/email/verify/:token', async (req: Request, res: Response) => {
   const token = req.params.token as string;
@@ -270,6 +314,12 @@ identity.get('/auth/email/verify/:token', async (req: Request, res: Response) =>
 
 /**
  * Trigger password reset email to users who are locked out.
+ *
+ * @function
+ * @name post/auth/forgot-password
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Status message
  */
 identity.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { email } = req.body;
@@ -293,7 +343,13 @@ identity.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Re
 });
 
 /**
- * Trigger email verification if original has expired or didn't arrive.
+ * Trigger email verification if the original has expired or didn't arrive.
+ *
+ * @function
+ * @name post/auth/resend-email-verification
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Status message
  */
 identity.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const user = extractUser(req);
@@ -316,7 +372,13 @@ identity.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), asyn
 });
 
 /**
- * Trigger an email when someone submits the contact us form
+ * Trigger an email when someone submits the contact us form.
+ *
+ * @function
+ * @name post/email/contact-us
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Status message
  */
 identity.post('/email/contact-us', allowIfAnyOf('anonymous'), async (req: Request, res: Response) => {
   const { name, email, desc, ticketId } = req.body;

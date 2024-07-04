@@ -13,6 +13,25 @@ import { VideoPlayerInfo, NonVideoPlayerInfo } from './types/cloudflare';
 import { s3 } from './utils/r2';
 
 export const cloudflare = express.Router();
+
+/**
+ * Cloudflare Service
+ *
+ * This service handles operations related to file uploads and management in Cloudflare,
+ * including generating presigned URLs for uploads and retrieving file information.
+ *
+ * @module CloudflareService
+ */
+
+/**
+ * Reserve a video upload slot using TUS protocol.
+ *
+ * @function
+ * @name post/upload/video-tus-reservation
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} TUS upload URL
+ */
 cloudflare.post('/upload/video-tus-reservation', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const fileId = req.query.fileId as string;
 
@@ -92,6 +111,15 @@ cloudflare.post('/upload/video-tus-reservation', allowIfAnyOf('anonymous', 'acti
   }
 });
 
+/**
+ * Generate an S3 presigned URL for file upload.
+ *
+ * @function
+ * @name post/upload/s3-presigned-url
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Presigned URL and file ID
+ */
 cloudflare.post('/upload/s3-presigned-url', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const {
     profileId,
@@ -123,7 +151,6 @@ cloudflare.post('/upload/s3-presigned-url', allowIfAnyOf('anonymous', 'active'),
     const filePathInBucket = `${fileId}/${fileName}`;
     const presignedUrl = await getPresignedUploadUrl(filePathInBucket, mimeType, urlValidDurationSeconds);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     await db.updateS3FileWithPresignedUrl(fileId, filePathInBucket, presignedUrl);
 
@@ -134,6 +161,15 @@ cloudflare.post('/upload/s3-presigned-url', allowIfAnyOf('anonymous', 'active'),
   }
 });
 
+/**
+ * Fetch file details by file ID.
+ *
+ * @function
+ * @name get/files/:fileId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} File details
+ */
 cloudflare.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { fileId } = req.params;
 
@@ -142,7 +178,7 @@ cloudflare.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req
   }
 
   try {
-    const file = getFile(fileId as string);
+    const file = await getFile(fileId as string);
     res.status(200).json(file);
   } catch (e: any) {
     console.error('Error retrieving file', e);
@@ -150,6 +186,16 @@ cloudflare.get('/files/:fileId', allowIfAnyOf('anonymous', 'active'), async (req
   }
 });
 
+/**
+ * Get a presigned upload URL for S3.
+ *
+ * @function
+ * @name getPresignedUploadUrl
+ * @param {String} filePathInBucket - Path of the file in the S3 bucket
+ * @param {String} mimeType - MIME type of the file
+ * @param {Number} expiresIn - Expiration time for the presigned URL in seconds
+ * @returns {Promise<String>} Presigned URL
+ */
 const getPresignedUploadUrl = async (filePathInBucket: string, mimeType: string, expiresIn: number) => {
   const putCommand = new PutObjectCommand({
     Bucket: settings.CLOUDFLARE_R2_BUCKET_NAME,
@@ -160,6 +206,14 @@ const getPresignedUploadUrl = async (filePathInBucket: string, mimeType: string,
   return await getSignedUrl(s3, putCommand, { expiresIn });
 };
 
+/**
+ * Get file details by file ID.
+ *
+ * @function
+ * @name getFile
+ * @param {String} fileId - ID of the file
+ * @returns {Promise<Object>} File details
+ */
 export const getFile = async (fileId: string) => {
   const r = await db.getFileById(fileId);
   if (r === null) {
@@ -200,9 +254,6 @@ export const getFile = async (fileId: string) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     const filePathInBucket = dbFile.data.filePathInBucket;
-
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-ignore
     const publicUrl = `${settings.CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL}/${filePathInBucket}`;
 
     playerInfo = {

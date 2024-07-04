@@ -3,8 +3,26 @@ import * as db from './db/queries/playlist';
 import { UUID_REGEXP, getApiResultFromDbRow, transformPlaylist } from './utils/utils';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 
+/**
+ * Playlist Service
+ *
+ * This service handles playlist-related operations such as fetching, creating,
+ * updating, deleting playlists, and managing content within playlists.
+ *
+ * @module PlaylistService
+ */
+
 export const playlist = express.Router();
 
+/**
+ * Route to fetch a playlist by its ID
+ *
+ * @function
+ * @name get/playlist/:playlistId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Playlist details
+ */
 playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
   const playlistId = req.params.playlistId;
   if (!playlistId) {
@@ -12,7 +30,7 @@ playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
   }
 
   if (!UUID_REGEXP.test(playlistId)) {
-    return res.status(400).send(`Invalid parameter, must be in UUID format.`);
+    return res.status(400).send('Invalid parameter, must be in UUID format.');
   }
 
   const dbResult = await db.getPlaylistById(playlistId);
@@ -24,11 +42,20 @@ playlist.get('/playlist/:playlistId', async (req: Request, res: Response) => {
   return res.status(200).json(transformedPlaylist);
 });
 
+/**
+ * Route to fetch playlists by profile or user ID
+ *
+ * @function
+ * @name get/playlist
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} List of playlists
+ */
 playlist.get('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const offset = parseInt(req.query.offset as string, 10) || 0;
   const limit = parseInt(req.query.limit as string, 10) || 10;
   const profileId = (req.query.profileId as string) || '';
-  const userId = req.query.userId as string | '';
+  const userId = (req.query.userId as string) || '';
 
   const dbResult = await db.listPlaylistsByProfileOrUserId(offset, limit, profileId, userId);
   const playlistList = dbResult.map((item) => item.dataValues);
@@ -36,17 +63,24 @@ playlist.get('/playlist', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   res.status(200).json(transformedPlaylist);
 });
 
+/**
+ * Route to create a new playlist
+ *
+ * @function
+ * @name post/playlist
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} ID of the newly created playlist
+ */
 playlist.post('/playlist', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { profileId, ...playlistData } = req.body;
 
-    // Validate request body
     if (Object.keys(playlistData).length === 0) {
       return res.status(400).send('Invalid request body');
     }
 
-    // Insert playlist into database
     const r = await db.insertPlaylist({ userId: user.uuid, profileId, ...playlistData });
     const dbResult = r?.dataValues;
 
@@ -57,18 +91,25 @@ playlist.post('/playlist', allowIfAnyOf('active'), async (req: Request, res: Res
   }
 });
 
+/**
+ * Route to update an existing playlist by its ID
+ *
+ * @function
+ * @name post/playlist/:playlistId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Updated playlist
+ */
 playlist.post('/playlist/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { ...playlistData } = req.body;
     const { playlistId } = req.params;
 
-    // Validate request body and parameters
     if (!user.uuid || Object.keys(playlistData).length === 0 || !playlistId) {
       return res.status(400).send('Invalid request body or parameters');
     }
 
-    // Check that the user updating playlist is indeed associated to the playlist submitted in the request
     const isUserAssociated = await db.isUserAssociatedToPlaylist(user.uuid, playlistId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update playlist');
@@ -82,18 +123,25 @@ playlist.post('/playlist/:playlistId', allowIfAnyOf('active'), async (req: Reque
   }
 });
 
+/**
+ * Route to add content to a playlist
+ *
+ * @function
+ * @name post/playlist/addContent/:playlistId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Updated playlist with new content
+ */
 playlist.post('/playlist/addContent/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { playlistId } = req.params;
     const { contentId } = req.body;
 
-    // Validate request body and parameters
     if (!playlistId || !contentId) {
       return res.status(400).send('Invalid request body or parameters');
     }
 
-    // Check that the user updating playlist is indeed associated to the playlist submitted in the request
     const isUserAssociated = await db.isUserAssociatedToPlaylist(user.uuid, playlistId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update playlist');
@@ -111,18 +159,25 @@ playlist.post('/playlist/addContent/:playlistId', allowIfAnyOf('active'), async 
   }
 });
 
+/**
+ * Route to remove content from a playlist
+ *
+ * @function
+ * @name post/playlist/removeContent/:playlistId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Updated playlist without the removed content
+ */
 playlist.post('/playlist/removeContent/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { playlistId } = req.params;
     const { contentId } = req.body;
 
-    // Validate request body and parameters
     if (!playlistId || !contentId) {
       return res.status(400).send('Invalid request body or parameters');
     }
 
-    // Check that the user updating playlist is indeed associated to the playlist submitted in the request
     const isUserAssociated = await db.isUserAssociatedToPlaylist(user.uuid, playlistId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to update playlist');
@@ -140,30 +195,34 @@ playlist.post('/playlist/removeContent/:playlistId', allowIfAnyOf('active'), asy
   }
 });
 
+/**
+ * Route to delete a playlist by its ID
+ *
+ * @function
+ * @name delete/playlist/:playlistId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Result of the delete operation
+ */
 playlist.delete('/playlist/:playlistId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   try {
     const user = extractUser(req);
     const { playlistId } = req.params;
 
-    // Validate request parameters
     if (!playlistId) {
       return res.status(400).send('Invalid request parameters');
     }
 
-    // Retrieve playlist item to delete
     const playlist = await db.getPlaylistById(playlistId);
     if (!playlist) {
       return res.status(404).send('Playlist not found');
     }
 
-    // Check if user is associated with the profile of the content item
-    //@ts-ignore
     const isUserAssociated = await db.isUserAssociatedToPlaylist(user.uuid, playlistId);
     if (!isUserAssociated) {
       return res.status(403).send('User does not have permission to delete this playlist');
     }
 
-    // Delete playlist in the database
     const dbResult = await db.deletePlaylist(playlistId);
     return res.status(200).json(dbResult);
   } catch (error) {

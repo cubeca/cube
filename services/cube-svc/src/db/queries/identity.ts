@@ -1,5 +1,21 @@
 import { User } from '../models';
 
+/**
+ * Insert a new user identity into the database.
+ *
+ * @function
+ * @name insertIdentity
+ * @param {string} name - The name of the user.
+ * @param {string} email - The email of the user.
+ * @param {string} profileId - The profile ID associated with the user.
+ * @param {string} password - The password of the user.
+ * @param {string[]} permissionIds - The list of permission IDs for the user.
+ * @param {boolean} hasAcceptedTerms - Whether the user has accepted the terms.
+ * @param {boolean} hasAcceptedNewsletter - Whether the user has accepted the newsletter.
+ * @param {boolean} isOver18 - Whether the user is over 18 years old.
+ * @returns {Promise<User>} The inserted user object.
+ * @throws {Error} If the insertion fails.
+ */
 export const insertIdentity = async (
   name: string,
   email: string,
@@ -29,6 +45,15 @@ export const insertIdentity = async (
   }
 };
 
+/**
+ * Update the email address of a user.
+ *
+ * @function
+ * @name updateEmail
+ * @param {string} id - The ID of the user.
+ * @param {string} email - The new email address of the user.
+ * @throws {Error} If the user is not found.
+ */
 export const updateEmail = async (id: string, email: string) => {
   const user = await User.findByPk(id);
   if (user) {
@@ -40,6 +65,15 @@ export const updateEmail = async (id: string, email: string) => {
   }
 };
 
+/**
+ * Update the password of a user.
+ *
+ * @function
+ * @name updatePassword
+ * @param {string} id - The ID of the user.
+ * @param {string} password - The new password of the user.
+ * @throws {Error} If the user is not found.
+ */
 export const updatePassword = async (id: string, password: string) => {
   const user = await User.findByPk(id);
   if (user) {
@@ -50,14 +84,39 @@ export const updatePassword = async (id: string, password: string) => {
   }
 };
 
+/**
+ * Select a user by their email address.
+ *
+ * @function
+ * @name selectUserByEmail
+ * @param {string} email - The email address of the user.
+ * @returns {Promise<User|null>} The user object, or null if not found.
+ */
 export const selectUserByEmail = async (email: string) => {
   return await User.findOne({ where: { email } });
 };
 
+/**
+ * Select a user by their ID.
+ *
+ * @function
+ * @name selectUserByID
+ * @param {string} id - The ID of the user.
+ * @returns {Promise<User|null>} The user object, or null if not found.
+ */
 export const selectUserByID = async (id: string) => {
   return await User.findByPk(id);
 };
 
+/**
+ * Update the email verification status of a user.
+ *
+ * @function
+ * @name updateEmailVerification
+ * @param {string} id - The ID of the user.
+ * @param {boolean} hasBeenVerified - The new email verification status.
+ * @throws {Error} If the user is not found.
+ */
 export const updateEmailVerification = async (id: string, hasBeenVerified: boolean) => {
   const user = await User.findByPk(id);
   if (user) {
@@ -68,6 +127,15 @@ export const updateEmailVerification = async (id: string, hasBeenVerified: boole
   }
 };
 
+/**
+ * Add permission IDs to a user.
+ *
+ * @function
+ * @name addPermissionIds
+ * @param {string} id - The ID of the user.
+ * @param {string[]} perms - The permission IDs to add.
+ * @throws {Error} If the user is not found.
+ */
 export const addPermissionIds = async (id: string, perms: string[]) => {
   const user = await User.findByPk(id);
   if (user) {
@@ -78,6 +146,15 @@ export const addPermissionIds = async (id: string, perms: string[]) => {
   }
 };
 
+/**
+ * Update the active status of a user.
+ *
+ * @function
+ * @name updateActiveStatus
+ * @param {string} id - The ID of the user.
+ * @param {boolean} status - The new active status of the user.
+ * @throws {Error} If the user is not found.
+ */
 export const updateActiveStatus = async (id: string, status: boolean) => {
   const user = await User.findByPk(id);
   if (user) {
