@@ -50,9 +50,6 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
 
   const handleClickOpen = (e: any) => {
     setOpen(true);
-    // e.preventDefault();
-    // e.stopPropagation();
-    // e.nativeEvent.stopImmediatePropagation();
     setEditingPlaylist(playlistId);
   };
   const handleClose = () => {

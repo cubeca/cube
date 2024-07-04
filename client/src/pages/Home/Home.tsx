@@ -15,9 +15,7 @@ const About = () => (
     <CenterColumnPanel />
     <VirtualExperiencesPanel />
     <AccessibilityPanel />
-    <LanguagesPanel/>
-    {/* <CollaborationsPanel /> */}
-    {/* <NftsPanel /> */}
+    <LanguagesPanel />
     <DigitalNeighboursPanel />
     <Footer />
   </Stack>

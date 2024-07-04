@@ -200,7 +200,7 @@ export const EditSubsButton = styled(MuiLink)`
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 26px; /* 162.5% */
+  line-height: 26px;
   text-decoration-line: underline;
   margin-right: 22px;
 `;

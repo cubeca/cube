@@ -260,13 +260,9 @@ const AddToPlaylistModal = ({
       return;
     }
     const updatedContentIds = [...playlist.data.contentIds, contentId];
-    const updatedPlaylistData = {
-      ...playlist.data,
-      contentIds: updatedContentIds
-    };
 
     addContentToPlaylist(playlistId, { contentId });
-    // handleUpdatePlaylist(playlistId, updatedPlaylistData);
+
     setShowSuccessMessage(true);
     refetchPlaylists && refetchPlaylists();
     // change icon to checkmark
@@ -310,10 +306,6 @@ const AddToPlaylistModal = ({
         const newTempPlaylist = {
           id: newPlaylistId
         };
-      }
-
-      if (onlyCreate) {
-        // onClose();
       }
       console.log('Playlist created successfully');
     } catch (error) {

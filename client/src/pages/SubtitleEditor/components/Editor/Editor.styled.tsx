@@ -69,7 +69,7 @@ export const StyledButtonEdit = styled(Button)`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px; /* 125% */
+  line-height: 20px;
 `;
 
 export const StyledButtonDisplay = styled(Button)`
@@ -86,5 +86,5 @@ export const StyledButtonDisplay = styled(Button)`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px; /* 125% */
+  line-height: 20px;
 `;

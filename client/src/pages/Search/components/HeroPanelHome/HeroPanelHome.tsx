@@ -19,19 +19,12 @@ const HeroPanelHome = () => {
         <Grid container>
           <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
             <s.Headline>
-              {/* <Typography component="h1" variant="h5">
-                <span>{t('Featured in ')}</span>
-                <strong className="category">{t('Videos')}</strong>:
-              </Typography> */}
               <Typography component="h1" variant="h1">
                 {t('searchPage')}
               </Typography>
               <Typography component="h3" variant="h3">
                 {t('searchPageFR')}
               </Typography>
-              {/* <a href="#TEST" className="play-button">
-                <img src={Play} alt="play" />
-              </a> */}
             </s.Headline>
           </Grid>
 

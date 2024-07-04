@@ -69,11 +69,6 @@ const UploadInput = ({
           />
         </s.CurrentImageBox>
       )}
-      {/* {editMode && newImage && (
-        <s.NewImageBox>
-          <s.NewImage newImage={newImage} />
-        </s.NewImageBox>
-      )} */}
       <Typography component="h6" variant="h6">
         {descText}
       </Typography>

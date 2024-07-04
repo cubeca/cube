@@ -29,18 +29,6 @@ export const ViewSection = styled(Stack)`
   margin-top: 16px;
   z-index: 3;
 
-  /* &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    z-index: -1;
-    top: 236px;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #2f4048;
-  } */
-
   ${(props) => props.theme.breakpoints.up('md')} {
     position: fixed;
     overflow-y: auto;
