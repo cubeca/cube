@@ -10,6 +10,11 @@ import { login as authLogin } from 'api/auth';
 const useAuth = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  /**
+   * Check if the user is logged in when the component mounts.  This function
+   * also will request a new token if the user refreshes their page and the previous
+   * token has expired.
+   */
   useEffect(() => {
     const checkIsUserLoggedIn = async () => {
       const isLoggedIn = await isAuthed();
