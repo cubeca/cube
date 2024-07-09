@@ -18,7 +18,6 @@ export const addPlaylist = async ({
       payload.coverImageFileId = fileId;
     }
   }
-  // return await playlistApi.addPlaylist(payload);
   const response = await playlistApi.addPlaylist(payload);
   return response;
 };

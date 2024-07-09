@@ -102,11 +102,6 @@ const Footer = () => {
   return (
     <s.Footer component="footer">
       <Grid container>
-        {/* <Grid xs={10} xsOffset={1} md={4}>
-          <Subscribe></Subscribe>
-        </Grid>
-         */}
-
         <Grid xs={10} xsOffset={1} md={5}>
           <NavPanel></NavPanel>
         </Grid>

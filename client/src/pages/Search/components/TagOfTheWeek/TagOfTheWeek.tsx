@@ -21,7 +21,7 @@ register();
 const Content = () => {
   const { data, isLoading } = useContent('featured', ContentLists.Featured);
   const { t } = useTranslation('about');
-  // const content = data || [
+
   const content = [
     {
       id: 0,

@@ -6,14 +6,13 @@ import Social from '../Header/components/Social';
 
 const Main: FC<{ children: ReactNode }> = ({ children }) => {
   const theme = useTheme();
-  
+
   return (
-  <Box>
-    <Header/>
-    {/* <Social /> */}
-    <Box component="main">{children}</Box>
-    {/* <Footer/> */}
-  </Box>
-)};
+    <Box>
+      <Header />
+      <Box component="main">{children}</Box>
+    </Box>
+  );
+};
 
 export default Main;

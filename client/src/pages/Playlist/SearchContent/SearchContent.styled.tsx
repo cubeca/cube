@@ -25,7 +25,7 @@ export const PlaylistItemTitle = styled(Typography)`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 21px; /* 131.25% */
+  line-height: 21px;
   padding: 15px 0;
   margin: 0;
 `;
@@ -38,7 +38,6 @@ export const UserContent = styled(Box)`
     align-content: flex-start;
     flex-flow: row wrap;
     margin: -15px;
-    /* min-height: 200px; */
 
     .content-card {
       flex: 0 0 calc(33.3333% - 30px);

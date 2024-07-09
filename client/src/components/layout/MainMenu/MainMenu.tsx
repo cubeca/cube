@@ -8,7 +8,7 @@ import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import BookIcon from '@mui/icons-material/MenuBook';
-import WorddocIcon from '@mui/icons-material/Article'
+import WorddocIcon from '@mui/icons-material/Article';
 import LinkIcon from '@mui/icons-material/Link';
 import CloseIcon from '@mui/icons-material/Close';
 import * as s from './MainMenu.styled';
@@ -44,9 +44,8 @@ const MainMenu = ({
       MenuListProps={{
         'aria-labelledby': id
       }}
-      >
-
-      <Button className='close-button' onClick={onClose}>
+    >
+      <Button className="close-button" onClick={onClose}>
         <CloseIcon />
       </Button>
 
@@ -75,19 +74,17 @@ const MainMenu = ({
         />
       </MenuList>
       <MenuItem
-          onClick={() => handleMenuClick('/search')}
-          text={t('Rechercher')}
-        />
-       <MenuItem
-          onClick={() => handleMenuClick('/home')}
-          text={t('Traduire Contenu & Boutons')}
-        />
+        onClick={() => handleMenuClick('/search')}
+        text={t('Rechercher')}
+      />
+      <MenuItem
+        onClick={() => handleMenuClick('/home')}
+        text={t('Traduire Contenu & Boutons')}
+      />
 
-    
       <Divider />
 
       <s.Glossary>
-
         <Typography
           component="h3"
           px="16px"
@@ -98,16 +95,10 @@ const MainMenu = ({
         >
           Glossary of Icons
         </Typography>
-        
-        <Typography component="h4">
-          Accessibility
-        </Typography>
+
+        <Typography component="h4">Accessibility</Typography>
 
         <MenuList>
-          {/* <MenuItem
-            text={t('Text to Speech')}
-            icon={<VoiceChatIcon fontSize="small" />}
-          /> */}
           <MenuItem
             text={t('Sign Language')}
             icon={<SignLanguageIcon fontSize="small" />}
@@ -118,30 +109,16 @@ const MainMenu = ({
           />
         </MenuList>
 
-        <Typography component="h4">
-          Content Types
-        </Typography>
-        
-        <MenuItem
-          text={t('Video')}
-          icon={<PlayArrowIcon fontSize="small" />}
-        />
-        <MenuItem
-          text={t('Audio')}
-          icon={<VolumeUpIcon fontSize="small" />}
-        />
-        <MenuItem
-          text={t('PDF')}
-          icon={<BookIcon fontSize="small" />}
-        />
+        <Typography component="h4">Content Types</Typography>
+
+        <MenuItem text={t('Video')} icon={<PlayArrowIcon fontSize="small" />} />
+        <MenuItem text={t('Audio')} icon={<VolumeUpIcon fontSize="small" />} />
+        <MenuItem text={t('PDF')} icon={<BookIcon fontSize="small" />} />
         <MenuItem
           text={t('Word Doc')}
           icon={<WorddocIcon fontSize="small" />}
         />
-        <MenuItem
-          text={t('Link')}
-          icon={<LinkIcon fontSize="small" />}
-        />
+        <MenuItem text={t('Link')} icon={<LinkIcon fontSize="small" />} />
         <Typography
           component="h3"
           px="16px"
@@ -152,16 +129,10 @@ const MainMenu = ({
         >
           (FR) Glossaire des Icônes
         </Typography>
-        
-        <Typography component="h4">
-        Accessibilité
-        </Typography>
+
+        <Typography component="h4">Accessibilité</Typography>
 
         <MenuList>
-          {/* <MenuItem
-            text={t('Text to Speech')}
-            icon={<VoiceChatIcon fontSize="small" />}
-          /> */}
           <MenuItem
             text={t('Langage des Signes')}
             icon={<SignLanguageIcon fontSize="small" />}
@@ -171,32 +142,20 @@ const MainMenu = ({
             icon={<SubtitlesIcon fontSize="small" />}
           />
         </MenuList>
-        <Typography component="h4">
-        Types de Contenu
-        </Typography>
-        
-        <MenuItem
-          text={t('Vidéo')}
-          icon={<PlayArrowIcon fontSize="small" />}
-        />
+        <Typography component="h4">Types de Contenu</Typography>
+
+        <MenuItem text={t('Vidéo')} icon={<PlayArrowIcon fontSize="small" />} />
         <MenuItem
           text={t('L`Audio')}
           icon={<VolumeUpIcon fontSize="small" />}
         />
-        <MenuItem
-          text={t('PDF')}
-          icon={<BookIcon fontSize="small" />}
-        />
+        <MenuItem text={t('PDF')} icon={<BookIcon fontSize="small" />} />
         <MenuItem
           text={t('Word Doc')}
           icon={<WorddocIcon fontSize="small" />}
         />
-        <MenuItem
-          text={t('Lien')}
-          icon={<LinkIcon fontSize="small" />}
-        />
+        <MenuItem text={t('Lien')} icon={<LinkIcon fontSize="small" />} />
       </s.Glossary>
-      
     </s.MainMenu>
   );
 };

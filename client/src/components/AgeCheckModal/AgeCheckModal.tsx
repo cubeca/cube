@@ -26,7 +26,7 @@ const AgeCheckModal = ({
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 2 // space between items
+            gap: 2
           }}
         >
           <Typography variant="h6">

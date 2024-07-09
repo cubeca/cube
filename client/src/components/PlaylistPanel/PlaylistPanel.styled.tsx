@@ -17,7 +17,7 @@ export const DeletePlaylistText = styled(Typography)`
   font-size: 18px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 26px !important; /* 144.444% */
+  line-height: 26px !important;
   letter-spacing: 0.234px;
   padding-bottom: 10px;
   text-decoration: underline;
@@ -115,7 +115,7 @@ export const PlaylistTitle = styled(Typography)`
   font-size: 24px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 40px; /* 166.667% */
+  line-height: 40px;
   padding: 0 !important;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -130,7 +130,7 @@ export const PlaylistTitleInput = styled(TextField)`
   font-size: 24px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 40px; /* 166.667% */
+  line-height: 40px;
   margin-left: 0;
   margin-bottom: 0;
 `;
@@ -144,7 +144,7 @@ export const PlaylistDescription = styled(Typography)`
   font-size: 18px !important;
   font-style: normal;
   font-weight: 400;
-  line-height: 26px !important; /* 144.444% */
+  line-height: 26px !important;
   letter-spacing: 0.234px;
   padding-bottom: 10px;
 
@@ -157,7 +157,7 @@ export const PlaylistItemTitle = styled(Typography)`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 21px; /* 131.25% */
+  line-height: 21px;
   padding: 15px 0;
   margin: 0;
 `;

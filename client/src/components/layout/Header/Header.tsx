@@ -17,8 +17,6 @@ const Header = () => {
       }}
     >
       <s.HomeLink to="/" />
-      {/* leaving this here in case changes go in another direction */}
-      {/* <PrimaryNav /> */}
       <AuxiliaryNav />
     </s.Header>
   ) : null;

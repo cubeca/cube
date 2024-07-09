@@ -148,7 +148,6 @@ const Tags = ({
             <Autocomplete
               multiple
               options={categories}
-              // value={selectedCategories}
               value={localCategories}
               onChange={(_, newValue) => {
                 field.onChange(newValue);

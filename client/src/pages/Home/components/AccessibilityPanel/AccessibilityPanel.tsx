@@ -28,17 +28,17 @@ const AccessibilityPanel = () => {
           {t('accessibilityFR')}
         </Typography>
         <Grid container justifyContent="center">
-        <Grid xs={12} md={4} padding="1rem">
+          <Grid xs={12} md={4} padding="1rem">
             <Typography component="p" variant="body1" textAlign="center">
-            {t('accessibilityText')}
+              {t('accessibilityText')}
             </Typography>
-        </Grid>
-        <Grid xs={12} md={4} padding="1rem">
+          </Grid>
+          <Grid xs={12} md={4} padding="1rem">
             <Typography component="p" variant="body1" textAlign="center">
               {t('accessibilityTextFR')}
             </Typography>
+          </Grid>
         </Grid>
-      </Grid>
         <Typography
           component="p"
           sx={{
@@ -66,11 +66,6 @@ const AccessibilityPanel = () => {
             OAFAC
           </a>
         </Typography>
-        {/* </Trans> */}
-        {/* <MediaPlayer
-          url="https://storage.googleapis.com/media-session/elephants-dream/the-wires.mp3"
-          isAudio
-        /> */}
       </Box>
 
       <Grid container>

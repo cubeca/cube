@@ -1,8 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import Button from 'components/Button';
 import Grid from '@mui/system/Unstable_Grid';
-import MediaPlayer from 'components/MediaPlayer';
-import { Trans, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import FirstTopThumb from 'assets/images/fpo/cont-art-gal-thumb1.png';
 import SecondTopThumb from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
 import ThirdTopThumb from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
@@ -57,34 +56,17 @@ const CenterColumnPanel = () => {
               <Typography component="h2" variant="h2">
                 {t('dao')}
               </Typography>
-              <Typography component="p">
-                {t(
-                  'daoTagline'
-                )}
-              </Typography>
-              <Typography component="p">
-                {t(
-                  'daoText'
-                )}
-              </Typography>
+              <Typography component="p">{t('daoTagline')}</Typography>
+              <Typography component="p">{t('daoText')}</Typography>
               <Typography component="p" variant="h3">
-                {t(
-                  'daoFR'
-                )}
+                {t('daoFR')}
               </Typography>
               <Typography component="p" variant="body2">
-                {t(
-                  'daoTaglineFR'
-                )}
+                {t('daoTaglineFR')}
               </Typography>
               <Typography component="p" variant="body2">
-                {t(
-                  'daoTextFR'
-                )}
+                {t('daoTextFR')}
               </Typography>
-              {/* <Button href="https://www.example.com" variant="contained">
-                Browse Our DAO Documentation
-              </Button> */}
             </s.CenterColumnTextSection>
           </DarkContent.Wrapper>
         </Grid>
@@ -102,22 +84,12 @@ const CenterColumnPanel = () => {
               <Typography component="h2" variant="h2">
                 {t('creators')}
               </Typography>
-              <Typography component="p">
-                {t(
-                  'creatorsText'
-                )}
-              </Typography>
-              <Typography component="p">
-                {t(
-                  'creatorsList'
-                )}
-              </Typography>
+              <Typography component="p">{t('creatorsText')}</Typography>
+              <Typography component="p">{t('creatorsList')}</Typography>
               <Typography component="p" variant="h3">
                 {t('creatorsFR')}
               </Typography>
-              <Typography variant="body2">
-                {t('creatorsTextFR')}
-              </Typography>
+              <Typography variant="body2">{t('creatorsTextFR')}</Typography>
               <Button href="/signup" variant="contained">
                 Join Us
               </Button>

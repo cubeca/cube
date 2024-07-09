@@ -395,11 +395,9 @@ const Video = () => {
               </Typography>
 
               {loggedInProfileId === profileId && (
-                // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                 <s.EditDeleteWrapper>
                   <DeleteContentButton contentId={content?.id || ''} />
                 </s.EditDeleteWrapper>
-                // </Box>
               )}
             </Box>
             <Typography component="p" variant="body2" sx={{ my: 1 }}>

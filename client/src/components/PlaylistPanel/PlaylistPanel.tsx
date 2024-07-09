@@ -295,7 +295,6 @@ const PlaylistPanel: React.FC<Props> = ({
                         <TextField
                           className="editInput"
                           value={editedTitles[playlist.id] || ''}
-                          // value={textFieldTitleValue}
                           placeholder="Title (required)"
                           onChange={(e) => {
                             setEditedTitles({
