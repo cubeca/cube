@@ -20,7 +20,8 @@ export const identity = express.Router();
  * Identity Service
  *
  * This service handles operations related to user identity management, such as user creation,
- * login, email updates, password updates, and email verification.
+ * login, email updates, password updates, and email verification.  This service is consider 'dumb'
+ * and does not do any session management only handling requests from the front-end.
  *
  * @module IdentityService
  */

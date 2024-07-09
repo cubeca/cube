@@ -16,7 +16,8 @@ export const content = express.Router();
  * Content Service
  *
  * This service handles operations related to content, such as creating, fetching,
- * updating, deleting content items, and reporting abuse.
+ * updating, deleting content items, and reporting abuse.  This service is also responsible
+ * for translating database rows into consumable objects for the front-end.
  *
  * @module ContentService
  */
