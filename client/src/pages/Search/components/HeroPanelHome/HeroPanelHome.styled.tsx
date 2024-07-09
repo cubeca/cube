@@ -3,7 +3,7 @@ import { styled } from 'theme/utils';
 
 export const HeroPanelHome = styled(Stack)`
   position: relative;
-  background-color: rgba(47,64,72,1);
+  background-color: rgba(47, 64, 72, 1);
 `;
 
 export const Bg = styled(Box)`
@@ -12,7 +12,7 @@ export const Bg = styled(Box)`
   left: 0;
   width: 100%;
   height: 100vw;
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     top: -116px;
     bottom: 360px;
@@ -28,13 +28,17 @@ export const Bg = styled(Box)`
     left: 0;
     width: 100%;
     height: 116px;
-    background: linear-gradient(180deg, rgba(40,52,60,1) 12.5%, rgba(40,52,60,0) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(40, 52, 60, 1) 12.5%,
+      rgba(40, 52, 60, 0) 100%
+    );
 
     ${(props) => props.theme.breakpoints.up('md')} {
       height: 232px;
     }
   }
-  
+
   &::after {
     content: '';
     display: block;
@@ -44,7 +48,11 @@ export const Bg = styled(Box)`
     left: 0;
     width: 100%;
     height: 232px;
-    background: linear-gradient(180deg, rgba(47,64,72,0) 0%, rgba(47,64,72,1) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(47, 64, 72, 0) 0%,
+      rgba(47, 64, 72, 1) 100%
+    );
 
     ${(props) => props.theme.breakpoints.up('md')} {
       height: 464px;
@@ -67,16 +75,15 @@ export const Content = styled(Box)`
   position: relative;
   z-index: 3;
   padding-bottom: 18.333333333333334vw;
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
-    /* min-height: calc(100vh - 116px); */
     padding-bottom: 8.333333333333334vw;
   }
 `;
 
 export const Headline = styled(Box)`
   padding: 55vw 0 8.333333333333334vw 0;
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 8.333333333333334vw 0;
   }

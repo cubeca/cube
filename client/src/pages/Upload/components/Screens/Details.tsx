@@ -408,11 +408,6 @@ const Details = ({
             </Typography>
           </Box>
         </Grid>
-        {/* <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
-          {t(
-            'Content will be hidden from public search after it expires. You can update this date at any time.'
-          )}
-        </Typography> */}
       </Box>
     </Box>
   );

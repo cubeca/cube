@@ -73,14 +73,12 @@ const useContent = (list = 'videos', category?: string) => {
     id: string,
     payload: UpdateContent,
     coverImageFile: File,
-    // vttFile: File,
     bannerImageFile: File
   ) =>
     await mutateUpdate({
       id,
       payload,
       coverImageFile,
-      // vttFile,
       bannerImageFile
     });
 

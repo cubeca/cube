@@ -64,8 +64,6 @@ export const CurrentImageBox = styled(Box)`
   height: 180px;
   width: 100%;
   transform: translate(-50%, -50%);
-  /* top: 8px;
-  left: 20px; */
   z-index: -1;
 
   ::before {
@@ -90,7 +88,6 @@ export const NewImageBox = styled(Box)`
   right: 20px;
 `;
 export const CurrentImage = styled(Box)`
-  /* background-image: ${(props) => `url(${props.currentImage})`}; */
   background-image: ${(props) => getImage(props)};
   height: 180px;
   width: 100%;

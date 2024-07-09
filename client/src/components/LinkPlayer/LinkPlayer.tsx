@@ -25,26 +25,6 @@ const LinkPlayer = ({
       url
     );
 
-  // logic for fetching Open Graph data
-  // const {
-  //   data,
-  //   isLoading: loading,
-  //   error
-  // } = useQuery<
-  //   { title: string | null; description: string | null; image: string | null },
-  //   { message: string }
-  // >(['openGraphData', url], () => getOpenGraphData(url));
-
-  // if (loading) {
-  //   return <p>Loading preview...</p>;
-  // }
-
-  // if (error) {
-  //   return <p>Error: {error.message}</p>;
-  // }
-
-  // const { title, description, image } = data;
-
   return (
     <s.Container>
       <a href={url} target="_blank" rel="noopener noreferrer">
