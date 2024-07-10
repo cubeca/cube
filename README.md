@@ -1,141 +1,69 @@
-# Cube Commons
+# CubeCommons (https://cubecommons.ca)
 
-This project is a monorepo containing the front-end ui and services required to run the CubeCommons app.
+CubeCommons aggregates the video, audio, digital publications and activity booklets by arts organizations and artists across northern Turtle Island (Canada). This repository contains the front-end react app, express services and database schema details to run the project.
 
 # File Structure
-
 ## /client
-
-This is the front-end UI in the form of a typical React App
+This is the front-end user interface in the form of a typical React application.
 
 # /services
+This includes the cube-svc microservice that supports all operations.  Additionally, there is a VTT service responsible for coordinating subtitle generation between GCP and OpenAI.
 
-This includes the micro-services that will be deployed to support the app
+- */cube-svc/src/cloudflare:* APIs related to uploading files to cloudflare. Specifically can retrieve a TUS upload url for media files on behalf of the client.
+- */cube-svc/src/content:* APIs related to storing metadata about upload files and file ids for retrieving the actual content from cloudflare..
+- */cube-svc/src/identity:* APIs related to authenticating the user and creating a user account, email verification and password management. This service is responsible for providing an authentication jwt used to identify the user.
+- */cube-svc/src/profile:* APIs related to operations of a creator profile.
+- */vtt:* Set of functions designed for a publisher-subscriber model generating subtitles (optionally requested by the user) upon successful content uploads.
 
-- */services/cloudflare:* APIs related to uploading files to cloudflare. Specifically can retrieve a TUS upload url for media files on behalf of the client.
-- */services/content:* APIs related to storing metadata about upload files and file ids for retrieving the actual uploaded files.
-- */services/identity:* APIs related to authenticating the user and creating a user account, email verification and password resets. This service is responsible for providing an authentication jwt used to identify the user.
-- */services/profile:* APIs related to CRUD operations of a creator profile.
 
-# Quick Start
+# Project Infrastructure
 
-## 1. Start the Cloudflare Service
+## Database
+CubeCommons utilizes a serverless database solution called CockroachDB.  Cockroach Labs offers a generous free tier that auto-scales based on demand.  You may use any database solution you wish.  The schema detials are outlined below.
 
-- Install a postgres db and set user/password as desired.
-- Create a database called `cube_cloudflare`
+## Cloud Infrastructure
+The above services are packaged into Docker containers and deployed to Google Cloud Run for resource, instance and scalability management.
 
+## Front-End Hosting
+The built front-end react app is hosted on Cloudflare pages.  There is some light configuration in the tsconfig.json to support this deployment.  Cloudflare Pages offers a generous free-tier and automatic deployments and may be switched out for any alternative hosting option.
+
+# Setup
+## 1. Create Database Tables
+
+- Install/setup account with a postgres db solution.
+- Create a database called `cube` with tables: `content`, `files`, `playlists`, `profiles`, `users` and `vtt`.
+- Deploy the schemas located in */sql/cockroach_init.sql*
+
+## 2. Email Provider
+Email notifications sent to users for activities like account creation or password management are coordinated with Brevo. Brevo assists with template management, newsletter campaigns and is the mail server.
+
+## 3. Configure Environment Vars
 ```
-cd services/cloudflare
+cd services/cube-svc/
 cp .env.example .env
 ```
 
-- Add the values for the API keys for cloudflare to `.env`
-- Update the values for `PGUSER` and `PGPASSWORD` to match the admin credentials for your db
-- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used for the identity server.
+- Add the values for the database keys to `.env`
+- Update the values `COCKROACH_DB_CONNECTION_STRING`, `BREVO_API_KEY` and everything prefixed with `CLOUDFLARE_`.
+- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used for the identity server (configured in GCP).
 
 ```
 npm i
-npm run migrate:up
 npm run start
 ```
 
 The service will now be running on [http://localhost:8080](http://localhost:8080)
-
-## 2. Start the Content Service
-
-- Using the same postgres as above, create a database called `cube_content`
-
-```
-cd services/content
-cp .env.example .env
-```
-
-- Update the values for `PGUSER` and `PGPASSWORD` to match the admin credentials for your db
-- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used as the other microservices.
-
-```
-npm i
-npm run migrate:up
-npm run start
-```
-
-The service will now be running on [http://localhost:8081](http://localhost:8081)
-
-## 3. Start the Identity Service
-
-- Using the same postgres as above, create a database called `cube_identity`. If using a different postgres server and/or db, update the `.env` values accordingly.
-
-```
-cd services/identity
-cp .env.example .env
-```
-
-- Update the values for `PGUSER` and `PGPASSWORD` to match the admin credentials for your db
-- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used as the other microservices.
-- The `ENCRYPT_SECRET` can be any value
-- The `BREVO_API_KEY` is for the email client to process new account registration emails, password reset emails, etc.
-- The `HOST` will determine the domain used in placeholder URLs in email templates.
-
-```
-npm i
-npm run migrate:up
-npm run start
-```
-
-The service will now be running on [http://localhost:8082](http://localhost:8082)
-
-NOTE: A test user is created in the migration with the following credentials:
-
-username: firstuser@cubecommons.ca
-password: abc123456789***
-
-NOTE:
-1. User identities are created without permissions until they confirm their email.  Once confirmed, they receive an 'active' role.  The is_active and has_verified_email statuses are both changed from false to true at this time.
-2. Different actions like resending profile creation emails, changing an email or password will have different side effects on the profile with respect to permissions and statuses.
-3. Brevo is the email service used to send client emails with templates, they have a quota of 300 free emails per day.
-4. The permission levels to date are: active, creator and superadmin.
-
-## 4. Start the Profile Service
-
-- Using the same postgres as above, create a database called `cube_profile`. If using a different postgres server and/or db, update the `.env` values accordingly.
-
-```
-cd services/profile
-cp .env.example .env
-```
-
-- Update the values for `PGUSER` and `PGPASSWORD` to match the admin credentials for your db
-- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used as the other microservices.
-
-```
-npm i
-npm run migrate:up
-npm run start
-```
-
-The service will now be running on [http://localhost:8083](http://localhost:8083)
-
-Note: A sample profile is created that can be used with the sample user to get the app started. In order to set it up, the
-profile id must be updated in the users table. Using a Postgres GUI such as pgAdmin
-
-```
-# in the cube_profiles db
-select * from profiles
-
-# copy the value for 'id'
-
-# in the cube_identity db
-select * from users
-
-# paste the value copied above into the profile_id column for "First User"
-# save the database to store the updated value.
-```
 
 ## 4. Start the Client
 
 ```
 cd client
 cp .env.example .env
+```
+- Update the values `REACT_APP_CUBE_SVC_URL` to the endpoint configured above.
+- Update `REACT_APP_HCAPTCHA_KEY` with the key of your hcaptcha account.
+
+```
 npm i
 npm run start
 ```
