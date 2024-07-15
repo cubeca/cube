@@ -55,10 +55,10 @@ CubeCommons utilizes a serverless database solution called CockroachDB. Cockroac
 `vtt`: table for metadata related to generated or uploaded VTT files associated to a piece of content.
 
 #### User Permissions
-There is a small set of user permissions that are associated to the user record allowing actions to be taken.  The tresholds are:
+There is a small set of user permissions that are associated to the user record allowing actions to be taken.  The thresholds are:
 - `anonymous`: any user visiting the site gets the anonymous permission.
 - `active`: any authenticated user who has completed the user registration has the active permission.
-- `contributor`: any authenticated user who has completed profile registration has the contributor permission.
+- `contentEditor`: any authenticated user who has completed profile registration has the contentEditor permission.
 
 ### Cloud Infrastructure
 
