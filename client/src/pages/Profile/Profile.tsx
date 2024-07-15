@@ -1,3 +1,11 @@
+/**
+ * `Profile` serves as the main container for a user's profile page.
+ * It utilizes the `useProfile` hook for fetching the logged-in user's profile data.
+ * It displays various sections of the profile, such as `ViewSection` for viewing profile details, `UserContent` for displaying
+ * the user's content, and `PrivateContent` for private items. Additionally, it includes `EditDialog` for editing profile information,
+ * `PlaylistPanel` for managing playlists, and `AddToPlaylistModal` for adding items to playlists.
+ */
+
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';

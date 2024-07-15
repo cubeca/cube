@@ -1,3 +1,22 @@
+/**
+ * `usePlaylist` is a custom React hook for managing playlist-related operations for a specific profile and user. It provides
+ * functionalities such as fetching all playlists, fetching a specific playlist, adding, updating, and deleting playlists, as well as
+ * adding and removing content to/from playlists.
+ *
+ * The hook integrates with a playlist API through imported functions (`getPlaylists`, `addPlaylist`, `deletePlaylist`, `getPlaylist`,
+ * `updatePlaylist`, `addContentToPlaylist`, `removeContentFromPlaylist`) to perform these operations.
+ *
+ * @param {string} profileId - The profile ID associated with the playlists.
+ * @param {string} userId - The user ID associated with the playlists.
+ * @returns {Object} An object containing:
+ *   - `isLoading`: A boolean indicating if the playlist(s) fetching is in progress.
+ *   - `isError`: A boolean indicating if an error occurred during the fetching.
+ *   - `playlists`: The data for all fetched playlists.
+ *   - `playlist`: The data for a specific fetched playlist.
+ *   - `refetchPlaylists`: A function to refetch all playlists.
+ *   - `refetchPlaylist`: A function to refetch a specific playlist.
+ */
+
 import {
   getPlaylists,
   addPlaylist,

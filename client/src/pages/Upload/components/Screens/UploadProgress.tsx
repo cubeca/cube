@@ -1,3 +1,9 @@
+/**
+ * `UploadProgress` is the final step of the upload flow and displays the upload progress of a file. It listens to an event emitter
+ * for upload progress updates and updates its state accordingly. The progress is displayed both as a percentage in text and visually
+ * through the animation's progress.
+ */
+
 import { Typography } from '@mui/material';
 import { progressEmitter } from 'api/upload';
 import * as s from './UploadProgress.styled';
@@ -5,6 +11,7 @@ import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Lottie from 'lottie-react';
+
 const UploadProgress = ({ editMode }: any) => {
   const { t } = useTranslation();
   const [progress, setProgress] = useState('');

@@ -1,3 +1,8 @@
+/**
+ * `PrivateContent` is designed to display a user's private content.  (Content either not yet live or expired)
+ *  It is only displayed to a logged in user when they are viewing their own profile.
+ */
+
 import ContentCard from 'components/ContentCard';
 import UserContentFilter from '../UserContent/UserContentFilter';
 import Lottie from 'lottie-react';

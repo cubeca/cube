@@ -1,3 +1,8 @@
+/**
+ * `ViewSection` is a component of the Profile page that renders a profile's organization logo and allows editing if the user is logged in.
+ *
+ */
+
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import EditIcon from '@mui/icons-material/Edit';

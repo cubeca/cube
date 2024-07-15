@@ -1,3 +1,14 @@
+/**
+ * `EditProfileForm` renders a form for editing user profile information.
+ * The form includes text input fields for user information, an upload input for profile picture changes, and a captcha for security.
+ * It utilizes a custom hook `useEditProfile` for profile update logic. The form submission is handled by the `handleSubmit` function
+ * from `react-hook-form`, which is triggered on the form's submit event.
+ *
+ * @param {any} profile The current user's profile data.
+ * @param {() => void} onSave Callback function to be called after successful profile update.
+ * @param {() => void} onUploadComplete Callback function to be called after successful profile picture upload.
+ */
+
 import { Stack, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import Button from 'components/Button';
@@ -9,7 +20,7 @@ import TextInput from 'components/form/TextInput';
 import * as s from './EditProfileForm.styled';
 import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
 import UploadInput from 'components/form/UploadInput';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
 import HCaptcha from '@hcaptcha/react-hcaptcha';

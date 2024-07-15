@@ -1,4 +1,12 @@
-import { Stack, Typography, Link as MuiLink } from '@mui/material';
+/**
+ * `Contributors` is a component that renders a list of contributors or collaborating organizations
+ * associated with a piece of content. It displays each contributor's logo (if available) and name. If a contributor has
+ * a social profile URL, their name is rendered as a clickable link that navigates to their profile page.
+ *
+ * @param {CollaboratorDetails[]} contributors An array of contributor details, including name, logo URL, and social profile URL.
+ */
+
+import { Stack, Link as MuiLink } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { CollaboratorDetails, Contributor } from 'types/content';
 import * as s from './Content.styled';

@@ -1,3 +1,7 @@
+/**
+ * `EditDialog` renders a modal dialog using the `Dialog` component and containing the EditProfileForm component.
+ */
+
 import Dialog from 'components/Dialog';
 import { useTranslation } from 'react-i18next';
 import EditProfileForm from './EditProfileForm';

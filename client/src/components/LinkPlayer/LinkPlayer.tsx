@@ -1,8 +1,19 @@
-import { Box, Typography, Grid } from '@mui/material';
+/**
+ * `LinkPlayer`, used on the Content page for Link content, renders a clickable container leading to a specified URL.
+ * It is designed to visually represent a link, optionally displaying a cover image and a title.
+ * The component determines if the provided URL points to a file based on its extension and adjusts its presentation accordingly.
+ * If the URL is identified as a file link, a file icon is displayed.
+ *
+ * @param {string} url The URL that the component should link to.
+ * @param {string} cover The URL of an image to display as a cover for the link.
+ * @param {string} title The title of the link to display.
+ * @param {string} [coverImageAltText] Optional alt text for the cover image, for accessibility.
+ */
+
+import { Typography, Grid } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import * as s from './LinkPlayer.styled';
-import { getOpenGraphData } from 'utils/openGraphUtils';
 
 interface LinkPlayerProps {
   url: string;
@@ -16,7 +27,6 @@ const LinkPlayer = ({
   url,
   cover,
   title,
-  coverImageAltText,
   bannerImageAltText
 }: LinkPlayerProps) => {
   // check if URL is a file
