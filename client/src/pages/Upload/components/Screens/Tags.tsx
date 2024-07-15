@@ -1,3 +1,16 @@
+/**
+ * `Tags` is the third screen within the upload flow, designed for handling the tagging and categorization of content.
+ * The component allows users to select categories from a predefined list fetched from `SearchFiltersCategoryEnum`
+ * and manage collaborator information (artists, editors, etc) through dynamic input fields. It supports both creation and editing modes,
+ * adjusting its initial state based on the provided `content` prop in edit mode.
+ *
+ * @param {boolean} editMode Indicates if the component is being used in edit mode, affecting initial states and behaviors.
+ * @param {Object} content Object containing existing content details, used to populate the form in edit mode.
+ * @param {Function} setFinalCollaborators Callback function to update the final list of collaborators in the parent form state.
+ * @param {Function} setSelectedCategories Callback function to update the selected categories in the parent form state.
+ * @param {Function} setUserClearedFields Callback function to ensure proper validation when fields are cleared by the user in editMode.
+ */
+
 import {
   Autocomplete,
   Box,
@@ -21,14 +34,13 @@ import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import { Controller } from 'react-hook-form';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import EmbedToggleInput from 'components/form/EmbedToggleInput';
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Tags = ({
   control,
   handleCaptchaVerification,
   editMode,
   content,
   setFinalCollaborators,
-  selectedCategories,
   setSelectedCategories,
   setUserClearedFields
 }: any) => {

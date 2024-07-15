@@ -1,3 +1,9 @@
+/* AgeCheckModal Component
+ *   This component renders a modal that prompts the user to confirm if they are over 18 years old.
+ *   The modal appears full-screen when open and prevents click propagation to underlying elements.
+ *   It contains two buttons: one for users over 18, and another for users under 18 which also navigates back in history and closes the modal.
+ */
+
 import { Box, Typography } from '@mui/material';
 import * as s from './AgeCheckModal.styled';
 

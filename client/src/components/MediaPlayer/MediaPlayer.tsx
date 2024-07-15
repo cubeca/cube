@@ -1,3 +1,13 @@
+/**
+ * `MediaPlayer` renders a media player using the `video-react` library.
+ * It is designed to support video playback with customizable subtitles. The component accepts a `src` prop for the video source,
+ * an optional `coverImageAltText` for accessibility, and a predefined set of subtitles in English.
+ *
+ * @param {string} url The source URL of the video to be played.
+ * @param {string} [coverImageAltText] Optional alt text for the video, enhancing accessibility.
+ * @param {string} [subtitleUrl] Optional URL for the subtitles file.
+ */
+
 import * as s from './MediaPlayer.styled';
 
 interface MediaPlayerProps {
@@ -10,7 +20,6 @@ interface MediaPlayerProps {
 
 const MediaPlayer = ({
   url,
-  isAudio,
   coverArtUrl,
   subtitleUrl,
   coverImageAltText

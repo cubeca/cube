@@ -1,3 +1,13 @@
+/**
+ * `useContentDetails` is a custom React hook to fetch detailed information about a specific piece of content. It leverages the 
+ * `getContentDetails` function from the `api/content` module to perform the data fetching based on the content ID obtained from 
+ * the URL parameters using `useParams` from `react-router-dom`. 
+
+ * @returns {ExtendedContentDetailsResponse} An object containing the loading state (`isLoading`), error state (`isError`), 
+ * detailed content data (`data`), and a method to manually fetch content details (`fetchContentDetails`). The `data` object 
+ * includes extended information such as image URLs, collaborator details, and media URLs.
+ */
+
 import { getContentDetails } from 'api/content';
 import { useQuery, QueryFunctionContext } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';

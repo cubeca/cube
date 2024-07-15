@@ -1,3 +1,17 @@
+/**
+ * `ContentCard` is a functional React component that displays a card with content information. 
+ * It supports displaying an image, title, and an optional icon to denote the type of content (e.g., video, audio, article). 
+ * Additionally, it can indicate if the content includes sign language support. 
+
+ * @param {string} url The URL to navigate to when the card is clicked.
+ * @param {string} image The URL of the image to display on the card.
+ * @param {string} title The title of the content to display.
+ * @param {string} [icon] The name of the icon to display on the card, indicating the type of content (optional).
+ * @param {string} [creator] The creator of the content (optional).
+ * @param {boolean} [hasSignLanguage] Indicates if the content includes sign language support (optional).
+ * @param {string} [coverImageAltText] The alt text for the cover image (optional).
+ */
+
 import { Typography } from '@mui/material';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
@@ -29,6 +43,7 @@ const ContentCard: FC<ContentCardProps> = ({
   hasSignLanguage,
   coverImageAltText
 }) => {
+  // Clean the URL for the image to prevent errors originating from special characters
   const cleanedUrl = image
     .replace(/'/g, '%27')
     .replace(/\(/g, '%28')

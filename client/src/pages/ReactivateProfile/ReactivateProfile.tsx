@@ -1,10 +1,16 @@
+/**
+ * `ReactivateProfile` is a component designed to handle the reactivation of a user's profile.  While a user's organization name
+ * and profile tag will remain the same, all previous content will be removed.  The user will be prompted to complete a CAPTCHA
+ * verification before reactivating their profile.  Upon successful reactivation, the user will be redirected to their profile page.
+ *
+ */
+
 import { Grid, Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
 import ErrorMessage from 'components/form/ErrorMessage';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import Link from 'components/Link';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@mui/system';
 import useEditProfile from 'pages/Profile/Edit/useEditProfile';

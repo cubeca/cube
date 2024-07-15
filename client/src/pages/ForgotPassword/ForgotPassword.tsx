@@ -1,3 +1,11 @@
+/**
+ * `ForgotPassword` provides a user interface for requesting a password reset.
+ * The component includes an email input field, an hCaptcha for bot protection, and a submit button.
+ * Upon successful captcha verification and form submission, it calls the `forgotPassword` API function with the user's email.
+ * If the API call is successful, it updates the state to indicate that the email has been submitted.
+ * In case of an error, it displays an error message.
+ */
+
 import { Grid, Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
 import ErrorMessage from 'components/form/ErrorMessage';

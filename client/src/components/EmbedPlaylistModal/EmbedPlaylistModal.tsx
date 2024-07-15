@@ -1,3 +1,7 @@
+/**
+ * `EmbedPlaylistModal` is a component that renders a modal dialog for generating and copying an embed code for a playlist.
+ */
+
 import { Stack } from '@mui/material';
 import Dialog from 'components/Dialog';
 import * as s from './EmbedPlaylistModal.styled';

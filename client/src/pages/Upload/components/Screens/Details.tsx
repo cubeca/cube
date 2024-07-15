@@ -1,11 +1,11 @@
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-  Typography,
-  useTheme
-} from '@mui/material';
+/**
+ * The `Details` screen is the second screen of the upload flow and allows a user to enter a description for their content. It also
+ * lets a user optionally upload a subtitle to be displayed with the content. The screen also allows a user to specify if the content
+ * is suitable for children and set visibility dates for the content.
+ *
+ */
+
+import { Box, Checkbox, TextField, Typography, useTheme } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid/Grid';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';
@@ -13,7 +13,7 @@ import UploadInput from 'components/form/UploadInput';
 import { useTranslation } from 'react-i18next';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 const Details = ({
@@ -226,7 +226,7 @@ const Details = ({
               name="live"
               control={control}
               defaultValue={!editMode ? liveDate : content?.live}
-              render={({ field: { onChange, value } }) => {
+              render={({ field: { value } }) => {
                 const dateValue =
                   watchedLiveDate !== undefined
                     ? watchedLiveDate
@@ -325,7 +325,7 @@ const Details = ({
               name="expiry"
               control={control}
               defaultValue={!editMode ? expiryDate : content?.expiry}
-              render={({ field: { onChange, value } }) => {
+              render={({ field: { value } }) => {
                 const dateValue =
                   watchedExpiryDate !== null
                     ? watchedExpiryDate

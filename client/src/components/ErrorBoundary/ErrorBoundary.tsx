@@ -1,3 +1,10 @@
+/**
+ * `CustomErrorBoundary` is a component that serves as an error boundary for its child components.
+ * It uses `react-error-boundary` to catch JavaScript errors anywhere in the child component tree, log those errors,
+ * and display a fallback UI instead of the component tree that crashed. The fallback UI includes a "Try again" button
+ * that, when clicked, attempts to reset the error state and recover from the error.
+ */
+
 import { useQueryErrorResetBoundary } from '@tanstack/react-query';
 import Button from 'components/Button';
 import { ReactNode } from 'react';

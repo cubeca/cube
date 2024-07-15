@@ -1,4 +1,10 @@
-import { Stack, TextField } from '@mui/material';
+/**
+ * `EmbedModal` renders a modal dialog using the `Dialog` component.
+ * It is designed to generate and display an embed code for different types of content (audio, pdf, video, link) based on the content type and a URL.
+ * @param {string} embedContentType The type of content to generate the embed code for (e.g., audio, pdf, video, link).
+ */
+
+import { Stack } from '@mui/material';
 import Dialog from 'components/Dialog';
 import * as s from './EmbedModal.styled';
 import Button from 'components/Button';

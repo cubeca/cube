@@ -1,3 +1,9 @@
+/**
+ * `ContentListPlaylists` renders a list of playlist items.
+ * It utilizes the `ContentCard` component to display each item in the list. The component supports an optional heading to be displayed above the list.
+ * The content items are expected to have an `id` and may have images specified by either a `coverImageUrl.playerInfo.publicUrl` or `coverImageExternalUrl`.
+ */
+
 import { Stack, Typography } from '@mui/material';
 import ContentCard from 'components/ContentCard/ContentCard';
 import { FC } from 'react';
@@ -11,7 +17,6 @@ interface ContentListProps {
 }
 
 const ContentListPlaylists: FC<ContentListProps> = ({ heading, content }) => {
-  console.log(content);
   return (
     <Stack>
       {heading && (

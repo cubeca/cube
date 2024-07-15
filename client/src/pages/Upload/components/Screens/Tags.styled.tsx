@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import { styled } from 'theme/utils';
