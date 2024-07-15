@@ -1,3 +1,11 @@
+/**
+ * The `Accessibility` screen renders an accessibility options screen within the upload process.
+ * It focuses on promoting the inclusion of sign language in video content. The main content encourages users to add a
+ * sign-language option to their videos, explaining Cube's partnership with Deaf Spectrum to facilitate this. A button is
+ * provided to book signers through Deaf Spectrum's portal, aiming to make content more accessible to the deaf and hard-of-hearing
+ * community.  This screen is currently disabled in the upload flow.
+ */
+
 import { Box, Typography, useTheme } from '@mui/material';
 import Button from 'components/Button';
 import { useTranslation } from 'react-i18next';

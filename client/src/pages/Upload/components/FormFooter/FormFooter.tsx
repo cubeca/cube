@@ -1,3 +1,17 @@
+/**
+ * `FormFooter` is designed to provide navigation and action controls for the multi-screen form interface. It supports conditional
+ * rendering of navigation buttons based on the current screen index and the total number of screens, and it allows for disabling
+ * the "Next" button based on form state or validation.
+ *
+ * @param {boolean} isLoading Indicates if an action is currently being processed, showing a loading animation if true.
+ * @param {string[]} screens An array of screen identifiers that define the steps in the form process.
+ * @param {number} screenIndex The current index in the `screens` array, determining which form step is active.
+ * @param {(screen: number) => void} onScreenIndexChange Callback function to change the current screen index.
+ * @param {() => void} handleSubmit Callback function to handle form submission.
+ * @param {boolean} [isNextDisabled=false] Optional flag to disable the "Next" button, typically used for form validation.
+ * @param {boolean} [editMode=false] Optional flag to indicate if the form is in edit mode.
+ */
+
 import { Box, Typography, useTheme } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import Grid from '@mui/system/Unstable_Grid';
@@ -5,10 +19,6 @@ import Button from 'components/Button';
 import * as s from './FormFooter.styled';
 import Lottie from 'lottie-react';
 import LoadingAnimation from 'assets/animations/loading-circle.json';
-import { progressEmitter } from 'api/upload';
-import { useEffect, useState } from 'react';
-import Progress from '../Progress';
-import UploadProgress from '../Screens/UploadProgress';
 
 interface FormFooterProps {
   isLoading: boolean;
@@ -26,8 +36,7 @@ const FormFooter = ({
   screenIndex,
   onScreenIndexChange,
   handleSubmit,
-  isNextDisabled,
-  editMode
+  isNextDisabled
 }: FormFooterProps) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -38,7 +47,7 @@ const FormFooter = ({
   const BackButton =
     screenIndex > 0 ? (
       <Button
-        onClick={(e) => onScreenIndexChange(--screenIndex)}
+        onClick={() => onScreenIndexChange(--screenIndex)}
         variant="outlined"
         fullWidth={false}
       >
@@ -62,7 +71,7 @@ const FormFooter = ({
       </Button>
     ) : (
       <Button
-        onClick={(e) => onScreenIndexChange(++screenIndex)}
+        onClick={() => onScreenIndexChange(++screenIndex)}
         fullWidth={false}
         disabled={isNextDisabled || isLoading}
       >

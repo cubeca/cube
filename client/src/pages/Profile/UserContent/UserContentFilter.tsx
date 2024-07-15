@@ -1,3 +1,14 @@
+/**
+ * `UserContentFilter` provides filtering functionality for user content. The component allows users to filter content based on a
+ * search term and a category filter. The `SearchFiltersCategoryEnum` from `@cubeca/cube-svc-client-oas-axios` is used to define the
+ * available categories for filtering. The `setSearchTerm` and `setCategoryFilter` functions are used to update the parent component's state
+ * based on user input.
+ *
+ * @param {Function} setSearchTerm Function to update the search term in the parent component's state.
+ * @param {string} categoryFilter The current category filter value.
+ * @param {Function} setCategoryFilter Function to update the category filter in the parent component's state.
+ */
+
 import Select from 'components/form/Select';
 import TextInput from 'components/form/TextInput';
 import { useForm } from 'react-hook-form';

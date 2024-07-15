@@ -1,3 +1,12 @@
+/**
+ * `CategorizedContent` displays content and playlists filtered by specific categories. It leverages Material UI's Grid system
+ * for layout, and custom components like `ContentCard` for individual content items, and `ContentFilter` for filtering options.
+ * Also, while quite similar to the UserContent component, it is used to show all search results and not just that of a specific user.
+ *
+ * @param {string} [tagSearchTerm] Optional search term for filtering content by tags.
+ * @param {string} [languageSearchTerm] Optional search term for filtering content by language.
+ */
+
 import Grid from '@mui/system/Unstable_Grid';
 import ContentCard from 'components/ContentCard';
 import * as s from './CategorizedContent.styled';

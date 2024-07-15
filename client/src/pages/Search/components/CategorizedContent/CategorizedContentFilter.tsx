@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedContentFilter.styled';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
-import { FC, useEffect, useRef } from 'react';
-import { Menu } from '@mui/material';
+import { FC, useEffect } from 'react';
 
 interface CategorizedContentFilterProps {
   setSearchTerm: any;

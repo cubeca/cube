@@ -1,3 +1,23 @@
+/**
+ * The `Media` screen is the first screen within the upload flow and serves to handle the selection of the media type to be uploaded,
+ * the media's title to be displayed on the site, as well as the actual media file selection, cover image file selection, and cover image
+ * alt text input. It also includes the option to upload a banner image and banner image alt text when uploading link content.
+ * File validation is performed to ensure that the selected files are of the correct type and size.
+ * The component dynamically adjusts its behaviour and validations based on the `uploadType` and `editMode`
+ * props, allowing for flexible use in different contexts (e.g., new uploads vs editing existing content).
+ *
+ * @param {Object} control The `control` object provided by `react-hook-form`, used for managing form inputs.
+ * @param {Function} handleMediaUpload Callback function for handling the upload of the main media file.
+ * @param {Function} handleCoverImageUpload Callback function for handling the upload of the cover image.
+ * @param {Function} handleBannerImageUpload Callback function for handling the upload of the banner image.
+ * @param {string} uploadType A string indicating the type of upload, which influences validation and behavior.
+ * @param {Function} setIsMediaProperFileType Callback function to set the state indicating if the media file is of a proper file type.
+ * @param {Function} setIsCoverImageProperFileType Callback function to set the state indicating if the cover image is of a proper file type.
+ * @param {Function} setIsBannerImageProperFileType Callback function to set the state indicating if the banner image is of a proper file type.
+ * @param {boolean} editMode A boolean indicating if the component is being used to edit existing content, affecting default values and validations.
+ * @param {Object} content An object containing existing content details, used in edit mode to populate form fields with existing values.
+ */
+
 import { Box, Link, Typography, useTheme } from '@mui/material';
 import Select from 'components/form/ControlledSelect';
 import TextInput from 'components/form/TextInput';

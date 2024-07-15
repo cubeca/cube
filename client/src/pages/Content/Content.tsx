@@ -1,8 +1,14 @@
+/**
+ * `Content` serves as a main content display page (The Play page) within Cube Commons.
+ * It dynamically renders different types of media (videos, audio, PDFs, links) based on the content details fetched
+ * using a custom hook `useContentDetails`. It also includes functionality for editing and deleting content for authorized users.
+ * represented by `EditIcon` and `DeleteContentButton`.
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
 import MediaPlayer from 'components/MediaPlayer';
 import YouTubePlayer from 'components/YouTubePlayer';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
@@ -172,6 +178,7 @@ const Video = () => {
     });
   }, [location, refetch, subtitleUrl]);
 
+  // scroll to top of content when it loads
   useEffect(() => {
     if (contentRef.current) {
       const headerHeight = document.querySelector('header')?.clientHeight || 0;
@@ -227,6 +234,7 @@ const Video = () => {
     setIsReportContentModalOpen(true);
   };
 
+  // get the role(s) of the contributor
   function getContributorRole(
     role: string,
     count: number,
@@ -249,7 +257,7 @@ const Video = () => {
         case 'sound_technician':
           roleStr = 'Sound Technician';
           break;
-        // Add more roles as needed
+        // add more roles here as needed
         default: // capitalize first letter of role
           roleStr = role.charAt(0).toUpperCase() + role.slice(1);
       }

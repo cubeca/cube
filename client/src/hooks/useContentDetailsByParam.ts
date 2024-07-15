@@ -1,3 +1,14 @@
+/**
+ * `useContentDetailsByParam` is a custom React hook that fetches detailed information about a specific piece of content identified by 
+ * URL parameters. This hook is particularly useful in scenarios where content details need to be fetched based on the current URL.
+
+ * @returns {ExtendedContentDetailsResponse} An object containing:
+ *   - `isLoading`: A boolean indicating if the content details are currently being fetched.
+ *   - `isError`: A boolean indicating if an error occurred during the fetching process.
+ *   - `data`: The detailed content data, optionally extended with additional fields like image URLs and collaborator details.
+ *   - `fetchContentDetails`: A method for manually fetching content details by ID.
+ */
+
 import { getContentDetails } from 'api/content';
 import { useQuery, QueryFunctionContext } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
