@@ -12,7 +12,7 @@
     - [1. Create Database Tables](#1-create-database-tables)
     - [2. Email Provider](#2-email-provider)
     - [3. Configure Environment Variables](#3-configure-environment-variables)
-  - [4. Start the Client](#4-start-the-client)
+    - [4. Start the Client](#4-start-the-client)
 - [Styleguide](#styleguide)
   - [Contributing](#contributing)
   - [License](#license)
@@ -98,7 +98,7 @@ npm run start
 
 The service will now be running on [http://localhost:8080](http://localhost:8080)
 
-## 4. Start the Client
+### 4. Start the Client
 
 ```
 cd client
