@@ -5,6 +5,7 @@
     - [/services](#services)
   - [Project Infrastructure](#project-infrastructure)
     - [Database](#database)
+      - [User Permissions](#user-permissions)
     - [Cloud Infrastructure](#cloud-infrastructure)
     - [Front-End Hosting](#front-end-hosting)
   - [Setup](#setup)
@@ -17,7 +18,6 @@
   - [License](#license)
   - [Contact](#contact)
   - [Known Issues](#known-issues)
-  - [Known Issues](#known-issues-1)
   - [Changelog](#changelog)
     - [\[Version 1.0.0\]](#version-100)
 
@@ -46,6 +46,19 @@ This includes the `cube-svc` microservice that supports all operations. Addition
 ### Database
 
 CubeCommons utilizes a serverless database solution called CockroachDB. Cockroach Labs offers a generous free tier that auto-scales based on demand. You may use any database solution you wish. The schema details are outlined below.
+
+`users`: table for authentication and authorization information as well as user account statuses.
+`profiles`: table for organization related information, is associated to a user identity 1:1.
+`playlists`: table for playlist related information including basic metadata and a list of associated content items.
+`files`: table for data related to cloudflare information like upload endpoints and external data required to interact with cloudflare.
+`content`: table for metadata related to a piece of content on CubeCommons like description, tags, contributors, etc.
+`vtt`: table for metadata related to generated or uploaded VTT files associated to a piece of content.
+
+#### User Permissions
+There is a small set of user permissions that are associated to the user record allowing actions to be taken.  The tresholds are:
+- `anonymous`: any user visiting the site gets the anonymous permission.
+- `active`: any authenticated user who has completed the user registration has the active permission.
+- `contributor`: any authenticated user who has completed profile registration has the contributor permission.
 
 ### Cloud Infrastructure
 
@@ -101,7 +114,7 @@ npm run start
 
 # Styleguide
 
-Site styles can be referenced in the [theme file](https://github.com/cubeca/cube_ui/blob/main/client/src/theme/index.ts)
+Site styles can be referenced in the [theme file](https://github.com/cubeca/cube_ui/blob/main/client/src/theme/index.ts).
 
 ## Contributing
 
@@ -124,16 +137,12 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 For any questions or support, please contact us at [support@cubecommons.ca](mailto:support@cubecommons.ca).
 
 ## Known Issues
+
 A section to document any known issues or bugs.
 
-```
-## Known Issues
-
 - Issue 1: VTT Generation is currently disabled.  Due to some challenges with the publisher-subscriber model, it is turned off.
-- Issue 2: Description and possible workaround.
 
 Please report any new issues in the GitHub issues section.
-
 
 ## Changelog
 
