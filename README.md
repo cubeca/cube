@@ -82,7 +82,7 @@ Email notifications sent to users for activities like account creation or passwo
 
 ### 3. Configure Environment Variables
 
-```sh
+```
 cd services/cube-svc/
 cp .env.example .env
 ```
