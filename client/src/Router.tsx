@@ -4,7 +4,7 @@ import {
   NotFound,
   Profile,
   Content,
-  Upload,
+  EditAndUpload,
   Login,
   ResetPassword,
   ForgotPassword,
@@ -28,7 +28,7 @@ const Router = () => {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reactivate-profile" element={<ReactivateProfile />} />
       <Route path="/profile/:tag" element={<Profile />} />
-      <Route path="/profile/:tag/upload" element={<Upload />} />
+      <Route path="/profile/:tag/upload" element={<EditAndUpload />} />
       <Route path="/content/:id" element={<Content />} />
       <Route path="/playlist/:id" element={<Playlist />} />
       <Route path="/user/:id" element={<User />} />
