@@ -2,7 +2,7 @@ import Home from './Home';
 import Search from './Search';
 import Profile from './Profile';
 import Content from './Content';
-import Upload from './Upload';
+import EditAndUpload from './EditAndUpload';
 import Login from './Login';
 import ResetPassword from './ResetPassword';
 import ForgotPassword from './ForgotPassword';
@@ -19,7 +19,7 @@ export {
   NotFound,
   Profile,
   Content,
-  Upload,
+  EditAndUpload,
   Login,
   ResetPassword,
   ForgotPassword,
