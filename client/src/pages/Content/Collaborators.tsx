@@ -1,7 +1,7 @@
 /**
- * `Collaborators` is a component that renders a list of collaborating organizations
- * associated with a piece of content. It displays each collaborator's logo (if available) and name. If a collaborator has
- * a social profile URL, their name is rendered as a clickable link that navigates to their profile page.
+ * `Collaborators` is a component that renders a list of collaborators associated with a piece of content. It displays each
+ * collaborator's logo (if available) and name. If a collaborator has a social profile URL, their name is rendered as a clickable
+ * link that navigates to their profile page.
  *
  * ***** Note *****
  * While a Collaborator and Contributor are similar, they are not the same. A Collaborator is an organization or entity
