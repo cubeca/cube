@@ -47,17 +47,17 @@ This includes the `cube-svc` microservice that supports all operations. Addition
 
 CubeCommons utilizes a serverless database solution called CockroachDB. Cockroach Labs offers a generous free tier that auto-scales based on demand. You may use any database solution you wish. The schema details are outlined below.
 
-`users`: table for authentication and authorization information as well as user account statuses.
-`profiles`: table for organization related information, is associated to a user identity 1:1.
-`playlists`: table for playlist related information including basic metadata and a list of associated content items.
-`files`: table for data related to cloudflare information like upload endpoints and external data required to interact with cloudflare.
-`content`: table for metadata related to a piece of content on CubeCommons like description, tags, contributors, etc.
-`vtt`: table for metadata related to generated or uploaded VTT files associated to a piece of content.
+- `users`: table for authentication and authorization information as well as user account statuses.
+- `profiles`: table for organization related information, is associated to a user identity 1:1.
+- `playlists`: table for playlist related information including basic metadata and a list of associated content items.
+- `files`: table for data related to cloudflare information like upload endpoints and external data required to interact with cloudflare.
+- `content`: table for metadata related to a piece of content on CubeCommons like description, tags, contributors, etc.
+- `vtt`: table for metadata related to generated or uploaded VTT files associated to a piece of content.
 
 #### User Permissions
 There is a small set of user permissions that are associated to the user record allowing actions to be taken.  The thresholds are:
-- `anonymous`: any user visiting the site gets the anonymous permission.
-- `active`: any authenticated user who has completed the user registration has the active permission.
+- `anonymous`: any user visiting the site gets the anonymous permission (regardless if they are authenticated or not).
+- `active`: any user who has completed the user registration and verified their email has the active permission.
 - `contentEditor`: any authenticated user who has completed profile registration has the contentEditor permission.
 
 ### Cloud Infrastructure
