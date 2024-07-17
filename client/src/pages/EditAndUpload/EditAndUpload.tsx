@@ -124,7 +124,7 @@ const getContributors = (values: FieldValues) => {
   return contributorsObject;
 };
 
-const Upload = () => {
+const EditAndUpload = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   let contentId = queryParams.get('contentid');
@@ -514,4 +514,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default EditAndUpload;

@@ -20,7 +20,7 @@ import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
 
 import MoreContent from './MoreContent';
-import Contributors from './Contributors';
+import Collaborators from './Collaborators';
 
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
@@ -566,9 +566,8 @@ const Video = () => {
                   </>
                 )}
 
-                {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
-                <Contributors
-                  contributors={
+                <Collaborators
+                  collaborators={
                     content?.collaboratorDetails as CollaboratorDetails[]
                   }
                 />
