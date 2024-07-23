@@ -62,7 +62,7 @@ There is a small set of user permissions that are associated to the user record 
 
 ### Cloud Infrastructure
 
-The above services are packaged into Docker containers and deployed to Google Cloud Run for resource, instance, and scalability management.
+The above services are packaged into Docker containers and deployed to Google Cloud Run for resource, instance, and scalability management.  These docker containers can be deployed using any server structure that you wish.
 
 ### Front-End Hosting
 
@@ -72,13 +72,13 @@ The built front-end React app is hosted on Cloudflare Pages. There is some light
 
 ### 1. Create Database Tables
 
-- Install/setup an account with a PostgreSQL database solution.
+- Install/setup an account with a PostgreSQL database solution. CubeCommons utilizes Cockroach Lab's CockroachDB to host a cloud based scalable  database
 - Create a database called `cube` with tables: `content`, `files`, `playlists`, `profiles`, `users`, and `vtt`.
 - Deploy the schemas located in `/sql/cockroach_init.sql`.
 
 ### 2. Email Provider
 
-Email notifications sent to users for activities like account creation or password management are coordinated with Brevo. Brevo assists with template management, newsletter campaigns, and is the mail server.
+Email notifications sent to users for activities like account creation or password management are coordinated with Brevo. Brevo assists with template management, newsletter campaigns, and is the mail server.  CubeCommons uses Brevo's APIs to implement this functionality so a Brevo account is a requirement to proceed.
 
 ### 3. Configure Environment Variables
 
