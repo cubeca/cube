@@ -7,7 +7,13 @@ import * as db from './db/queries/identity';
 import { comparePassword, encryptString, decryptString, hashPassword, validateUserCreateInput, UUID_REGEXP } from './utils/utils';
 import * as settings from './settings';
 import { allowIfAnyOf, extractUser } from './middleware/auth';
-import { sendVerificationEmail, sendPasswordChangeConfirmation, sendContactUsEmail, sendPasswordResetEmail } from './middleware/email';
+import {
+  sendVerificationEmail,
+  sendPasswordChangeConfirmation,
+  sendContactUsEmail,
+  sendPasswordResetEmail,
+  sendProfileRegistrationNotification
+} from './middleware/email';
 import * as profile from './db/queries/profile';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -56,6 +62,8 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
         const r = await profile.insertProfile(organization, he.decode(website), tag);
         profileId = r.id as string;
         permissionIds.push('contentEditor');
+
+        await sendProfileRegistrationNotification(name, email, organization, website, tag);
       } catch (error) {
         console.error('Error creating profile for user. Organization name, website or tag already exist', organization, website, tag);
         return res.status(400).send('Error creating profile for user. Organization name, website, or tag already exists');

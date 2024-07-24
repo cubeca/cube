@@ -39,7 +39,8 @@ export const brevoTemplateIdMapping = {
   PASSWORD_CHANGE_CONFIRMATION: 3,
   PASSWORD_RESET_EMAIL: 4,
   REPORT_ABUSE_TEMPLATE: 12,
-  CONTACT_US_EMAIL: 19
+  CONTACT_US_EMAIL: 19,
+  NEW_PROFILE_REGISTRATION_NOTIFICATION: 20
 };
 
 export const getApiResultFromDbRow = (r: any) => ({
