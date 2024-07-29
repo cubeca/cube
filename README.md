@@ -1,4 +1,5 @@
-## Table of Contents Test for AC
+## Table of Contents
+
 - [CubeCommons](#cubecommons)
   - [File Structure](#file-structure)
     - [/client](#client)
@@ -13,6 +14,7 @@
     - [2. Email Provider](#2-email-provider)
     - [3. Configure Environment Variables](#3-configure-environment-variables)
     - [4. Start the Client](#4-start-the-client)
+  - [Governance](#governance)
 - [Styleguide](#styleguide)
   - [Contributing](#contributing)
   - [License](#license)
@@ -55,30 +57,48 @@ CubeCommons utilizes a serverless database solution called CockroachDB. Cockroac
 - `vtt`: table for metadata related to generated or uploaded VTT files associated to a piece of content.
 
 #### User Permissions
-There is a small set of user permissions that are associated to the user record allowing actions to be taken.  The thresholds are:
+
+There is a small set of user permissions that are associated to the user record allowing actions to be taken. The thresholds are:
+
 - `anonymous`: any user visiting the site gets the anonymous permission (regardless if they are authenticated or not).
 - `active`: any user who has completed the user registration and verified their email has the active permission.
 - `contentEditor`: any authenticated user who has completed profile registration has the contentEditor permission.
 
 ### Cloud Infrastructure
 
-The above services are packaged into Docker containers and deployed to Google Cloud Run for resource, instance, and scalability management.  These docker containers can be deployed using any server structure that you wish.
+The above services are packaged into Docker containers and deployed to Google Cloud Run for resource, instance, and scalability management. These docker containers can be deployed using any server structure that you wish.
 
 ### Front-End Hosting
 
 The built front-end React app is hosted on Cloudflare Pages. There is some light configuration in the `tsconfig.json` to support this deployment. Cloudflare Pages offers a generous free tier and automatic deployments and may be switched out for any alternative hosting option.
 
+## Governance
+
+CubeCommons uses a third-party tool called Gov4Git to govern its' issues and pull requests. Follow these steps to get started with Gov4Git.
+
+1. Create a GitHub profile. In order to contribute, you need to be a member of GitHub.
+2. Download Gov4Git by visiting this link: https://github.com/gov4git/gov4git
+3. Once installed, open Gov4Git and follow the login and verification instructions using your GitHub account.
+   - Login with the Verify link, copy the verification code and enter it when prompted.
+   - Click “Join a community” in Gov4Git and enter the Cube Commons URL: “https://github.com/cubeca/cube”
+4. Once approved, return to GitHub in your browser and click on the GitHub logo in the top left corner (looks like a small cat) - this should take you to the dashboard.
+5. On the left hand side under repositories, you'll see the ‘cubeca’ repository that you’ve just joined.
+6. On the top menu, click on “Issues”, then “New Issue” and request voting tokens.
+7. Add the `gov4git:managed` label to your issue. This will push the proposal to be voted on by the CubeCommons Gov4Git community.
+
+This same procedure can be followed for pull requests once you have written some code, just ensure that you add the `gov4git:managed` label for the Gov4Git bot to properly parse your request and allow it to be voted on.
+
 ## Setup
 
 ### 1. Create Database Tables
 
-- Install/setup an account with a PostgreSQL database solution. CubeCommons utilizes Cockroach Lab's CockroachDB to host a cloud based scalable  database
+- Install/setup an account with a PostgreSQL database solution. CubeCommons utilizes Cockroach Lab's CockroachDB to host a cloud based scalable database
 - Create a database called `cube` with tables: `content`, `files`, `playlists`, `profiles`, `users`, and `vtt`.
 - Deploy the schemas located in `/sql/cockroach_init.sql`.
 
 ### 2. Email Provider
 
-Email notifications sent to users for activities like account creation or password management are coordinated with Brevo. Brevo assists with template management, newsletter campaigns, and is the mail server.  CubeCommons uses Brevo's APIs to implement this functionality so a Brevo account is a requirement to proceed.
+Email notifications sent to users for activities like account creation or password management are coordinated with Brevo. Brevo assists with template management, newsletter campaigns, and is the mail server. CubeCommons uses Brevo's APIs to implement this functionality so a Brevo account is a requirement to proceed.
 
 ### 3. Configure Environment Variables
 
@@ -104,6 +124,7 @@ The service will now be running on [http://localhost:8080](http://localhost:8080
 cd client
 cp .env.example .env
 ```
+
 - Update the values `REACT_APP_CUBE_SVC_URL` to the endpoint configured above.
 - Update `REACT_APP_HCAPTCHA_KEY` with the key of your hcaptcha account.
 
@@ -124,9 +145,12 @@ We welcome contributions to CubeCommons! Please follow these steps to contribute
 2. Create a new branch for your feature or bugfix.
 3. Make your changes and commit them to your branch.
 4. Push your changes to your fork.
-5. Open a pull request to the Cubeca main repository.
+5. Open a pull request to the main repository.
+6. Ensure that you add the `gov4git:managed` label to your PR to allow the Gov4Git bot to parse your request.
 
 Please ensure your code follows the project's coding standards and includes appropriate tests.
+
+More detailed instructions for contributing to the project can be found in [README_CONTRIBUTIONS.md](README_CONTRIBUTIONS.md)
 
 ## License
 
@@ -140,7 +164,7 @@ For any questions or support, please contact us at [support@cubecommons.ca](mail
 
 A section to document any known issues or bugs.
 
-- Issue 1: VTT Generation is currently disabled.  Due to some challenges with the publisher-subscriber model, it is turned off.
+- Issue 1: VTT Generation is currently disabled. Due to some challenges with the publisher-subscriber model, it is turned off.
 
 Please report any new issues in the GitHub issues section.
 
