@@ -5,8 +5,8 @@
  *
  * ***** Note *****
  * While a Collaborator and Contributor are similar, they are not the same. A Collaborator is an organization or entity
- * that has co-produced a piece of content, while a Contributor is an individual is in or has actually made the content (ie: a writer,
- * director, actor, etc).
+ * with a creator profile on Cube Commons that has co-produced a piece of content, while a Contributor is an individual is any individual
+ * that's credited with the content.
  * @param {CollaboratorDetails[]} collaborators An array of collaborator details, including name, logo URL, and social profile URL.
  */
 
