@@ -1,6 +1,8 @@
 # Contributing to CubeCommons
 
-We welcome contributions from everyone. By participating in this project, you agree to abide by the [Code of Conduct](CODE_OF_CONDUCT.md).
+We welcome code contributions from everyone. By participating in this project, you agree to abide by the [Code of Conduct](CODE_OF_CONDUCT.md).
+
+Contributions are reviewed on an annual basis. Pull requests can be made at any point between the last town hall and one month before the next town hall. In the month before a town hall, PRs with a vote over 5 go into review at the town hall for a final vote. The code contributions that are selected then go into review by a developer before being merged into CubeCommons.
 
 ## How to Contribute
 
@@ -50,14 +52,24 @@ If you find a bug or have a feature request, please [open a new issue](https://g
 - Navigate to the original repository and click the "New Pull Request" button.
 - Select your branch from the "compare" dropdown.
 - Add the `gov4git:managed` label to ensure the Gov4Git bot will process your pull request.
-- Fill in the pull request template and submit.
+- Ensure that your PR title and description describes accurately what the code does.
+  ie. "This code adds a button that handles the submission of an extra video."
+- Press submit.
+
+### Contribution Reviews
+
+Ensure that your PR title and description describes accurately what the code does.
+ie. "This code adds a button that handles the submission of an extra video."
 
 ### Code Review Process
 
-- Your pull request will be reviewed by one or more maintainers.
-- Ensure that all tests pass and that your code adheres to the project's coding standards.
-- You may be asked to make changes based on feedback.
-- Once approved, your changes will be merged into the main branch.
+- Add `gov4git:managed` label to your PR
+- Ensure that your PR title and description describes accurately what the code does.
+  ie. "This code adds a button that handles the submission of an extra video."
+- Your pull request will become an issue for community vote on the Gov4Git desktop app. Here community members can ask questions and decide whether they want this new feature.
+- If your PR is approved by the community then it goes into code review.
+- Code review is managed by the CubeCommons board and a developer code review can take up to seven months and may require changes to the code.
+- Once code has been reviewed and tested, it's pushed to the main branch.
 
 ### Style Guide
 
