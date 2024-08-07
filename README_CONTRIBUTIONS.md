@@ -56,6 +56,12 @@ If you find a bug or have a feature request, please [open a new issue](https://g
   ie. "This code adds a button that handles the submission of an extra video."
 - Press submit.
 
+11. **Acknowledge Contributions**:
+
+- After your pull request is merged, acknowledge which files were added to the main branch by the contributor.
+- Include both the organization or artist name and their GitHub handle.
+- List all developers and their GitHub handles who worked on the project.
+
 ### Contribution Reviews
 
 Ensure that your PR title and description describes accurately what the code does.
