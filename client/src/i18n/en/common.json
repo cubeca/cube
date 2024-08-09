@@ -2,7 +2,16 @@
   "Home": "Home",
   "About": "About",
   "Become a Creator": "Become a content creator",
-  "Creator Login": "Creator Login",
+  "Creator SingUp": "Or, become a Creator",
+  "Creator SingUpFR": "Ou devenez 'Creator'",
+  "Creator Benefits":" A 'Creator' can also upload: documents, audio, video and PDF content, create multimedia program packages, audio guides, and connect content by different Creators.",
+  "Creator BenefitsFR": " (FR) Un 'Creator' peut également télécharger : des documents, du contenu audio, vidéo et PDF, créer des packages de programmes multimédias, des audioguides et connecter des contenus de différents 'Creators.",
+  "User SignUpFR": "Ou devenez a 'User'",
+  "User SignUp": "Or, become a User",
+  "UserBenefits":"A 'User' can make and share multimedia playlists.",
+  "UserBenefitsFR":" (FR) 'Users' peuvent créer des 'Playlists' multimédia.",
+  "Account": "Already have an account?",
+  "AccountFR": "Vous avez déjà un compte ?",
   "Start watching": "Start watching",
   "Sign Language": "Sign Language",
   "Subtitles": "Subtitles",
@@ -12,5 +21,9 @@
   "E-mail Address": "E-mail Address",
   "Password": "Password",
   "E-mail Address required": "E-mail Address required",
-  "Password required": "Password required"
+  "Password required": "Password required",
+  "userGuideLoginPage": "Wondering which profile to choose? Or need help logging in? Press play for a audio/video guide.",
+  "userGuideLoginAccountDescription": "A 'User' can make and share multimedia playlists. A 'Creator' can also upload: documents, audio, video and PDF content.",
+  "UserGuideLoginPageFR": " (FR) Besoin d'aide? Appuyez sur lecture.",
+  "userGuideLoginAccountDescriptionFR": "(FR) 'Users' peuvent créer des 'Playlists' multimédia. 'Creators' peuvent également télécharger du contenu."
 }

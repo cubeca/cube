@@ -41,8 +41,12 @@ export const Content = styled(Grid)`
   }
 `;
 
+export const ExtraTopMargin = styled(Box)`
+margin-top: 8.333%;
+`;
+
 export const ContentMain = styled(Box)`
-  height: 600px;
+  height: 100vh;
   padding-top: 70px;
   padding-bottom: 120px;
   text-align: left;

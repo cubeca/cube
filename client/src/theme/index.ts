@@ -70,6 +70,7 @@ const getTheme = (mode?: 'dark' | 'light') =>
           fontSize: '2rem',
           color: THEME_COLORS.primary.main
         },
+        
         h4: {
           fontFamily: HEADING_FONT_FAMILY,
           fontSize: '1.5rem',
