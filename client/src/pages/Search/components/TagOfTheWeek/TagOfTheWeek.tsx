@@ -26,8 +26,7 @@ const Content = () => {
     {
       id: 0,
       thumbnailUrl: FPOThumb6,
-      title:
-        'Cheryl L`Hirondelle, Interspecies Communication',
+      title: 'Cheryl L`Hirondelle, Interspecies Communication',
       url: 'https://www.cubecommons.ca/content/5e7382ba-3e4a-4f14-8035-1e04e14d1578',
       icon: 'video',
       hasSignLanguage: false
@@ -43,8 +42,7 @@ const Content = () => {
     {
       id: 2,
       thumbnailUrl: FPOThumb5,
-      title:
-        'Robert Christie, Talking About Hot Orange Furrow',
+      title: 'Robert Christie, Talking About Hot Orange Furrow',
       url: 'https://www.cubecommons.ca/content/2e0199b2-b136-4b81-9b43-5612051c22a6?playlist=38d62a5a-9424-4f2b-bee6-369d76cda89b',
       icon: 'audio',
       hasSignLanguage: false
@@ -58,7 +56,7 @@ const Content = () => {
       hasSignLanguage: false
     },
     {
-      id:4,
+      id: 4,
       thumbnailUrl: FPOThumb1,
       title: 'Alex Morrison, Nooks and Corners',
       url: 'https://cubecommons.ca/content/4f0b89ba-9104-4806-91c4-a86cb71a2751',

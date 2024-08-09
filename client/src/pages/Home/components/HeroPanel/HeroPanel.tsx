@@ -22,9 +22,9 @@ const HeroPanel = () => {
               {t('discoverFR')}
             </Typography>
             <s.ExtraTopMargin>
-            <Typography component="p" variant="body1">
-              {t('heroText')} <span>{t('heroTextFR')}</span>
-            </Typography>
+              <Typography component="p" variant="body1">
+                {t('heroText')} <span>{t('heroTextFR')}</span>
+              </Typography>
             </s.ExtraTopMargin>
 
             <Button href="/search" variant="contained" size="large">

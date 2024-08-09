@@ -52,48 +52,48 @@ const Login = () => {
                 <Typography component="h3" variant="h3" color="secondary">
                   {t('New Here?')}
                 </Typography>
-                
-                <s.InfoWrapper>      
-      <ReactPlayer
-        url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/002d576b577461da5c6426eccd01ddfa/manifest/video.m3u8"
-        width="100%"
-        height="20vh"
-        overflow="hidden"
-        playing
-        controls
-        config={{
-          file: {
-            attributes: {
-              controls: true,
-              crossOrigin: 'true',
-              playing: 'false'
-            },
-            forceVideo: true,
-            tracks: [
-              {
-                src: "https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/vttSubtitles%20(5).vtt",
-                kind: 'subtitles',
-                srcLang: 'en',
-                default: true,
-                label: 'English',
-              }
-            ]
-          }
-        }}
-        playIcon={
-          <Box className="play-button">
-            <a href="#play-how-to-video">
-             <PlaySymbol />
-            </a>
-          </Box>
-        }
-        light={CtaImage}
-      />
-  
-  </s.InfoWrapper>
-            
+
+                <s.InfoWrapper>
+                  <ReactPlayer
+                    url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/002d576b577461da5c6426eccd01ddfa/manifest/video.m3u8"
+                    width="100%"
+                    height="20vh"
+                    overflow="hidden"
+                    playing
+                    controls
+                    config={{
+                      file: {
+                        attributes: {
+                          controls: true,
+                          crossOrigin: 'true',
+                          playing: 'false'
+                        },
+                        forceVideo: true,
+                        tracks: [
+                          {
+                            src: 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/vttSubtitles%20(5).vtt',
+                            kind: 'subtitles',
+                            srcLang: 'en',
+                            default: true,
+                            label: 'English'
+                          }
+                        ]
+                      }
+                    }}
+                    playIcon={
+                      <Box className="play-button">
+                        <a href="#play-how-to-video">
+                          <PlaySymbol />
+                        </a>
+                      </Box>
+                    }
+                    light={CtaImage}
+                  />
+                </s.InfoWrapper>
+
                 <Typography component="p" variant="body1" color="secondary">
-                  {t('userGuideLoginPage')}<span>{t('UserGuideLoginPageFR')}</span>
+                  {t('userGuideLoginPage')}
+                  <span>{t('UserGuideLoginPageFR')}</span>
                 </Typography>
 
                 <Button
@@ -104,7 +104,8 @@ const Login = () => {
                 </Button>
 
                 <Typography component="p" variant="body1" color="secondary">
-                  {t('userGuideLoginAccountDescription')}<span>{t('userGuideLoginAccountDescriptionFR')}</span>
+                  {t('userGuideLoginAccountDescription')}
+                  <span>{t('userGuideLoginAccountDescriptionFR')}</span>
                 </Typography>
 
                 <Button color="secondary" onClick={() => navigate('/signup?')}>
@@ -123,7 +124,8 @@ const Login = () => {
                 </Typography>
 
                 <Typography component="p" variant="body2" color="secondary">
-                  {t('Creator Benefits')}<span>{t('Creator BenefitsFR')}</span>
+                  {t('Creator Benefits')}
+                  <span>{t('Creator BenefitsFR')}</span>
                 </Typography>
 
                 <Button color="secondary" onClick={() => navigate('/signup')}>
@@ -150,7 +152,8 @@ const Login = () => {
                 </Typography>
 
                 <Typography component="p" variant="body2" color="secondary">
-                  {t('UserBenefits')}<span>{t('UserBenefitsFR')}</span>
+                  {t('UserBenefits')}
+                  <span>{t('UserBenefitsFR')}</span>
                 </Typography>
 
                 <Button

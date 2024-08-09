@@ -35,7 +35,7 @@ export const CTAWrapper = styled(Box)`
     background: transparent url(${LoginBackground}) no-repeat center/cover;
     opacity: 0.5;
   }
-  
+
   ${(props) => props.theme.breakpoints.up('md')} {
     height: auto;
     min-height: 0;
@@ -45,10 +45,9 @@ export const CTAWrapper = styled(Box)`
 `;
 
 export const InfoWrapper = styled(Box)`
-width: 70%;
-margin: 20px 0 20px 0;
+  width: 70%;
+  margin: 20px 0 20px 0;
 `;
-
 
 export const CTAMessage = styled(Box)`
   position: relative;
@@ -58,14 +57,13 @@ export const CTAMessage = styled(Box)`
     margin-bottom: 8px;
     max-width: 50vw;
   }
-  
+
   p {
     margin-bottom: 10px;
     max-width: 60vw;
   }
 
   button {
-
     &:not(:last-child) {
       margin-bottom: 40px;
     }
@@ -74,4 +72,3 @@ export const CTAMessage = styled(Box)`
   ${(props) => props.theme.breakpoints.up('md')} {
   }
 `;
-

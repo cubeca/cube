@@ -42,7 +42,7 @@ export const Content = styled(Grid)`
 `;
 
 export const ExtraTopMargin = styled(Box)`
-margin-top: 8.333%;
+  margin-top: 8.333%;
 `;
 
 export const ContentMain = styled(Box)`
