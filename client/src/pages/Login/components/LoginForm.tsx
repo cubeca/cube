@@ -81,13 +81,13 @@ export const LoginForm = ({
           {isLinkResent ? (
             <Typography>
               {t(
-                'Email verification link has been resent to the provided email address.'
+                'An <b>Email verification link</b> has been resent to the provided email address.'
               )}
             </Typography>
           ) : (
             <ErrorMessage>
               {t(
-                'Email is unverified. Check your email for a verification link, or resend to provided email address.'
+                'Email is unverified. <b>Check your email</b> for a verification link, or resend to provided email address.'
               )}
             </ErrorMessage>
           )}

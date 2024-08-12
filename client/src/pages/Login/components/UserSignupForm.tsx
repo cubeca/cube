@@ -76,8 +76,8 @@ export const UserSignupForm = () => {
 
   if (isFormSubmitted) {
     return (
-      <Typography>
-        Sign up Successful! Check the email address you provided for your
+      <Typography component="h2" variant="h2">
+        <b style={{color: "#D9FFEE"}}>One More Step: Verify Your Email.</b> Check the email address you provided for your
         verification link.
       </Typography>
     );

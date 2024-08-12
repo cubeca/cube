@@ -52,7 +52,7 @@ const MoreContent = ({
   const [playlistContent, setPlaylistContent] = useState<any>([]);
   const [isFromPlaylist, setIsFromPlaylist] = useState<boolean>(playlistId);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const { data: content, isLoading } = useProfileContent(profileId);
 
   function getRandomContent(content: any[], count: number) {
@@ -259,7 +259,7 @@ const MoreContent = ({
     <Stack>
       {combinedContent.length > 0 ? (
         <ContentList
-          heading={t('More Content Like This')}
+          heading={t('Play Page Header 4')}
           content={uniqueCombinedContent}
           playlistId={playlistId}
         />
