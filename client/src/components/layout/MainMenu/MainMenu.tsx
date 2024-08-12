@@ -127,7 +127,7 @@ const MainMenu = ({
           m={0}
           mb={1}
         >
-          (FR) Glossaire des Icônes
+          |FR| Glossaire des Icônes
         </Typography>
 
         <Typography component="h4">Accessibilité</Typography>
