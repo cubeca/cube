@@ -12,8 +12,8 @@ import FPOThumb1 from 'assets/images/fpo/cont-art-gal-thumb1.png';
 import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
 import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
 import FPOThumb4 from 'assets/images/fpo/third-top-thumb.png';
-import FPOThumb5 from 'assets/images/fpo/first-bottom-thumb.png';
-import FPOThumb6 from 'assets/images/fpo/third-bottom-thumb.png';
+import FPOThumb5 from 'assets/images/fpo/Hot-Orange-Furrow-Robert-Christie.png';
+import FPOThumb6 from 'assets/images/fpo/cheryl-lhirondelle-artengine1.png';
 import { useTranslation } from 'react-i18next';
 
 register();
@@ -25,9 +25,9 @@ const Content = () => {
   const content = [
     {
       id: 0,
-      thumbnailUrl: FPOThumb1,
-      title: 'Alex Morrison, Nooks and Corners',
-      url: 'https://cubecommons.ca/content/4f0b89ba-9104-4806-91c4-a86cb71a2751',
+      thumbnailUrl: FPOThumb6,
+      title: 'Cheryl L`Hirondelle, Interspecies Communication',
+      url: 'https://www.cubecommons.ca/content/5e7382ba-3e4a-4f14-8035-1e04e14d1578',
       icon: 'video',
       hasSignLanguage: false
     },
@@ -41,11 +41,10 @@ const Content = () => {
     },
     {
       id: 2,
-      thumbnailUrl: FPOThumb4,
-      title:
-        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
-      url: 'https://www.cubecommons.ca/content/bc3610ab-9bf6-4283-81a9-ce1287a45570',
-      icon: 'video',
+      thumbnailUrl: FPOThumb5,
+      title: 'Robert Christie, Talking About Hot Orange Furrow',
+      url: 'https://www.cubecommons.ca/content/2e0199b2-b136-4b81-9b43-5612051c22a6?playlist=38d62a5a-9424-4f2b-bee6-369d76cda89b',
+      icon: 'audio',
       hasSignLanguage: false
     },
     {
@@ -57,19 +56,21 @@ const Content = () => {
       hasSignLanguage: false
     },
     {
-      thumbnailUrl: FPOThumb5,
-      title:
-        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
-      url: 'https://www.cubecommons.ca/content/3f15f034-b952-4101-a64a-79b9d0dda987',
-      icon: 'audio',
+      id: 4,
+      thumbnailUrl: FPOThumb1,
+      title: 'Alex Morrison, Nooks and Corners',
+      url: 'https://cubecommons.ca/content/4f0b89ba-9104-4806-91c4-a86cb71a2751',
+      icon: 'video',
       hasSignLanguage: false
     },
     {
       id: 5,
-      thumbnailUrl: FPOThumb6,
-      title: 'How to feel unsafe in a safe way',
-      url: 'https://www.cubecommons.ca/content/79cf81ff-b033-40d9-84a9-e371c15945c3',
-      icon: 'video'
+      thumbnailUrl: FPOThumb4,
+      title:
+        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
+      url: 'https://www.cubecommons.ca/content/bc3610ab-9bf6-4283-81a9-ce1287a45570',
+      icon: 'video',
+      hasSignLanguage: false
     }
   ];
 

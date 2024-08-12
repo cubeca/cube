@@ -1,15 +1,16 @@
 {
-  "heroText": "CubeCommons aggregates the video, audio, digital publications and activity booklets by arts organizations and artists across northern Turtle Island (Canada).",
-  "heroTextFR": " |FR| CubeCommons regroupe les publications vidéo, audio, numériques et les livrets d'activités d'organisations artistiques et d'artistes du nord de l'Île de la Tortue (Canada).",
-  "discover": "Discover/ Découvrir",
+  "heroText": "One platform, with community at its core—our culture is collective sustainability.  On CubeCommos arts and culture organisations, and artists can upload their audio, video, word and PDF content knowing their materials will not be data farmed or used to sell advertising.",
+  "heroTextFR": "|FR| CubeCommons regroupe les publications vidéo, audio, numériques et les livrets d'activités d'organisations artistiques et d'artistes sans crainte d’exploitation de données ou de publicité.",
+  "discover": "Discover Share Create",
+  "discoverFR": "Découvrir Partager Créer",
   "search": "Search/ Recherche",
   "becomeCreatorText": "Learn how to set up your orgnization's profile and start uploading content.",
-  "becomeCreatorTextFR": " |FR| Découvrez comment créer le profil de votre organisation et commencer à ajouter du contenu.",
+  "becomeCreatorTextFR": "|FR| Découvrez comment créer le profil de votre organisation et commencer à ajouter du contenu.",
   "dao": "Digital Commons",
   "daoTagline": "Creating a profile on CubeCommons makes you an owner of CubeCommons. This is a free tool, with a zero energy waste policy, built to ensure its economic and environmental sustainability.",
   "daoText": "As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and a precarious relationships with corporations that often go obsolete or make decisions that do not align with their mandates. When organizations load their educational content onto their Cube profile, they earn the right to vote on platform changes, additions and maintenance. By pooling our resources we mean to experiment with collective infastructure and new models for education and cultural archiving.",
   "daoSustainOp": "This is a free tool, with a zero energy waste policy, built to ensure its economic and environmental sustainability.",
-  "daoGovToken":"We are just getting started; our early adopters get to load as much content as they like and have a say in the development of our governance system. Our governance tokens are not a form of currency and cannot be bought or sold. Only earned through acts of knowledge sharing.",
+  "daoGovToken": "We are just getting started; our early adopters get to load as much content as they like and have a say in the development of our governance system. Our governance tokens are not a form of currency and cannot be bought or sold. Only earned through acts of knowledge sharing.",
   "daoFR": "Un Commun Numérique",
   "daoTaglineFR": "La création d'un profil sur CubeCommons fait de vous un copropriétaire de CubeCommons. Il s’agit d’un outil gratuit, avec une politique de zéro gaspillage énergétique, construit pour assurer sa durabilité économique et environnementale.",
   "daoTextFR": "Depuis qu’Internet existe, les organismes artistiques dépendent de plateformes tierces pour organiser et distribuer leur contenu. Cela s'est souvent accompagné de coûts non viables, et a donné lieu à des relations précaires avec des entreprises qui deviennent obsolètes ou prennent des décisions qui ne correspondent pas à leur mandat. Lorsque les organisations ajoutent leur contenu éducatif sur leur profil Cube, elles obtiennent en retour le droit de voter sur les évolutions de la plateforme. En mettant en commun nos ressources, nous entendons promouvoir des infrastructures collectives et de nouveaux modèles d'éducation et d'archivage culturel.",
@@ -48,7 +49,7 @@
   "metaLabelDescription": "A release club where groups who share interest release work, collaborate, and support each other.",
   "searchPage": "Welcome to Search",
   "searchPageFR": "Bienvenue sur notre Page de Recherche",
-  "userGuide": "Learn how to use this site and start discovering content.",
-  "userGuideFR": " |FR| Apprenez à utiliser ce site et commencez à découvrir du contenu.",
-  "featuredTag": "#brilliant"
+  "userGuideSearchPage": "Learn how to use this site and start discovering content.",
+  "userGuideSearchPageFR": " |FR| Apprenez à utiliser ce site et commencez à découvrir du contenu.",
+  "featuredTag": "#Exhibitions"
 }

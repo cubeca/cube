@@ -31,8 +31,8 @@ const HeroPanelHome = () => {
           <Grid xs={10} xsOffset={1} md={4} mdOffset={2}>
             <HeroCTA
               title="Guide"
-              text={t('userGuide')}
-              frenchText={t('userGuideFR')}
+              text={t('userGuideSearchPage')}
+              frenchText={t('userGuideSearchPageFR')}
               video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/1522f4bfdb5e28886e25f58c27c3d278/manifest/video.m3u8"
               image={CtaImage}
               subtitlesUrl="https://files.cubecommons.ca/3ed305be-ff47-4cf2-abb8-6c0d77bcc208/vtt.vtt"
