@@ -46,13 +46,12 @@ export const ExtraTopMargin = styled(Box)`
 `;
 
 export const ContentMain = styled(Box)`
-  height: 100vh;
   padding-top: 70px;
-  padding-bottom: 120px;
   text-align: left;
 
   ${(props) => props.theme.breakpoints.up('md')} {
     text-align: left;
+    padding-top: 0;
   }
 
   ${(props) => props.theme.breakpoints.up('lg')} {
