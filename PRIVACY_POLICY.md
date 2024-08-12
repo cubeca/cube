@@ -1,0 +1,106 @@
+# Privacy Policy
+
+**Last Updated: August 8, 2024**
+
+## 1. Overview
+
+1.1 The Association for CubeCommons (“CubeCommons”, “we”, “us”, “our”) cares about your privacy and is committed to protecting your personal information.
+
+1.2 Our Privacy Policy applies to the information we collect, use, or disclose about you when you use the Cube Services.
+
+1.3 Read this Privacy Policy carefully to understand our policies and practices for collecting, processing, and storing your information.
+
+1.4 This policy describes how we handle your information and your rights regarding your information.
+
+1.5 We will only use your personal information in accordance with this policy unless otherwise required by law.
+
+1.6 The Cube Services may include links to third-party content, websites, plug-ins, services, and applications.
+
+## 2. Information We Collect About You
+
+2.1 We collect the following types of information:
+
+2.1.1 **Personal Information**: Information we can reasonably use to directly or indirectly identify you, such as your name, username, email address, phone number, IP address, photograph, login names on third-party sites, and other identifiers.
+
+2.1.2 **Usage Information**: Information about how you use the Website or the App, including records of:
+
+- The content you view on the Website or App, including the full URLs of pages or content.
+- Playlists you create on the Website or App, including content you add to or remove from playlists.
+- The links you click to get to the Website and to third-party websites.
+- Certain Website interactions or App interactions, such as playing content.
+
+  2.1.3 **Non-Personal Information**: Information that does not directly or indirectly reveal your identity or directly relate to an identifiable individual, such as demographic information, statistical information, or aggregated information. We may aggregate personal information to create non-personal information. For example, we may use IP addresses to create statistics about usage of the Website by province, or the age cohorts most likely to access a certain kind of content.
+
+  2.1.4 **Technical Information**: Information such as your login information, browser type and version, time zone, browser plug-ins and versions, operating system and platform, and usage details.
+
+  2.1.5 **Creators**: For organizations that apply to become Creators, we collect information necessary to process your application and manage your membership in CubeCommons, such as the name of your organization, names and contact information for people within your organization, web and social media account information, Ethereum addresses used to participate in the Cube DAO, and other identifiers. We also collect information about the content you upload, including any attribution information for that content and whether you have agreed to have our Accessibility Partners provide accessibility content for it.
+
+## 3. How We Collect Information About You
+
+3.1 We collect information using the following methods:
+
+3.1.1 **Direct Interactions**: We collect information about your direct interactions with the Website or App, including, but not limited to, creating an Account, viewing content, sending messages, buying or selling an NFT, or participating in the Cube DAO.
+
+3.1.2 **User Contributions**: We store your contributions to the Website or App, including information you provide to us so we can publish or display it on public areas of the Website or App, including information you include in your account profile, playlists you create, tags you add to content, and proposals, comments, and votes you submit to the Cube DAO.
+
+3.1.3 **Automatic Collection**: We use web server logs, HTTP headers, and privacy-preserving analytics tools to collect information about your use of the Website or App, including usage details, IP addresses, and referring URLs.
+
+3.1.4 **Cookies**: CubeCommons does not use tracking cookies. We use plausible.io to collect aggregate data about users of the Website without using cookies and without collecting personal information.
+
+3.1.5 **Third Party Platforms**: The Cube Services, including the Website and data used by the App, are hosted on Google Cloud Platform (“Google Cloud”). Google Cloud may log or collect usage information, subject to its own Privacy Notice at [Google Cloud Privacy Notice](https://cloud.google.com/terms/cloud-privacy-notice). Some of the content on the Website and App is hosted by third-party service providers or platforms (“Platforms”). Those Platforms may collect information about you or the content you view. We do not control these Platforms’ tracking technologies or how they are used, and each is subject to its own privacy policy. A list of Platforms we use is provided below, along with those Platforms’ privacy policies:
+
+- **YouTube**: [YouTube Privacy Policy](https://policies.google.com/privacy?hl=en)
+
+## 4. How We Use Your Information
+
+4.1 We use the information you provide us or information we collect about you, including any personal information, to:
+
+- Maintain and improve the Cube Services and how we deliver them.
+- Provide our Website and App to you.
+- Provide the services and content you request from us.
+- Deliver notices about your account and changes to the Cube Services, the Terms, and this Privacy Policy.
+- Deliver our email newsletter. You can unsubscribe by clicking the unsubscribe link in the newsletter.
+
+  4.2 **For Creators**: In addition to the uses above, we use the information you provide us or we collect about you to assess your application to become a Creator, to manage content you upload, and to manage your participation in the Cube DAO.
+
+## 5. Disclosure of Your Information
+
+5.1 **General**: Information you provide or that we collect may be disclosed:
+
+5.1.1 To contractors, service providers, and other third parties we use to deliver the Cube Services, and who are contractually obliged to keep personal information confidential and to only use it for the purposes for which we disclose it to them, and to process the personal information with the same standards set out in this privacy policy.
+
+5.1.2 To enforce our Terms and other agreements.
+
+5.1.3 To comply with any court order, law, or legal process, including to respond to any government or regulatory request, in accordance with applicable law.
+
+5.1.4 If we believe that disclosure is necessary or appropriate to protect the rights, property, or safety of CubeCommons, our users, or others.
+
+5.2 **For Creators**: In addition to the disclosures listed above, we may disclose the information you provide or that we collect:
+
+## 6. Transfers of Your Information
+
+6.1 We may transfer personal information that we collect or you provide as described in this policy to contractors, service providers, and other third parties we use to deliver the Cube Services. These third parties are contractually obliged to keep personal information confidential, to only use it for the purposes for which we disclose it to them, and to process personal information with the same set of standards set out in this privacy policy. We may process and store your personal information in, and transfer your personal information to, the United States. By using the Cube Services, you consent to this transfer, storage, or processing.
+
+6.2 **Google Cloud Services**: We use Google Cloud Services to offer the Cube Services. As such, we transfer data, including personal information, to Google Cloud Services for processing and storage. Google Cloud Services may host data, including personal information, in the United States. By using the Cube Services, you consent to this transfer, storage, and processing.
+
+## 7. Children
+
+7.1 We do not knowingly collect personal information from people under the age of 13, and do not allow people under the age of 13 to register for accounts without written consent from a parent or guardian.
+
+7.2 If we learn we have collected or received personal information from a person under 13 without parental consent, we will delete that information. If you believe we have collected information from or about a person under the age of 13, please contact us at: ash@cubecommons.ca
+
+## 8. User Rights
+
+8.1 **Rights to Access and Correction**: You have the right to know what personal information we have stored about you. If there are errors in that personal information, you can ask us to correct it. If you ask us to delete it, we will delete it entirely. If you want to see the personal information we have stored about you, you can make a request by email to: ash@cubecommons.ca
+
+8.2 **Right to Withdraw Consent and Right to Erasure**: If you want to withdraw your consent to collect, use, or store your personal information, or wish to have your personal information erased or deleted, your account will be deleted and you will not be able to use the Cube Services.
+
+8.3 **Confirmation**: We may request additional information from you to help us confirm your identity before you can exercise the rights set out above. This additional information will be deleted after your identity has been verified.
+
+## 9. Changes to the Privacy Policy
+
+9.1 If we make changes to our Privacy Policy, we will post the updated policy on this page. This page will include the date our Privacy Policy was last updated. If we make changes that have an impact on your rights, we will also send an email to the email address in your account.
+
+## 10. Contact
+
+10.1 If you have questions, comments, or requests about this privacy policy, or want to know more about our compliance with this policy and with applicable privacy laws, you can contact us at: ash@cubecommons.ca
