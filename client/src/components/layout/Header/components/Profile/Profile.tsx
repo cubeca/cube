@@ -36,21 +36,23 @@ const Profile = () => {
         sx={{ padding: '10px 20px' }}
       >
         <Box display="flex" justifyContent="center" alignItems="center">
-          <s.ImageWrapper>
-            <s.ImageInner>
-              {profile.logoUrl && (
-                <img src={profile!.logoUrl} alt="user profile thumbnail" />
-              )}
-              {!profile && (
-                <Lottie
-                  className="loading-circle"
-                  animationData={LoadingCircle}
-                  loop={true}
-                  autoplay={true}
-                />
-              )}
-            </s.ImageInner>
-          </s.ImageWrapper>
+          {profileId !== null && (
+            <s.ImageWrapper>
+              <s.ImageInner>
+                {profile.logoUrl && (
+                  <img src={profile!.logoUrl} alt="user profile thumbnail" />
+                )}
+                {!profile && (
+                  <Lottie
+                    className="loading-circle"
+                    animationData={LoadingCircle}
+                    loop={true}
+                    autoplay={true}
+                  />
+                )}
+              </s.ImageInner>
+            </s.ImageWrapper>
+          )}
           <Box component="span" pl="10px">
             {username}
           </Box>
