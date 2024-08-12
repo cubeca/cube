@@ -30,7 +30,7 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
   setCategoryFilter
 }) => {
   const { control } = useForm();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   categoryFilter = categoryFilter ? categoryFilter : 'all';
 
@@ -54,17 +54,17 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
           className="searchFilter"
           control={control}
           variant="standard"
-          placeholder="Search/ Recherche"
+          placeholder={t('Search Input Text')}
           sx={{ fontSize: '2rem' }}
         />
 
         <Select
-          label={t('Filter/Filtre')}
+          label={t('Filter Menu Title')}
           className="typeFilter"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e)}
         >
-          <MenuItem.li value={'all'}>{t('All/Toute')}</MenuItem.li>
+          <MenuItem.li value={'all'}>{t('Filter Menu Button')}</MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
             {t('Video')}
           </MenuItem.li>
