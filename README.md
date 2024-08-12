@@ -74,19 +74,34 @@ The built front-end React app is hosted on Cloudflare Pages. There is some light
 
 ## Governance
 
-CubeCommons uses a third-party tool called Gov4Git to govern its' issues and pull requests. Follow these steps to get started with Gov4Git.
+CubeCommons uses a third-party tool called Gov4Git to govern its' issues and pull requests. This Tool was developed by Digital Minister Audrey Tang (they/them) and their collaborators – architects of Taiwan’s internationally acclaimed digital democracy technology. 
+Learn more about Audrey Tang: https://www.plurality.net/
+Gov4git installation links and instructions can be found here: https://gitrules.ai/
 
-1. Create a GitHub profile. In order to contribute, you need to be a member of GitHub.
-2. Download Gov4Git by visiting this link: https://github.com/gov4git/gov4git
-3. Once installed, open Gov4Git and follow the login and verification instructions using your GitHub account.
+Follow these steps to get started with Gov4Git for CubeCommons:
+
+1. Create a GitHub profile https://github.com/
+2. Download Gov4Git on MacOS or Windows using the links found here: https://github.com/gov4git/gov4git/blob/v2/README.md
+3. Once installed, open Gov4Git on your computer and follow the login and verification instructions using your GitHub account details.
    - Login with the Verify link, copy the verification code and enter it when prompted.
-   - Click “Join a community” in Gov4Git and enter the Cube Commons URL: “https://github.com/cubeca/cube”
-4. Once approved, return to GitHub in your browser and click on the GitHub logo in the top left corner (looks like a small cat) - this should take you to the dashboard.
-5. On the left hand side under repositories, you'll see the ‘cubeca’ repository that you’ve just joined.
-6. On the top menu, click on “Issues”, then “New Issue” and request voting tokens.
-7. Add the `gov4git:managed` label to your issue. This will push the proposal to be voted on by the CubeCommons Gov4Git community.
+   - Once Verified, the Gove4Git desktop app should show a button called “Join a community”, this can always be found under settings. Under "Join Community" there is an input titled "Community URL". Paste this CubeCommons URL: “https://github.com/cubeca/cube”
+4. Approval may take a few minutes.
 
-This same procedure can be followed for pull requests once you have written some code, just ensure that you add the `gov4git:managed` label for the Gov4Git bot to properly parse your request and allow it to be voted on.
+Requesting Voting Tokens:
+5. Once approved, go back to your browser and login to your GitHub account (if you're not already), click on the GitHub logo - found in the top left corner (looks like a small cat) - this should take you to your dashboard.
+6. On the left hand side under repositories, you'll see the ‘cubeca’ repository that you’ve just joined.
+7. click on the 'cubeca' repository this will take you to a new page on Github.
+8. Under the Github logo in the top navigation bar is a secondary navigation bar with the buttons "code", "Issues", "Pull requests" etc. Click “Issues”, this will take you to a new page on GitHub
+9. On the right hand side of this new page, click a green button titled “New Issue” and create a request for voting tokens.
+
+Formatting "New Issues" as Requests or Proposals:
+ * In the input called "Add a title" write:
+'[Your Org Name] Requests Voting Tokens as a Member of CubeCommons'
+ * In the input called "Add a description write:
+'[Your Org Name] has a Creator profile on CubeCommons and requests tokens to create and vote on proposals.'
+ * On the right hand side click on the header "label" - search `gov4git:managed` and select it. This will ensure your issue is pushed to the CubeCommons Gov4Git desktop app for tokens to be granted or the community to vote on.
+ * This is the same process for idea proposals, which can include a simple description about a function you would like to propose the community prioritize, or a language or policy change. It is a different process to submit code for review by the community. See Section below called (##contributing)
+
 
 ## Setup
 
@@ -139,7 +154,7 @@ Site styles can be referenced in the [theme file](https://github.com/cubeca/cube
 
 ## Contributing
 
-We welcome contributions to CubeCommons! Please follow these steps to contribute:
+We welcome code contributions to CubeCommons! This can be new features or components that you have developed after forking our code. Please follow these steps to contribute:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bugfix.
