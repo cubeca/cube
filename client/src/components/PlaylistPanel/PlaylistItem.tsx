@@ -56,7 +56,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
   deletePlaylistItem
 }) => {
   const TypeIcon = {
-    book: BookIcon,
+    pdf: BookIcon,
     audio: AudioIcon,
     video: VideoIcon,
     link: LinkIcon,
