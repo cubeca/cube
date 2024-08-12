@@ -420,9 +420,17 @@ const Video = () => {
             {!isLoading && (
               <Stack
                 direction="row"
-                spacing={2}
                 justifyContent="left"
-                sx={{ my: 3, typography: 'body2' }}
+                sx={{
+                  my: 3,
+                  typography: 'body2',
+                  flexWrap: 'wrap',
+                  rowGap: 0,
+                  columnGap: 3,
+                  '@media (max-width: 600px)': {
+                    justifyContent: 'space-between'
+                  }
+                }}
               >
                 {(content?.type === 'document' || content?.type === 'pdf') && (
                   <s.ActionsWrapper>
