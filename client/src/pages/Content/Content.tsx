@@ -44,7 +44,7 @@ import useAuth from 'hooks/useAuth';
 
 const Video = () => {
   const { isLoggedIn } = useAuth();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const user = getAuthTokenPayload();
   const theme = useTheme();
   const location = useLocation();
@@ -490,7 +490,7 @@ const Video = () => {
               <>
                 <Stack>
                   <Typography component="h5" variant="h5">
-                    {t('Contributors')}
+                    {t('Play Page Header 1')}
                   </Typography>
                   {content?.contributors &&
                     Object.entries(content?.contributors)
@@ -577,7 +577,7 @@ const Video = () => {
                 {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <Typography component="h5" variant="h5">
-                      {t('Tags')}
+                      {t('Play Page Header 2')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
@@ -610,8 +610,8 @@ const Video = () => {
                   <Stack>
                     <Typography component="h5" variant="h5">
                       {content?.languageTags && content?.languageTags.length > 1
-                        ? t('Languages')
-                        : t('Language')}
+                        ? t('Play Page Header 3LanguagePlural')
+                        : t('Play Page Header 3LanguageSingular')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])
