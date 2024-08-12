@@ -29,7 +29,7 @@ interface PDFReaderProps {
   url: string;
 }
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 const PDFReader = ({ url }: PDFReaderProps) => {
   const [numPages, setNumPages] = useState<number>();
