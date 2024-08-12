@@ -135,7 +135,7 @@ const EditProfileForm = ({
               )}
               <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
                 <CameraIcon />
-                <Typography>Upload</Typography>
+                <Typography>Upload Banner Image</Typography>
                 <input
                   type="file"
                   id={heroIdUpload}
@@ -167,7 +167,7 @@ const EditProfileForm = ({
           <s.EditWrapper>
             <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
               <CameraIcon />
-              <Typography>Upload</Typography>
+              <Typography>Profile Pic</Typography>
               <input
                 type="file"
                 id={logoIdUpload}
