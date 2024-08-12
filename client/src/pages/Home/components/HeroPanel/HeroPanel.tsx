@@ -38,9 +38,9 @@ const HeroPanel = () => {
             title="Guide"
             text={t('becomeCreatorText')}
             frenchText={t('becomeCreatorTextFR')}
-            video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/002d576b577461da5c6426eccd01ddfa/manifest/video.m3u8"
+            video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/1ef89ceecd84c1b5d4cf1aee309ffbee/manifest/video.m3u8"
             image={CtaImage}
-            subtitlesUrl="https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/vttSubtitles%20(5).vtt"
+            subtitlesUrl="https://files.cubecommons.ca/Landing%20Page%20Guide%20Subtitles%20Two%20_Aug%2012%202024.vtt"
           />
         </Grid>
       </s.Content>
