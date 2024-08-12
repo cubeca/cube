@@ -27,13 +27,13 @@
   "UserGuideLoginPageFR": " (FR) Besoin d'aide? Appuyez sur lecture.",
   "userGuideLoginAccountDescriptionFR": "(FR) 'Users' peuvent créer des 'Playlists' multimédia. 'Creators' peuvent également télécharger du contenu.",
   "Play Page Header 1": "Collaborateurs",
-  "Play Page Header 2": "Tags / Étiquette",
-  "Play Page Header 3LanguagePlural": "Languages / Langues",
-  "Play Page Header 3LanguageSingular": "Language / Langue",
-  "Play Page Header 4": "More Like This / Plus comme ça",
-  "Search Input Text": "Search / Recherche",
-  "Filter Menu Title": "Filter/Filtre",
-  "Filter Menu Button": "All/Toute",
+  "Play Page Header 2": "Tags | Étiquette",
+  "Play Page Header 3LanguagePlural": "Languages | Langues",
+  "Play Page Header 3LanguageSingular": "Language | Langue",
+  "Play Page Header 4": "More Like This | Plus comme ça",
+  "Search Input Text": "Search | Recherche",
+  "Filter Menu Title": "Filter | Filtre",
+  "Filter Menu Button": "All | Toute",
   "Password required": "Password required"
 
 }

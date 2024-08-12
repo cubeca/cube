@@ -4,8 +4,8 @@
   "discover": "Discover Share Create",
   "discoverFR": "Découvrir Partager Créer",
   "search": "Search/ Recherche",
-  "becomeCreatorText": "Accessibility is our goal, learn more about what's on this page, and what we have to offer.",
-  "becomeCreatorTextFR": " (FR) L'accessibilité est notre objectif, apprenez-en plus sur le contenu de cette page et ce que nous avons à offrir.",
+  "becomeCreatorText": "Learn how to set up your orgnization's profile and start uploading content.",
+  "becomeCreatorTextFR": " (FR) Découvrez comment créer le profil de votre organisation et commencer à ajouter du contenu.",
   "dao": "Digital Commons",
   "daoTagline": "Creating a profile on CubeCommons makes you an owner of CubeCommons. This is a free tool, with a zero energy waste policy, built to ensure its economic and environmental sustainability.",
   "daoText": "As long as there has been internet, arts organizations have depended on third-party platforms to organize and distribute their content. This has created unsustainable fee systems and a precarious relationships with corporations that often go obsolete or make decisions that do not align with their mandates. When organizations load their educational content onto their Cube profile, they earn the right to vote on platform changes, additions and maintenance. By pooling our resources we mean to experiment with collective infastructure and new models for education and cultural archiving.",
@@ -26,7 +26,7 @@
   "virtual": "Virtual Experiences",
   "virtualText": "Voxels is free and easy to access on your phone or computer with no login required. In this VR neighbourhood of artist-run and institutional spaces  creators on CubeCommons can produce virtual events, build exhibitions with a variety of contextual content. This lot is generously shared by CubeCommons member Mike St Jean.",
   "virtualFR": "Expériences virtuelles",
-  "virtualTextFR": "(FR) Voxels est gratuit, facile d'accès depuis votre téléphone ou votre ordinateur, et ne nécessite pas de créer de compte. Dans ce quartier en réalité virtuelle (VR) abritant divers espaces institutionnels et gérés par des artistes, les créateurs de CubeCommons peuvent organiser des événements virtuels et créer des expositions avec une variété de contenus contextuels. Cet espace est généreusement mis à disposition par Mike St Jean, membre de CubeCommons.",
+  "virtualTextFR": "|FR| Voxels est gratuit, facile d'accès depuis votre téléphone ou votre ordinateur, et ne nécessite pas de créer de compte. Dans ce quartier en réalité virtuelle (VR) abritant divers espaces institutionnels et gérés par des artistes, les créateurs de CubeCommons peuvent organiser des événements virtuels et créer des expositions avec une variété de contenus contextuels. Cet espace est généreusement mis à disposition par Mike St Jean, membre de CubeCommons.",
   "language": "Languages",
   "languageText": "With over 70 Indigenous languages spoken across Northern Turtle Island (Canada), and roughly 72% of residents consuming information in English, French, Mandarin, Punjabi and Tagalog, it's important that we leverage technology to ensure the internet does not become a segregated place of platforms storing and sharing content from only one cultural perspective or language.",
   "languageP2": "Where you see our URL, look for three dots, usually on the right, or the 'translate' symbol or word. Your browser should be able to translate all our buttons, and information provided by content creators, into the language of your choice.",
@@ -50,6 +50,6 @@
   "searchPage": "Welcome to Search",
   "searchPageFR": "Bienvenue sur notre Page de Recherche",
   "userGuideSearchPage": "Learn how to use this site and start discovering content.",
-  "userGuideSearchPageFR": " (FR) Apprenez à utiliser ce site et commencez à découvrir du contenu.",
+  "userGuideSearchPageFR": " |FR| Apprenez à utiliser ce site et commencez à découvrir du contenu.",
   "featuredTag": "#Exhibitions"
 }
