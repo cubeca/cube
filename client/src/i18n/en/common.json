@@ -21,12 +21,11 @@
   "E-mail Address": "E-mail Address",
   "Password": "Password",
   "E-mail Address required": "E-mail Address required",
-  "Password required": "Password required",
   "userGuideLoginPage": "Wondering which profile to choose? Or need help logging in? Press play for a audio/video guide.",
   "userGuideLoginAccountDescription": "A 'User' can make and share multimedia playlists. A 'Creator' can also upload: documents, audio, video and PDF content.",
   "UserGuideLoginPageFR": " (FR) Besoin d'aide? Appuyez sur lecture.",
   "userGuideLoginAccountDescriptionFR": "(FR) 'Users' peuvent créer des 'Playlists' multimédia. 'Creators' peuvent également télécharger du contenu.",
-  "Play Page Header 1": "Collaborateurs",
+  "Play Page Header 1": "Collaborators | Collaborateurs",
   "Play Page Header 2": "Tags | Étiquette",
   "Play Page Header 3LanguagePlural": "Languages | Langues",
   "Play Page Header 3LanguageSingular": "Language | Langue",
@@ -35,5 +34,4 @@
   "Filter Menu Title": "Filter | Filtre",
   "Filter Menu Button": "All | Toute",
   "Password required": "Password required"
-
 }
