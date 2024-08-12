@@ -21,7 +21,7 @@ const HeroPanel = () => {
             <Typography component="p" variant="body1">
               {t('heroText')} <span>{t('heroTextFR')}</span>
             </Typography>
-            
+
             <Button href="/search" variant="contained" size="large">
               {t('search')}
             </Button>
@@ -33,9 +33,9 @@ const HeroPanel = () => {
             title="Create/ Créer"
             text={t('becomeCreatorText')}
             frenchText={t('becomeCreatorTextFR')}
-            video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/43df9c06ed57348a3414802cf1d565f8/manifest/video.m3u8"
+            video="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/1ef89ceecd84c1b5d4cf1aee309ffbee/manifest/video.m3u8"
             image={CtaImage}
-            subtitlesUrl="https://files.cubecommons.ca/24978756-8ad3-4d7b-8412-b1bde69ec26f/vtt.vtt"
+            subtitlesUrl="https://files.cubecommons.ca/Landing%20Page%20Guide%20Subtitles%20Two%20_Aug%2012%202024.vtt"
           />
         </Grid>
       </s.Content>
