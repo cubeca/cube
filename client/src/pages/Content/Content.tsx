@@ -490,7 +490,7 @@ const Video = () => {
               <>
                 <Stack>
                   <Typography component="h5" variant="h5">
-                    {t('Contributors')}
+                    {t('Collaborateur')}
                   </Typography>
                   {content?.contributors &&
                     Object.entries(content?.contributors)
@@ -577,7 +577,7 @@ const Video = () => {
                 {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <Typography component="h5" variant="h5">
-                      {t('Tags')}
+                      {t('Tags / Étiquette')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
@@ -610,8 +610,8 @@ const Video = () => {
                   <Stack>
                     <Typography component="h5" variant="h5">
                       {content?.languageTags && content?.languageTags.length > 1
-                        ? t('Languages')
-                        : t('Language')}
+                        ? t('Languages / Langues')
+                        : t('Language / Langue')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])

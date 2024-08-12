@@ -259,7 +259,7 @@ const MoreContent = ({
     <Stack>
       {combinedContent.length > 0 ? (
         <ContentList
-          heading={t('More Content Like This')}
+          heading={t('More Like This / Plus comme ça')}
           content={uniqueCombinedContent}
           playlistId={playlistId}
         />
