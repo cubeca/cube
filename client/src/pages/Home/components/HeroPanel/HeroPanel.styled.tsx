@@ -51,7 +51,6 @@ export const ContentMain = styled(Box)`
 
   ${(props) => props.theme.breakpoints.up('md')} {
     text-align: left;
-    padding-top: 0;
   }
 
   ${(props) => props.theme.breakpoints.up('lg')} {
