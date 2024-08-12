@@ -55,7 +55,7 @@ const Login = () => {
 
                 <s.InfoWrapper>
                   <ReactPlayer
-                    url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/002d576b577461da5c6426eccd01ddfa/manifest/video.m3u8"
+                    url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/08aa6b389f1e0f93b380f321226b64b3/manifest/video.m3u8"
                     width="100%"
                     height="20vh"
                     overflow="hidden"
@@ -71,7 +71,7 @@ const Login = () => {
                         forceVideo: true,
                         tracks: [
                           {
-                            src: 'https://pub-7f4bf083e7344d06b67371aec183bddb.r2.dev/vttSubtitles%20(5).vtt',
+                            src: 'https://files.cubecommons.ca/Login%20Page%20Subtitles_Aug%2012%202024.vtt',
                             kind: 'subtitles',
                             srcLang: 'en',
                             default: true,
