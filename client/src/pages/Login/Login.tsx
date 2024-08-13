@@ -166,7 +166,7 @@ const Login = () => {
                   color="secondary"
                   onClick={() => navigate('/signup?type=user')}
                 >
-                  {t('User Sing-Up | S`inscrire')}
+                  {t('User Sign-Up | S`inscrire')}
                 </Button>
 
                 <Typography component="h3" variant="h3" color="secondary">
