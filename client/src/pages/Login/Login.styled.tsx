@@ -49,6 +49,11 @@ export const InfoWrapper = styled(Box)`
   margin: 20px 0 20px 0;
 `;
 
+export const FrenchDescription =styled(Box)`
+font-size: auto;
+padding-bottom: 20px;
+`;
+
 export const CTAMessage = styled(Box)`
   position: relative;
   z-index: 2;

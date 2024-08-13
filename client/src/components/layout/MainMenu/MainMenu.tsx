@@ -151,7 +151,7 @@ const MainMenu = ({
         />
         <MenuItem text={t('PDF')} icon={<BookIcon fontSize="small" />} />
         <MenuItem
-          text={t('Word Doc')}
+          text={t('Doc Word')}
           icon={<WorddocIcon fontSize="small" />}
         />
         <MenuItem text={t('Lien')} icon={<LinkIcon fontSize="small" />} />

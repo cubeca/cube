@@ -119,14 +119,14 @@ export const LoginForm = ({
         </Typography>
       )}
       <Typography variant="h3" component="h3" pb={4}>
-        {t('Account Login')}
+        {t('Login')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           <EmailInput
             control={control}
             name="email"
-            label={t('Email address')}
+            label={t('Email')}
             fullWidth
             helperText={t('Email address required')}
             variant="outlined"
@@ -134,7 +134,7 @@ export const LoginForm = ({
           <PasswordInput
             control={control}
             name="password"
-            label={t('Password')}
+            label={t('Password | Mot de passe')}
             fullWidth
             helperText={t('Password required')}
             variant="outlined"
@@ -152,10 +152,10 @@ export const LoginForm = ({
               onClick={handleSubmit(onSubmit)}
               fullWidth
             >
-              {t('Login')}
+              {t('Login | Connexion')}
             </Button>
             <Box pt={4}>
-              <Link to="/forgot-password">{t('Forgot Password?')}</Link>
+              <Link to="/forgot-password">{t('Forgot Password | Oublié Votre Mot de Passe ?')}</Link>
             </Box>
           </Box>
         </Stack>

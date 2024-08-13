@@ -69,10 +69,10 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
             {t('Audio')}
           </MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.ActivityBook}>
-            {t('Activity Book')}
+            {t('Activities')}
           </MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.DigitalPublications}>
-            {t('Digital Publication')}
+            {t('Publications')}
           </MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Collaborations}>
             {t('Collaboration')}
@@ -80,7 +80,19 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
             {t('Has Sign Language')}
           </MenuItem.li>
-          <MenuItem.li value={'playlist'}>{t('Playlist')}</MenuItem.li>
+          <MenuItem.li value={'playlist'}>{t('Playlists')}</MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
+            {t('A la langue des signes')}
+          </MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
+            {t('Vidéo')}
+          </MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Audio}>
+            {t('L`Audio')}
+          </MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.ActivityBook}>
+            {t('Activités')}
+          </MenuItem.li>
         </Select>
       </form>
     </s.Filters>
