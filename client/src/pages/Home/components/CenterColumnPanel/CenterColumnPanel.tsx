@@ -68,6 +68,7 @@ const CenterColumnPanel = () => {
                 {t('daoTextFR')}
               </Typography>
             </s.CenterColumnTextSection>
+            <Button>Learn More</Button>
           </DarkContent.Wrapper>
         </Grid>
         <Grid xs={10} xsOffset={1} md={3}></Grid>
