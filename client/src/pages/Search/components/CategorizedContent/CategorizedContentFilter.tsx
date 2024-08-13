@@ -5,8 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedContentFilter.styled';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
-import { FC, useEffect, useRef } from 'react';
-import { Menu } from '@mui/material';
+import { FC, useEffect } from 'react';
 
 interface CategorizedContentFilterProps {
   setSearchTerm: any;
@@ -22,7 +21,7 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
   tagSearchTerm
 }) => {
   const { control } = useForm();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   categoryFilter = categoryFilter ? categoryFilter : 'all';
 
@@ -51,18 +50,18 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           name="searchFilter"
           control={control}
           variant="standard"
-          placeholder="Search/ Rechercher"
+          placeholder={t('Search Input Text')}
           className="searchFilter"
           defaultValue={tagSearchTerm ? tagSearchTerm : ''}
         />
 
         <Select
-          label={t('Filter/Filtre')}
+          label={t('Filter Menu Title')}
           className="typeFilter"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e)}
         >
-          <MenuItem.li value={'all'}>{t('All/Toute')}</MenuItem.li>
+          <MenuItem.li value={'all'}>{t('Filter Menu Button')}</MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
             {t('Video')}
           </MenuItem.li>
@@ -70,10 +69,10 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
             {t('Audio')}
           </MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.ActivityBook}>
-            {t('Activity Book')}
+            {t('Activities')}
           </MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.DigitalPublications}>
-            {t('Digital Publication')}
+            {t('Publications')}
           </MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Collaborations}>
             {t('Collaboration')}
@@ -81,7 +80,19 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
           <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
             {t('Has Sign Language')}
           </MenuItem.li>
-          <MenuItem.li value={'playlist'}>{t('Playlist')}</MenuItem.li>
+          <MenuItem.li value={'playlist'}>{t('Playlists')}</MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
+            {t('A la langue des signes')}
+          </MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
+            {t('Vidéo')}
+          </MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Audio}>
+            {t('L`Audio')}
+          </MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.ActivityBook}>
+            {t('Activités')}
+          </MenuItem.li>
         </Select>
       </form>
     </s.Filters>

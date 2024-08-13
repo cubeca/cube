@@ -8,10 +8,10 @@ import {
   KeyboardArrowRight,
   Close
 } from '@mui/icons-material';
-import { IconButton, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import * as s from './PDFReader.styled';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface PDFModalProps {
   url: string;
@@ -24,7 +24,6 @@ interface PDFModalProps {
 const PDFModal = ({
   url,
   onClose,
-  displayMode,
   pageToOpen,
   setPageToReturnTo
 }: PDFModalProps) => {

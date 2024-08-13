@@ -1,8 +1,14 @@
+/**
+ * `Content` serves as a main content display page (The Play page) within Cube Commons.
+ * It dynamically renders different types of media (videos, audio, PDFs, links) based on the content details fetched
+ * using a custom hook `useContentDetails`. It also includes functionality for editing and deleting content for authorized users.
+ * represented by `EditIcon` and `DeleteContentButton`.
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
 import MediaPlayer from 'components/MediaPlayer';
 import YouTubePlayer from 'components/YouTubePlayer';
 import { useTranslation } from 'react-i18next';
-import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Typography, useTheme, Box, Link } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import CodeIcon from '@mui/icons-material/Code';
@@ -14,7 +20,7 @@ import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
 
 import MoreContent from './MoreContent';
-import Contributors from './Contributors';
+import Collaborators from './Collaborators';
 
 import { MediaPlayerLoader, MediaMetaDataLoader } from 'components/Loaders';
 import Footer from 'components/layout/Footer';
@@ -38,7 +44,7 @@ import useAuth from 'hooks/useAuth';
 
 const Video = () => {
   const { isLoggedIn } = useAuth();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const user = getAuthTokenPayload();
   const theme = useTheme();
   const location = useLocation();
@@ -172,6 +178,7 @@ const Video = () => {
     });
   }, [location, refetch, subtitleUrl]);
 
+  // scroll to top of content when it loads
   useEffect(() => {
     if (contentRef.current) {
       const headerHeight = document.querySelector('header')?.clientHeight || 0;
@@ -227,6 +234,7 @@ const Video = () => {
     setIsReportContentModalOpen(true);
   };
 
+  // get the role(s) of the contributor
   function getContributorRole(
     role: string,
     count: number,
@@ -249,7 +257,7 @@ const Video = () => {
         case 'sound_technician':
           roleStr = 'Sound Technician';
           break;
-        // Add more roles as needed
+        // add more roles here as needed
         default: // capitalize first letter of role
           roleStr = role.charAt(0).toUpperCase() + role.slice(1);
       }
@@ -395,11 +403,9 @@ const Video = () => {
               </Typography>
 
               {loggedInProfileId === profileId && (
-                // <Box sx={{ marginLeft: 'auto', display: 'flex' }}>
                 <s.EditDeleteWrapper>
                   <DeleteContentButton contentId={content?.id || ''} />
                 </s.EditDeleteWrapper>
-                // </Box>
               )}
             </Box>
             <Typography component="p" variant="body2" sx={{ my: 1 }}>
@@ -414,9 +420,17 @@ const Video = () => {
             {!isLoading && (
               <Stack
                 direction="row"
-                spacing={2}
                 justifyContent="left"
-                sx={{ my: 3, typography: 'body2' }}
+                sx={{
+                  my: 3,
+                  typography: 'body2',
+                  flexWrap: 'wrap',
+                  rowGap: 0,
+                  columnGap: 3,
+                  '@media (max-width: 600px)': {
+                    justifyContent: 'space-between'
+                  }
+                }}
               >
                 {(content?.type === 'document' || content?.type === 'pdf') && (
                   <s.ActionsWrapper>
@@ -484,7 +498,7 @@ const Video = () => {
               <>
                 <Stack>
                   <Typography component="h5" variant="h5">
-                    {t('Contributors')}
+                    {t('Play Page Header 1')}
                   </Typography>
                   {content?.contributors &&
                     Object.entries(content?.contributors)
@@ -560,9 +574,8 @@ const Video = () => {
                   </>
                 )}
 
-                {/* Technically these are the Collaborators, not the Contributors.  I keep mixing them up as well :)  */}
-                <Contributors
-                  contributors={
+                <Collaborators
+                  collaborators={
                     content?.collaboratorDetails as CollaboratorDetails[]
                   }
                 />
@@ -572,7 +585,7 @@ const Video = () => {
                 {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <Typography component="h5" variant="h5">
-                      {t('Tags')}
+                      {t('Play Page Header 2')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
@@ -605,8 +618,8 @@ const Video = () => {
                   <Stack>
                     <Typography component="h5" variant="h5">
                       {content?.languageTags && content?.languageTags.length > 1
-                        ? t('Languages')
-                        : t('Language')}
+                        ? t('Play Page Header 3LanguagePlural')
+                        : t('Play Page Header 3LanguageSingular')}
                     </Typography>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])

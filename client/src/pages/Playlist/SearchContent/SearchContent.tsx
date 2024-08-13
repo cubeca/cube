@@ -4,11 +4,11 @@ import LoadingCircle from 'assets/animations/loading-circle.json';
 import * as s from './SearchContent.styled';
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
-import useDebounce from '../../../hooks/useDebounce';
+import useDebounce from 'hooks/useDebounce';
 import { useTranslation } from 'react-i18next';
 import { searchContent } from 'api/search';
-import { ReactComponent as PlaylistIcon } from '../../../assets/icons/playlist.svg';
-import { ReactComponent as PlusIcon } from '../../../assets/icons/plus.svg';
+import { ReactComponent as PlaylistIcon } from 'assets/icons/playlist.svg';
+import { ReactComponent as PlusIcon } from 'assets/icons/plus.svg';
 import CheckIcon from '@mui/icons-material/Check';
 import { Box } from '@mui/material';
 

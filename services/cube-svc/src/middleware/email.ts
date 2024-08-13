@@ -14,10 +14,17 @@ import { brevoTemplateIdMapping } from '../utils/utils';
 
 /**
  * Send a verification email using the preconfigured Brevo template #2.
+ *
+ * @function
+ * @name sendVerificationEmail
+ * @param {string} name - The name of the user.
+ * @param {string} email - The email address of the user.
+ * @param {string} token - The verification token.
+ * @throws {Error} If the email or token is invalid, or if sending the email fails.
  */
 export const sendVerificationEmail = async (name: string, email: string, token: string) => {
   if (!email || !token) {
-    //name isn't required as the Brevo template can have default values
+    // name isn't required as the Brevo template can have default values
     throw new Error('Invalid parameters');
   }
 
@@ -50,6 +57,11 @@ export const sendVerificationEmail = async (name: string, email: string, token: 
 
 /**
  * Send a notification email letting the user know their password has been updated.
+ *
+ * @function
+ * @name sendPasswordChangeConfirmation
+ * @param {string} uuid - The UUID of the user.
+ * @throws {Error} If the UUID is invalid, or if sending the email fails.
  */
 export const sendPasswordChangeConfirmation = async (uuid: string) => {
   if (!uuid) {
@@ -89,6 +101,11 @@ export const sendPasswordChangeConfirmation = async (uuid: string) => {
 /**
  * Send an email containing a link for a password reset of an unauthenticated user.
  * This uses Brevo template #4.
+ *
+ * @function
+ * @name sendPasswordResetEmail
+ * @param {string} email - The email address of the user.
+ * @throws {Error} If the email is invalid, or if sending the email fails.
  */
 export const sendPasswordResetEmail = async (email: string) => {
   if (!email) {
@@ -141,6 +158,14 @@ export const sendPasswordResetEmail = async (email: string) => {
 
 /**
  * Send an email when the contact us form is submitted.
+ *
+ * @function
+ * @name sendContactUsEmail
+ * @param {string} name - The name of the user submitting the form.
+ * @param {string} email - The email address of the user submitting the form.
+ * @param {string} desc - The description of the issue.
+ * @param {string} ticketId - The ticket ID for the issue.
+ * @throws {Error} If any required parameters are missing, or if sending the email fails.
  */
 export const sendContactUsEmail = async (name: string, email: string, desc: string, ticketId: string) => {
   if (!name || !email || !desc || !ticketId) {
@@ -177,8 +202,17 @@ export const sendContactUsEmail = async (name: string, email: string, desc: stri
 };
 
 /**
- * Send an email letting an admin know someone is disputing an
- * uploaded content item.
+ * Send an email letting an admin know someone is disputing an uploaded content item.
+ *
+ * @function
+ * @name sendReportAbuseEmail
+ * @param {string} disputedUrl - The URL of the disputed content.
+ * @param {string} requestType - The type of request (e.g., dispute, report).
+ * @param {string} contactName - The name of the person reporting the issue.
+ * @param {string} contactEmail - The email address of the person reporting the issue.
+ * @param {string} issueDesc - The description of the issue.
+ * @param {string} ticketId - The ticket ID for the issue.
+ * @throws {Error} If any required parameters are missing, or if sending the email fails.
  */
 export const sendReportAbuseEmail = async (
   disputedUrl: string,
@@ -220,5 +254,52 @@ export const sendReportAbuseEmail = async (
   } catch (error) {
     console.error('Error sending report abuse email:', error);
     throw new Error('Error sending report abuse email');
+  }
+};
+
+/**
+ * Send an email letting an admin know someone has registered a creator profile.
+ *
+ * @function
+ * @name sendProfileRegistrationNotification
+ * @param {string} organization - The organization of the registered profile.
+ * @param {string} email - The email associated to the registered profile.
+ * @param {string} name - The name of the person registering the profile.
+ * @param {string} tag - The organization tag of the registered profile.
+ * @param {string} website - The website associated to the registered profile.
+ * @throws {Error} If any required parameters are missing, or if sending the email fails.
+ */
+export const sendProfileRegistrationNotification = async (organization: string, email: string, name: string, tag: string, website: string) => {
+  if (!organization || !email || !name || !tag || !website) {
+    throw new Error('Not all required fields have been provided');
+  }
+
+  const defaultClient = Brevo.ApiClient.instance;
+  const apiKey = defaultClient.authentications['api-key'];
+  apiKey.apiKey = settings.BREVO_API_KEY;
+
+  const apiInstance = new Brevo.TransactionalEmailsApi();
+  const sendSmtpEmail = new Brevo.SendSmtpEmail();
+  sendSmtpEmail.sender = {
+    name: 'CubeCommons Do Not Reply',
+    email: 'donotreply@cubecommons.ca'
+  };
+
+  sendSmtpEmail.to = [{ email: settings.NOTIFICATION_EMAIL }];
+  sendSmtpEmail.templateId = brevoTemplateIdMapping.NEW_PROFILE_REGISTRATION_NOTIFICATION;
+  sendSmtpEmail.params = {
+    organization: `${organization}`,
+    email: `${email}`,
+    name: `${name}`,
+    tag: `${tag}`,
+    website: `${website}`
+  };
+
+  try {
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log('New profile registration notification email sent successfully');
+  } catch (error) {
+    console.error('Error sending profile registration notification email:', error);
+    throw new Error('Error sending profile registration notification email');
   }
 };

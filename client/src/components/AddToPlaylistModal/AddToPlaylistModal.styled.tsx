@@ -37,7 +37,7 @@ export const PlaylistItemTitle = styled(Typography)`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 21px; /* 131.25% */
+  line-height: 21px;
   padding: 15px 0;
   margin: 0;
 `;

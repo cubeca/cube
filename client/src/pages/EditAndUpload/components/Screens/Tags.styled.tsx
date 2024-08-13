@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import Button from 'components/Button';
 import TextInput from 'components/form/TextInput';
 import { styled } from 'theme/utils';
@@ -22,7 +22,7 @@ export const StyledButton = styled(Button)`
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
-  line-height: 20px; /* 125% */
+  line-height: 20px;
 `;
 
 export const StyledList = styled('ul')`
@@ -36,10 +36,10 @@ export const StyledList = styled('ul')`
 `;
 
 export const StyledListItem = styled('li')`
-  line-height: 26px; /* 162.5% */
+  line-height: 26px;
   margin: 0;
-  text-indent: -1.3em; /* adjust as needed */
-  padding-left: 1.5em; /* adjust as needed */
+  text-indent: -1.3em;
+  padding-left: 1.5em;
 `;
 
 export const StyledListSpan = styled('span')`
@@ -47,7 +47,7 @@ export const StyledListSpan = styled('span')`
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
-  line-height: 26px; /* 162.5% */
+  line-height: 26px;
   font-weight: 400;
 `;
 
@@ -61,7 +61,7 @@ export const StyledInputLabel = styled(Typography)`
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
-    line-height: 26px; /* 162.5% */ 
+    line-height: 26px; 
     ${theme.breakpoints.down('sm')} {
       marginTop: ${theme.spacing(0)};
     }

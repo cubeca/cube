@@ -1,3 +1,10 @@
+/**
+ * `DoubleLanguagePanel` renders a two-column layout for displaying bilingual text content,
+ * optionally accompanied by an image. It leverages Material-UI's Grid system for responsive layout, allowing the content to stack
+ * on smaller screens and sit side-by-side on larger ones. The component supports reversing the column order, making it flexible
+ * for different design needs.
+ */
+
 import Grid from '@mui/system/Unstable_Grid';
 import { FC, ReactNode } from 'react';
 interface DoubleLanguagePanelProps {

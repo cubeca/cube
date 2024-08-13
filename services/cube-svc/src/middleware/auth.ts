@@ -2,12 +2,18 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as settings from '../settings';
 
+/**
+ * Interface representing the payload of a JWT used in the application.
+ */
 interface CubeJwtPayload {
   sub: string;
   aud: string[];
   iss: string;
 }
 
+/**
+ * Interface representing an Express request that includes a user property.
+ */
 interface UserRequest extends Request {
   user?: {
     uuid: string;
@@ -16,6 +22,14 @@ interface UserRequest extends Request {
   };
 }
 
+/**
+ * Type guard to check if an object is of type CubeJwtPayload.
+ *
+ * @function
+ * @name isCubeJwtPayload
+ * @param {any} x - The object to check.
+ * @returns {boolean} True if the object is a CubeJwtPayload, false otherwise.
+ */
 function isCubeJwtPayload(x: any): x is CubeJwtPayload {
   return (
     'sub' in x &&
@@ -29,6 +43,16 @@ function isCubeJwtPayload(x: any): x is CubeJwtPayload {
   );
 }
 
+/**
+ * Middleware to authenticate a JWT token from the authorization header or query parameter.
+ *
+ * @function
+ * @name authenticateToken
+ * @param {UserRequest} req - The Express request object, extended with a user property.
+ * @param {Response} res - The Express response object.
+ * @param {NextFunction} next - The next middleware function.
+ * @returns {void}
+ */
 const authenticateToken = (req: UserRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const authQuery = req.query?.authorization ? String(req.query?.authorization) : undefined;
@@ -57,6 +81,14 @@ const authenticateToken = (req: UserRequest, res: Response, next: NextFunction) 
   });
 };
 
+/**
+ * Middleware to allow access if the user has any of the specified permissions.
+ *
+ * @function
+ * @name allowIfAnyOf
+ * @param {...string[]} allowList - The list of permissions to check against.
+ * @returns {Function[]} An array of middleware functions.
+ */
 export const allowIfAnyOf = (...allowList: string[]) => [
   authenticateToken,
   (req: UserRequest, res: Response, next: NextFunction) => {
@@ -73,6 +105,15 @@ export const allowIfAnyOf = (...allowList: string[]) => [
   }
 ];
 
+/**
+ * Utility function to extract the user object from the request.
+ *
+ * @function
+ * @name extractUser
+ * @param {UserRequest} req - The Express request object, extended with a user property.
+ * @returns {Object} The user object from the request.
+ * @throws {Error} If the request or user object is missing.
+ */
 export const extractUser = (req: UserRequest) => {
   if (!req) {
     throw new Error('Request object is missing');

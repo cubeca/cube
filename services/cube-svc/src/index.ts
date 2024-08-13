@@ -27,6 +27,24 @@ app.use('/', content);
 app.use('/', vtt);
 app.use('/', playlist);
 
+/**
+ * Main Application
+ *
+ * This module sets up the Express application, configures middleware,
+ * and defines the main routes for the application.
+ *
+ * @module App
+ */
+
+/**
+ * Search endpoint that allows searching across content, profiles, and playlists.
+ *
+ * @function
+ * @name get/search
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Search results
+ */
 app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   type ServiceResult = {
     status: number | null;
@@ -141,6 +159,15 @@ app.get('/search', allowIfAnyOf('anonymous', 'active'), async (req: Request, res
   return res.status(200).json(responsePayload);
 });
 
+/**
+ * Deactivate a profile.
+ *
+ * @function
+ * @name post/deactivateProfile
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Status message
+ */
 app.post('/deactivateProfile', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const user = extractUser(req);
   const { profileId } = req.body;
@@ -173,13 +200,10 @@ app.post('/deactivateProfile', allowIfAnyOf('active'), async (req: Request, res:
 
       const profileContent = await contentQueries.listContentByProfileId(0, 1000, {}, profileId);
       for (const contentItem of profileContent) {
-        // Delete content and file record in the database
         await contentQueries.deleteContent(contentItem.id!);
-
-        // @ts-ignore
+        //@ts-ignore
         await deleteCloudflareData(contentItem.data.mediaFileId);
-
-        // @ts-ignore
+        //@ts-ignore
         await deleteCloudflareData(contentItem.data.coverImageFileId);
       }
       return res.status(200).send('Profile deactivated');
@@ -189,6 +213,15 @@ app.post('/deactivateProfile', allowIfAnyOf('active'), async (req: Request, res:
   }
 });
 
+/**
+ * Health check endpoint to verify the service is running.
+ *
+ * @function
+ * @name get/
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {String} Service status message
+ */
 app.get('/', async (_req: Request, res: Response) => {
   return res.status(200).send('Service is running');
 });

@@ -24,11 +24,11 @@ const NavPanel = () => {
 
       <s.NavList component="ul">
         <s.NavItem>
-          <s.NavLink to="/">{t('Home/ Accueil')}</s.NavLink>
+          <s.NavLink to="/">{t('Home | Accueil')}</s.NavLink>
         </s.NavItem>
 
         <s.NavItem>
-          <s.NavLink to="/search">{t('Search Content/ Recherche')}</s.NavLink>
+          <s.NavLink to="/search">{t('Search Content | Recherche')}</s.NavLink>
         </s.NavItem>
 
         <s.NavItem>
@@ -39,20 +39,20 @@ const NavPanel = () => {
 
         <s.NavItem>
           <s.NavLink to={''} onClick={openContactUsModal}>
-            {t('Contact Us/ Contactez-Nous')}
+            {t('Contact Us | Contactez-Nous')}
           </s.NavLink>
         </s.NavItem>
 
         <s.NavItem>
-          <s.NavLink to="/">{t('FAQs')}</s.NavLink>
+         <s.NavLink to="/">{t('FAQs')}</s.NavLink>
         </s.NavItem>
 
         <s.NavItem>
-          <s.NavLink to="/signup">{t('Become a Creator/ Devenez un Créateur')}</s.NavLink>
+          <s.NavLink to="/signup">{t('Become a Creator | Devenez un Créateur')}</s.NavLink>
         </s.NavItem>
 
         <s.NavItem>
-          <s.NavLink to="/login">{t('Login/ Connexion')}</s.NavLink>
+          <s.NavLink to="/login">{t('Login | Connexion')}</s.NavLink>
         </s.NavItem>
         <s.NavItem>
           <LegalModalNav />

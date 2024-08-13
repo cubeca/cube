@@ -1,11 +1,29 @@
+/**
+ * PlaylistItem Component
+ *
+ * This component represents an item within a playlist and provides a UI for interacting with it.
+ * It displays the item's thumbnail, title, and type-specific icon. If the item includes sign language,
+ * an additional icon is shown. The component also supports edit mode, enabling users to delete playlist items
+ * with confirmation dialogs.
+ *
+ * Props:
+ * @param {string} bgUrl - Background URL for the item's thumbnail.
+ * @param {string} alt - Alt text for the thumbnail image.
+ * @param {string} title - Title of the playlist item.
+ * @param {string} type - Type of the item (e.g., book, audio, video, link, document).
+ * @param {string} url - URL associated with the playlist item.
+ * @param {boolean} [signLanguage] - Indicates if the item includes sign language.
+ */
+
 import React from 'react';
 import * as s from './PlaylistPanel.styled';
-import { ReactComponent as VideoIcon } from '../../assets/icons/type-video-square.svg';
+import { ReactComponent as VideoIcon } from 'assets/icons/type-video-square.svg';
 import { ReactComponent as AudioIcon } from '../../assets/icons/audio.svg';
 import { ReactComponent as BookIcon } from '../../assets/icons/book.svg';
 import { ReactComponent as SignLanguageIcon } from '../../assets/icons/sign.svg';
 import { ReactComponent as LinkIcon } from '../../assets/icons/link.svg';
 import { ReactComponent as DocIcon } from '../../assets/icons/doc.svg';
+
 import { DialogTitle, DialogActions } from '@mui/material';
 import Button from 'components/Button';
 
@@ -38,7 +56,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
   deletePlaylistItem
 }) => {
   const TypeIcon = {
-    book: BookIcon,
+    pdf: BookIcon,
     audio: AudioIcon,
     video: VideoIcon,
     link: LinkIcon,
@@ -49,9 +67,6 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
 
   const handleClickOpen = (e: any) => {
     setOpen(true);
-    // e.preventDefault();
-    // e.stopPropagation();
-    // e.nativeEvent.stopImmediatePropagation();
     setEditingPlaylist(playlistId);
   };
   const handleClose = () => {

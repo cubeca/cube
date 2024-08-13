@@ -1,3 +1,16 @@
+/**
+ * `MoreContent` fetches and displays additional content related to the current content or playlist.
+ * It uses custom hooks `useProfileContent` and `useSinglePlaylist` to fetch content based on the profile ID or playlist ID provided.
+ * The component can also filter out specific content by an exclude ID and can further refine content fetching based on tags.
+ * It renders a list of content or playlists using `ContentList` or `ContentListPlaylists` components respectively.
+ * If the data is still loading, a `ContentLoader` is displayed to indicate the loading state.
+ *
+ * @param {string} profileId The ID of the profile for which to fetch related content.
+ * @param {string} excludeId The ID of the content to exclude from the results.
+ * @param {string} [playlistId] Optional. The ID of the playlist for which to fetch related playlists.
+ * @param {any} [tags] Optional. Tags used to further filter the content or playlists.
+ */
+
 import { Stack } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import ContentList from 'components/ContentList';
@@ -7,7 +20,6 @@ import useProfileContent from 'hooks/useProfileContent';
 import useSinglePlaylist from 'hooks/useSinglePlaylist';
 import { searchContent, searchPlaylists } from 'api/search';
 import { SearchFilters } from '@cubeca/cube-svc-client-oas-axios';
-import { set } from 'date-fns';
 import ContentListPlaylists from 'components/ContentListPlaylists';
 import FPOThumb1 from '../../assets/images/fpo/cont-art-gal-thumb1.png';
 import FPOThumb2 from '../../assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
@@ -40,7 +52,7 @@ const MoreContent = ({
   const [playlistContent, setPlaylistContent] = useState<any>([]);
   const [isFromPlaylist, setIsFromPlaylist] = useState<boolean>(playlistId);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const { data: content, isLoading } = useProfileContent(profileId);
 
   function getRandomContent(content: any[], count: number) {
@@ -55,6 +67,7 @@ const MoreContent = ({
     isLoading: isPlaylistLoading
   } = useSinglePlaylist(playlistId ? playlistId : '');
 
+  // fallback content to display if no content is found
   const defaultContent = [
     {
       id: '4f0b89ba-9104-4806-91c4-a86cb71a2751',
@@ -246,7 +259,7 @@ const MoreContent = ({
     <Stack>
       {combinedContent.length > 0 ? (
         <ContentList
-          heading={t('More Content Like This')}
+          heading={t('Play Page Header 4')}
           content={uniqueCombinedContent}
           playlistId={playlistId}
         />

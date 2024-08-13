@@ -1,6 +1,9 @@
 # Use an official Node.js runtime as a base image
 FROM node:14
 
+# Specify the license using the LABEL instruction
+LABEL org.opencontainers.image.licenses="MIT"
+
 # Set the working directory in the container
 WORKDIR /work/
 
@@ -18,3 +21,4 @@ EXPOSE 4551
 
 # Define the command to run your application
 CMD ["npm", "run", "serve"]
+

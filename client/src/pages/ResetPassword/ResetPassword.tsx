@@ -1,3 +1,7 @@
+/**
+ * `ResetPassword` provides a user interface for resetting a user's password.
+ */
+
 import { Grid, Stack, Typography } from '@mui/material';
 import Button from 'components/Button';
 import ErrorMessage from 'components/form/ErrorMessage';

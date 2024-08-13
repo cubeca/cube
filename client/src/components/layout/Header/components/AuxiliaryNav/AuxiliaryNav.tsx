@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import * as s from './AuxiliaryNav.styled';
 import useAuth from 'hooks/useAuth';
+import { useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { MainMenu } from 'components/layout/MainMenu';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -15,6 +16,7 @@ const AuxiliaryNav = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const open = Boolean(anchorEl);
+  const isSmallScreen = useMediaQuery('(max-width: 390px)');
 
   const handleLogin = () => {
     if (location.pathname.includes('/login')) {
@@ -45,9 +47,11 @@ const AuxiliaryNav = () => {
 
   return (
     <s.Aux component="nav" direction="row" alignItems="center" spacing={2}>
-      <s.StyledLink to="/search">
-        <s.StyledHomeIcon isLoggedIn={isLoggedIn} />
-      </s.StyledLink>
+      {!isSmallScreen && (
+        <s.StyledLink to="/search">
+          <s.StyledHomeIcon isLoggedIn={isLoggedIn} />
+        </s.StyledLink>
+      )}
 
       {isLoading ? (
         <p>Loading...</p>

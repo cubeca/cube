@@ -10,6 +10,9 @@ const cloudflareApi = axios.create({
   validateStatus: null
 });
 
+/**
+ * Interface representing HTTP headers.
+ */
 export interface Headers {
   [k: string]: string;
 }
@@ -18,6 +21,18 @@ const authHeader: Headers = {
   Authorization: `bearer ${settings.CLOUDFLARE_API_TOKEN}`
 };
 
+/**
+ * Get a TUS upload URL for uploading a video to Cloudflare Stream.
+ *
+ * @function
+ * @name getTusUploadUrl
+ * @param {string} fileId - The ID of the file to be uploaded.
+ * @param {number} fileSizeBytes - The size of the file in bytes.
+ * @param {number} reserveDurationSeconds - The duration in seconds to reserve the upload.
+ * @param {number} urlValidDurationSeconds - The duration in seconds for which the URL is valid.
+ * @param {string} userId - The ID of the user uploading the file.
+ * @returns {Promise<{tusUploadUrl: string, cloudflareStreamUid: string}>} The TUS upload URL and Cloudflare Stream UID.
+ */
 export const getTusUploadUrl = async (
   fileId: string,
   fileSizeBytes: number,
@@ -45,11 +60,27 @@ export const getTusUploadUrl = async (
   return { tusUploadUrl, cloudflareStreamUid };
 };
 
+/**
+ * Delete a video from Cloudflare Stream.
+ *
+ * @function
+ * @name deleteVideo
+ * @param {string} cloudflareStreamUid - The Cloudflare Stream UID of the video to delete.
+ * @returns {Promise<boolean>} True if the video was deleted successfully, false otherwise.
+ */
 export const deleteVideo = async (cloudflareStreamUid: string) => {
   const { status } = await cloudflareApi.delete(`/${cloudflareStreamUid}`, { headers: authHeader });
   return status === 204;
 };
 
+/**
+ * Get details of a video from Cloudflare Stream.
+ *
+ * @function
+ * @name getVideoDetails
+ * @param {string} cloudflareStreamUid - The Cloudflare Stream UID of the video.
+ * @returns {Promise<any|null>} The video details if the request was successful, null otherwise.
+ */
 export const getVideoDetails = async (cloudflareStreamUid: string) => {
   const { status, data } = await cloudflareApi.get(`/${cloudflareStreamUid}`, { headers: authHeader });
   if (status === 200) {

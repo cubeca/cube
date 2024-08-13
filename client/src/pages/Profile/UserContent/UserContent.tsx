@@ -1,3 +1,11 @@
+/**
+ * `UserContent` provides an interface for users to view and manage their content and playlists.
+ * The component fetches and displays content and playlists based on user input and selected filters, including search terms and content categories.
+ *
+ * @param {any} profile The user's profile information, used to fetch relevant content and playlists.
+ * @param {boolean} isLoading Indicates whether the initial loading of the user's content and playlists is in progress.
+ */
+
 import ContentCard from 'components/ContentCard';
 import UserContentFilter from './UserContentFilter';
 import Lottie from 'lottie-react';
@@ -252,8 +260,6 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
                         const liveDate = new Date(key.live ? key.live : null);
 
                         // only return content that is between the date ranges of live and expiry dates to a public user
-                        // but show all content if user is the profile owner
-
                         return (
                           (expiryDate >= new Date() || !key.expiry) &&
                           (!key.live || liveDate <= new Date())

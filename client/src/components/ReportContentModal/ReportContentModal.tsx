@@ -1,9 +1,16 @@
-import { Stack, TextField, Typography } from '@mui/material';
+/**
+ * `ReportContentModal` renders a modal dialog for reporting content.
+ * The modal includes a form with text input and radio buttons for specifying the report reason,
+ * and integrates hCaptcha for spam and abuse prevention. Upon successful form submission,
+ * it communicates with a backend service through the `reportContent` API function,
+ * displaying success or error messages based on the submission outcome.
+ */
+
+import { Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import Dialog from 'components/Dialog';
 import * as s from './ReportContentModal.styled';
 import Button from 'components/Button';
-import CheckboxInput from 'components/form/CheckboxInput';
 import { FieldValues, useForm } from 'react-hook-form';
 import TextInput from 'components/form/TextInput';
 import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';

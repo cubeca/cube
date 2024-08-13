@@ -1,36 +1,35 @@
-import { FC, useEffect } from 'react';
+/**
+ * `PDFReader` is a component designed to render PDF documents.
+ * It utilizes the `pdfjs-dist` library to load and display PDF files. The component supports basic functionalities
+ * such as navigating between pages, toggling fullscreen mode, and dynamically adjusting to screen width changes.
+ * It also includes a custom fullscreen modal for an enhanced viewing experience in fullscreen mode.
+ * The component allows for displaying one page at a time or all pages simultaneously, controlled by the `displayMode` state.
+ *
+ * @param {string} url The URL of the PDF document to be displayed.
+ */
+
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
-import { Button } from 'components/Button/Button.styled';
 import {
   Fullscreen,
   KeyboardArrowLeft,
   KeyboardArrowRight
 } from '@mui/icons-material';
-import {
-  Box,
-  IconButton,
-  ToggleButton,
-  ToggleButtonGroup
-} from '@mui/material';
+
 import { ContentLoader } from 'components/Loaders';
 import Grid from '@mui/system/Unstable_Grid';
 import PDFModal from './FullscreenModal';
 import * as s from './PDFReader.styled';
 
-const options = {
-  cMapUrl: '/cmaps/',
-  standardFontDataUrl: '/standard_fonts/'
-};
-
 interface PDFReaderProps {
   url: string;
 }
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const PDFReader = ({ url }: PDFReaderProps) => {
   const [numPages, setNumPages] = useState<number>();

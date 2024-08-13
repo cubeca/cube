@@ -1,3 +1,13 @@
+/**
+ * The `Playlist` component (page) is designed to display a playlist and its associated content
+ * when anyone (logged in or not) navigates to a playlist on the site.
+ * It fetches playlist details and the user's profile information upon component mounting. The component renders an `EmbedModal`
+ * for sharing the playlist and dynamically generates a link to the playlist creator's profile if the current user's profile
+ * does not match the playlist creator's profile. The component conditionally displays the creator's profile link based on the
+ * availability of the localProfile` and `playlistCreatorProfileId`, and whether the current profile matches the playlist creator's profile.
+ *
+ */
+
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useEffect, useState } from 'react';

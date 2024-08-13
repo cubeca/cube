@@ -1,10 +1,31 @@
-import {
-  Box,
-  DialogActions,
-  DialogTitle,
-  TextField,
-  Typography
-} from '@mui/material';
+/**
+ * PlaylistPanel Component
+ *
+ * This component displays and manages playlists for a user. It includes features
+ * for viewing, editing, adding, and deleting playlists. Playlist items can be
+ * rearranged via drag-and-drop.
+ *
+ * Key functionalities:
+ * - Display playlists with title and description.
+ * - Edit mode for updating playlist titles and descriptions with
+ *   drag-and-drop support for reordering content items within a playlist.
+ * - Add new playlists via a modal.
+ * - Delete playlists with confirmation dialog.
+ *
+ * Props:
+ * @param {Array} playlists - Array of playlist objects to be displayed.
+ * @param {string} profileId - ID of the user's profile.
+ * @param {string} userId - ID of the user.
+ * @param {boolean} cameFromSinglePlaylist - Boolean indicating if the view originated from a single playlist.
+ * @param {boolean} isLoading - Boolean for loading state.
+ * @param {Function} refetchPlaylist - Function to refetch a single playlist.
+ * @param {Function} refetchPlaylists - Function to refetch all playlists.
+ * @param {string} currentPlaylistId - ID of the current playlist being viewed.
+ * @param {boolean} isLoggedIn - Boolean indicating if the user is logged in.
+ *
+ */
+
+import { Box, DialogActions, DialogTitle, TextField } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useEffect, useState } from 'react';
 import Lottie from 'lottie-react';
@@ -104,8 +125,6 @@ const PlaylistPanel: React.FC<Props> = ({
 
   const {
     isLoading,
-    isAddLoading,
-    isDeleteLoading,
     addPlaylist: handleAddPlaylist,
     deletePlaylist: handleDeletePlaylist,
     updatePlaylist: handleUpdatePlaylist
@@ -295,7 +314,6 @@ const PlaylistPanel: React.FC<Props> = ({
                         <TextField
                           className="editInput"
                           value={editedTitles[playlist.id] || ''}
-                          // value={textFieldTitleValue}
                           placeholder="Title (required)"
                           onChange={(e) => {
                             setEditedTitles({

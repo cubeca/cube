@@ -1,4 +1,11 @@
+/* AgeCheckModal Component
+ *   This component renders a modal that prompts the user to confirm if they are over 18 years old.
+ *   The modal appears full-screen when open and prevents click propagation to underlying elements.
+ *   It contains two buttons: one for users over 18, and another for users under 18 which also navigates back in history and closes the modal.
+ */
+
 import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
 import * as s from './AgeCheckModal.styled';
 
 interface AgeCheckModalProps {
@@ -26,11 +33,11 @@ const AgeCheckModal = ({
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 2 // space between items
+            gap: 2
           }}
         >
           <Typography variant="h6">
-            The following content requires a viewer to be 18 or older.
+            The following content requires a viewer to be 18 or older. |FR| Le contenu suivant nécessite que le spectateur soit âgé d`au moins 18 ans.
           </Typography>
           <Box
             sx={{

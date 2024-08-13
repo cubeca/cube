@@ -82,13 +82,13 @@ export const Seperator = styled(Divider)`
   opacity: 0.3333;
 `;
 
-export const Contributor = styled(Stack)`
+export const Collaborator = styled(Stack)`
   &:not(:first-child) {
     margin-top: 16px;
   }
 `;
 
-export const ContributorThumb = styled(Box)`
+export const CollaboratorThumb = styled(Box)`
   width: 40px;
   margin-right: 8px;
 
@@ -101,7 +101,7 @@ export const ContributorThumb = styled(Box)`
   }
 `;
 
-export const ContributorName = styled(Typography)`
+export const CollaboratorName = styled(Typography)`
   color: ${(props) => props.theme.palette.primary.light} !important;
   font-weight: 500;
 
@@ -115,7 +115,7 @@ export const ContributorName = styled(Typography)`
   }
 `;
 
-export const ContributorSocial = styled(MuiLink)`
+export const CollaboratorSocial = styled(MuiLink)`
   font-size: 0.875rem;
   text-transform: uppercase;
   font-weight: 600;
@@ -200,7 +200,7 @@ export const EditSubsButton = styled(MuiLink)`
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 26px; /* 162.5% */
+  line-height: 26px;
   text-decoration-line: underline;
   margin-right: 22px;
 `;

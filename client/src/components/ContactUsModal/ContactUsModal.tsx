@@ -1,3 +1,8 @@
+/**
+ * `ContactUsModal` is a React component that renders a modal dialog allowing users to contact support or send feedback.
+ * The component also manages its own state for error messages, captcha verification status, and a success message display after form submission.
+ */
+
 import { Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import Dialog from 'components/Dialog';

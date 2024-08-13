@@ -1,11 +1,29 @@
 import express, { Request, Response } from 'express';
-
 import * as db from './db/queries/profile';
-
 import { allowIfAnyOf, extractUser } from './middleware/auth';
 import { getProfileData } from './utils/utils';
 
+/**
+ * Profile Service
+ *
+ * This service handles profile-related operations such as fetching, creating,
+ * updating, and deleting profiles. It also manages building a collaborator object
+ * for the front-end and allows fetching profiles by tag or a list of IDs.
+ *
+ *  * @module ProfileService
+ */
+
 export const profile = express.Router();
+
+/**
+ * Route to fetch all profiles
+ *
+ * @function
+ * @name get/profiles
+ * @param {Request} _req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} List of profiles
+ */
 profile.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (_req: Request, res: Response) => {
   try {
     const r = await db.selectAllProfiles();
@@ -16,6 +34,15 @@ profile.get('/profiles', allowIfAnyOf('anonymous', 'active'), async (_req: Reque
   }
 });
 
+/**
+ * Route to fetch all collaborators
+ *
+ * @function
+ * @name get/collaborators
+ * @param {Request} _req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} List of collaborators
+ */
 profile.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (_req: Request, res: Response) => {
   try {
     const r = await db.selectAllProfiles();
@@ -32,16 +59,22 @@ profile.get('/collaborators', allowIfAnyOf('anonymous', 'active'), async (_req: 
   }
 });
 
-// Route for creating a new profile
+/**
+ * Route to create a new profile
+ *
+ * @function
+ * @name post/profiles
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} ID of the newly created profile
+ */
 profile.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { organization, website, tag } = req.body;
 
-  // Check if required fields are provided in the request body
   if (!organization || !website || !tag) {
     return res.status(401).send('Invalid Request Body: organization, website, and tag must be provided.');
   }
 
-  // Insert the new profile and return its ID
   try {
     const r = await db.insertProfile(organization, website, tag);
     res.status(201).json({ id: r.id });
@@ -56,11 +89,18 @@ profile.post('/profiles', allowIfAnyOf('anonymous', 'active'), async (req: Reque
   }
 });
 
-// Route for updating an existing profile by its ID
+/**
+ * Route to update an existing profile by its ID
+ *
+ * @function
+ * @name patch/profiles/:profileId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Updated profile
+ */
 profile.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const profileId = req.params.profileId as string;
 
-  // Ensure at least one field is provided for update
   if (
     !(
       req.body.organization ||
@@ -82,10 +122,8 @@ profile.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Reques
     return res.status(403).send('User does not have permission to update this profile');
   }
 
-  // Store the values for each field to be updated
   const { organization, website, heroFileId, logoFileId, description, descriptionFileId, budget, status } = req.body;
 
-  // Update the profile and return the updated profile
   try {
     const dbResult = await db.updateProfile(
       profileId,
@@ -105,17 +143,23 @@ profile.patch('/profiles/:profileId', allowIfAnyOf('active'), async (req: Reques
   }
 });
 
-// Route for fetching a profile by its ID
+/**
+ * Route to fetch a profile by its ID
+ *
+ * @function
+ * @name get/profiles/:profileId
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Profile details
+ */
 profile.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { profileId } = req.params;
 
-  // Check if the profile ID is provided
   if (!profileId) {
     res.status(404).send('Profile Id not provided.');
     return;
   }
 
-  // Fetch the profile and return its details
   try {
     const profile = await getProfileData(profileId);
     res.status(200).json({ ...profile });
@@ -125,16 +169,22 @@ profile.get('/profiles/:profileId', allowIfAnyOf('anonymous', 'active'), async (
   }
 });
 
-// Route for fetching a profile by its tag
+/**
+ * Route to fetch a profile by its tag
+ *
+ * @function
+ * @name get/profiles/tag/:tag
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} Profile details
+ */
 profile.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { tag } = req.params;
 
-  // Check if the profile ID is provided
   if (!tag) {
     return res.status(404).send('Profile tag is not provided.');
   }
 
-  // Fetch the profile and return its details
   try {
     const r = await db.selectProfileByTag(tag);
 
@@ -151,17 +201,23 @@ profile.get('/profiles/tag/:tag', allowIfAnyOf('anonymous', 'active'), async (re
   }
 });
 
-// Route for fetching a list of profile by their ids
+/**
+ * Route to fetch a list of profiles by their IDs
+ *
+ * @function
+ * @name post/getProfilesByIdList
+ * @param {Request} req - Express request object
+ * @param {Response} res - Express response object
+ * @returns {JSON} List of profiles
+ */
 profile.post('/getProfilesByIdList', allowIfAnyOf('anonymous', 'active'), async (req: Request, res: Response) => {
   const { profileIdList } = req.body;
 
-  // Check if the profile id list is provided
   if (!profileIdList) {
     res.status(404).send('Profile id list not provided.');
     return;
   }
 
-  // Fetch the profile and return its details
   try {
     const r = await db.selectProfilesByIdList(profileIdList);
 

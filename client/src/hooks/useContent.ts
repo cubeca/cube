@@ -1,3 +1,25 @@
+/**
+ * `useContent` is a custom React hook designed to fetch content data using the `@tanstack/react-query` library. It integrates with 
+ * the application's content API to perform operations such as getting content, adding new content, and updating existing content. 
+ * The hook also utilizes `react-router-dom`'s `useSearchParams` for managing URL search parameters, allowing it to filter content 
+ * based on category, content type, nation, and creator.
+
+ * The hook accepts an optional `list` parameter, defaulting to 'videos', to specify the type of content to fetch, and an optional 
+ * `category` parameter for filtering content by category. It automatically updates the URL search parameters to reflect the selected 
+ * category if provided.
+
+ * Additionally, the hook provides `isLoading`, `isError`, and `data` states to manage and access the content fetching status and 
+ * results. It also supports content addition and updating through the `useMutation` hook, leveraging the `addContent` and 
+ * `updateContent` functions from the content API.
+
+ * @param {string} [list='videos'] - Optional. Specifies the type of content to fetch (e.g., 'videos', 'audio'). Defaults to 'videos'.
+ * @param {string} [category] - Optional. Specifies the category to filter the content by.
+ * @returns {Object} An object containing the following properties:
+ *   - `isLoading`: A boolean indicating if the content fetching is in progress.
+ *   - `isError`: A boolean indicating if there was an error during the content fetching.
+ *   - `data`: The content data fetched from the API.
+ */
+
 import {
   getContent,
   addContent,
@@ -73,14 +95,12 @@ const useContent = (list = 'videos', category?: string) => {
     id: string,
     payload: UpdateContent,
     coverImageFile: File,
-    // vttFile: File,
     bannerImageFile: File
   ) =>
     await mutateUpdate({
       id,
       payload,
       coverImageFile,
-      // vttFile,
       bannerImageFile
     });
 

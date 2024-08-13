@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+/**
+ * EmbeddedContent is a copy of the Content component but used for displaying embedded content.
+ * For more information, visit the Content component.
+ */
+
+import { useEffect, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 

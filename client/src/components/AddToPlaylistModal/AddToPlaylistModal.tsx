@@ -1,3 +1,39 @@
+/**
+ * AddToPlaylistModal Component
+ *
+ * This component provides a modal for creating a new playlist and adding content to existing playlists.
+ * A newly created playlist can be populated with content from the user's recent uploads or from a search of all content.
+ * The modal includes a form for creating a new playlist, a list of existing playlists to add content to, and a success message.
+ * The data required to create a new playlist includes a title, description, and a thumbnail image.
+ *      - A user can also optionally add an embed whitelist to restrict where the playlist can be embedded.
+ * This component is used in two ways:
+ *      - As a standalone modal for creating a new playlist and adding content to it.
+ *      - As a modal for adding content to an existing playlist.
+ *
+ * Props:
+ * @param {boolean} isOpen - Controls the modal's open state.
+ * @param {Function} onClose - Function to handle closing the modal.
+ * @param {boolean} [onlyCreate=false] - If true, only show the "Create Playlist" option.
+ * @param {string} [contentId] - ID of the content to be added to the playlist.
+ * @param {string} profileId - Profile ID of the user.
+ * @param {string} userId - User ID.
+ * @param {boolean} [userVersion=false] - If true, apply user-specific customizations.
+ * @param {string} [playlistId] - ID of an existing playlist.
+ * @param {string} [passedPlaylistId] - ID of a playlist passed from another component.
+ * @param {boolean} [cameFromSinglePlaylist=false] - If true, indicates navigation from a single playlist view.
+ * @param {string} [currentEditedPlaylist] - ID of the playlist currently being edited.
+ * @param {Function} [setCurrentEditedPlaylist] - Function to set the current edited playlist ID.
+ * @param {Function} [refetchPlaylists] - Function to refetch the playlist data after updating it.
+ * @param {string} [currentPlaylistId] - ID of the current playlist.
+ *
+ * Internal State:
+ * - errorMessage: Error message for form validation or submission errors.
+ * - showSuccessMessage: Flag to display the success message.
+ * - isAdded: Indicates whether a listed piece of content has already been added to the current playlist.
+ * - localPlaylists: Local state for playlist data.
+ * - playlistImageFile: File object for the playlist thumbnail image.
+ */
+
 import {
   Accordion,
   AccordionDetails,
@@ -123,6 +159,17 @@ const AddToPlaylistModal = ({
   const { t } = useTranslation();
   const theme = useTheme();
 
+  /** This block initializes playlist-related data using the `useSinglePlaylist` hook. Because this component is used both to create a
+   * new playlist and to add content to an existing playlist, it needs to handle different scenarios for playlist data.
+   *
+   * It determines the playlist ID to use by checking the following in order:
+   * 1. `newPlaylistId` - If present, this indicates a newly created playlist ID.
+   * 2. `playlistId` - If `newPlaylistId` is not present, it falls back to an existing `playlistId`.
+   * 3. `currentPlaylistId` - If neither `newPlaylistId` nor `playlistId` are present, it uses `currentPlaylistId`.
+   * If none of these IDs are available, it defaults to an empty string.
+   * The hook returns the current playlist's data (`playlist`), a function to fetch the current playlist (`getCurrentPlaylist`), and
+   * a function to refetch the playlist data (`refetchPlaylist`).
+   **/
   const {
     playlist,
     handleGetPlaylist: getCurrentPlaylist,
@@ -260,13 +307,9 @@ const AddToPlaylistModal = ({
       return;
     }
     const updatedContentIds = [...playlist.data.contentIds, contentId];
-    const updatedPlaylistData = {
-      ...playlist.data,
-      contentIds: updatedContentIds
-    };
 
     addContentToPlaylist(playlistId, { contentId });
-    // handleUpdatePlaylist(playlistId, updatedPlaylistData);
+
     setShowSuccessMessage(true);
     refetchPlaylists && refetchPlaylists();
     // change icon to checkmark
@@ -310,10 +353,6 @@ const AddToPlaylistModal = ({
         const newTempPlaylist = {
           id: newPlaylistId
         };
-      }
-
-      if (onlyCreate) {
-        // onClose();
       }
       console.log('Playlist created successfully');
     } catch (error) {

@@ -1,3 +1,10 @@
+/**
+ * `Upload` is a component (page) for uploading and editing content.
+ * The component is structured around a step-by-step upload process, represented by different screens (`Media`, `Details`, `Tags`, `TOS`),
+ * each encapsulated in its own component for better modularity. The upload/edit process uses react-hook-form for persisting form data between
+ * screens.  More details about each screen of the process can be found in the respective components within the Screens directory.
+ */
+
 import { Box, Typography } from '@mui/material';
 import useContent from 'hooks/useContent';
 import { useEffect, useRef, useState } from 'react';
@@ -117,7 +124,7 @@ const getContributors = (values: FieldValues) => {
   return contributorsObject;
 };
 
-const Upload = () => {
+const EditAndUpload = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   let contentId = queryParams.get('contentid');
@@ -507,4 +514,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default EditAndUpload;

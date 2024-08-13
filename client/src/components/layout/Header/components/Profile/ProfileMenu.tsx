@@ -15,6 +15,7 @@ import useAuth from 'hooks/useAuth';
 import * as s from './Profile.styled';
 import { GetProfileByTagData } from '@cubeca/cube-svc-client-oas-axios';
 import { getUser } from 'utils/auth';
+import { Box } from '@mui/material';
 
 interface ProfileMenuProps {
   open: boolean;
@@ -114,11 +115,14 @@ const ProfileMenu = ({
           text={t('Change Password')}
           icon={<PasswordIcon />}
         />
-        <ProfileMenuItem
-          onClick={handleDeactivateProfile}
-          text={t('Deactivate Profile')}
-          icon={<NotInterestedIcon />}
-        />
+        {profileId && profile && (
+          <ProfileMenuItem
+            onClick={handleDeactivateProfile}
+            text={t('Deactivate Profile')}
+            icon={<NotInterestedIcon />}
+            clipIcon={1.5}
+          />
+        )}
         <ProfileMenuItem
           onClick={handleLogout}
           text={t('Logout')}

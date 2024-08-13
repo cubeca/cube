@@ -1,3 +1,8 @@
+/**
+ * `ViewSection` is a component of the Profile page that renders a profile's organization logo and allows editing if the user is logged in.
+ *
+ */
+
 import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
@@ -5,7 +10,7 @@ import * as s from '../Profile.styled';
 import MediaPlayer from 'components/MediaPlayer';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
-
+import LanguageIcon from '@mui/icons-material/Language';
 interface ViewSectionProps {
   isLoggedIn: boolean;
   profile: any;
@@ -39,6 +44,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
               />
             )}
           </s.ImageInner>
+
           {isLoggedIn && (
             <s.EditWrapper>
               <button onClick={onEdit} style={{ cursor: 'pointer' }}>
@@ -55,15 +61,30 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             target="_blank"
             rel="noreferrer"
           >
-            {profile!.organization || ''}
+            <Box style={{ display: 'flex', alignItems: 'center' }}>
+              <LanguageIcon
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  color: '#d8ffed',
+                  opacity: 0.9,
+                  marginRight: '4px'
+                }}
+              />
+
+              {profile!.organization || ''}
+            </Box>
           </a>
           <small>
-            {profile!.tag &&
-              (profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`)}
+            <Typography component="p" variant="body2" style={{ margin: '0' }}>
+              {profile!.tag &&
+                (profile!.tag.includes('@')
+                  ? profile!.tag
+                  : `@${profile!.tag}`)}
+            </Typography>
           </small>
         </Typography>
       </s.Header>
-
       <s.Body>
         <Typography
           component="p"

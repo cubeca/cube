@@ -1,5 +1,9 @@
+/**
+ * `ContentList` is a functional React component that renders a list of content items using the `ContentCard` component.
+ * It optionally displays a heading above the list.
+ */
+
 import { Stack, Typography } from '@mui/material';
-import Button from 'components/Button';
 import ContentCard from 'components/ContentCard/ContentCard';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -15,9 +19,7 @@ interface ContentListProps {
 const ContentList: FC<ContentListProps> = ({
   heading,
   content,
-  isLoggedIn = false,
-  playlistId,
-  handleNewMedia
+  playlistId
 }) => {
   const { t } = useTranslation();
 

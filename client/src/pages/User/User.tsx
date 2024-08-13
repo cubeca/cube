@@ -1,15 +1,18 @@
+/**
+ * The `User`component serves as a dashboard page for logged-in users on Cube Commons, not to be confused with logged in creators,
+ * who have more privileges and access to additional features. The page displays the user's playlists and allows them to create new playlists.
+ */
+
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { getAuthTokenPayload } from 'utils/auth';
 import Button from 'components/Button';
 import Footer from 'components/layout/Footer';
 import Lottie from 'lottie-react';
 import LoadingCubes from 'assets/animations/loading-cubes.json';
-import useAuth from 'hooks/useAuth';
 import PlaylistPanel from 'components/PlaylistPanel';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import usePlaylist from 'hooks/usePlaylist';
@@ -18,11 +21,8 @@ import useContentDetails from 'hooks/useContentDetails';
 const User = () => {
   const user = getAuthTokenPayload();
   const { t } = useTranslation();
-  const [playlist, setPlaylist] = useState(null);
   const [detailedPlaylists, setDetailedPlaylists] = useState<any[]>([]);
-  const [transformedPlaylists, setTransformedPlaylists] = useState<any[]>([]);
   const { fetchContentDetails } = useContentDetails();
-  const [playlistData, setPlaylistData] = useState<[]>([]);
   const [userId, setUserId] = useState('');
 
   useEffect(() => {
@@ -46,12 +46,9 @@ const User = () => {
   const queryParams = new URLSearchParams(location.search);
   const tab = queryParams.get('tab');
 
-  const { isLoggedIn } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
 
   const [selectedPanel, setSelectedPanel] = useState(tab || 'content');
-  const navigate = useNavigate();
 
   function handleClose() {
     setIsPlaylistModalOpen(false);
