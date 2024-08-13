@@ -1,4 +1,4 @@
-## Table of Contents
+## Table of Contents - trying branch restrictions
 
 - [CubeCommons](#cubecommons)
   - [File Structure](#file-structure)
@@ -9,12 +9,12 @@
       - [User Permissions](#user-permissions)
     - [Cloud Infrastructure](#cloud-infrastructure)
     - [Front-End Hosting](#front-end-hosting)
+  - [Governance](#governance)
   - [Setup](#setup)
     - [1. Create Database Tables](#1-create-database-tables)
     - [2. Email Provider](#2-email-provider)
     - [3. Configure Environment Variables](#3-configure-environment-variables)
     - [4. Start the Client](#4-start-the-client)
-  - [Governance](#governance)
 - [Styleguide](#styleguide)
   - [Contributing](#contributing)
   - [License](#license)
