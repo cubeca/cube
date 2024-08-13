@@ -5,6 +5,7 @@
  */
 
 import { Box, Typography } from '@mui/material';
+import { t } from 'i18next';
 import * as s from './AgeCheckModal.styled';
 
 interface AgeCheckModalProps {
@@ -36,7 +37,7 @@ const AgeCheckModal = ({
           }}
         >
           <Typography variant="h6">
-            The following content requires a viewer to be 18 or older.
+            The following content requires a viewer to be 18 or older. |FR| Le contenu suivant nécessite que le spectateur soit âgé d`au moins 18 ans.
           </Typography>
           <Box
             sx={{

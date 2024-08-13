@@ -11,9 +11,10 @@ import TextInput from 'components/form/TextInput';
 import CheckboxInput from 'components/form/CheckboxInput';
 import LegalModalSignup from 'components/Legal/LegalModalSignup';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import * as s from '../Login.styled';
 
 export const UserSignupForm = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const { control, handleSubmit } = useForm();
   const [displayLegal, setDisplayLegal] = useState(false);
   const [submittableData, setSubmittableData] = useState({
@@ -76,10 +77,20 @@ export const UserSignupForm = () => {
 
   if (isFormSubmitted) {
     return (
-      <Typography component="h2" variant="h2">
-        <b style={{color: "#D9FFEE"}}>One More Step: Verify Your Email.</b> Check the email address you provided for your
-        verification link.
-      </Typography>
+      <>
+      <Typography variant="h2" component="h2"  color="#D9FFEE" pb={4}>
+      {t('Verify Email Header')}
+        </Typography>
+        <Typography variant="h4" component="h4"  pb={4}>
+      {t('Verify Email Body')}
+        </Typography>
+        <Typography variant="h3" component="h3" color="#D9FFEE" pb={4}>
+      {t('Verify Email HeaderFR')}
+        </Typography>
+        <Typography variant="h4" component="h4"  pb={4}>
+      {t('Verify Email BodyFR')}
+        </Typography>
+      </>
     );
   }
 
@@ -88,12 +99,15 @@ export const UserSignupForm = () => {
       <Typography variant="h3" component="h3" pb={4}>
         {t('Sign up for a User Account')}
       </Typography>
+      <Typography variant="h5" component="h5" pb={4}> 
+        {t('Inscrivez-vous pour un compte `User`')}
+      </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack direction="row" spacing={2} pb={2}>
           <TextInput
             control={control}
             name="firstName"
-            label={t('First name')}
+            label={t('First name | Prénom')}
             fullWidth
             helperText={t('First name required')}
             variant="outlined"
@@ -102,7 +116,7 @@ export const UserSignupForm = () => {
           <TextInput
             control={control}
             name="lastName"
-            label={t('Last name')}
+            label={t('Last name | Nom de famille')}
             fullWidth
             helperText={t('Last name required')}
             variant="outlined"
@@ -113,7 +127,7 @@ export const UserSignupForm = () => {
           <EmailInput
             control={control}
             name="email"
-            label={t('E-mail address')}
+            label={t('E-mail')}
             fullWidth
             helperText={t('E-mail address required')}
             variant="outlined"
@@ -122,17 +136,26 @@ export const UserSignupForm = () => {
           <PasswordInput
             control={control}
             name="password"
-            label={t('Password')}
+            label={t('Password | Mot de passe')}
             fullWidth
             helperText={t('Password required')}
             variant="outlined"
           />
+          <Typography fontSize="small" pb={4} >
+           {t('Account FeesP1')} 
+           </Typography>
+           <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
+           {t('Account FeesP2')}
+           </Typography>
+           <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
+           {t('Account FeesP2FR')} 
+           </Typography>
           <CheckboxInput
             control={control}
             name="ageConfirmation"
-            label={t('I am 18 years of age or older.')}
+            label={t('Over 18')}
             rules={{
-              required: 'You must confirm that you are at least 18 years old'
+              required: 'You must confirm that you are at least 18 years old. |FR| Vous devez confirmer que vous avez au moins 18 ans.'
             }}
             fullWidth
           />
@@ -140,7 +163,7 @@ export const UserSignupForm = () => {
             control={control}
             name="promotions"
             label={t(
-              'I would like to receive Cube Commons newsletters and other promotional information.'
+              'Newsletter'
             )}
             rules={{
               required: false
@@ -162,7 +185,7 @@ export const UserSignupForm = () => {
               onClick={handleSubmit(onSubmit)}
               fullWidth
             >
-              {t('Review Terms and Sign up')}
+              {t('Review Terms | Consultez les Conditions')}
             </Button>
           </Box>
         </Stack>

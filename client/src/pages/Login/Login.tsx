@@ -50,7 +50,10 @@ const Login = () => {
             {isLogin && (
               <s.CTAMessage>
                 <Typography component="h3" variant="h3" color="secondary">
-                  {t('New Here?')}
+                  {t('User Guide Login Page Title')}
+                </Typography>
+                <Typography component="h5" variant="h5" color="secondary">
+                  {t('User Guide Login Page TitleFR')}
                 </Typography>
 
                 <s.InfoWrapper>
@@ -92,24 +95,24 @@ const Login = () => {
                 </s.InfoWrapper>
 
                 <Typography component="p" variant="body1" color="secondary">
-                  {t('userGuideLoginPage')}
-                  <span>{t('UserGuideLoginPageFR')}</span>
+                  {t('User Guide Login Page')}
+                  <span>{t('User Guide Login PageFR')}</span>
                 </Typography>
 
                 <Button
                   color="secondary"
                   onClick={() => navigate('/signup?type=user')}
                 >
-                  {t('Sign up for a User Account')}
+                  {t('User Sign-Up | S`inscrire')}
                 </Button>
 
                 <Typography component="p" variant="body1" color="secondary">
-                  {t('userGuideLoginAccountDescription')}
-                  <span>{t('userGuideLoginAccountDescriptionFR')}</span>
+                  {t('User Guide Login Account Description')}
+                  <span>{t('User Guide Login Account DescriptionFR')}</span>
                 </Typography>
 
                 <Button color="secondary" onClick={() => navigate('/signup?')}>
-                  {t('Apply for a Creator Account')}
+                  {t('Creator Sign-Up | S`inscrire')}
                 </Button>
               </s.CTAMessage>
             )}
@@ -129,15 +132,18 @@ const Login = () => {
                 </Typography>
 
                 <Button color="secondary" onClick={() => navigate('/signup')}>
-                  {t('Apply for a Creator Account')}
+                  {t('Creator Sign-Up | S`inscrire')}
                 </Button>
 
                 <Typography component="h3" variant="h3" color="secondary">
                   {t('Account')}
                 </Typography>
+                <Typography component="h5" variant="h5" color="secondary">
+                  {t('AccountFR')}
+                </Typography>
 
                 <Button color="secondary" onClick={() => navigate('/login')}>
-                  {t('Login/ Connexion')}
+                  {t('Login | Connexion')}
                 </Button>
               </s.CTAMessage>
             )}
@@ -160,15 +166,17 @@ const Login = () => {
                   color="secondary"
                   onClick={() => navigate('/signup?type=user')}
                 >
-                  {t('Sign up for a User Account')}
+                  {t('User Sing-Up | S`inscrire')}
                 </Button>
 
                 <Typography component="h3" variant="h3" color="secondary">
-                  {t('Already have an account?')}
+                  {t('Account')}
                 </Typography>
-
+                <Typography component="h5" variant="h5" color="secondary">
+                  {t('AccountFR')}
+                </Typography>
                 <Button color="secondary" onClick={() => navigate('/login')}>
-                  {t('Login/ Connexion')}
+                  {t('Login | Connexion')}
                 </Button>
               </s.CTAMessage>
             )}
