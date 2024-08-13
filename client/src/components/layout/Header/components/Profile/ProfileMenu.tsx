@@ -15,7 +15,6 @@ import useAuth from 'hooks/useAuth';
 import * as s from './Profile.styled';
 import { GetProfileByTagData } from '@cubeca/cube-svc-client-oas-axios';
 import { getUser } from 'utils/auth';
-import { Box } from '@mui/material';
 
 interface ProfileMenuProps {
   open: boolean;
