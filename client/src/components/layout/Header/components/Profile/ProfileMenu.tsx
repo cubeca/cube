@@ -8,6 +8,7 @@ import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import UpdateEmailDialog from './UpdateEmailDialog';
 import DeactivateProfileDialog from './DeactivateProfileDialog';
 import { useContext, useState } from 'react';
+import gov4gitIcon from '../../../../../assets/icons/gov4gitlogobest.png';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PasswordIcon from '@mui/icons-material/Password';
 import ChangePasswordDialog from './ChangePasswordDialog';
@@ -62,6 +63,10 @@ const ProfileMenu = ({
     onClose();
   };
 
+  const handleGov4Cube = () => {
+    window.location.href = 'https://gov4cube.com';
+  };
+
   const handleDeactivateProfile = () => {
     setIsDeactivateProfileDialogOpen(true);
     onClose();
@@ -95,6 +100,7 @@ const ProfileMenu = ({
             onClick={() => handleProfile(`/profile/${profile.tag}`)}
             text={t('My Profile')}
             icon={<AccountBoxIcon />}
+            clipIcon={2}
           />
         )}
         {!profileId && (
@@ -104,10 +110,23 @@ const ProfileMenu = ({
             icon={<PlaylistAdd />}
           />
         )}
+
+        <ProfileMenuItem
+          onClick={handleGov4Cube}
+          text={t('Gov4Cube')}
+          icon={
+            <img
+              src={gov4gitIcon}
+              style={{ height: '23px', width: '22px' }}
+              alt="Gov4Cube Icon"
+            />
+          }
+        />
         <ProfileMenuItem
           onClick={handleEmailUpdate}
           text={t('Update Email')}
           icon={<MailOutlineIcon />}
+          clipIcon={2}
         />
         <ProfileMenuItem
           onClick={handleChangePassword}

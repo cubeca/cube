@@ -11,6 +11,7 @@ import MediaPlayer from 'components/MediaPlayer';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
 import LanguageIcon from '@mui/icons-material/Language';
+import Button from 'components/Button';
 interface ViewSectionProps {
   isLoggedIn: boolean;
   profile: any;
@@ -75,17 +76,35 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
               {profile!.organization || ''}
             </Box>
           </a>
-          <small>
-            <Typography component="p" variant="body2" style={{ margin: '0' }}>
-              {profile!.tag &&
-                (profile!.tag.includes('@')
-                  ? profile!.tag
-                  : `@${profile!.tag}`)}
-            </Typography>
-          </small>
         </Typography>
+        {isLoggedIn && (
+          <>
+            <Button
+              href="/"
+              variant="contained"
+              sx={{
+                backgroundColor: '#86b0af50',
+                color: '#D9FFEE',
+                fontSize: '12px',
+                padding: '8px 16px',
+                marginTop: '42px'
+              }}
+            >
+              Join Gov4CubeCommons
+            </Button>
+            <Typography component="p" variant="body2" sx={{ marginTop: '6px' }}>
+              <small style={{ fontWeight: 500 }}>Vote. Propose. Share.</small>
+            </Typography>
+          </>
+        )}
       </s.Header>
       <s.Body>
+        <small>
+          <Typography component="p" variant="body2" style={{ margin: '0' }}>
+            {profile!.tag &&
+              (profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`)}
+          </Typography>
+        </small>
         <Typography
           component="p"
           variant="body2"
