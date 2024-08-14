@@ -213,7 +213,7 @@ const CategorizedContent = ({
                 {!isPlaylistLoading && hasMorePlaylistToLoad && (
                   <s.LoadMore onClick={handlePlaylistLoadMore}>
                     <span className="inner">
-                      <span className="label">{t('Load More Results')}</span>
+                      <span className="label">{t('Load More | Charger Plus')}</span>
                     </span>
                   </s.LoadMore>
                 )}
@@ -276,7 +276,7 @@ const CategorizedContent = ({
                 {!isContentLoading && hasMoreContentToLoad && (
                   <s.LoadMore onClick={handleContentLoadMore}>
                     <span className="inner">
-                      <span className="label">{t('Load More Results')}</span>
+                      <span className="label">{t('Load More | Charger Plus')}</span>
                     </span>
                   </s.LoadMore>
                 )}

@@ -202,7 +202,7 @@ export const CreatorSignupForm = () => {
           <Grid xs={8} sm={6} md={6}>
           <s.InfoWrapper>
                   <ReactPlayer
-                    url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/c36a9be6e1918ea065849cbc38357b07/manifest/video.m3u8"
+                    url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/3124ee66efa401ecb7a1c358f7ef98ed/manifest/video.m3u8"
                     width="100%"
                     height="40vh"
                     overflow="hidden"
