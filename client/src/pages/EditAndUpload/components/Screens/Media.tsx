@@ -246,6 +246,7 @@ const Media = ({
             control={control}
             fullWidth={false}
             defaultValue=""
+            aria-label={'Select file type'}
           >
             <MenuItem.li value={ContentTypes.Video}>{t('Video')}</MenuItem.li>
             <MenuItem.li value={ContentTypes.Audio}>{t('Audio')}</MenuItem.li>
@@ -277,6 +278,8 @@ const Media = ({
             fullWidth
             placeholder={'Title (required)'}
             defaultValue={editMode ? content?.title : ''}
+            aria-label="Content title"
+            aria-placeholder="Enter your content title"
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
@@ -293,6 +296,7 @@ const Media = ({
             onDrop={handleMediaOnDrop}
             maxFiles={1}
             isUploadReady={isMediaUploadReady}
+            aria-label="Upload media file"
           />
           {mediaTypeError ? (
             <Typography component="p" variant="body2" color="#FFB7C4">
@@ -322,6 +326,7 @@ const Media = ({
             newImage={newImage}
             editMode={editMode}
             editType="Cover"
+            aria-label="Upload thumbnail image"
           />
 
           {imageTypeError ? (
@@ -344,6 +349,8 @@ const Media = ({
             placeholder={t('Thumbnail Image alt text (required)')}
             defaultValue={editMode ? content?.coverImageText : ''}
             fullWidth
+            aria-label="thumbnail image alt text"
+            aria-placeholder="Enter thumbnail image alt text"
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
@@ -363,6 +370,7 @@ const Media = ({
             newImage={newBannerImage}
             editMode={editMode}
             editType="Banner"
+            aria-label="Upload banner image"
           />
           {bannerImageTypeError ? (
             <Typography component="p" variant="body2" color="#FFB7C4">
@@ -384,6 +392,8 @@ const Media = ({
             placeholder={t('Banner Image alt text (required)')}
             defaultValue={editMode ? content?.bannerImageText : ''}
             fullWidth
+            aria-label="Banner image alt text"
+            aria-placeholder="Enter banner image alt text"
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
@@ -400,6 +410,8 @@ const Media = ({
             placeholder={t('Link to content (required)')}
             defaultValue={editMode ? content?.externalUrl : ''}
             fullWidth
+            aria-label="Link to content"
+            aria-placeholder="Enter link to content"
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
