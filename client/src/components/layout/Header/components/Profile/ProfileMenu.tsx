@@ -8,7 +8,7 @@ import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import UpdateEmailDialog from './UpdateEmailDialog';
 import DeactivateProfileDialog from './DeactivateProfileDialog';
 import { useContext, useState } from 'react';
-import gov4gitIcon from '../../../../../assets/icons/gov4gitlogobest.png';
+import gov4git from '../../../../../assets/icons/gov4git.svg';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PasswordIcon from '@mui/icons-material/Password';
 import ChangePasswordDialog from './ChangePasswordDialog';
@@ -114,13 +114,7 @@ const ProfileMenu = ({
         <ProfileMenuItem
           onClick={handleGov4Cube}
           text={t('Gov4Cube')}
-          icon={
-            <img
-              src={gov4gitIcon}
-              style={{ height: '23px', width: '22px' }}
-              alt="Gov4Cube Icon"
-            />
-          }
+          icon={<img src={gov4git} alt="Gov4Cube Icon" />}
         />
         <ProfileMenuItem
           onClick={handleEmailUpdate}
