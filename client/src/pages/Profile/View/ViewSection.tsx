@@ -103,7 +103,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
               }}
               aria-label="button to join Gov4CubeCommons"
             >
-              Join Gov4CubeCommons
+              Governance Tool
             </Button>
             <Typography component="p" variant="body2" sx={{ marginTop: '6px' }}>
               <small style={{ fontWeight: 500 }}>Vote. Propose. Share.</small>
@@ -116,12 +116,17 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
           component="p"
           variant="body2"
           style={{ whiteSpace: 'pre-wrap' }}
+          aria-label="profile description"
         >
           {profile.description}
         </Typography>
         <Box pt="16px">
           {profile?.descriptionUrl && (
-            <MediaPlayer url={profile?.descriptionUrl} isAudio />
+            <MediaPlayer
+              url={profile?.descriptionUrl}
+              isAudio
+              aria-label="profile audio description"
+            />
           )}
         </Box>
       </s.Body>
