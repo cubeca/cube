@@ -15,10 +15,10 @@ const PrimaryNav = () => {
             key={'/search'}
             selected={location.pathname.startsWith('/search')}
           >
-            <s.LinkButton to={'/search'}>{t('Search Content')}</s.LinkButton>
+            <s.LinkButton aria-label="Button to Go to Search page" to={'/search'}>{t('Search Content')}</s.LinkButton>
           </s.NavItem>
 
-          <s.NavItem>
+          <s.NavItem aria-label="Go to VR offerings">
             <HashLink smooth to="/#virtual-experiences">
               {t('Cube VR')}
             </HashLink>
@@ -28,7 +28,7 @@ const PrimaryNav = () => {
             key={'/signup'}
             selected={location.pathname.startsWith('/signup')}
           >
-            <s.LinkButton to={'/signup'}>{t('Become a Creator')}</s.LinkButton>
+            <s.LinkButton aria-label="Button to Sign Up for a Creator Account" to={'/signup'}>{t('Become a Creator')}</s.LinkButton>
           </s.NavItem>
         </s.NavList>
       </s.PrimaryNav>
