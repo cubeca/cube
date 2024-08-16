@@ -163,6 +163,7 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
           animationData={LoadingCubes}
           loop={true}
           style={{ height: '500px' }}
+          aria-label="Loading animation"
         />
       ) : (
         <Grid container>
@@ -197,6 +198,7 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
                       className="loading-cubes"
                       animationData={LoadingCubes}
                       loop={true}
+                      aria-label="Loading animation"
                     />
                   ) : error ? (
                     <p>{error}</p>
@@ -246,6 +248,7 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
                       className="loading-cubes"
                       animationData={LoadingCubes}
                       loop={true}
+                      aria-label="Loading animation"
                     />
                   ) : error ? (
                     <p>{error}</p>
@@ -282,7 +285,10 @@ const UserContent = ({ profile, isLoading }: UserContentProps) => {
                   )}
 
                   {!isContentLoading && hasMoreContentToLoad && (
-                    <s.LoadMore onClick={handleContentLoadMore}>
+                    <s.LoadMore
+                      onClick={handleContentLoadMore}
+                      aria-label="button to load more content"
+                    >
                       <span className="inner">
                         <span className="label">{t('Load More Results')}</span>
                       </span>

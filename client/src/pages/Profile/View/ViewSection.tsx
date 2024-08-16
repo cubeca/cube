@@ -32,6 +32,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             title={profile!.organization}
             target="_blank"
             style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
+            aria-label="profile image"
           >
             {profile.logoUrl && (
               <img src={profile!.logoUrl} alt="user profile thumbnail" />
@@ -42,13 +43,18 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
                 animationData={LoadingCircle}
                 loop={true}
                 autoplay={true}
+                aria-label="loading animation"
               />
             )}
           </s.ImageInner>
 
           {isLoggedIn && (
             <s.EditWrapper>
-              <button onClick={onEdit} style={{ cursor: 'pointer' }}>
+              <button
+                onClick={onEdit}
+                style={{ cursor: 'pointer' }}
+                aria-label="button to go to edit profile modal"
+              >
                 <EditIcon />
               </button>
             </s.EditWrapper>
@@ -89,6 +95,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
                 padding: '8px 16px',
                 marginTop: '42px'
               }}
+              aria-label="button to join Gov4CubeCommons"
             >
               Join Gov4CubeCommons
             </Button>

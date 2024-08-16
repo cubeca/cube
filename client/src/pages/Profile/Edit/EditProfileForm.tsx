@@ -123,6 +123,7 @@ const EditProfileForm = ({
                 loop={true}
                 autoplay={true}
                 style={{ width: '100px', height: '100px' }}
+                aria-label="loading animation"
               />
             </div>
           ) : (
@@ -131,6 +132,7 @@ const EditProfileForm = ({
                 <img
                   src={selectedHero || profile!.heroUrl}
                   alt="user profile hero"
+                  aria-label="user profile hero"
                 />
               )}
               <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
@@ -141,6 +143,7 @@ const EditProfileForm = ({
                   id={heroIdUpload}
                   onChange={onChangeHero}
                   style={{ display: 'none' }}
+                  aria-label="upload banner image"
                 />
               </label>
             </>
@@ -154,12 +157,14 @@ const EditProfileForm = ({
                 animationData={LoadingCircle}
                 loop={true}
                 autoplay={true}
+                aria-label="loading animation"
               />
             ) : (
               profile.logoUrl && (
                 <img
                   src={selectedLogo || profile!.logoUrl}
                   alt="user profile thumbnail"
+                  aria-label="user profile thumbnail"
                 />
               )
             )}
@@ -173,6 +178,7 @@ const EditProfileForm = ({
                 id={logoIdUpload}
                 onChange={onChangeLogo}
                 style={{ display: 'none' }}
+                aria-label="upload profile picture"
               />
             </label>
           </s.EditWrapper>
@@ -188,6 +194,8 @@ const EditProfileForm = ({
         fullWidth
         variant="outlined"
         label={t('Organization Name')}
+        aria-label="organization name"
+        aria-placeholder="type your organization name"
       />
       <TextInput
         colormode="dark"
@@ -198,6 +206,8 @@ const EditProfileForm = ({
         fullWidth
         variant="outlined"
         label={t('Organization URL')}
+        aria-label="organization url"
+        aria-placeholder="type your organization url"
       />
       <TextInput
         colormode="dark"
@@ -211,6 +221,8 @@ const EditProfileForm = ({
         fullWidth
         variant="outlined"
         label={t('Description')}
+        aria-label="description"
+        aria-placeholder="type your description"
       />
       <sRadioInput.DarkRadioInput
         control={control}
@@ -241,6 +253,7 @@ const EditProfileForm = ({
             id: '4'
           }
         ]}
+        aria-label="budget"
       />
 
       <UploadInput
@@ -249,6 +262,7 @@ const EditProfileForm = ({
         maxFiles={1}
         style={'dark'}
         isUploadComplete={isAudioUploadComplete}
+        aria-label="audio file describing the information above"
       />
 
       <Grid
@@ -262,6 +276,7 @@ const EditProfileForm = ({
               theme="dark"
               sitekey={hCaptchaKey}
               onVerify={onCaptchaSuccess}
+              aria-label="captcha"
             />
           </Box>
         </Grid>
@@ -271,6 +286,8 @@ const EditProfileForm = ({
               color="secondary"
               disabled={!captchaVerified}
               onClick={handleSubmit(onSubmitSection)}
+              aria-label="update profile button"
+              aria-placeholder="button to complete update profile"
             >
               {t('Update Profile')}
             </Button>

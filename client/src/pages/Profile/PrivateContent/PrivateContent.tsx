@@ -101,6 +101,7 @@ const PrivateContent = ({ profile, isLoading }: PrivateContentProps) => {
           animationData={LoadingCubes}
           loop={true}
           style={{ height: '500px' }}
+          aria-label="Loading animation"
         />
       ) : (
         <Grid container>
@@ -133,6 +134,7 @@ const PrivateContent = ({ profile, isLoading }: PrivateContentProps) => {
                       className="loading-cubes"
                       animationData={LoadingCubes}
                       loop={true}
+                      aria-label="Loading animation"
                     />
                   ) : error ? (
                     <p>{error}</p>

@@ -55,7 +55,7 @@ import { useForm } from 'react-hook-form';
 import TextInput from 'components/form/TextInput';
 import { Link } from 'react-router-dom';
 import LoadingCircle from 'assets/animations/loading-circle.json';
-import { SetStateAction, useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 import ErrorMessage from 'components/form/ErrorMessage';
 import { Box } from '@mui/system';
 import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
@@ -158,6 +158,30 @@ const AddToPlaylistModal = ({
   const isProfile = getProfileId();
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      const dialogElement = document.getElementById('add-to-playlist-dialog');
+      dialogElement?.focus();
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      previousFocusRef.current?.focus();
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   /** This block initializes playlist-related data using the `useSinglePlaylist` hook. Because this component is used both to create a
    * new playlist and to add content to an existing playlist, it needs to handle different scenarios for playlist data.
@@ -381,7 +405,8 @@ const AddToPlaylistModal = ({
 
   return isOpen ? (
     <Dialog
-      id={'add-to-playlist'}
+      id={'add-to-playlist-dialog'}
+      aria-labelledby="add-to-playlist-dialog-title"
       title={
         onlyCreate && !cameFromSinglePlaylist && !currentEditedPlaylist
           ? 'Create a playlist'
@@ -394,6 +419,11 @@ const AddToPlaylistModal = ({
         onlyCreate={onlyCreate}
         showSuccessMessage={showSuccessMessage}
       >
+        <h2 id="add-to-playlist-dialog-title">
+          {onlyCreate && !cameFromSinglePlaylist && !currentEditedPlaylist
+            ? 'Create a playlist'
+            : 'Add to playlist'}
+        </h2>
         {!onlyCreate ? (
           <Tabs
             value={tab}

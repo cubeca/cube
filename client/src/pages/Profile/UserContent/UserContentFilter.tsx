@@ -56,6 +56,8 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
           variant="standard"
           placeholder={t('Search Input Text')}
           sx={{ fontSize: '2rem' }}
+          aria-label="search"
+          aria-placeholder="type your search term here"
         />
 
         <Select
@@ -63,6 +65,7 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
           className="typeFilter"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e)}
+          aria-label="filter by type"
         >
           <MenuItem.li value={'all'}>{t('Filter Menu Button')}</MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
