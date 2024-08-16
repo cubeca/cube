@@ -83,6 +83,12 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             </Box>
           </a>
         </Typography>
+        <small>
+          <Typography component="p" variant="body2" style={{ margin: '0' }}>
+            {profile!.tag &&
+              (profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`)}
+          </Typography>
+        </small>
         {isLoggedIn && (
           <>
             <Button
@@ -106,12 +112,6 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
         )}
       </s.Header>
       <s.Body>
-        <small>
-          <Typography component="p" variant="body2" style={{ margin: '0' }}>
-            {profile!.tag &&
-              (profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`)}
-          </Typography>
-        </small>
         <Typography
           component="p"
           variant="body2"
