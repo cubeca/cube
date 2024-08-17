@@ -11,13 +11,19 @@ interface MenuItemProps {
   onClick?: () => void;
   icon?: JSX.Element;
   text: string;
+  tabIndex?: number;
 }
 
-const MenuItem = ({ onClick, icon, text }: MenuItemProps) => (
+const MenuItem = ({ 
+  onClick, 
+  icon,
+  tabIndex, 
+  text }: MenuItemProps) => (
 
   <s.Item
     onClick={onClick}
     active={onClick ? true : false}
+    tabIndex={tabIndex}
   >
     {icon && <ListItemIcon sx={{ paddingRight: '10px' }}>{icon}</ListItemIcon>}
     <Typography component="div" sx={{ margin: 0 }}>
