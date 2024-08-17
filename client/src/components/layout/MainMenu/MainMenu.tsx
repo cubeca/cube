@@ -2,6 +2,7 @@ import { Button, Divider, MenuList, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from 'react';
 import MenuItem from './MenuItem';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
@@ -35,17 +36,42 @@ const MainMenu = ({
     onClose();
   };
 
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (open) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      const dialogElement = document.getElementById('main-menu-is-open');
+      dialogElement?.focus();
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      previousFocusRef.current?.focus();
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open, onClose]);
+
   return (
     <s.MainMenu
       open={open}
       anchorEl={anchorEl}
       onClose={onClose}
-      id={id}
+      id={'main-menu-is-open'}
+      aria-orientation="vertical"
       MenuListProps={{
         'aria-labelledby': id
       }}
     >
-      <Button className="close-button" onClick={onClose}>
+      <Button className="close-button" onClick={onClose} tabIndex={0}>
         <CloseIcon />
       </Button>
 
@@ -54,12 +80,12 @@ const MainMenu = ({
           onClick={() => handleMenuClick('/search')}
           text={t('Search')}
         />
-        <s.MenuHashItem>
+        <s.MenuHashItem tabIndex={-1}>
           <HashLink smooth to="/#virtual-experiences">
             {t('Cube VR')}
           </HashLink>
         </s.MenuHashItem>
-        <s.MenuHashItem>
+        <s.MenuHashItem tabIndex={-1}>
           <HashLink smooth to="/#language-translation">
             {t('Translate Content & Buttons')}
           </HashLink>

@@ -14,8 +14,9 @@ const PrimaryNav = () => {
           <s.NavItem
             key={'/search'}
             selected={location.pathname.startsWith('/search')}
+            aria-label="Got to the Search page"
           >
-            <s.LinkButton aria-label="Button to Go to Search page" to={'/search'}>{t('Search Content')}</s.LinkButton>
+            <s.LinkButton to={'/search'}>{t('Search Content')}</s.LinkButton>
           </s.NavItem>
 
           <s.NavItem aria-label="Go to VR offerings">
@@ -27,8 +28,9 @@ const PrimaryNav = () => {
           <s.NavItem
             key={'/signup'}
             selected={location.pathname.startsWith('/signup')}
+            aria-label="Button to Sign Up for a Creator Account"
           >
-            <s.LinkButton aria-label="Button to Sign Up for a Creator Account" to={'/signup'}>{t('Become a Creator')}</s.LinkButton>
+            <s.LinkButton to={'/signup'}>{t('Become a Creator')}</s.LinkButton>
           </s.NavItem>
         </s.NavList>
       </s.PrimaryNav>
