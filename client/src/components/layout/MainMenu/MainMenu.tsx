@@ -70,8 +70,9 @@ const MainMenu = ({
       MenuListProps={{
         'aria-labelledby': id
       }}
+      ref={previousFocusRef}
     >
-      <Button className="close-button" onClick={onClose} tabIndex={0}>
+      <Button className="close-button" onClick={onClose} tabIndex={-1}>
         <CloseIcon />
       </Button>
 
@@ -80,12 +81,12 @@ const MainMenu = ({
           onClick={() => handleMenuClick('/search')}
           text={t('Search')}
         />
-        <s.MenuHashItem tabIndex={-1}>
+        <s.MenuHashItem>
           <HashLink smooth to="/#virtual-experiences">
             {t('Cube VR')}
           </HashLink>
         </s.MenuHashItem>
-        <s.MenuHashItem tabIndex={-1}>
+        <s.MenuHashItem>
           <HashLink smooth to="/#language-translation">
             {t('Translate Content & Buttons')}
           </HashLink>
