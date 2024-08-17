@@ -99,7 +99,8 @@ Formatting "New Issues" as Requests or Proposals:
 '[Your Org Name] Requests Voting Tokens as a Member of CubeCommons'
  * In the input called "Add a description write:
 '[Your Org Name] has a Creator profile on CubeCommons and requests tokens to create and vote on proposals.'
- * On the right hand side click on the header "label" - search `gov4git:managed` and select it. This will ensure your issue is pushed to the CubeCommons Gov4Git desktop app for tokens to be granted or the community to vote on.
+ *In the description of any Issue or Pull Request you create plese add Gov4CubeCommons. This is so we can be sure it's for a community vote.
+ * CubeCommons Admin will add the "label" - search `gov4git:managed` which will push it to the voting platform. This will ensure your issue is pushed to the CubeCommons Gov4Git desktop app for tokens to be granted or the community to vote on.
  * This is the same process for idea proposals, which can include a simple description about a function you would like to propose the community prioritize, or a language or policy change. It is a different process to submit code for review by the community. See Section below called (##contributing)
 
 
