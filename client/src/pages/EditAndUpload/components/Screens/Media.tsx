@@ -230,6 +230,12 @@ const Media = ({
               'Make sure the media type you select matches the file type you upload; or right when you think you’re done, you’ll have to start over.'
             )}
           </s.StyledListItem>
+          <s.StyledListItem>
+            {t('Translate this form into more than 12 languages using your browser “translate” tool. See instructions on our landing page.')}
+          </s.StyledListItem>
+          <s.StyledListItem>
+            {t('|FR| Traduisez ce formulaire en français, à l`aide de l`outil « traduire » de votre navigateur. Voir les instructions sur notre page de destination.')}
+          </s.StyledListItem>
           <Typography component="h4" variant="h4" mt={2.5}>
             {t('* Every click is powered by energy & resources, be mindful *')}
           </Typography>

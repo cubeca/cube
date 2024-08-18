@@ -3,7 +3,7 @@
  *
  */
 
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { FC } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import * as s from '../Profile.styled';
