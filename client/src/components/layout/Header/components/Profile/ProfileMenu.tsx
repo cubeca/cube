@@ -7,7 +7,7 @@ import { PlaylistAdd } from '@mui/icons-material/';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import UpdateEmailDialog from './UpdateEmailDialog';
 import DeactivateProfileDialog from './DeactivateProfileDialog';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import gov4git from '../../../../../assets/icons/gov4git.svg';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PasswordIcon from '@mui/icons-material/Password';
@@ -64,7 +64,8 @@ const ProfileMenu = ({
   };
 
   const handleGov4Cube = () => {
-    window.location.href = 'https://gov4cube.com';
+    window.location.href =
+      'https://github.com/cubeca/cube?tab=readme-ov-file#governance';
   };
 
   const handleDeactivateProfile = () => {
@@ -94,6 +95,8 @@ const ProfileMenu = ({
         MenuListProps={{
           'aria-labelledby': id
         }}
+        role="menu"
+        aria-orientation="vertical"
       >
         {profileId && profile && (
           <ProfileMenuItem
@@ -101,6 +104,9 @@ const ProfileMenu = ({
             text={t('My Profile')}
             icon={<AccountBoxIcon />}
             clipIcon={2}
+            role="menuitem"
+            tabIndex={0}
+            aria-current="true"
           />
         )}
         {!profileId && (
@@ -108,6 +114,8 @@ const ProfileMenu = ({
             onClick={() => handleProfile(`/user/${getUser().uuid}`)}
             text={t('My Playlists')}
             icon={<PlaylistAdd />}
+            role="menuitem"
+            tabIndex={!profileId ? 0 : -1}
           />
         )}
 
@@ -115,17 +123,20 @@ const ProfileMenu = ({
           onClick={handleGov4Cube}
           text={t('Gov4Cube')}
           icon={<img src={gov4git} alt="Gov4Cube Icon" />}
+          role="menuitem"
         />
         <ProfileMenuItem
           onClick={handleEmailUpdate}
           text={t('Update Email')}
           icon={<MailOutlineIcon />}
           clipIcon={2}
+          role="menuitem"
         />
         <ProfileMenuItem
           onClick={handleChangePassword}
           text={t('Change Password')}
           icon={<PasswordIcon />}
+          role="menuitem"
         />
         {profileId && profile && (
           <ProfileMenuItem
@@ -133,12 +144,14 @@ const ProfileMenu = ({
             text={t('Deactivate Profile')}
             icon={<NotInterestedIcon />}
             clipIcon={1.5}
+            role="menuitem"
           />
         )}
         <ProfileMenuItem
           onClick={handleLogout}
           text={t('Logout')}
           icon={<LogoutIcon />}
+          role="menuitem"
         />
       </s.ProfileMenu>
       <UpdateEmailDialog

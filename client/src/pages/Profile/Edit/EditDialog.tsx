@@ -52,6 +52,7 @@ const EditDialog = ({
       title=""
       aria-labelledby="edit-profile-dialog-title"
       aria-describedby="edit-profile-dialog-description"
+      ref={previousFocusRef}
     >
       <h2 id="edit-profile-dialog-title">{t('Edit Profile')}</h2>
       <EditProfileForm

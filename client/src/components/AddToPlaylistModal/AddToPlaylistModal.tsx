@@ -414,6 +414,8 @@ const AddToPlaylistModal = ({
       }
       onClose={onCloseAndReset}
       open={isOpen}
+      aria-modal="true"
+      ref={previousFocusRef}
     >
       <s.ModalContainer
         onlyCreate={onlyCreate}
@@ -479,6 +481,7 @@ const AddToPlaylistModal = ({
                   animationData={LoadingCircle}
                   style={{ height: '250px', width: '50px', fill: 'black' }}
                   loop
+                  aria-label="loading animation"
                 />
                 <Typography component="p" variant="body2">
                   Creating your playlist...
@@ -502,6 +505,7 @@ const AddToPlaylistModal = ({
                   <Link
                     style={{ color: 'black' }}
                     to={`/playlist/${newPlaylistId}`}
+                    aria-label="button to view new playlist"
                   >
                     here
                   </Link>{' '}
@@ -530,6 +534,8 @@ const AddToPlaylistModal = ({
               fullWidth
               variant="outlined"
               placeholder="Title (required)"
+              aria-label="playlist title"
+              aria-placeholder="type your playlist title"
             />
             <TextInput
               label="Description"
@@ -543,6 +549,8 @@ const AddToPlaylistModal = ({
               fullWidth
               variant="outlined"
               placeholder="Description (required)"
+              aria-label="playlist description"
+              aria-placeholder="type your playlist description"
             />
 
             <Stack direction="row" pb={2} spacing={17} alignItems="center">
@@ -575,6 +583,8 @@ const AddToPlaylistModal = ({
                     'Include only the domain name (e.g., example.com), not the full URL.'
                 }
               }}
+              aria-label="whitelist"
+              aria-placeholder="type your whitelisted urls"
             />
 
             <Box pb={4}>
@@ -610,6 +620,7 @@ const AddToPlaylistModal = ({
                       sx={{ color: 'inherit' }}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="button to view code for embedding content"
                     >
                       here.
                     </MuiLink>
@@ -660,6 +671,7 @@ const AddToPlaylistModal = ({
                     backgroundColor: '#585858'
                   }
                 }}
+                aria-label="button to add to playlist"
               >
                 + Add
               </Button>
@@ -841,6 +853,7 @@ const AddToPlaylistModal = ({
                   backgroundColor: '#585858'
                 }
               }}
+              aria-label="button to go to newly created playlist"
             >
               Done
             </Button>

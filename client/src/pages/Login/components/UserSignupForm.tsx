@@ -78,17 +78,17 @@ export const UserSignupForm = () => {
   if (isFormSubmitted) {
     return (
       <>
-      <Typography variant="h2" component="h2"  color="#D9FFEE" pb={4}>
-      {t('Verify Email Header')}
+        <Typography variant="h2" component="h2" color="#D9FFEE" pb={4}>
+          {t('Verify Email Header')}
         </Typography>
-        <Typography variant="h4" component="h4"  pb={4}>
-      {t('Verify Email Body')}
+        <Typography variant="h4" component="h4" pb={4}>
+          {t('Verify Email Body')}
         </Typography>
         <Typography variant="h3" component="h3" color="#D9FFEE" pb={4}>
-      {t('Verify Email HeaderFR')}
+          sfsffsfssf
         </Typography>
-        <Typography variant="h4" component="h4"  pb={4}>
-      {t('Verify Email BodyFR')}
+        <Typography variant="h4" component="h4" pb={4}>
+          {t('Verify Email BodyFR')}
         </Typography>
       </>
     );
@@ -99,7 +99,7 @@ export const UserSignupForm = () => {
       <Typography variant="h3" component="h3" pb={4}>
         {t('Sign up for a User Account')}
       </Typography>
-      <Typography variant="h5" component="h5" pb={4}> 
+      <Typography variant="h5" component="h5" pb={4}>
         {t('Inscrivez-vous pour un compte `User`')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -141,30 +141,29 @@ export const UserSignupForm = () => {
             helperText={t('Password required')}
             variant="outlined"
           />
-          <Typography fontSize="small" pb={4} >
-           {t('Account FeesP1')} 
-           </Typography>
-           <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
-           {t('Account FeesP2')}
-           </Typography>
-           <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
-           {t('Account FeesP2FR')} 
-           </Typography>
+          <Typography fontSize="small" pb={4}>
+            {t('Account FeesP1')}
+          </Typography>
+          <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
+            {t('Account FeesP2')}
+          </Typography>
+          <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
+            {t('Account FeesP2FR')}
+          </Typography>
           <CheckboxInput
             control={control}
             name="ageConfirmation"
             label={t('Over 18')}
             rules={{
-              required: 'You must confirm that you are at least 18 years old. |FR| Vous devez confirmer que vous avez au moins 18 ans.'
+              required:
+                'You must confirm that you are at least 18 years old. |FR| Vous devez confirmer que vous avez au moins 18 ans.'
             }}
             fullWidth
           />
           <CheckboxInput
             control={control}
             name="promotions"
-            label={t(
-              'Newsletter'
-            )}
+            label={t('Newsletter')}
             rules={{
               required: false
             }}

@@ -84,7 +84,12 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
           </a>
         </Typography>
         <small>
-          <Typography component="p" variant="body2" style={{ margin: '0' }}>
+          <Typography
+            component="p"
+            variant="body2"
+            style={{ margin: '0' }}
+            aria-label="profile tag"
+          >
             {profile!.tag &&
               (profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`)}
           </Typography>
@@ -92,7 +97,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
         {isLoggedIn && (
           <>
             <Button
-              href="/"
+              href="https://github.com/cubeca/cube?tab=readme-ov-file#governance"
               variant="contained"
               sx={{
                 backgroundColor: '#86b0af50',

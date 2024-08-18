@@ -66,6 +66,7 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e)}
           aria-label="filter by type"
+          aria-haspopup="listbox"
         >
           <MenuItem.li value={'all'}>{t('Filter Menu Button')}</MenuItem.li>
           <MenuItem.li value={SearchFiltersCategoryEnum.Video}>

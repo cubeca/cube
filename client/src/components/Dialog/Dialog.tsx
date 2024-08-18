@@ -4,7 +4,7 @@
  * The dialog can be closed using a close icon button, which triggers the `onClose` callback.
  */
 
-import { FC } from 'react';
+import { FC, RefObject } from 'react';
 import { Dialog as MuiDialog, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
@@ -16,12 +16,20 @@ export interface DialogProps {
   children?: React.ReactNode;
   onClose: () => void;
   open: boolean;
+  ref?: RefObject<HTMLElement | null>;
 }
 
-const Dialog: FC<DialogProps> = ({ open, onClose, children, id, title }) => {
+const Dialog: FC<DialogProps> = ({
+  open,
+  onClose,
+  children,
+  id,
+  title,
+  ref
+}) => {
   const { t } = useTranslation();
   return (
-    <s.Wrapper onClose={onClose} aria-labelledby={id} open={open}>
+    <s.Wrapper onClose={onClose} aria-labelledby={id} open={open} ref={ref}>
       <s.Title id={id}>
         <Typography component="h2" variant="h4">
           {title}

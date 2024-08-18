@@ -208,7 +208,7 @@ const Details = ({
             }}
             name="checked"
             color="primary"
-            aria-label={t('Enter content expiry date')}
+            aria-label={t('Button to hide content from search')}
           />
           <Typography component="p" variant="body2">
             {t(

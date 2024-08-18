@@ -94,27 +94,18 @@ export const CreatorSignupForm = () => {
 
   if (isFormSubmitted) {
     return (
-      <Typography component="h2" variant="h2">
-        <b style={{color: "#D9FFEE"}}>One More Step: Verify Your Email.</b> Check the email address you provided for your
-        verification link.
-      </Typography>
-    );
-  }
-
-  if (isFormSubmitted) {
-    return (
       <>
-      <Typography variant="h2" component="h2"  color="#D9FFEE" pb={4}>
-      {t('Verify Email Header')}
+        <Typography variant="h2" component="h2" color="#D9FFEE" pb={4}>
+          {t('Verify Email Header')}
         </Typography>
-        <Typography variant="h4" component="h4"  pb={4}>
-      {t('Verify Email Body')}
+        <Typography variant="h4" component="h4" pb={4}>
+          {t('Verify Email Body')}
         </Typography>
-        <Typography variant="h3" component="h3" color="#D9FFEE" pb={4}>
-      {t('Verify Email HeaderFR')}
+        <Typography variant="h4" component="h4" color="#D9FFEE" pb={4}>
+          {t('Verify Email HeaderFR')}
         </Typography>
-        <Typography variant="h4" component="h4"  pb={4}>
-      {t('Verify Email BodyFR')}
+        <Typography variant="h4" component="h4" pb={4}>
+          {t('Verify Email BodyFR')}
         </Typography>
       </>
     );
@@ -195,12 +186,12 @@ export const CreatorSignupForm = () => {
             variant="outlined"
           />
           <Stack>
-          <Typography component="p" variant="h6" pb={4} >
-           {t('Account FeesP1')} 
-           </Typography>
+            <Typography component="p" variant="h6" pb={4}>
+              {t('Account FeesP1')}
+            </Typography>
             <Grid container>
-          <Grid xs={8} sm={6} md={6}>
-          <s.InfoWrapper>
+              <Grid xs={8} sm={6} md={6}>
+                <s.InfoWrapper>
                   <ReactPlayer
                     url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/c36a9be6e1918ea065849cbc38357b07/manifest/video.m3u8"
                     width="100%"
@@ -214,7 +205,7 @@ export const CreatorSignupForm = () => {
                           controls: true,
                           crossOrigin: 'true',
                           playing: 'false',
-                          autoPlay: 'false',
+                          autoPlay: 'false'
                         },
                         forceVideo: true,
                         tracks: [
@@ -237,10 +228,10 @@ export const CreatorSignupForm = () => {
                     }
                     light={CtaImage1}
                   />
-                   </s.InfoWrapper>
-                  </Grid>
-                  <Grid xs={8} sm={6} md={6}>
-                  <s.InfoWrapper>
+                </s.InfoWrapper>
+              </Grid>
+              <Grid xs={8} sm={6} md={6}>
+                <s.InfoWrapper>
                   <ReactPlayer
                     url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/e28c788ff6c973977e3127a2e81632a9/manifest/video.m3u8"
                     width="100%"
@@ -254,7 +245,7 @@ export const CreatorSignupForm = () => {
                           controls: true,
                           crossOrigin: 'true',
                           playing: 'false',
-                          autoPlay: 'false',
+                          autoPlay: 'false'
                         },
                         forceVideo: true,
                         tracks: [
@@ -278,22 +269,22 @@ export const CreatorSignupForm = () => {
                     light={CtaImage2}
                   />
                 </s.InfoWrapper>
-                </Grid>
-                </Grid>
+              </Grid>
+            </Grid>
 
-           <Typography component="h4" variant="h3" color="#95F5CB" pb={4}>
-           {t('Account Fees CTA')}
-           </Typography>
-           <Typography component="p" color="#D9FFEE" variant="h4" pb={4}>
-           {t('Who Creator Accounts Are For')} 
-           </Typography>
-           <s.FrenchDescription>
-            {t('Account Fees Creator CTA FR')}
+            <Typography component="h4" variant="h3" color="#95F5CB" pb={4}>
+              {t('Account Fees CTA')}
+            </Typography>
+            <Typography component="p" color="#D9FFEE" variant="h4" pb={4}>
+              {t('Who Creator Accounts Are For')}
+            </Typography>
+            <s.FrenchDescription>
+              {t('Account Fees Creator CTA FR')}
             </s.FrenchDescription>
-           <s.FrenchDescription>
-            {t('Who Creator Accounts Are For FR')}
+            <s.FrenchDescription>
+              {t('Who Creator Accounts Are For FR')}
             </s.FrenchDescription>
-           </Stack>
+          </Stack>
 
           <CheckboxInput
             control={control}
@@ -308,9 +299,7 @@ export const CreatorSignupForm = () => {
           <CheckboxInput
             control={control}
             name="promotions"
-            label={t(
-              'Newsletter'
-            )}
+            label={t('Newsletter')}
             rules={{
               required: false
             }}
