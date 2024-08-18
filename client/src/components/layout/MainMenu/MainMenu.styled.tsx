@@ -1,4 +1,4 @@
-import { Popper, Box } from '@mui/material';
+import { Popper, Box, Menu, MenuItem as MuiMenuItem } from '@mui/material';
 import { styled } from 'theme/utils';
 
 export const MainMenu = styled(Popper)`
@@ -13,7 +13,10 @@ export const MainMenu = styled(Popper)`
   overflow-y: auto;
   color: ${(props) => props.theme.palette.background.default} !important;
   background-color: ${(props) => props.theme.palette.primary.main} !important;
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+  box-shadow:
+    0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 
   ${(props) => props.theme.breakpoints.up('md')} {
     width: auto;
@@ -36,9 +39,9 @@ export const MainMenu = styled(Popper)`
     margin-right: 0;
 
     circle,
-      path {
-        fill: ${(props) => props.theme.palette.background.default} !important;
-      }
+    path {
+      fill: ${(props) => props.theme.palette.background.default} !important;
+    }
   }
 
   .MuiList-padding {
@@ -47,36 +50,53 @@ export const MainMenu = styled(Popper)`
   }
 
   .MuiDivider-root {
-    border-color: ${(props) => props.theme.palette.background.default} !important;
+    border-color: ${(props) =>
+      props.theme.palette.background.default} !important;
     margin-top: 16px;
   }
 
   li {
     margin-bottom: 4px;
   }
-
 `;
 
 export const MenuHashItem = styled('li')`
   padding: 6px 20px;
+  border: none !important;
+  outline: none !important;
 
   a {
     display: block;
     color: ${(props) => props.theme.palette.background.default} !important;
     text-decoration: none;
-    font-size: ${(props) => props.theme.typography.body1.fontSize} !important;  
+    font-size: ${(props) => props.theme.typography.body1.fontSize} !important;
     font-weight: 500 !important;
+    line-height: 1.5;
+    margin-bottom: 1px;
+    /* margin-top: 1px; */
+    outline: none !important;
+    border: none !important;
   }
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+  }
+  &:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+  }
+  &:active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
   }
 `;
 
 export const Glossary = styled(Box)`
   padding: 1px 0 80px;
-  background-color: #D8FFEE;
-  
+  background-color: #d8ffee;
+  outline: none !important;
+
   ${(props) => props.theme.breakpoints.up('md')} {
     padding: 1px 0;
   }
@@ -92,7 +112,43 @@ export const Glossary = styled(Box)`
   }
 
   circle,
-      path {
-        fill: ${(props) => props.theme.palette.background.default} !important;
-      }
+  path {
+    fill: ${(props) => props.theme.palette.background.default} !important;
+  }
+`;
+
+export const ProfileMenu = styled(Menu)`
+  .MuiPaper-root {
+    color: ${(props) => props.theme.palette.background.default};
+    background-color: ${(props) => props.theme.palette.primary.main};
+
+    circle,
+    path {
+      fill: ${(props) => props.theme.palette.background.default};
+    }
+  }
+`;
+
+export const Item = styled(MuiMenuItem)`
+  margin-bottom: 1px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  cursor: ${(props) => (props.active ? 'pointer' : 'default')};
+
+  pointer-events: ${(props) => (props.active ? 'auto' : 'none')};
+
+  .MuiTypography-root {
+    font-size: ${(props) =>
+      props.active ? props.theme.typography.body1.fontSize : '15px'} !important;
+
+    font-weight: ${(props) => (props.active ? '500' : '400')} !important;
+  }
+
+  &:hover {
+    background-color: ${(props) =>
+      props.active
+        ? 'rgba(255, 255, 255, 0.3)'
+        : props.theme.palette.primary.main};
+  }
 `;

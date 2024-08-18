@@ -2,6 +2,7 @@ import { Button, Divider, MenuList, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from 'react';
 import MenuItem from './MenuItem';
 import SignLanguageIcon from '@mui/icons-material/SignLanguage';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
@@ -35,56 +36,101 @@ const MainMenu = ({
     onClose();
   };
 
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (open) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      const dialogElement = document.getElementById('main-menu-is-open');
+      dialogElement?.focus();
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      previousFocusRef.current?.focus();
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [open, onClose]);
+
   return (
-    <s.MainMenu
+    <s.ProfileMenu
       open={open}
       anchorEl={anchorEl}
       onClose={onClose}
       id={id}
+      aria-orientation="vertical"
       MenuListProps={{
         'aria-labelledby': id
       }}
+      role="menu"
+      ref={previousFocusRef}
+      aria-label="button to open main menu"
     >
-      <Button className="close-button" onClick={onClose}>
-        <CloseIcon />
-      </Button>
+      <MenuItem
+        onClick={() => handleMenuClick('/search')}
+        text={t('Search')}
+        // aria-label="button to go to search page"
+      />
 
-      <MenuList sx={{ padding: '4px 4px' }}>
-        <MenuItem
-          onClick={() => handleMenuClick('/search')}
-          text={t('Search')}
-        />
-        <s.MenuHashItem>
-          <HashLink smooth to="/#virtual-experiences">
-            {t('Cube VR')}
-          </HashLink>
-        </s.MenuHashItem>
-        <s.MenuHashItem>
-          <HashLink smooth to="/#language-translation">
-            {t('Translate Content & Buttons')}
-          </HashLink>
-        </s.MenuHashItem>
-        <MenuItem
-          onClick={() => handleMenuClick('/signup')}
-          text={t('Become a Creator')}
-        />
-        <MenuItem
-          onClick={() => handleMenuClick('/signup')}
-          text={t('Devenez un Créateur')}
-        />
-      </MenuList>
+      <s.MenuHashItem
+        role="menuitem"
+        tabIndex={0}
+        // aria-label="button to go to virtual experiences section"
+      >
+        <HashLink smooth to="/#virtual-experiences">
+          {t('Cube VR')}
+        </HashLink>
+      </s.MenuHashItem>
+
+      <s.MenuHashItem
+        role="menuitem"
+        tabIndex={0}
+        // aria-label="button to go to language translation section"
+      >
+        <HashLink smooth to="/#language-translation">
+          {t('Translate Content & Buttons')}
+        </HashLink>
+      </s.MenuHashItem>
+
+      <MenuItem
+        onClick={() => handleMenuClick('/signup')}
+        text={t('Become a Creator')}
+        tabIndex={0}
+        // aria-label="button to go to signup page"
+      />
+      <MenuItem
+        onClick={() => handleMenuClick('/signup')}
+        text={t('Devenez un Créateur')}
+        // aria-label="bouton pour accéder à la page d'inscription"
+      />
+
       <MenuItem
         onClick={() => handleMenuClick('/search')}
         text={t('Rechercher')}
+        // aria-label="bouton pour aller à la page de recherche"
       />
-      <MenuItem
-        onClick={() => handleMenuClick('/home')}
-        text={t('Traduire Contenu & Boutons')}
-      />
+
+      <s.MenuHashItem
+        role="menuitem"
+        tabIndex={0}
+        aria-label="bouton pour accéder à la section de traduction"
+      >
+        <HashLink smooth to="/#language-translation">
+          {t('Traduire Contenu & Boutons')}
+        </HashLink>
+      </s.MenuHashItem>
 
       <Divider />
 
-      <s.Glossary>
+      <s.Glossary tabIndex={0}>
         <Typography
           component="h3"
           px="16px"
@@ -98,16 +144,16 @@ const MainMenu = ({
 
         <Typography component="h4">Accessibility</Typography>
 
-        <MenuList>
-          <MenuItem
-            text={t('Sign Language')}
-            icon={<SignLanguageIcon fontSize="small" />}
-          />
-          <MenuItem
-            text={t('Subtitles')}
-            icon={<SubtitlesIcon fontSize="small" />}
-          />
-        </MenuList>
+        {/* <MenuList role="menu"> */}
+        <MenuItem
+          text={t('Sign Language')}
+          icon={<SignLanguageIcon fontSize="small" />}
+        />
+        <MenuItem
+          text={t('Subtitles')}
+          icon={<SubtitlesIcon fontSize="small" />}
+        />
+        {/* </MenuList> */}
 
         <Typography component="h4">Content Types</Typography>
 
@@ -156,7 +202,7 @@ const MainMenu = ({
         />
         <MenuItem text={t('Lien')} icon={<LinkIcon fontSize="small" />} />
       </s.Glossary>
-    </s.MainMenu>
+    </s.ProfileMenu>
   );
 };
 

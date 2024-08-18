@@ -48,7 +48,7 @@ const AuxiliaryNav = () => {
   return (
     <s.Aux component="nav" direction="row" alignItems="center" spacing={2}>
       {!isSmallScreen && (
-        <s.StyledLink to="/search">
+        <s.StyledLink aria-label="Button to go to Search Page" to="/search">
           <s.StyledHomeIcon isLoggedIn={isLoggedIn} />
         </s.StyledLink>
       )}
@@ -60,7 +60,7 @@ const AuxiliaryNav = () => {
           {isLoggedIn ? (
             <Profile />
           ) : (
-            <s.AuxButton variant="outlined" onClick={handleLogin}>
+            <s.AuxButton aria-label="Button to Go To Login Page" variant="outlined" onClick={handleLogin}>
               {t('Login')}
             </s.AuxButton>
           )}
@@ -72,6 +72,7 @@ const AuxiliaryNav = () => {
         aria-controls={open ? menuId : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
+        aria-label="Open Main Menu"
       >
         <MoreVertIcon />
       </s.AuxMenuTrigger>

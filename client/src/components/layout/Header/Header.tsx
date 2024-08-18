@@ -16,7 +16,7 @@ const Header = () => {
         pointerEvents: storedProfile.status === 'inactive' ? 'none' : 'auto'
       }}
     >
-      <s.HomeLink to="/" />
+      <s.HomeLink to="/" aria-label="Button to go to home page"/>
       <AuxiliaryNav />
     </s.Header>
   ) : null;

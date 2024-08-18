@@ -441,14 +441,25 @@ const EditAndUpload = () => {
         loop={true}
         autoplay={true}
         style={{ height: '500px' }}
+        aria-label="Page loading animation"
       />
     );
   }
 
   return isError ? (
-    <s.ModalContainer>
-      <s.ModalTitle variant="h1">{t('Uploading Failed')}</s.ModalTitle>
-      <Typography variant="body2" sx={{ paddingBottom: '24px' }}>
+    <s.ModalContainer
+      role="dialog"
+      aria-labelledby="upload-failed-title"
+      aria-describedby="upload-failed-description"
+    >
+      <s.ModalTitle id="upload-failed-title" variant="h1">
+        {t('Uploading Failed')}
+      </s.ModalTitle>
+      <Typography
+        id="upload-failed-description"
+        variant="body2"
+        sx={{ paddingBottom: '24px' }}
+      >
         Unfortunately, it seems we&apos;ve hit a snag while uploading your file.
         This could be due to your internet connection. However, please make sure
         you&apos;re not trying to upload content in multiple browsers or windows
@@ -458,7 +469,7 @@ const EditAndUpload = () => {
     </s.ModalContainer>
   ) : (
     <Box className={'upload'} ref={topRef}>
-      <Breadcrumb editMode={editMode} />
+      <Breadcrumb editMode={editMode} aria-label="Breadcrumb navigation" />
       <Progress
         screens={SCREENS.map((x) => x.label)}
         screenIndex={screenIndex}
@@ -478,6 +489,10 @@ const EditAndUpload = () => {
           (screenIndex === 1 && !isVTTSelected) ||
           vttEditorLaunched
         }
+        aria-label="Upload progress through steps"
+        aria-valuenow={screenIndex + 1}
+        aria-valuemin={1}
+        aria-valuemax={SCREENS.length}
       />
       <Screens screen={activeScreenView} />
       {vttEditorLaunched ? null : (
@@ -508,6 +523,7 @@ const EditAndUpload = () => {
                   !isVTTSelected &&
                   mediaType in ['video', 'audio'])
           }
+          aria-label="Form footer with navigation and submit controls"
         />
       )}
     </Box>

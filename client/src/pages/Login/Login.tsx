@@ -39,6 +39,7 @@ const Login = () => {
                 emailVerified={emailVerified}
                 passwordReset={passwordReset}
                 invalidToken={isInvalidToken}
+                aria-label={LoginForm}
               />
             ) : (
               signUpForm
@@ -56,7 +57,7 @@ const Login = () => {
                   {t('User Guide Login Page TitleFR')}
                 </Typography>
 
-                <s.InfoWrapper>
+                <s.InfoWrapper htmlFor="VideoGuide">
                   <ReactPlayer
                     url="https://customer-ayah89x7bps0l5b8.cloudflarestream.com/08aa6b389f1e0f93b380f321226b64b3/manifest/video.m3u8"
                     width="100%"
@@ -102,6 +103,7 @@ const Login = () => {
                 <Button
                   color="secondary"
                   onClick={() => navigate('/signup?type=user')}
+                  aria-label="Button to Go to User SignUp form"
                 >
                   {t('User Sign-Up | S`inscrire')}
                 </Button>
@@ -111,7 +113,7 @@ const Login = () => {
                   <span>{t('User Guide Login Account DescriptionFR')}</span>
                 </Typography>
 
-                <Button color="secondary" onClick={() => navigate('/signup?')}>
+                <Button color="secondary" onClick={() => navigate('/signup?')} aria-label="Button to Go to Creator SignUp form">
                   {t('Creator Sign-Up | S`inscrire')}
                 </Button>
               </s.CTAMessage>
@@ -142,7 +144,7 @@ const Login = () => {
                   {t('AccountFR')}
                 </Typography>
 
-                <Button color="secondary" onClick={() => navigate('/login')}>
+                <Button color="secondary" onClick={() => navigate('/login')} aria-label="Button to Go to Login form">
                   {t('Login | Connexion')}
                 </Button>
               </s.CTAMessage>
@@ -165,7 +167,7 @@ const Login = () => {
                 <Button
                   color="secondary"
                   onClick={() => navigate('/signup?type=user')}
-                >
+                  aria-label="Button to Go to User SignUp form">
                   {t('User Sign-Up | S`inscrire')}
                 </Button>
 
@@ -175,7 +177,8 @@ const Login = () => {
                 <Typography component="h5" variant="h5" color="secondary">
                   {t('AccountFR')}
                 </Typography>
-                <Button color="secondary" onClick={() => navigate('/login')}>
+                <Button color="secondary" onClick={() => navigate('/login')}
+                aria-label="Button to Go to Login form">
                   {t('Login | Connexion')}
                 </Button>
               </s.CTAMessage>
