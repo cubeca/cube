@@ -95,7 +95,11 @@ const Profile = () => {
     <Box>
       <s.UserHeroBg>
         {profile.heroUrl && (
-          <img src={profile!.heroUrl} alt="user profile hero" />
+          <img
+            src={profile!.heroUrl}
+            alt="user profile hero"
+            aria-label="user profile hero image"
+          />
         )}
         {!profile && (
           <Lottie
@@ -103,6 +107,7 @@ const Profile = () => {
             animationData={LoadingCircle}
             loop={true}
             autoplay={true}
+            aria-label="loading animation"
           />
         )}
       </s.UserHeroBg>
@@ -137,6 +142,7 @@ const Profile = () => {
                     cursor: 'pointer'
                   }}
                   onClick={() => setSelectedPanel('content')}
+                  aria-label="button to select content tab"
                 >
                   {t('Content')}
                 </Typography>
@@ -151,6 +157,7 @@ const Profile = () => {
                     cursor: 'pointer'
                   }}
                   onClick={() => setSelectedPanel('playlists')}
+                  aria-label="button to select playlists tab"
                 >
                   {t('Playlists')}
                 </Typography>
@@ -166,6 +173,7 @@ const Profile = () => {
                       cursor: 'pointer'
                     }}
                     onClick={() => setSelectedPanel('private')}
+                    aria-label="button to select private content tab"
                   >
                     {t('Private')}
                   </Typography>
@@ -173,12 +181,20 @@ const Profile = () => {
               </s.UserContentSubWrapper>
               <s.UserContentSubWrapper>
                 {selectedPanel === 'playlists' ? (
-                  <Button onClick={openPlaylistModal} fullWidth={false}>
+                  <Button
+                    onClick={openPlaylistModal}
+                    fullWidth={false}
+                    aria-label="button to create a new playlist"
+                  >
                     {t('+ Playlist')}
                   </Button>
                 ) : null}
                 {selectedPanel === 'content' || selectedPanel === 'private' ? (
-                  <Button onClick={handleNewMedia} fullWidth={false}>
+                  <Button
+                    onClick={handleNewMedia}
+                    fullWidth={false}
+                    aria-label="button to upload new content"
+                  >
                     {t('+ Upload')}
                   </Button>
                 ) : null}

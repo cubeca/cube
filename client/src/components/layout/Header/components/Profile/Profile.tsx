@@ -65,6 +65,9 @@ const Profile = () => {
         id={menuId}
         profile={profile as GetProfileByTagData}
         profileId={profileId || ''}
+        aria-controls={open ? menuId : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
       />
     </Box>
   );

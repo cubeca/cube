@@ -11,6 +11,7 @@ import MediaPlayer from 'components/MediaPlayer';
 import Lottie from 'lottie-react';
 import LoadingCircle from 'assets/animations/loading-circle.json';
 import LanguageIcon from '@mui/icons-material/Language';
+import Button from 'components/Button';
 interface ViewSectionProps {
   isLoggedIn: boolean;
   profile: any;
@@ -31,6 +32,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             title={profile!.organization}
             target="_blank"
             style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
+            aria-label="profile image"
           >
             {profile.logoUrl && (
               <img src={profile!.logoUrl} alt="user profile thumbnail" />
@@ -41,13 +43,18 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
                 animationData={LoadingCircle}
                 loop={true}
                 autoplay={true}
+                aria-label="loading animation"
               />
             )}
           </s.ImageInner>
 
           {isLoggedIn && (
             <s.EditWrapper>
-              <button onClick={onEdit} style={{ cursor: 'pointer' }}>
+              <button
+                onClick={onEdit}
+                style={{ cursor: 'pointer' }}
+                aria-label="button to go to edit profile modal"
+              >
                 <EditIcon />
               </button>
             </s.EditWrapper>
@@ -75,27 +82,56 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
               {profile!.organization || ''}
             </Box>
           </a>
-          <small>
-            <Typography component="p" variant="body2" style={{ margin: '0' }}>
-              {profile!.tag &&
-                (profile!.tag.includes('@')
-                  ? profile!.tag
-                  : `@${profile!.tag}`)}
-            </Typography>
-          </small>
         </Typography>
+        <small>
+          <Typography
+            component="p"
+            variant="body2"
+            style={{ margin: '0' }}
+            aria-label="profile tag"
+          >
+            {profile!.tag &&
+              (profile!.tag.includes('@') ? profile!.tag : `@${profile!.tag}`)}
+          </Typography>
+        </small>
+        {isLoggedIn && (
+          <>
+            <Button
+              href="https://github.com/cubeca/cube?tab=readme-ov-file#governance"
+              variant="contained"
+              sx={{
+                backgroundColor: '#86b0af50',
+                color: '#D9FFEE',
+                fontSize: '12px',
+                padding: '8px 16px',
+                marginTop: '42px'
+              }}
+              aria-label="button to join Gov4CubeCommons"
+            >
+              Governance Tool
+            </Button>
+            <Typography component="p" variant="body2" sx={{ marginTop: '6px' }}>
+              <small style={{ fontWeight: 500 }}>Vote. Propose. Share.</small>
+            </Typography>
+          </>
+        )}
       </s.Header>
       <s.Body>
         <Typography
           component="p"
           variant="body2"
           style={{ whiteSpace: 'pre-wrap' }}
+          aria-label="profile description"
         >
           {profile.description}
         </Typography>
         <Box pt="16px">
           {profile?.descriptionUrl && (
-            <MediaPlayer url={profile?.descriptionUrl} isAudio />
+            <MediaPlayer
+              url={profile?.descriptionUrl}
+              isAudio
+              aria-label="profile audio description"
+            />
           )}
         </Box>
       </s.Body>

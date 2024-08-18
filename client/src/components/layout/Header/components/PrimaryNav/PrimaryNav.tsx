@@ -14,12 +14,13 @@ const PrimaryNav = () => {
           <s.NavItem
             key={'/search'}
             selected={location.pathname.startsWith('/search')}
+            aria-label="Got to the Search page"
           >
-            <s.LinkButton to={'/search'}>{t('Search Content')}</s.LinkButton>
+            <s.LinkButton aria-hidden="true" to={'/search'}>{t('Search Content')}</s.LinkButton>
           </s.NavItem>
 
-          <s.NavItem>
-            <HashLink smooth to="/#virtual-experiences">
+          <s.NavItem aria-label="Go to VR offerings">
+            <HashLink aria-hidden="true" smooth to="/#virtual-experiences">
               {t('Cube VR')}
             </HashLink>
           </s.NavItem>
@@ -27,8 +28,9 @@ const PrimaryNav = () => {
           <s.NavItem
             key={'/signup'}
             selected={location.pathname.startsWith('/signup')}
+            aria-label="Button to Sign Up for a Creator Account"
           >
-            <s.LinkButton to={'/signup'}>{t('Become a Creator')}</s.LinkButton>
+            <s.LinkButton aria-hidden="true" to={'/signup'}>{t('Become a Creator')}</s.LinkButton>
           </s.NavItem>
         </s.NavList>
       </s.PrimaryNav>

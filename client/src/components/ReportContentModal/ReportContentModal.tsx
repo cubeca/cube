@@ -16,7 +16,7 @@ import TextInput from 'components/form/TextInput';
 import * as sRadioInput from 'components/form/RadioInput/RadioInput.styled';
 import { reportContent } from 'api/content';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ErrorMessage from 'components/form/ErrorMessage';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@mui/system';
@@ -68,6 +68,30 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
     onClose();
   };
 
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onCloseAndReset();
+      }
+    };
+
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      const dialogElement = document.getElementById('report-content');
+      dialogElement?.focus();
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      previousFocusRef.current?.focus();
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onCloseAndReset]);
+
   const generateTicketId = (): string => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const length = 5;
@@ -87,6 +111,9 @@ const ReportContentModal = ({ onClose, isOpen }: ReportContentModalProps) => {
       title={'Report Content'}
       onClose={onCloseAndReset}
       open={isOpen}
+      aria-modal="true"
+      aria-labelledby="report-content"
+      ref={previousFocusRef}
     >
       {showSuccessMessage ? (
         <Box sx={{ py: 6 }}>

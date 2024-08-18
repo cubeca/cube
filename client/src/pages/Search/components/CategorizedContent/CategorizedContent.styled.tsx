@@ -73,7 +73,7 @@ export const LoadMore = styled(Link)`
   display: block;
   text-decoration: none !important;
   text-align: center;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   transition: transform 0.15s ease-in-out;
 
@@ -108,7 +108,7 @@ export const LoadMore = styled(Link)`
       display: block;
       content: '';
       position: absolute;
-      top: 50%;
+      top: 40%;
       left: 50%;
       margin: -22px 0 0 -26px;
       width: 52px;
