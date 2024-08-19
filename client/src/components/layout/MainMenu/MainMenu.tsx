@@ -37,7 +37,16 @@ const MainMenu = ({
   };
 
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    onClose();
+  };
 
+  const handleKeyDown = (event: React.KeyboardEvent, path: string) => {
+    if (event.key === 'Enter') {
+      handleNavigation(path);
+    }
+  };
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -83,9 +92,26 @@ const MainMenu = ({
       <s.MenuHashItem
         role="menuitem"
         tabIndex={0}
-        // aria-label="button to go to virtual experiences section"
+        onClick={() => {
+          onClose();
+        }}
+        onKeyDown={(event: { key: string; preventDefault: () => void }) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            const linkElement = document.getElementById('cube-vr-link');
+            if (linkElement) {
+              linkElement.click();
+              onClose();
+            }
+          }
+        }}
       >
-        <HashLink smooth to="/#virtual-experiences">
+        <HashLink
+          smooth
+          to="/#virtual-experiences"
+          id="cube-vr-link"
+          tabIndex={-1}
+        >
           {t('Cube VR')}
         </HashLink>
       </s.MenuHashItem>
@@ -93,9 +119,28 @@ const MainMenu = ({
       <s.MenuHashItem
         role="menuitem"
         tabIndex={0}
-        // aria-label="button to go to language translation section"
+        onClick={() => {
+          onClose();
+        }}
+        onKeyDown={(event: { key: string; preventDefault: () => void }) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            const linkElement = document.getElementById(
+              'translate-content-link'
+            );
+            if (linkElement) {
+              linkElement.click();
+              onClose();
+            }
+          }
+        }}
       >
-        <HashLink smooth to="/#language-translation">
+        <HashLink
+          smooth
+          to="/#language-translation"
+          id="translate-content-link"
+          tabIndex={-1}
+        >
           {t('Translate Content & Buttons')}
         </HashLink>
       </s.MenuHashItem>
@@ -121,9 +166,28 @@ const MainMenu = ({
       <s.MenuHashItem
         role="menuitem"
         tabIndex={0}
-        aria-label="bouton pour accéder à la section de traduction"
+        onClick={() => {
+          onClose();
+        }}
+        onKeyDown={(event: { key: string; preventDefault: () => void }) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            const linkElement = document.getElementById(
+              'translate-content-link'
+            );
+            if (linkElement) {
+              linkElement.click();
+              onClose();
+            }
+          }
+        }}
       >
-        <HashLink smooth to="/#language-translation">
+        <HashLink
+          smooth
+          to="/#language-translation"
+          id="translate-content-link"
+          tabIndex={-1}
+        >
           {t('Traduire Contenu & Boutons')}
         </HashLink>
       </s.MenuHashItem>
@@ -144,7 +208,6 @@ const MainMenu = ({
 
         <Typography component="h4">Accessibility</Typography>
 
-        {/* <MenuList role="menu"> */}
         <MenuItem
           text={t('Sign Language')}
           icon={<SignLanguageIcon fontSize="small" />}
@@ -153,7 +216,6 @@ const MainMenu = ({
           text={t('Subtitles')}
           icon={<SubtitlesIcon fontSize="small" />}
         />
-        {/* </MenuList> */}
 
         <Typography component="h4">Content Types</Typography>
 
