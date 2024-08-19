@@ -56,8 +56,15 @@ const CenterColumnPanel = () => {
               <Typography component="h2" variant="h2">
                 {t('dao')}
               </Typography>
-              <Typography component="p">{t('daoTagline')}</Typography>
-              <Typography component="p">{t('daoText')}</Typography>
+              <Typography component="p">
+                {t('daoTagline')}
+              </Typography>
+              <Typography component="p">
+                {t('daoText')}
+              </Typography>
+              <Typography component="p">
+                {t('daoGovToken')}
+              </Typography>
               <Typography component="p" variant="h3">
                 {t('daoFR')}
               </Typography>
@@ -68,7 +75,9 @@ const CenterColumnPanel = () => {
                 {t('daoTextFR')}
               </Typography>
             </s.CenterColumnTextSection>
-            <Button>Learn More</Button>
+            <Button href="https://www.cubecommons.ca/content/5d8f289d-1bac-4a0a-8df3-c5a118158be6">
+              Learn More | En Savoir Plus
+              </Button>
           </DarkContent.Wrapper>
         </Grid>
         <Grid xs={10} xsOffset={1} md={3}></Grid>
@@ -92,7 +101,7 @@ const CenterColumnPanel = () => {
               </Typography>
               <Typography variant="body2">{t('creatorsTextFR')}</Typography>
               <Button href="/signup" variant="contained">
-                Join Us
+                Join Us | Rejoignez-Nous
               </Button>
             </DarkContent.Wrapper>
           </s.CenterColumnTextSection>

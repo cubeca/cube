@@ -435,26 +435,43 @@ const Video = () => {
                 {(content?.type === 'document' || content?.type === 'pdf') && (
                   <s.ActionsWrapper>
                     <DownloadIcon />
-                    <s.Action to={docUrl || ''}>Download</s.Action>
+                    <s.Action
+                      to={docUrl || ''}
+                      aria-label="button to download the current content"
+                    >
+                      Download
+                    </s.Action>
                   </s.ActionsWrapper>
                 )}
                 {showEmbedModal && (
                   <s.ActionsWrapper>
                     <CodeIcon />
-                    <s.Action to={''} onClick={openEmbedModal}>
+                    <s.Action
+                      to={''}
+                      onClick={openEmbedModal}
+                      aria-label="button to open the embed menu"
+                    >
                       Embed
                     </s.Action>
                   </s.ActionsWrapper>
                 )}
                 <s.ActionsWrapper>
                   <ListIcon />
-                  <s.Action to={''} onClick={openPlaylistModal}>
+                  <s.Action
+                    to={''}
+                    onClick={openPlaylistModal}
+                    aria-label="button to add the current content to a playlist"
+                  >
                     Add to Playlist
                   </s.Action>
                 </s.ActionsWrapper>
                 <s.ActionsWrapper>
                   <FlagIcon />
-                  <s.Action to={''} onClick={openReportContentModal}>
+                  <s.Action
+                    to={''}
+                    onClick={openReportContentModal}
+                    aria-label="button to report the current content"
+                  >
                     Report Content
                   </s.Action>
                 </s.ActionsWrapper>
@@ -462,7 +479,10 @@ const Video = () => {
                   <>
                     <s.ActionsWrapper>
                       <EditIcon />
-                      <s.Action to={`/profile/${tag}/upload?contentid=${id}`}>
+                      <s.Action
+                        to={`/profile/${tag}/upload?contentid=${id}`}
+                        aria-label="button to edit the current content"
+                      >
                         Edit Content
                       </s.Action>
                     </s.ActionsWrapper>
@@ -553,6 +573,7 @@ const Video = () => {
                                         sx={{ color: 'inherit' }}
                                         target="_blank"
                                         rel="noopener noreferrer"
+                                        aria-label="button to contributor profile"
                                       >
                                         {contributor.name}
                                       </Link>
@@ -593,7 +614,10 @@ const Video = () => {
                         .split(', ')
                         .map((tag: string, index: number, array: string[]) => (
                           <React.Fragment key={tag}>
-                            <Link href={`/search?searchTerm=${tag}`}>
+                            <Link
+                              href={`/search?searchTerm=${tag}`}
+                              aria-label="button to search for more content with this tag"
+                            >
                               <s.Tag
                                 component="span"
                                 variant="body2"
@@ -627,7 +651,10 @@ const Video = () => {
                         .split(', ')
                         .map((tag: string, index: number, array: string[]) => (
                           <React.Fragment key={tag}>
-                            <Link href={`/search?language=${tag}`}>
+                            <Link
+                              href={`/search?language=${tag}`}
+                              aria-label="button to search for more content with this language tag"
+                            >
                               <s.Tag
                                 component="span"
                                 variant="body2"

@@ -179,6 +179,8 @@ const Tags = ({
                   variant="outlined"
                   label=""
                   placeholder="Content Tags (required)"
+                  aria-label="Content Tags (required)"
+                  aria-placeholder="Enter content tags"
                 />
               )}
             />
@@ -222,6 +224,8 @@ const Tags = ({
               ? content?.tags.join(', ')
               : content?.tags[0] || ''
           }
+          aria-label="Connection Tags (required)"
+          aria-placeholder="Enter connection tags"
         />
         <TagInput
           control={control}
@@ -235,6 +239,8 @@ const Tags = ({
               ? content?.languageTags.join(', ')
               : (content?.languageTags && content?.languageTags[0]) || ''
           }
+          aria-label="Language Tags (required)"
+          aria-placeholder="Enter language tags"
         />
         <Typography component="p" variant="body1" mt={theme.spacing(2.5)}>
           <strong>{t('Separate tags with a comma. ')}</strong>
@@ -284,6 +290,8 @@ const Tags = ({
                       (editMode && getDefaultRole(content?.contributors)) ||
                       'Artist'
                     }
+                    aria-label="Preferred Title"
+                    aria-placeholder="Enter preferred title"
                   />
                 </Grid>
               ) : (
@@ -304,6 +312,8 @@ const Tags = ({
                       content?.contributors.artist[index]?.name) ||
                     ''
                   }
+                  aria-label="Artist Name"
+                  aria-placeholder="Enter artist name"
                 />
               </Grid>
               <Grid xs={12} sm={4}>
@@ -327,6 +337,8 @@ const Tags = ({
                         'URLs must begin with http://, https://, or ftp://'
                     }
                   }}
+                  aria-label="Artist URL"
+                  aria-placeholder="Enter artist URL"
                 />
               </Grid>
 
@@ -336,6 +348,7 @@ const Tags = ({
                     sx={{ marginTop: '14px', height: '58px' }}
                     variant="outlined"
                     onClick={() => handleAddMore('artist', 'preferredTitle')}
+                    aria-label="Button to add more artists"
                   >
                     {t('+ more')}
                   </s.StyledButton>
@@ -376,6 +389,8 @@ const Tags = ({
                   fullWidth
                   placeholder={t('Name')}
                   rules={{ required: false }}
+                  aria-label="Editor Name"
+                  aria-placeholder="Enter editor name"
                 />
               </Grid>
               {index === editors.length - 1 && (
@@ -383,6 +398,7 @@ const Tags = ({
                   <s.StyledButton
                     variant="outlined"
                     onClick={() => handleAddMore('editor')}
+                    aria-label="Button to add more editors"
                   >
                     {t('+ more')}
                   </s.StyledButton>
@@ -415,6 +431,8 @@ const Tags = ({
                       : ''
                   }
                   rules={{ required: false }}
+                  aria-label="Camera Operator Name"
+                  aria-placeholder="Enter camera operator name"
                 />
               </Grid>
               {index === cameraOperators.length - 1 && (
@@ -422,6 +440,7 @@ const Tags = ({
                   <s.StyledButton
                     variant="outlined"
                     onClick={() => handleAddMore('camera_operator')}
+                    aria-label="Button to add more camera operators"
                   >
                     {t('+ more')}
                   </s.StyledButton>
@@ -454,6 +473,8 @@ const Tags = ({
                   fullWidth
                   placeholder={t('Name')}
                   rules={{ required: false }}
+                  aria-label="Sound Technician Name"
+                  aria-placeholder="Enter sound technician name"
                 />
               </Grid>
               {index === soundTechnicians.length - 1 && (
@@ -461,6 +482,7 @@ const Tags = ({
                   <s.StyledButton
                     variant="outlined"
                     onClick={() => handleAddMore('sound_technician')}
+                    aria-label="Button to add more sound technicians"
                   >
                     {t('+ more')}
                   </s.StyledButton>
@@ -485,6 +507,8 @@ const Tags = ({
                       getCustomFields(content?.contributors)[index]?.role) ||
                     ''
                   }
+                  aria-label="Role"
+                  aria-placeholder="Enter role"
                 />
               </Grid>
               <Grid xs={12} sm={8}>
@@ -499,6 +523,8 @@ const Tags = ({
                       getCustomFields(content?.contributors)[index]?.name) ||
                     ''
                   }
+                  aria-label="Name"
+                  aria-placeholder="Enter name"
                 />
               </Grid>
               {index === otherContributors.length - 1 && (
@@ -507,6 +533,7 @@ const Tags = ({
                     sx={{ marginTop: '14px', height: '58px' }}
                     variant="outlined"
                     onClick={() => handleAddMore('other')}
+                    aria-label="Button to add more contributors"
                   >
                     {t('+ more')}
                   </s.StyledButton>
@@ -530,6 +557,8 @@ const Tags = ({
               ? content?.collaboratorDetails
               : []
           }
+          aria-label="Collaborators"
+          aria-placeholder="Enter collaborators"
         />
 
         <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
@@ -561,6 +590,7 @@ const Tags = ({
               control={control}
               name="embedToggleInput"
               colormode="light"
+              aria-label="Embed Toggle Input"
             />
           </Grid>
         </Grid>
@@ -580,6 +610,8 @@ const Tags = ({
                 'Include only the domain name (e.g., example.com), not the full URL.'
             }
           }}
+          aria-label="Embedded Content Whitelist"
+          aria-placeholder="Enter embedded content whitelist"
         />
 
         <Box my={theme.spacing(2.5)}>
@@ -615,6 +647,7 @@ const Tags = ({
                   sx={{ color: 'inherit' }}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="View code for embedding content"
                 >
                   here.
                 </Link>
@@ -633,6 +666,7 @@ const Tags = ({
             theme="dark"
             sitekey={hCaptchaKey}
             onVerify={handleCaptchaVerification}
+            aria-label="HCaptcha"
           />
           <Typography component="p" variant="body2">
             {t('Verify you are a human being.')}

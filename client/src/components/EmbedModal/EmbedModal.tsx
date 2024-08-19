@@ -8,7 +8,7 @@ import { Stack } from '@mui/material';
 import Dialog from 'components/Dialog';
 import * as s from './EmbedModal.styled';
 import Button from 'components/Button';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface EmbedModalProps {
@@ -45,7 +45,7 @@ function generateEmbedCode(type: string, url: string) {
 
 const EmbedModal = ({ onClose, isOpen, embedContentType }: EmbedModalProps) => {
   const [copyCodeButtonText, setCopyCodeButtonText] = useState('Copy Code');
-
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(embedCode);
@@ -62,12 +62,36 @@ const EmbedModal = ({ onClose, isOpen, embedContentType }: EmbedModalProps) => {
     'https://' + hostname + location
   );
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      previousFocusRef.current?.focus();
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      previousFocusRef.current?.focus();
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
   return isOpen ? (
     <Dialog
       id={'embed-content'}
       title={'Embed Content'}
       onClose={onClose}
       open={isOpen}
+      aria-modal="true"
+      aria-labelledby="embed-content"
+      ref={previousFocusRef}
     >
       <s.EmbedTextField
         className="dark"
@@ -79,6 +103,8 @@ const EmbedModal = ({ onClose, isOpen, embedContentType }: EmbedModalProps) => {
         value={embedCode}
         variant="outlined"
         label="Embedded Content"
+        aria-label="embedded content"
+        aria-placeholder="embedded content"
       />
 
       <Stack direction="row" justifyContent="right">

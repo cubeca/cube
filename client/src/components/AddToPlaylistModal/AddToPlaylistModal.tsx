@@ -55,7 +55,7 @@ import { useForm } from 'react-hook-form';
 import TextInput from 'components/form/TextInput';
 import { Link } from 'react-router-dom';
 import LoadingCircle from 'assets/animations/loading-circle.json';
-import { SetStateAction, useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 import ErrorMessage from 'components/form/ErrorMessage';
 import { Box } from '@mui/system';
 import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
@@ -158,6 +158,30 @@ const AddToPlaylistModal = ({
   const isProfile = getProfileId();
   const { t } = useTranslation();
   const theme = useTheme();
+
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      const dialogElement = document.getElementById('add-to-playlist-dialog');
+      dialogElement?.focus();
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      previousFocusRef.current?.focus();
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   /** This block initializes playlist-related data using the `useSinglePlaylist` hook. Because this component is used both to create a
    * new playlist and to add content to an existing playlist, it needs to handle different scenarios for playlist data.
@@ -381,7 +405,8 @@ const AddToPlaylistModal = ({
 
   return isOpen ? (
     <Dialog
-      id={'add-to-playlist'}
+      id={'add-to-playlist-dialog'}
+      aria-labelledby="add-to-playlist-dialog-title"
       title={
         onlyCreate && !cameFromSinglePlaylist && !currentEditedPlaylist
           ? 'Create a playlist'
@@ -389,11 +414,18 @@ const AddToPlaylistModal = ({
       }
       onClose={onCloseAndReset}
       open={isOpen}
+      aria-modal="true"
+      ref={previousFocusRef}
     >
       <s.ModalContainer
         onlyCreate={onlyCreate}
         showSuccessMessage={showSuccessMessage}
       >
+        <h2 id="add-to-playlist-dialog-title">
+          {onlyCreate && !cameFromSinglePlaylist && !currentEditedPlaylist
+            ? 'Create a playlist'
+            : 'Add to playlist'}
+        </h2>
         {!onlyCreate ? (
           <Tabs
             value={tab}
@@ -449,6 +481,7 @@ const AddToPlaylistModal = ({
                   animationData={LoadingCircle}
                   style={{ height: '250px', width: '50px', fill: 'black' }}
                   loop
+                  aria-label="loading animation"
                 />
                 <Typography component="p" variant="body2">
                   Creating your playlist...
@@ -472,6 +505,7 @@ const AddToPlaylistModal = ({
                   <Link
                     style={{ color: 'black' }}
                     to={`/playlist/${newPlaylistId}`}
+                    aria-label="button to view new playlist"
                   >
                     here
                   </Link>{' '}
@@ -500,6 +534,8 @@ const AddToPlaylistModal = ({
               fullWidth
               variant="outlined"
               placeholder="Title (required)"
+              aria-label="playlist title"
+              aria-placeholder="type your playlist title"
             />
             <TextInput
               label="Description"
@@ -513,6 +549,8 @@ const AddToPlaylistModal = ({
               fullWidth
               variant="outlined"
               placeholder="Description (required)"
+              aria-label="playlist description"
+              aria-placeholder="type your playlist description"
             />
 
             <Stack direction="row" pb={2} spacing={17} alignItems="center">
@@ -545,6 +583,8 @@ const AddToPlaylistModal = ({
                     'Include only the domain name (e.g., example.com), not the full URL.'
                 }
               }}
+              aria-label="whitelist"
+              aria-placeholder="type your whitelisted urls"
             />
 
             <Box pb={4}>
@@ -580,6 +620,7 @@ const AddToPlaylistModal = ({
                       sx={{ color: 'inherit' }}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label="button to view code for embedding content"
                     >
                       here.
                     </MuiLink>
@@ -630,6 +671,7 @@ const AddToPlaylistModal = ({
                     backgroundColor: '#585858'
                   }
                 }}
+                aria-label="button to add to playlist"
               >
                 + Add
               </Button>
@@ -811,6 +853,7 @@ const AddToPlaylistModal = ({
                   backgroundColor: '#585858'
                 }
               }}
+              aria-label="button to go to newly created playlist"
             >
               Done
             </Button>

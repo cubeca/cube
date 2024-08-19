@@ -9,15 +9,27 @@ interface ProfileMenuItemProps {
   icon: JSX.Element;
   text: string;
   clipIcon?: number;
+  role?: string;
+  tabIndex?: number;
+  ref?: any;
 }
 
 const ProfileMenuItem = ({
   onClick,
   icon,
   text,
-  clipIcon
+  clipIcon,
+  role,
+  tabIndex,
+  ref
 }: ProfileMenuItemProps) => (
-  <MuiMenuItem onClick={onClick} sx={{ marginBottom: 1, paddingX: '20px' }}>
+  <MuiMenuItem
+    onClick={onClick}
+    sx={{ marginBottom: 1, paddingX: '20px' }}
+    role={role}
+    tabIndex={tabIndex}
+    ref={ref}
+  >
     <ListItemIcon
       sx={{
         paddingRight: '10px',

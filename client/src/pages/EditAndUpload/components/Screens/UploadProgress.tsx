@@ -45,6 +45,7 @@ const UploadProgress = ({ editMode }: any) => {
         animationData={LoadingCubes}
         loop={true}
         style={{ width: '170px', height: '170px' }}
+        aria-label="Loading animation"
       />
       <s.ModalTitle variant="h1">
         {editMode ? t('Applying changes...') : t('Uploading')}
@@ -58,7 +59,10 @@ const UploadProgress = ({ editMode }: any) => {
         Don&apos;t close your browser window.
       </Typography>
       <s.ProgressBarContainer>
-        <s.ProgressBar progress={progressInt} />
+        <s.ProgressBar
+          progress={progressInt}
+          aria-label="Upload progress bar indicator"
+        />
       </s.ProgressBarContainer>
     </s.ModalContainer>
   );

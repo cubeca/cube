@@ -71,6 +71,8 @@ const Details = ({
             rows={8}
             fullWidth
             required
+            aria-label={'Description input field'}
+            aria-placeholder="Type your content description here"
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t(
@@ -90,6 +92,7 @@ const Details = ({
             maxFiles={1}
             // isUploadReady={isVTTUploadReady}
             isUploadReady={!editMode ? isVTTUploadReady : true}
+            aria-label={t('Upload subtitle file here')}
           />
           <Typography component="p" variant="body2" my={theme.spacing(2.5)}>
             {t('Upload your VTT Subtitle file here. (optional)')}{' '}
@@ -147,6 +150,7 @@ const Details = ({
                 fullWidth={false}
                 control={control}
                 {...field}
+                aria-label={'Select whether this content is suitable for kids'}
               >
                 <MenuItem.li value="yeskids">
                   {t(
@@ -204,6 +208,7 @@ const Details = ({
             }}
             name="checked"
             color="primary"
+            aria-label={t('Button to hide content from search')}
           />
           <Typography component="p" variant="body2">
             {t(
@@ -266,6 +271,7 @@ const Details = ({
                             : ''
                         }
                         {...params}
+                        aria-label="Enter content live date"
                         onKeyUp={(e) => {
                           const cursorPosition = (e.target as HTMLInputElement)
                             .selectionStart;
@@ -362,6 +368,7 @@ const Details = ({
                             : ''
                         }
                         {...params}
+                        aria-label="Enter content expiry date"
                         onKeyUp={(e) => {
                           const cursorPosition = (e.target as HTMLInputElement)
                             .selectionStart;

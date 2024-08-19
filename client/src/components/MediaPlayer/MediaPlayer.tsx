@@ -51,7 +51,7 @@ const MediaPlayer = ({
         }}
         controls
         width={'100%'}
-        height={'auto'}
+        height={'10vh'}
         aria-label={coverImageAltText}
       />
     </>
