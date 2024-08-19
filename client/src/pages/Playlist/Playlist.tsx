@@ -23,8 +23,10 @@ import EmbedModal from 'components/EmbedPlaylistModal/EmbedPlaylistModal';
 import * as s from './Playlist.styled';
 import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
+import { useNavigate } from 'react-router-dom';
 
 const Playlist = () => {
+  const navigate = useNavigate();
   const user = getAuthTokenPayload();
   const { id } = useParams<{ id: string }>();
   const { playlist, handleGetPlaylist, refetchPlaylist, isLoading } =
@@ -146,7 +148,17 @@ const Playlist = () => {
                     </s.ImageInner>
                   </s.ImageWrapper>
 
-                  <Typography component="h5" variant="h5">
+                  <Typography
+                    component="h5"
+                    variant="h5"
+                    tabIndex={0}
+                    aria-label="button to go to playlist creator's profile"
+                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+                      if (e.key === 'Enter') {
+                        navigate(`/profile/${localProfile.tag}`);
+                      }
+                    }}
+                  >
                     {localProfile!.organization || ''}
 
                     <small>
@@ -180,7 +192,14 @@ const Playlist = () => {
               }}
             >
               {showEmbedModal && (
-                <s.ActionsWrapper>
+                <s.ActionsWrapper
+                  tabIndex={0}
+                  onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+                    if (e.key === 'Enter') {
+                      openEmbedModal();
+                    }
+                  }}
+                >
                   <CodeIcon />
                   <s.Action to={''} onClick={openEmbedModal}>
                     Embed

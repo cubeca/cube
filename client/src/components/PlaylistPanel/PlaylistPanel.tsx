@@ -397,6 +397,7 @@ const PlaylistPanel: React.FC<Props> = ({
                       <Link
                         to={`/playlist/${playlist.id}`}
                         style={{ textDecoration: 'inherit' }}
+                        tabIndex={-1}
                       >
                         <s.PlaylistTitle>
                           {editedTitles[playlist.id] ||
