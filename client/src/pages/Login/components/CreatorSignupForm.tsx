@@ -275,15 +275,18 @@ export const CreatorSignupForm = () => {
             <Typography component="h4" variant="h3" color="#95F5CB" pb={4}>
               {t('Account Fees CTA')}
             </Typography>
-            <Typography component="p" color="#D9FFEE" variant="h4" pb={4}>
+            <Typography component="p" color="#D9FFEE" pb={4}>
+              {t('Account Fees CTAPP2')}
+            </Typography>
+            <Typography component="p" color="#80d6c1" variant="h4" pb={4}>
               {t('Who Creator Accounts Are For')}
             </Typography>
             <s.FrenchDescription>
               {t('Account Fees Creator CTA FR')}
             </s.FrenchDescription>
-            <s.FrenchDescription>
+            <Typography component="p" color="#D9FFEE" pb={4}>
               {t('Who Creator Accounts Are For FR')}
-            </s.FrenchDescription>
+            </Typography>
           </Stack>
 
           <CheckboxInput
