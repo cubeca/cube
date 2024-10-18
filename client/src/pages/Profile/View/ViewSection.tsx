@@ -15,6 +15,7 @@ import Button from 'components/Button';
 interface ViewSectionProps {
   isLoggedIn: boolean;
   profile: any;
+  loggedInProfileId: string;
   onEdit: () => void;
 }
 
@@ -22,16 +23,25 @@ const getUrl = (website: string) => {
   return website?.startsWith('http') ? website : `https://${website}`;
 };
 
-const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
+const ViewSection: FC<ViewSectionProps> = ({
+  isLoggedIn,
+  profile,
+  loggedInProfileId,
+  onEdit
+}) => {
+  console.log(profile);
+  const isOwnProfile = loggedInProfileId === profile?.id;
   return (
     <s.ViewSection>
       <s.Header>
         <s.ImageWrapper>
           <s.ImageInner
-            onClick={isLoggedIn ? onEdit : undefined}
+            onClick={isLoggedIn && isOwnProfile ? onEdit : undefined}
             title={profile!.organization}
             target="_blank"
-            style={{ cursor: isLoggedIn ? 'pointer' : 'default' }}
+            style={{
+              cursor: isLoggedIn && isOwnProfile ? 'pointer' : 'default'
+            }}
             aria-label="profile image"
           >
             {profile.logoUrl && (
@@ -48,7 +58,7 @@ const ViewSection: FC<ViewSectionProps> = ({ isLoggedIn, profile, onEdit }) => {
             )}
           </s.ImageInner>
 
-          {isLoggedIn && (
+          {isLoggedIn && isOwnProfile && (
             <s.EditWrapper>
               <button
                 onClick={onEdit}
