@@ -29,7 +29,6 @@ const ViewSection: FC<ViewSectionProps> = ({
   loggedInProfileId,
   onEdit
 }) => {
-  console.log(profile);
   const isOwnProfile = loggedInProfileId === profile?.id;
   return (
     <s.ViewSection>
