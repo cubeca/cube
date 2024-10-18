@@ -91,6 +91,8 @@ const Profile = () => {
     setIsPlaylistModalOpen(true);
   };
 
+  const isOwnProfile = loggedInProfileId === profile?.id;
+
   return (
     <Box>
       <s.UserHeroBg>
@@ -117,12 +119,13 @@ const Profile = () => {
           profile={profile!}
           isLoggedIn={isLoggedIn}
           onEdit={() => setIsOpen(true)}
+          loggedInProfileId={loggedInProfileId || ''}
         />
       </s.UserProfile>
 
       <Grid container>
         <Grid xs={10} xsOffset={1} md={7}>
-          {isLoggedIn && loggedInProfileId === profile.id && (
+          {isLoggedIn && isOwnProfile && (
             <s.UserContentHeader
               direction="row"
               spacing={2}
@@ -161,7 +164,7 @@ const Profile = () => {
                 >
                   {t('Playlists')}
                 </Typography>
-                {profileId === loggedInProfileId && (
+                {isOwnProfile && (
                   <Typography
                     component="h3"
                     variant="h3"
@@ -208,7 +211,7 @@ const Profile = () => {
               isLoading={isLoading}
               key={profile?.id}
             />
-          ) : selectedPanel === 'private' ? (
+          ) : selectedPanel === 'private' && isOwnProfile ? (
             <PrivateContent
               profile={profile}
               isLoading={isLoading}

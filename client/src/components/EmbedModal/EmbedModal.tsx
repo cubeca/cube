@@ -22,13 +22,13 @@ function generateEmbedCode(type: string, url: string) {
 
   switch (type) {
     case 'audio':
-      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
+      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" allow="fullscreen" frameborder="0"></iframe>`;
       break;
     case 'pdf':
       embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
       break;
     case 'video':
-      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
+      embedCode = `<iframe src="${url}" style="width:100%; height:100%;" allow="fullscreen" frameborder="0"></iframe>`;
       break;
     case 'link':
       embedCode = `<iframe src="${url}" style="width:100%; height:100%;" frameborder="0"></iframe>`;
