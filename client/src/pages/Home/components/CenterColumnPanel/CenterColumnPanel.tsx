@@ -75,8 +75,8 @@ const CenterColumnPanel = () => {
                 {t('daoTextFR')}
               </Typography>
             </s.CenterColumnTextSection>
-            <Button href="https://www.cubecommons.ca/content/5d8f289d-1bac-4a0a-8df3-c5a118158be6">
-              Learn More | En Savoir Plus
+            <Button href="https://github.com/cubeca/cube?tab=readme-ov-file#readme">
+              Cubeca Github Repo
               </Button>
           </DarkContent.Wrapper>
         </Grid>
