@@ -60,7 +60,7 @@ export const Filters = styled(Stack)`
         }
 
         input {
-          padding: 8px 0;
+          padding: 8px 30px;
           font-size: 24px;
           color: ${(props) => props.theme.palette.primary.main};
           
