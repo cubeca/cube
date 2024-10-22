@@ -1,4 +1,5 @@
 import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
+import { Box } from '@mui/material';
 import Select from 'components/form/Select';
 import TextInput from 'components/form/TextInput';
 import { useForm } from 'react-hook-form';
@@ -6,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import * as s from './CategorizedContentFilter.styled';
 import * as MenuItem from '../../../../components/form/Select/MenuItem.styled';
 import { FC, useEffect } from 'react';
+import { Search } from '@mui/icons-material';
 
 interface CategorizedContentFilterProps {
   setSearchTerm: any;
@@ -45,15 +47,20 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
   return (
     <s.Filters>
       <form onChange={(e) => handleSearchTermChange(e)}>
-        <TextInput
+         
+         <Box>
+        <Search sx={{ color: '#95F5CB', position: 'absolute' }} alt-text="search icon" />
+        <TextInput 
           id="searchFilter"
           name="searchFilter"
-          control={control}
+          control={control} 
           variant="standard"
-          placeholder={t('Search Input Text')}
           className="searchFilter"
-          defaultValue={tagSearchTerm ? tagSearchTerm : ''}
-        />
+          placeholder={t('')}
+          aria-label="search"
+          aria-placeholder="type your search term here"
+          defaultValue={tagSearchTerm ? tagSearchTerm : ''} />
+        </Box>
 
         <Select
           label={t('Filter Menu Title')}
