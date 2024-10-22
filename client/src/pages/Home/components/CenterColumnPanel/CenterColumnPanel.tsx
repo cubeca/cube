@@ -65,6 +65,9 @@ const CenterColumnPanel = () => {
               <Typography component="p">
                 {t('daoGovToken')}
               </Typography>
+              <Button sx={{marginBottom:"40px"}} href="https://github.com/cubeca/cube?tab=readme-ov-file#readme">
+              Cubeca Github Repo
+              </Button>
               <Typography component="p" variant="h3">
                 {t('daoFR')}
               </Typography>
@@ -75,9 +78,6 @@ const CenterColumnPanel = () => {
                 {t('daoTextFR')}
               </Typography>
             </s.CenterColumnTextSection>
-            <Button href="https://github.com/cubeca/cube?tab=readme-ov-file#readme">
-              Cubeca Github Repo
-              </Button>
           </DarkContent.Wrapper>
         </Grid>
         <Grid xs={10} xsOffset={1} md={3}></Grid>

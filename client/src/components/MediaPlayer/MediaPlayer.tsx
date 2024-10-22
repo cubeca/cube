@@ -53,7 +53,6 @@ const MediaPlayer = ({
         width={'100%'}
         height={'10vh'}
         aria-label={coverImageAltText}
-        toggleFullscreen={true}
       />
     </>
   );
