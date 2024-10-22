@@ -74,24 +74,34 @@ The built front-end React app is hosted on Cloudflare Pages. There is some light
 
 ## Governance
 
-CubeCommons uses a third-party tool called Gov4Git to govern its' issues and pull requests. This Tool was developed by Digital Minister Audrey Tang (they/them) and their collaborators – architects of Taiwan’s internationally acclaimed digital democracy technology. 
+CubeCommons uses a third-party tool called Gov4Git to empower it users to govern changes and updates to the site. These are made in the form of github "issues"=used to propose changes or fixes and "pull requests"=used to review code, either updates or new tools developed by other projects who built on our codebase. Gov4git is also an open source project developed by former Digital Minister Audrey Tang (they/them) and their collaborators – architects of Taiwan’s internationally acclaimed digital democracy technology. 
 Learn more about Audrey Tang: https://www.plurality.net/
-Gov4git installation links and instructions can be found here: https://gitrules.ai/
+Gov4git's installation links and instructions can be found here: https://gitrules.ai/
 
 Follow these steps to get started with Gov4Git for CubeCommons:
 
 1. Create a GitHub profile https://github.com/
+GitHub is all about community, not business promotion. You can create one Personal Github Profile to join with or create a Personal Profile that 'owns' an Organizational Profile. Share the login to the organizational profile with your coworkers, who can use it to log in to the CubeCommons community on the Gov4git app. Ideally, only one or two members of your organization should be voting on behalf of your organization.
+For more details on converting an existing profile to an organization, check out:
+https://help.github.com/en/github/setting-up-and-managing-your-github-user-account/converting-a-user-into-an-organization
+
 2. Download Gov4Git on MacOS or Windows using the links found here: https://github.com/gov4git/gov4git/blob/v2/README.md
+
 3. Once installed, open Gov4Git on your computer and follow the login and verification instructions using your GitHub account details.
    - Login with the Verify link, copy the verification code and enter it when prompted.
    - Once Verified, the Gove4Git desktop app should show a button called “Join a community”, this can always be found under settings. Under "Join Community" there is an input titled "Community URL". Paste this CubeCommons URL: “https://github.com/cubeca/cube”
+
 4. Approval may take a few minutes.
 
 Requesting Voting Tokens:
 5. Once approved, go back to your browser and login to your GitHub account (if you're not already), click on the GitHub logo - found in the top left corner (looks like a small cat) - this should take you to your dashboard.
+
 6. On the left hand side under repositories, you'll see the ‘cubeca’ repository that you’ve just joined.
+
 7. click on the 'cubeca' repository this will take you to a new page on Github.
+
 8. Under the Github logo in the top navigation bar is a secondary navigation bar with the buttons "code", "Issues", "Pull requests" etc. Click “Issues”, this will take you to a new page on GitHub
+
 9. On the right hand side of this new page, click a green button titled “New Issue” and create a request for voting tokens.
 
 Formatting "New Issues" as Requests or Proposals:
@@ -152,6 +162,11 @@ npm run start
 # Styleguide
 
 Site styles can be referenced in the [theme file](https://github.com/cubeca/cube_ui/blob/main/client/src/theme/index.ts).
+All text on the Landing, Search, Login, Play pages as well as many of the buttons, can we altered within these two fils: 
+[about.json] (https://github.com/cubeca/cube/blob/main/client/src/i18n/en/about.json)
+[common.json] (https://github.com/cubeca/cube/blob/main/client/src/i18n/en/common.json)
+This simplifies making text changes across the site. You can also use these files to help you search wich other files are generating certain components or pages. For example, in the about.json file, the first text is called heroText. If you read it, you'll see it's the text displayed at the top of our landing page. If you copy this heroText (without quotation marks) and search for it in all files, you'll find HerPanel.tsx, which creates the top of the landing page."
+
 
 ## Contributing
 

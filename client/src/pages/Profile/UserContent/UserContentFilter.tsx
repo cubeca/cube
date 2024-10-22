@@ -16,6 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { SearchFiltersCategoryEnum } from '@cubeca/cube-svc-client-oas-axios';
 import * as s from './UserContentFilter.styled';
 import * as MenuItem from '../../../components/form/Select/MenuItem.styled';
+import { Search } from '@mui/icons-material';
+import { Box } from '@mui/material';
 import { FC } from 'react';
 
 interface UserContentFilterProps {
@@ -48,13 +50,15 @@ const UserContentFilter: FC<UserContentFilterProps> = ({
   return (
     <s.Filters>
       <form onChange={(e) => handleSearchTermChange(e)}>
+
+        <Search sx={{ color: '#95F5CB', position: 'absolute' }} alt-text="search icon"/>
         <TextInput
           id="searchFilter"
           name="searchFilter"
           className="searchFilter"
           control={control}
           variant="standard"
-          placeholder={t('Search Input Text')}
+          placeholder={t('')}
           sx={{ fontSize: '2rem' }}
           aria-label="search"
           aria-placeholder="type your search term here"

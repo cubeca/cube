@@ -34,6 +34,7 @@ export const Filters = styled(Stack)`
 
     .MuiInputBase-root {
       width: 100%;
+      padding-left: 33px;
 
       input {
         width: 100%;
