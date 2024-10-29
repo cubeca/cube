@@ -45,7 +45,7 @@ const CategorizedContentFilter: FC<CategorizedContentFilterProps> = ({
   }, [tagSearchTerm]);
 
   return (
-    <s.Filters>
+    <s.Filters role="search">
       <form onChange={(e) => handleSearchTermChange(e)}>
          
          <Box>

@@ -11,7 +11,8 @@
  * @param {any} [tags] Optional. Tags used to further filter the content or playlists.
  */
 
-import { Stack } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
+import * as s from './Content.styled';
 import { useTranslation } from 'react-i18next';
 import ContentList from 'components/ContentList';
 import { ContentLoader } from 'components/Loaders';
@@ -257,9 +258,16 @@ const MoreContent = ({
 
   return (
     <Stack>
+         <s.MoreLikeThisHeader>
+              <Typography component="h5" variant="h5">
+                    {t('Play Page Header 4')}
+                </Typography>
+              <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
+                    {t('Play Page Header 4FR')}
+                </s.FrenchHeaders>
+            </s.MoreLikeThisHeader>        
       {combinedContent.length > 0 ? (
         <ContentList
-          heading={t('Play Page Header 4')}
           content={uniqueCombinedContent}
           playlistId={playlistId}
         />
