@@ -2,18 +2,19 @@ import { styled } from 'theme/utils';
 import { Stack } from '@mui/material';
 import Button from 'components/Button';
 import { Link } from 'react-router-dom';
-import { ReactComponent as HomeIcon } from '../../../../../assets/icons/home.svg';
+import { Search } from '@mui/icons-material';
 
 export const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
+  text-decoration: none !important;
 `;
 
-export const StyledHomeIcon = styled(HomeIcon)`
+export const StyledSearchIcon = styled(Search)`
   height: 30px;
   width: 30px;
   color: ${(props) => props.theme.palette.primary.main};
-  margin-right: ${(props) => (props.isLoggedIn ? '16px' : '32px')};
+ 
 `;
 
 export const Aux = styled(Stack)`
@@ -50,4 +51,11 @@ export const AuxButton = styled(Button)`
   color: ${(props) => props.theme.palette.primary.light};
   border-color: ${(props) => props.theme.palette.primary.dark};
   padding: 8px 24px;
+`;
+
+export const AuxContent = styled('text')`
+  font-weight: 500;
+  color: ${(props) => props.theme.palette.primary.light};
+  margin-right: ${(props) => (props.isLoggedIn ? '16px' : '32px')};
+  padding: 8px 10px;
 `;

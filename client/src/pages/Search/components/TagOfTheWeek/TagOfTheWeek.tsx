@@ -78,8 +78,8 @@ const Content = () => {
     <s.ContentWrapper>
       <s.ContentHeader container>
         <Grid xs={10} xsOffset={1} md={5} mdOffset={1}>
-          <Typography component="h3" variant="h3">
-            <span>{t('featuredTag')}</span>
+          <Typography component="h3" variant="h3" aria-label="featured content">
+            <span aria-label="Tagged">{t('featuredTag')}</span>
           </Typography>
         </Grid>
       </s.ContentHeader>

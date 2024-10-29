@@ -27,11 +27,12 @@ const HeroCTA: FC<HeroCtaProps> = ({
         {title}
       </Typography>
       <Typography component="p" variant="body1" sx={{ color: '#2F4048' }}>
-        {text}<span>{frenchText}</span>
+        {text}<span aria-label="French translation">{frenchText}</span>
       </Typography>
     </s.CTAContent>
-    <s.CTAVideo>
+    <s.CTAVideo aria-label="This is a video with subtitles, on how to use this page.">
       <ReactPlayer
+      aria-hidden="true"
         url={video}
         width="100%"
         height="100%"
@@ -57,9 +58,9 @@ const HeroCTA: FC<HeroCtaProps> = ({
           }
         }}
         playIcon={
-          <Box className="play-button">
+          <Box className="play-button" role="button" aria-label="Play">
             <a href="#play-how-to-video">
-              <PlaySymbol />
+              <PlaySymbol/>
             </a>
           </Box>
         }

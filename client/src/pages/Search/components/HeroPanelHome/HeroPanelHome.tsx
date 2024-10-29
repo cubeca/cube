@@ -12,7 +12,7 @@ const HeroPanelHome = () => {
   return (
     <s.HeroPanelHome>
       <s.Bg>
-        <img src={HeroHome} alt="hero" width="100%" height="auto" />
+        <img src={HeroHome} alt="black and white background showing a person drawing" width="100%" height="auto" />
       </s.Bg>
 
       <s.Content>
@@ -22,7 +22,7 @@ const HeroPanelHome = () => {
               <Typography component="h1" variant="h1">
                 {t('searchPage')}
               </Typography>
-              <Typography component="h3" variant="h3">
+              <Typography component="h2" variant="h3" aria-label="French translation">
                 {t('searchPageFR')}
               </Typography>
             </s.Headline>
