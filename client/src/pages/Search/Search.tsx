@@ -12,11 +12,12 @@ const Home = () => {
   const languageSearchTerm = queryParams.get('language');
 
   return (
-    <Box>
+    <Box aria-label='Search Page'>
       <HeroPanelHome />
       <CategorizedContent
         tagSearchTerm={searchTerm || ''}
         languageSearchTerm={languageSearchTerm || ''}
+        aria-label='search cube commons content'
       />
       <Footer />
     </Box>

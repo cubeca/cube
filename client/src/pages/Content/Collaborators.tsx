@@ -25,7 +25,7 @@ const Collaborators = ({
       {Array.isArray(collaborators) &&
         collaborators.map((c: any, i: number) => (
           <s.Collaborator key={`${c}-${i}`}>
-            <Stack direction="row" alignItems="center">
+            <Stack direction="row" alignItems="center" aria-label="Creator of this content">
               <s.CollaboratorThumb>
                 {c.logoUrl && <img src={c.logoUrl} alt="" width="40" />}
               </s.CollaboratorThumb>
@@ -42,6 +42,7 @@ const Collaborators = ({
 
                 {c.tag && (
                   <s.CollaboratorSocial
+                    aria-label="their profile on cube commons"
                     href={`/profile/${c.tag.toString().toLowerCase()}`}
                   >
                     {c.tag}

@@ -169,6 +169,7 @@ const CategorizedContent = ({
             categoryFilter={categoryFilter}
             setCategoryFilter={setCategoryFilter}
             tagSearchTerm={tagSearchTerm || languageSearchTerm}
+            aria-label='filter search results using this menu'
           />
 
           {(categoryFilter === 'all' ||
@@ -182,19 +183,20 @@ const CategorizedContent = ({
                   </Typography>
                   {!isPlaylistLoading && playlistResults.length === 0 && (
                     <Grid>
-                      <Typography component="p" variant="body1" mt={2}>
+                      <Typography component="p" variant="body1" mt={2} aria-label='error message'>
                         <span>No playlists found/ aucun playlists trouvé</span>
                       </Typography>
                     </Grid>
                   )}
                 </Grid>
               </s.ContentHeader>
-              <s.Content>
+              <s.Content aria-label='a horizontal grid of Playlist cover images and titles'>
                 {isPlaylistLoading ? (
                   <Lottie
                     className="loading-cubes"
                     animationData={LoadingCubes}
                     loop={true}
+                    aria-label='loading icon'
                   />
                 ) : error ? (
                   <p>{error}</p>
@@ -211,7 +213,7 @@ const CategorizedContent = ({
                 )}
 
                 {!isPlaylistLoading && hasMorePlaylistToLoad && (
-                  <s.LoadMore onClick={handlePlaylistLoadMore}>
+                  <s.LoadMore onClick={handlePlaylistLoadMore} aria-label='button to load more'>
                     <span className="inner">
                       <span className="label">{t('Load More | Charger Plus')}</span>
                     </span>

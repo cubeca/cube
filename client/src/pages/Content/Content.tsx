@@ -307,8 +307,9 @@ const Video = () => {
         animationData={LoadingCubes}
         loop={true}
         style={{ width: '170px', height: '170px' }}
+        aria-hidden="true"
       />
-      <s.LoadingText>Loading your updated content...</s.LoadingText>
+      <s.LoadingText component="h2">Loading your updated content...</s.LoadingText>
     </s.UpdateWrapper>
   );
 
@@ -323,6 +324,7 @@ const Video = () => {
             animationData={LoadingCubes}
             loop={true}
             style={{ width: '170px', height: '170px' }}
+            aria-hidden="true"
           />
           <s.LoadingText>
             Your video is being processed. This may take a few minutes.
@@ -408,7 +410,7 @@ const Video = () => {
                 </s.EditDeleteWrapper>
               )}
             </Box>
-            <Typography component="p" variant="body2" sx={{ my: 1 }}>
+            <Typography  component="p" variant="body2" sx={{ my: 1 }}>
               {formattedCreatedDate}
             </Typography>
             {formattedExpiryDate && (
@@ -449,7 +451,7 @@ const Video = () => {
                     <s.Action
                       to={''}
                       onClick={openEmbedModal}
-                      aria-label="button to open the embed menu"
+                      aria-label="button to open the embed code"
                     >
                       Embed
                     </s.Action>
@@ -460,7 +462,7 @@ const Video = () => {
                   <s.Action
                     to={''}
                     onClick={openPlaylistModal}
-                    aria-label="button to add the current content to a playlist"
+                    aria-label="button to add this content to a playlist"
                   >
                     Add to Playlist
                   </s.Action>
@@ -470,7 +472,7 @@ const Video = () => {
                   <s.Action
                     to={''}
                     onClick={openReportContentModal}
-                    aria-label="button to report the current content"
+                    aria-label="button to open a form you can use to report this content"
                   >
                     Report Content
                   </s.Action>
@@ -481,7 +483,7 @@ const Video = () => {
                       <EditIcon />
                       <s.Action
                         to={`/profile/${tag}/upload?contentid=${id}`}
-                        aria-label="button to edit the current content"
+                        aria-label="button to edit this content"
                       >
                         Edit Content
                       </s.Action>
@@ -502,6 +504,7 @@ const Video = () => {
             )}
 
             <Typography
+              aria-label="Content Description"
               component="p"
               variant="body1"
               sx={{ whiteSpace: 'pre-wrap' }}
@@ -516,10 +519,15 @@ const Video = () => {
               <MediaMetaDataLoader />
             ) : (
               <>
-                <Stack>
+                <Stack aria-label="contributors to the making of this content">
+                  <s.Headers>
                   <Typography component="h5" variant="h5">
                     {t('Play Page Header 1')}
                   </Typography>
+                  <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
+                    {t('Play Page Header 1FR')}
+                  </s.FrenchHeaders>
+                  </s.Headers>
                   {content?.contributors &&
                     Object.entries(content?.contributors)
                       .sort(([roleA], [roleB]) => {
@@ -551,7 +559,7 @@ const Video = () => {
                                   contributors.length
                                 )
                               )}
-                              :&nbsp;
+                              :&nbsp; 
                             </Typography>
 
                             <Typography
@@ -573,7 +581,6 @@ const Video = () => {
                                         sx={{ color: 'inherit' }}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        aria-label="button to contributor profile"
                                       >
                                         {contributor.name}
                                       </Link>
@@ -605,9 +612,14 @@ const Video = () => {
 
                 {(content?.tags?.length || 0) > 0 && (
                   <Stack>
-                    <Typography component="h5" variant="h5">
-                      {t('Play Page Header 2')}
-                    </Typography>
+                    <s.Headers>
+                  <Typography component="h5" variant="h5">
+                    {t('Play Page Header 2')}
+                  </Typography>
+                  <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
+                    {t('Play Page Header 2FR')}
+                  </s.FrenchHeaders>
+                  </s.Headers>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
                         .join(', ')
@@ -616,7 +628,7 @@ const Video = () => {
                           <React.Fragment key={tag}>
                             <Link
                               href={`/search?searchTerm=${tag}`}
-                              aria-label="button to search for more content with this tag"
+                              aria-label="click to search more content with this tag"
                             >
                               <s.Tag
                                 component="span"
@@ -640,11 +652,18 @@ const Video = () => {
                 )}
                 {(content?.languageTags?.length || 0) > 0 && (
                   <Stack>
-                    <Typography component="h5" variant="h5">
-                      {content?.languageTags && content?.languageTags.length > 1
+                     <s.Headers>
+                  <Typography component="h5" variant="h5">
+                  {content?.languageTags && content?.languageTags.length > 1
                         ? t('Play Page Header 3LanguagePlural')
                         : t('Play Page Header 3LanguageSingular')}
-                    </Typography>
+                  </Typography>
+                  <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
+                  {content?.languageTags && content?.languageTags.length > 1
+                        ? t('Play Page Header 3LanguagePluralFR')
+                        : t('Play Page Header 3LanguageSingularFR')}
+                  </s.FrenchHeaders>
+                  </s.Headers>             
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])
                         .join(', ')
@@ -653,7 +672,7 @@ const Video = () => {
                           <React.Fragment key={tag}>
                             <Link
                               href={`/search?language=${tag}`}
-                              aria-label="button to search for more content with this language tag"
+                              aria-label="click to search for more content in this language"
                             >
                               <s.Tag
                                 component="span"

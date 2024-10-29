@@ -48,8 +48,9 @@ const AuxiliaryNav = () => {
   return (
     <s.Aux component="nav" direction="row" alignItems="center" spacing={2}>
       {!isSmallScreen && (
-        <s.StyledLink aria-label="Button to go to Search Page" to="/search">
-          <s.StyledHomeIcon isLoggedIn={isLoggedIn} />
+        <s.StyledLink aria-label="Button to go to the Search Page" to="/search">
+          <s.StyledSearchIcon titleaccess="Search Icon" />
+          <s.AuxContent component="h1" isLoggedIn={isLoggedIn}>Content</s.AuxContent>
         </s.StyledLink>
       )}
 
@@ -72,7 +73,7 @@ const AuxiliaryNav = () => {
         aria-controls={open ? menuId : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
-        aria-label="Open Main Menu"
+        aria-label="Open Site Menu"
       >
         <MoreVertIcon />
       </s.AuxMenuTrigger>
