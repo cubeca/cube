@@ -27,6 +27,7 @@ const MediaPlayer = ({
   return (
     <>
       <s.StyledPlayer
+      aria-hidden="true"
         coverImageAltText={coverImageAltText}
         coverArtUrl={coverArtUrl || ''}
         url={url}
