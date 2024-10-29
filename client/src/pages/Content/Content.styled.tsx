@@ -148,6 +148,24 @@ export const ActionsWrapper = styled(Box)`
   margin-bottom: 1.5rem;
 `;
 
+export const Headers = styled(Box)`
+  margin: 8px 0 0;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
+export const FrenchHeaders = styled(Typography)`
+padding-left: 4px;
+`;
+
+export const MoreLikeThisHeader = styled(Box)`
+  margin: 8px 0px 16px;
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+`;
+
 export const Tags = styled(Box)`
   margin: 8px 0 0;
   max-width: 100%;

@@ -59,31 +59,29 @@ const ContentCard: FC<ContentCardProps> = ({
           }}
           aria-label={coverImageAltText}
         >
-          <span role="img" aria-label={coverImageAltText}></span>
         </s.Thumbnail>
-        <div className="types"></div>
 
         <s.Data direction="row" alignItems="space-between">
-          <Typography component="div" className="title">
+          <Typography component="h4" className="title">
             {title}
           </Typography>
           <div className="types">
             {icon === 'video' ? (
-              <PlayArrowIcon fontSize="small" />
+              <PlayArrowIcon fontSize="small" titleAccess="Video Icon"/>
             ) : icon === 'audio' ? (
-              <VolumeUpIcon fontSize="small" />
+              <VolumeUpIcon fontSize="small" titleAccess="Audio Icon"/>
             ) : icon === 'pdf' ? (
-              <MenuBookIcon fontSize="small" />
+              <MenuBookIcon fontSize="small" titleAccess="PDF Icon"/>
             ) : icon === 'link' ? (
-              <LinkIcon fontSize="small" />
+              <LinkIcon fontSize="small" titleAccess="Linked Page Icon"/>
             ) : icon === 'playlist' ? (
-              <ListItemIcon fontSize="small" />
+              <ListItemIcon fontSize="small" titleAccess="Playlist Icon" aria-label="Playlist Icon"/>
             ) : icon === 'document' ? (
-              <DocIcon fontSize="small" />
+              <DocIcon fontSize="small" titleAccess="Word Doc Icon"/>
             ) : (
               <></>
             )}
-            {hasSignLanguage && <SignLanguageIcon fontSize="small" />}
+            {hasSignLanguage && <SignLanguageIcon fontSize="small" titleAccess="Sign Language Icon"/>}
           </div>
         </s.Data>
       </Link>
