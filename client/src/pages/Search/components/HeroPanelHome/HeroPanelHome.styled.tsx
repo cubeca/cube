@@ -14,8 +14,8 @@ export const Bg = styled(Box)`
   height: 100vw;
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    top: -116px;
-    bottom: 360px;
+    top: -100px;
+    bottom: 40px;
     height: auto;
   }
 
@@ -77,7 +77,7 @@ export const Content = styled(Box)`
   padding-bottom: 18.333333333333334vw;
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    padding-bottom: 8.333333333333334vw;
+    padding-bottom: 4vw;
   }
 `;
 
@@ -85,7 +85,7 @@ export const Headline = styled(Box)`
   padding: 55vw 0 8.333333333333334vw 0;
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    padding: 8.333333333333334vw 0;
+    padding: 24vw 0 1vw;
   }
 
   h1 {
