@@ -85,7 +85,7 @@ export const UserSignupForm = () => {
           {t('Verify Email Body')}
         </Typography>
         <Typography variant="h3" component="h3" color="#D9FFEE" pb={4}>
-          sfsffsfssf
+          Thank you ! Merci!
         </Typography>
         <Typography variant="h4" component="h4" pb={4}>
           {t('Verify Email BodyFR')}

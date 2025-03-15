@@ -18,7 +18,7 @@ import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
-
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import MoreContent from './MoreContent';
 import Collaborators from './Collaborators';
 
@@ -52,6 +52,8 @@ const Video = () => {
   const { data: content, isLoading, refetch } = useContentDetails();
   const createdAt = content?.createdAt;
 
+  useDocumentTitle(content?.title ? `${content.title}` : 'View Content');
+  
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }

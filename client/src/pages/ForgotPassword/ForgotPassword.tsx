@@ -17,9 +17,12 @@ import Link from 'components/Link';
 import EmailInput from 'components/form/EmailInput';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@mui/system';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const ForgotPassword = () => {
   const { t } = useTranslation('common');
+    // Use translation for accessibility and bilingual support
+    useDocumentTitle(t('forgotPassword.pageTitle', 'Password Recovery'));
   const { control, handleSubmit } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
   const [isEmailSubmitted, setIsEmailSubmitted] = useState(false);
