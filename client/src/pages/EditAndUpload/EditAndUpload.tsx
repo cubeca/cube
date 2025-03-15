@@ -479,7 +479,7 @@ const EditAndUpload = () => {
           !formState.isValid ||
           (screenIndex === 0 && !isMediaProperFileType) ||
           (screenIndex === 0 &&
-            mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
+            ['video', 'audio', 'pdf', 'document'].includes(mediaType) &&
             !isMediaProperFileType) ||
           (screenIndex === 0 &&
             mediaType === 'link' &&
@@ -510,7 +510,7 @@ const EditAndUpload = () => {
               ? false
               : !formState.isValid ||
                 (screenIndex === 0 &&
-                  mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
+                  ['video', 'audio', 'pdf', 'document'].includes(mediaType) &&
                   !isMediaProperFileType) ||
                 (screenIndex === 0 &&
                   mediaType === 'link' &&
@@ -521,7 +521,7 @@ const EditAndUpload = () => {
                 (!mediaLink && !isMediaSelected) ||
                 (screenIndex === 1 &&
                   !isVTTSelected &&
-                  mediaType in ['video', 'audio'])
+                  ['video', 'audio'].includes(mediaType))
           }
           aria-label="Form footer with navigation and submit controls"
         />
