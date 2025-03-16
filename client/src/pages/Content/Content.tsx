@@ -19,6 +19,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
 
+import { ReactComponent as LinkIcon } from 'assets/icons/link.svg';
+
 import MoreContent from './MoreContent';
 import Collaborators from './Collaborators';
 
@@ -616,9 +618,17 @@ const Video = () => {
                   <Typography component="h5" variant="h5">
                     {t('Play Page Header 2')}
                   </Typography>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
                     {t('Play Page Header 2FR')}
                   </s.FrenchHeaders>
+                  <LinkIcon 
+                          style={{ width: 20, height: 20 }} 
+                          role="img"
+                          aria-label="Link icon indicating French translation"
+                        />
+                      </Box>
                   </s.Headers>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
@@ -658,11 +668,18 @@ const Video = () => {
                         ? t('Play Page Header 3LanguagePlural')
                         : t('Play Page Header 3LanguageSingular')}
                   </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
                   {content?.languageTags && content?.languageTags.length > 1
                         ? t('Play Page Header 3LanguagePluralFR')
                         : t('Play Page Header 3LanguageSingularFR')}
                   </s.FrenchHeaders>
+                  <LinkIcon 
+                          style={{ width: 20, height: 20 }} 
+                          role="img"
+                          aria-label="Link icon indicating French translation"
+                        />
+                      </Box>
                   </s.Headers>             
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])

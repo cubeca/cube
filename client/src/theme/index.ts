@@ -31,13 +31,31 @@ const THEME_COLORS = {
   }
 };
 
+// Focus visible outline color - ensures good contrast for keyboard navigation
+const FOCUS_VISIBLE_OUTLINE = `2px solid ${THEME_COLORS.primary.main}`;
+
+// Common interactive states for better accessibility
+const INTERACTIVE_STATES = {
+  hover: {
+    transform: 'translateY(-1px)',
+    boxShadow: `0 2px 4px ${alpha(THEME_COLORS.primary.main, 0.2)}`
+  },
+  active: {
+    transform: 'translateY(0)',
+    boxShadow: 'none'
+  },
+  focusVisible: {
+    outline: FOCUS_VISIBLE_OUTLINE,
+    outlineOffset: '2px'
+  }
+};
+
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {
     reversed: true;
   }
 }
 
-//*// primary dark and primary light are used by folks primary light and dark Settings. But I would like to set background color default here as well. Lance what do you think?//
 
 const getTheme = (mode?: 'dark' | 'light') =>
   responsiveFontSizes(
@@ -157,6 +175,140 @@ const getTheme = (mode?: 'dark' | 'light') =>
           styleOverrides: () => ({
             body: {
               margin: '0'
+            },
+            // Global focus styles for better accessibility
+            '*:focus-visible': {
+              ...INTERACTIVE_STATES.focusVisible
+            },
+            // Global link styles for better accessibility
+            'a': {
+              color: THEME_COLORS.primary.main,
+              textDecoration: 'none',
+              position: 'relative',
+              transition: 'all 0.2s ease-in-out',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: '-7px',
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: alpha(THEME_COLORS.primary.light, 0.7),
+                transition: 'width 0.2s ease-in-out'
+              },
+              '&:hover': {
+                color: THEME_COLORS.primary.light,
+                '&::after': {
+                  width: '100%',
+                }
+              },
+              '&:active': {
+                color: THEME_COLORS.primary.dark,
+                '&::after': {
+                  backgroundColor: THEME_COLORS.primary.dark
+                }
+              },
+              '&:focus-visible': {
+                ...INTERACTIVE_STATES.focusVisible
+              }
+            },
+            // Enhanced styles for navigation links
+            'a.nav-link': {
+              color: alpha(THEME_COLORS.primary.light, 0.7),
+              textDecoration: 'none',
+              position: 'relative',
+              transition: 'all 0.2s ease-in-out',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: '-2px',
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: THEME_COLORS.primary.main,
+                transition: 'width 0.2s ease-in-out'
+              },
+              '&:hover': {
+                color: THEME_COLORS.primary.main,
+                '&::after': {
+                  width: '100%'
+                }
+              },
+              '&:active': {
+                color: THEME_COLORS.primary.dark,
+                transform: 'scale(0.98)'
+              },
+              '&:focus-visible': {
+                ...INTERACTIVE_STATES.focusVisible
+              },
+              '&.active': {
+                color: THEME_COLORS.primary.main,
+                fontWeight: 600,
+                '&::after': {
+                  width: '100%'
+                }
+              }
+            },
+            // Enhanced styles for content thumbnails
+            '.content-thumbnail': {
+              position: 'relative',
+              transition: 'all 0.2s ease-in-out',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                border: `3px solid transparent`,
+                transition: 'all 0.2s ease-in-out',
+                zIndex: 1
+              },
+              '&:hover': {
+                transform: 'translateY(-2px)',
+                '&::before': {
+                  border: `2px solid ${alpha(THEME_COLORS.primary.main, 0.7)}`,
+                  boxShadow: `0 4px 8px ${alpha(THEME_COLORS.primary.main, 0.2)}`
+                }
+              },
+              '&:active': {
+                transform: 'translateY(0)',
+                '&::before': {
+                  borderColor: THEME_COLORS.primary.main
+                }
+              },
+              '&:focus-visible': {
+                ...INTERACTIVE_STATES.focusVisible
+              }
+            },
+            // Enhanced styles for media player controls
+            '.react-player__controls': {
+              backgroundColor: alpha(THEME_COLORS.background.dark, 0.8),
+              padding: '8px',
+              borderRadius: DEFAULT_BORDER_RADIUS,
+              '& button': {
+                color: alpha(THEME_COLORS.primary.light, 0.7),
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  color: THEME_COLORS.primary.main,
+                  transform: 'scale(1.1)'
+                },
+                '&:active': {
+                  transform: 'scale(0.95)'
+                },
+                '&:focus-visible': {
+                  ...INTERACTIVE_STATES.focusVisible
+                }
+              },
+              '& .react-player__progress': {
+                backgroundColor: alpha(THEME_COLORS.primary.main, 0.3),
+                '&:hover': {
+                  height: '8px'
+                },
+                '& > div': {
+                  backgroundColor: THEME_COLORS.primary.main
+                }
+              }
             }
           })
         },
@@ -167,30 +319,150 @@ const getTheme = (mode?: 'dark' | 'light') =>
               style: {
                 color: THEME_COLORS.primary.main,
                 backgroundColor: THEME_COLORS.background.default,
+                border: `1px solid ${alpha(THEME_COLORS.primary.main, 0.5)}`,
                 '&:hover': {
-                  backgroundColor: THEME_COLORS.background.paper
-                }
+                  backgroundColor: THEME_COLORS.background.paper,
+                  borderColor: THEME_COLORS.primary.main,
+                  ...INTERACTIVE_STATES.hover
+                },
+                '&:active': INTERACTIVE_STATES.active,
+                '&:focus-visible': INTERACTIVE_STATES.focusVisible
               }
             }
           ],
           styleOverrides: {
             root: {
               textTransform: 'none',
-              padding: '1rem 2rem'
+              padding: '1rem 2rem',
+              position: 'relative',
+              '&:hover': INTERACTIVE_STATES.hover,
+              '&:active': INTERACTIVE_STATES.active,
+              '&:focus-visible': INTERACTIVE_STATES.focusVisible,
+              '&.Mui-disabled': {
+                backgroundColor: alpha(THEME_COLORS.background.light, 0.5),
+                color: alpha(THEME_COLORS.primary.main, 0.5),
+                cursor: 'not-allowed'
+              }
             }
           }
         },
         MuiIconButton: {
           styleOverrides: {
+            root: {
+              color: alpha(THEME_COLORS.primary.light, 0.7),
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                color: THEME_COLORS.primary.main,
+                backgroundColor: alpha(THEME_COLORS.primary.main, 0.1),
+                transform: 'scale(1.1)'
+              },
+              '&:active': {
+                transform: 'scale(0.95)'
+              },
+              '&:focus-visible': INTERACTIVE_STATES.focusVisible,
+              '&.Mui-disabled': {
+                color: alpha(THEME_COLORS.primary.main, 0.3)
+              }
+            },
             sizeMedium: {
-              color: alpha(THEME_COLORS.primary.light, 0.5)
+              color: alpha(THEME_COLORS.primary.light, 0.7)
+            }
+          }
+        },
+        MuiTextField: {
+          styleOverrides: {
+            root: {
+              '& .MuiOutlinedInput-root': {
+                backgroundColor: 'transparent',
+                transition: 'all 0.2s ease-in-out',
+                '& fieldset': {
+                  borderColor: alpha(THEME_COLORS.primary.main, 0.3),
+                  transition: 'all 0.2s ease-in-out'
+                },
+                '&:hover': {
+                  backgroundColor: alpha(THEME_COLORS.background.light, 0.2),
+                  '& fieldset': {
+                    borderColor: alpha(THEME_COLORS.primary.main, 0.5),
+                    borderWidth: '3px'
+                  }
+                },
+                '&.Mui-focused': {
+                  backgroundColor: alpha(THEME_COLORS.background.light, 0.3),
+                  '& fieldset': {
+                    borderColor: THEME_COLORS.primary.main,
+                    borderWidth: '3px'
+                  }
+                }
+              }
+            } 
+          }
+        },
+        MuiInputBase: {
+          styleOverrides: {
+            root: {
+              backgroundColor: 'transparent',
+              transition: 'all 0.2s ease-in-out',
+              '&:hover': {
+                backgroundColor: alpha(THEME_COLORS.background.light, 0.2)
+              },
+              '&.Mui-focused': {
+                backgroundColor: alpha(THEME_COLORS.background.light, 0.3)
+              }
+            }
+          }
+        },
+        MuiLink: {
+          styleOverrides: {
+            root: {
+              color: THEME_COLORS.primary.main,
+              textDecoration: 'none',
+              position: 'relative',
+              transition: 'all 0.2s ease-in-out',
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                bottom: '-7px',
+                left: 0,
+                width: '0%',
+                height: '2px',
+                backgroundColor: alpha(THEME_COLORS.primary.light, 0.7),
+                transition: 'width 0.2s ease-in-out'
+              },
+              '&:hover': {
+                color: THEME_COLORS.primary.light,
+                '&::after': {
+                  width: '100%'
+                }
+              },
+              '&:active': {
+                color: THEME_COLORS.primary.dark,
+                '&::after': {
+                  backgroundColor: THEME_COLORS.primary.dark
+                }
+              },
+              '&:focus-visible': {
+                ...INTERACTIVE_STATES.focusVisible
+              }
             }
           }
         },
         MuiMenu: {
           styleOverrides: {
             paper: {
-              backgroundColor: THEME_COLORS.background.paper
+              backgroundColor: THEME_COLORS.background.paper,
+              border: `2px solid ${alpha(THEME_COLORS.primary.main, 0.1)}`,
+              '& .MuiMenuItem-root': {
+                '&:hover': {
+                  backgroundColor: alpha(THEME_COLORS.primary.main, 0.1)
+                },
+                '&.Mui-selected': {
+                  backgroundColor: alpha(THEME_COLORS.primary.main, 0.2),
+                  '&:hover': {
+                    backgroundColor: alpha(THEME_COLORS.primary.main, 0.3)
+                  }
+                },
+                '&:focus-visible': INTERACTIVE_STATES.focusVisible
+              }
             }
           }
         }

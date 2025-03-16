@@ -46,7 +46,7 @@ export const AuxMenuTrigger = styled('button')`
 `;
 
 export const AuxButton = styled(Button)`
-  margin: 0 !important;
+  margin: 0px 0px 0px 20px !important;
   font-weight: 500;
   color: ${(props) => props.theme.palette.primary.light};
   border-color: ${(props) => props.theme.palette.primary.dark};
@@ -56,6 +56,6 @@ export const AuxButton = styled(Button)`
 export const AuxContent = styled('text')`
   font-weight: 500;
   color: ${(props) => props.theme.palette.primary.light};
-  margin-right: ${(props) => (props.isLoggedIn ? '16px' : '32px')};
+  margin-right: ${(props) => (props.isLoggedIn ? '5px' : '10px')};
   padding: 8px 10px;
 `;

@@ -24,6 +24,7 @@ import * as s from './Playlist.styled';
 import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import { useNavigate } from 'react-router-dom';
+import { alpha } from '@mui/material/styles';
 
 const Playlist = () => {
   const navigate = useNavigate();
@@ -127,52 +128,64 @@ const Playlist = () => {
           !isLoading &&
           profileId !== playlistCreatorProfileId &&
           (!profile.profileId || playlistCreatorProfileId !== '') && (
+            <s.ViewSection>
+              <s.Header>
             <Link
-              to={`/profile/${localProfile.tag}`}
-              style={{ color: 'inherit' }}
+               to={`/profile/${localProfile.tag}`}
+              style={{ 
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                color: 'inherit',
+                textDecoration: 'none'
+              }}
+              aria-label={`${localProfile.organization}'s profile - @${localProfile.tag}`}
             >
-              <s.ViewSection>
-                <s.Header>
+            
+            
                   <s.ImageWrapper>
-                    <s.ImageInner
-                      title={localProfile!.organization}
-                      target="_blank"
-                      style={{ cursor: 'pointer' }}
-                    >
+                   <s.ImageInner>
                       {localProfile.logoUrl && (
                         <img
                           src={localProfile!.logoUrl}
-                          alt="user profile thumbnail"
+                          aria-hidden="true"
+                          alt=""
                         />
                       )}
                     </s.ImageInner>
                   </s.ImageWrapper>
 
+                <div>
                   <Typography
                     component="h5"
                     variant="h5"
-                    tabIndex={0}
-                    aria-label="button to go to playlist creator's profile"
-                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-                      if (e.key === 'Enter') {
-                        navigate(`/profile/${localProfile.tag}`);
-                      }
-                    }}
+                    sx={{ marginBottom: '4px' }}
                   >
                     {localProfile!.organization || ''}
 
-                    <small>
+                    </Typography>
+                    <Typography
+                      component="span"
+                      sx={{ 
+                        display: 'block',
+                        position: 'relative',
+                        fontSize: '0.875rem',
+                        opacity: 0.7
+                      }}
+                    >
                       {localProfile &&
                         localProfile.tag &&
                         localProfile!.tag &&
                         (localProfile!.tag.includes('@')
                           ? localProfile!.tag
                           : `@${localProfile!.tag}`)}
-                    </small>
+                    
                   </Typography>
+                  </div>
+                </Link>
                 </s.Header>
               </s.ViewSection>
-            </Link>
+       
           )}
         {playlist ? (
           <div>

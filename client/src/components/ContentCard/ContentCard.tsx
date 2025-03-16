@@ -50,14 +50,26 @@ const ContentCard: FC<ContentCardProps> = ({
     .replace(/\)/g, '%29')
     .replace(/ /g, '%20');
 
+    const contentType = icon === 'video' ? 'Video' 
+    : icon === 'audio' ? 'Audio'
+    : icon === 'pdf' ? 'PDF Document'
+    : icon === 'link' ? 'External Link'
+    : icon === 'playlist' ? 'Playlist'
+    : icon === 'document' ? 'Document'
+    : 'Content';
+
+  const ariaLabel = `${title}${hasSignLanguage ? ', includes sign language' : ''}. Type: ${contentType}`;
+
   return (
     <s.ContentCard className="content-card">
-      <Link to={url} title={title}>
+      <Link to={url} title={title} aria-label={ariaLabel}>
         <s.Thumbnail
+        className="content-thumbnail"
           sx={{
             backgroundImage: `url('${cleanedUrl}')`
           }}
           aria-label={coverImageAltText}
+          role="img"
         >
         </s.Thumbnail>
 
@@ -65,23 +77,23 @@ const ContentCard: FC<ContentCardProps> = ({
           <Typography component="h4" className="title">
             {title}
           </Typography>
-          <div className="types">
+          <div className="types" aria-hidden="true">
             {icon === 'video' ? (
-              <PlayArrowIcon fontSize="small" titleAccess="Video Icon"/>
+              <PlayArrowIcon fontSize="small"/>
             ) : icon === 'audio' ? (
-              <VolumeUpIcon fontSize="small" titleAccess="Audio Icon"/>
+              <VolumeUpIcon fontSize="small"/>
             ) : icon === 'pdf' ? (
-              <MenuBookIcon fontSize="small" titleAccess="PDF Icon"/>
+              <MenuBookIcon fontSize="small"/>
             ) : icon === 'link' ? (
-              <LinkIcon fontSize="small" titleAccess="Linked Page Icon"/>
+              <LinkIcon fontSize="small"/>
             ) : icon === 'playlist' ? (
-              <ListItemIcon fontSize="small" titleAccess="Playlist Icon" aria-label="Playlist Icon"/>
+              <ListItemIcon fontSize="small"/>
             ) : icon === 'document' ? (
-              <DocIcon fontSize="small" titleAccess="Word Doc Icon"/>
+              <DocIcon fontSize="small"/>
             ) : (
               <></>
             )}
-            {hasSignLanguage && <SignLanguageIcon fontSize="small" titleAccess="Sign Language Icon"/>}
+            {hasSignLanguage && <SignLanguageIcon fontSize="small"/>}
           </div>
         </s.Data>
       </Link>
