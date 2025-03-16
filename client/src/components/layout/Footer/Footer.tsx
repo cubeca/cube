@@ -109,7 +109,7 @@ const Footer = () => {
 
       <Grid container>
         <Grid xs={10} xsOffset={1} md={4}>
-          <s.Credits>
+          <s.Credits role="img">
             <CreditsImg />
           </s.Credits>
         </Grid>
