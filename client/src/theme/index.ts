@@ -407,6 +407,10 @@ const getTheme = (mode?: 'dark' | 'light') =>
               },
               '&.Mui-focused': {
                 backgroundColor: alpha(THEME_COLORS.background.light, 0.3)
+              },
+              '& input::placeholder': {
+                color: THEME_COLORS.primary.dark,
+                opacity: 1
               }
             }
           }
