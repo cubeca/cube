@@ -27,9 +27,7 @@ const TextInput: FC<TextInputProps> = ({
   rules = {},
   type = 'text',
   className = '',
-  id = 'text-input',
   helperText = ' ',
-  helperTextId,
   placeholder,
   fullWidth,
   sx,
@@ -53,11 +51,10 @@ const TextInput: FC<TextInputProps> = ({
           <s.FieldWrapper colormode={colormode} sx={{ width: '100%' }}>
             <FormControl
               className={className}
-              id={id}
+              name={name}
               label={label}
               error={!!error}
               helperText={error && error.message ? error.message : helperText}
-              helperTextId={helperTextId}
               fullWidth={fullWidth}
             >
               <s.TextInput
@@ -73,6 +70,9 @@ const TextInput: FC<TextInputProps> = ({
                 rows={rows}
                 InputProps={InputProps}
                 colormode={colormode}
+                id={name}
+                aria-labelledby={`${name}-label`}
+                aria-describedby={`${name}-helper-text`}
                 {...field}
               />
             </FormControl>
