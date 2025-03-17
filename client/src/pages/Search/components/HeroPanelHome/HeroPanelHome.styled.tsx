@@ -51,6 +51,7 @@ export const Bg = styled(Box)`
     background: linear-gradient(
       180deg,
       rgba(47, 64, 72, 0) 0%,
+      rgba(40, 52, 60, 0.7) 50%,
       rgba(47, 64, 72, 1) 100%
     );
 
