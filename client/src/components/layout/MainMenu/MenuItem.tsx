@@ -18,9 +18,9 @@ interface MenuItemProps {
 const MenuItem = ({ onClick, icon, tabIndex, role, text }: MenuItemProps) => (
   <s.Item
     onClick={onClick}
-    active={onClick ? true : false}
+    active={!!onClick}
     tabIndex={tabIndex}
-    role={role}
+    role={role || "menuitem"}
   >
     {icon && <ListItemIcon sx={{ paddingRight: '10px' }}>{icon}</ListItemIcon>}
     <Typography component="div" sx={{ margin: 0 }}>

@@ -30,8 +30,9 @@ export const Bg = styled(Box)`
     height: 116px;
     background: linear-gradient(
       180deg,
-      rgba(40, 52, 60, 1) 12.5%,
-      rgba(40, 52, 60, 0) 100%
+      rgba(40, 52, 60, 0) 0%,
+      rgba(40, 52, 60, 0.7) 50%,
+      rgba(40, 52, 60, 1) 100%
     );
 
     ${(props) => props.theme.breakpoints.up('md')} {
@@ -50,8 +51,9 @@ export const Bg = styled(Box)`
     height: 232px;
     background: linear-gradient(
       180deg,
-      rgba(47, 64, 72, 0) 0%,
-      rgba(47, 64, 72, 1) 100%
+      rgba(40, 52, 60, 0) 0%,
+      rgba(40, 52, 60, 0.7) 50%,
+      rgba(40, 52, 60, 1) 100%
     );
 
     ${(props) => props.theme.breakpoints.up('md')} {

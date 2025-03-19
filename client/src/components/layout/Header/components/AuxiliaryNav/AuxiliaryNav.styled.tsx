@@ -35,6 +35,11 @@ export const AuxMenuTrigger = styled('button')`
   width: 40px;
   height: 40px;
   position: relative;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${(props) => props.theme.palette.primary.light};
+  }
 
   svg {
     position: absolute;
@@ -58,4 +63,27 @@ export const AuxContent = styled('text')`
   color: ${(props) => props.theme.palette.primary.light};
   margin-right: ${(props) => (props.isLoggedIn ? '16px' : '32px')};
   padding: 8px 10px;
+`;
+
+export const CloseButton = styled('button')`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  padding: 8px;
+  margin: 0;
+  cursor: pointer;
+  color: ${(props) => props.theme.palette.background.default};
+  transition: opacity 0.2s ease;
+  z-index: 2000;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
