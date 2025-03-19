@@ -18,6 +18,8 @@ import ListIcon from '@mui/icons-material/List';
 import EditIcon from '@mui/icons-material/Edit';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import { ReactComponent as LinkIcon } from 'assets/icons/link.svg';
 
 import MoreContent from './MoreContent';
 import Collaborators from './Collaborators';
@@ -51,6 +53,8 @@ const Video = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const { data: content, isLoading, refetch } = useContentDetails();
   const createdAt = content?.createdAt;
+
+  useDocumentTitle(content?.title ? `${content.title}` : 'View Content');
 
   function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -521,12 +525,12 @@ const Video = () => {
               <>
                 <Stack aria-label="contributors to the making of this content">
                   <s.Headers>
-                  <Typography component="h5" variant="h5">
-                    {t('Play Page Header 1')}
-                  </Typography>
-                  <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
-                    {t('Play Page Header 1FR')}
-                  </s.FrenchHeaders>
+                    <Typography component="h5" variant="h5">
+                      {t('Play Page Header 1')}
+                    </Typography>
+                    <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
+                      {t('Play Page Header 1FR')}
+                    </s.FrenchHeaders>
                   </s.Headers>
                   {content?.contributors &&
                     Object.entries(content?.contributors)
@@ -613,13 +617,20 @@ const Video = () => {
                 {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <s.Headers>
-                  <Typography component="h5" variant="h5">
-                    {t('Play Page Header 2')}
-                  </Typography>
-                  <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
-                    {t('Play Page Header 2FR')}
-                  </s.FrenchHeaders>
-                  </s.Headers>
+                      <Typography component="h5" variant="h5">
+                        {t('Play Page Header 2')}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
+                          {t('Play Page Header 2FR')}
+                        </s.FrenchHeaders>
+                        <LinkIcon 
+                          style={{ width: 20, height: 20 }} 
+                          role="img"
+                          aria-label="Link icon indicating French translation"
+                        />
+                      </Box>
+                    </s.Headers>
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
                         .join(', ')
@@ -652,18 +663,25 @@ const Video = () => {
                 )}
                 {(content?.languageTags?.length || 0) > 0 && (
                   <Stack>
-                     <s.Headers>
-                  <Typography component="h5" variant="h5">
-                  {content?.languageTags && content?.languageTags.length > 1
-                        ? t('Play Page Header 3LanguagePlural')
-                        : t('Play Page Header 3LanguageSingular')}
-                  </Typography>
-                  <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
-                  {content?.languageTags && content?.languageTags.length > 1
-                        ? t('Play Page Header 3LanguagePluralFR')
-                        : t('Play Page Header 3LanguageSingularFR')}
-                  </s.FrenchHeaders>
-                  </s.Headers>             
+                    <s.Headers>
+                      <Typography component="h5" variant="h5">
+                        {content?.languageTags && content?.languageTags.length > 1
+                          ? t('Play Page Header 3LanguagePlural')
+                          : t('Play Page Header 3LanguageSingular')}
+                      </Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
+                          {content?.languageTags && content?.languageTags.length > 1
+                            ? t('Play Page Header 3LanguagePluralFR')
+                            : t('Play Page Header 3LanguageSingularFR')}
+                        </s.FrenchHeaders>
+                        <LinkIcon 
+                          style={{ width: 20, height: 20 }} 
+                          role="img"
+                          aria-label="Link icon indicating French translation"
+                        />
+                      </Box>
+                    </s.Headers>             
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])
                         .join(', ')

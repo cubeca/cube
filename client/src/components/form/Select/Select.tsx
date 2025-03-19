@@ -14,9 +14,22 @@ interface SelectProps {
   className?: string;
   children: ReactNode;
   onChange: (value: string | number) => void;
+  id?: string;
+  'aria-label'?: string;
 }
 
-const Select: FC<SelectProps> = ({ label, value, children, className, onChange }) => {
+const Select: FC<SelectProps> = ({ 
+  label, 
+  value, 
+  children, 
+  className, 
+  onChange,
+  id = 'select',
+  'aria-label': ariaLabel 
+}) => {
+  const labelId = `${id}-label`;
+  const selectId = `${id}-select`;
+  
   const handleChange = (event: SelectChangeEvent<string | number>) => {
     onChange(event.target.value);
   };
@@ -24,13 +37,14 @@ const Select: FC<SelectProps> = ({ label, value, children, className, onChange }
   return (
     <s.Select sx={{ minWidth: 240 }} className={className}>
       <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">{label}</InputLabel>
+        <InputLabel id={labelId}>{label}</InputLabel>
         <MuiSelect
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId={labelId}
+          id={selectId}
           value={value}
           label={label}
           onChange={handleChange}
+          aria-label={ariaLabel}
         >
           {children}
         </MuiSelect>

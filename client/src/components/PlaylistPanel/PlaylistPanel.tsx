@@ -394,18 +394,29 @@ const PlaylistPanel: React.FC<Props> = ({
                         </s.IconContainer>
                       </s.TextFieldContainer>
                     ) : (
-                      <Link
-                        to={`/playlist/${playlist.id}`}
-                        style={{ textDecoration: 'inherit' }}
-                        tabIndex={-1}
-                      >
-                        <s.PlaylistTitle>
-                          {editedTitles[playlist.id] ||
-                            localPlaylists.find(
-                              (p: any) => p.id === playlist.id
-                            )?.data.title}
-                        </s.PlaylistTitle>
-                      </Link>
+                      <>
+                        {cameFromSinglePlaylist ? (
+                          <s.PlaylistTitle>
+                            {editedTitles[playlist.id] ||
+                              localPlaylists.find(
+                                (p: any) => p.id === playlist.id
+                              )?.data.title}
+                          </s.PlaylistTitle>
+                        ) : (
+                          <Link
+                            to={`/playlist/${playlist.id}`}
+                            style={{ textDecoration: 'inherit' }}
+                            aria-label={`View playlist: ${editedTitles[playlist.id] || localPlaylists.find((p: any) => p.id === playlist.id)?.data.title}`}
+                          >
+                            <s.PlaylistTitle>
+                              {editedTitles[playlist.id] ||
+                                localPlaylists.find(
+                                  (p: any) => p.id === playlist.id
+                                )?.data.title}
+                            </s.PlaylistTitle>
+                          </Link>
+                        )}
+                      </>
                     )}
                   </s.PlaylistTitleSubContainer>
                   <s.EditWrapper>

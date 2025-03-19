@@ -24,6 +24,7 @@ import * as s from './Playlist.styled';
 import { Link } from 'react-router-dom';
 import Lottie from 'lottie-react';
 import { useNavigate } from 'react-router-dom';
+import { alpha } from '@mui/material/styles';
 
 const Playlist = () => {
   const navigate = useNavigate();
@@ -127,52 +128,72 @@ const Playlist = () => {
           !isLoading &&
           profileId !== playlistCreatorProfileId &&
           (!profile.profileId || playlistCreatorProfileId !== '') && (
-            <Link
-              to={`/profile/${localProfile.tag}`}
-              style={{ color: 'inherit' }}
-            >
-              <s.ViewSection>
-                <s.Header>
+            <s.ViewSection>
+              <s.Header>
+                <Link 
+                  to={`/profile/${localProfile.tag}`}
+                  style={{ 
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    color: 'inherit',
+                    textDecoration: 'none'
+                  }}
+                  aria-label={`${localProfile.organization}'s profile - @${localProfile.tag}`}
+                >
                   <s.ImageWrapper>
-                    <s.ImageInner
-                      title={localProfile!.organization}
-                      target="_blank"
-                      style={{ cursor: 'pointer' }}
-                    >
+                    <s.ImageInner>
                       {localProfile.logoUrl && (
                         <img
                           src={localProfile!.logoUrl}
-                          alt="user profile thumbnail"
+                          alt=""
+                          aria-hidden="true"
                         />
                       )}
                     </s.ImageInner>
                   </s.ImageWrapper>
 
-                  <Typography
-                    component="h5"
-                    variant="h5"
-                    tabIndex={0}
-                    aria-label="button to go to playlist creator's profile"
-                    onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
-                      if (e.key === 'Enter') {
-                        navigate(`/profile/${localProfile.tag}`);
-                      }
-                    }}
-                  >
-                    {localProfile!.organization || ''}
-
-                    <small>
+                  <div>
+                    <Typography
+                      component="h5"
+                      variant="h5"
+                      sx={{ marginBottom: '4px' }}
+                    >
+                      {localProfile!.organization || ''}
+                    </Typography>
+                    <Box
+                      component="small"
+                      sx={{ 
+                        display: 'block',
+                        opacity: 0.7,
+                        fontSize: '0.875rem',
+                        '&::after': {
+                          content: '""',
+                          display: 'block',
+                          position: 'absolute',
+                          bottom: -2,
+                          left: 0,
+                          width: '0%',
+                          height: '2px',
+                          bgcolor: 'currentColor',
+                          transition: 'width 0.2s ease-in-out'
+                        },
+                        'a:hover &::after': {
+                          width: '100%'
+                        }
+                      }}
+                    >
                       {localProfile &&
                         localProfile.tag &&
                         localProfile!.tag &&
                         (localProfile!.tag.includes('@')
                           ? localProfile!.tag
                           : `@${localProfile!.tag}`)}
-                    </small>
-                  </Typography>
-                </s.Header>
-              </s.ViewSection>
-            </Link>
+                    </Box>
+                  </div>
+                </Link>
+              </s.Header>
+            </s.ViewSection>
           )}
         {playlist ? (
           <div>

@@ -28,6 +28,7 @@ import useAuth from 'hooks/useAuth';
 import * as s from './components/Screens/UploadProgress.styled';
 import UploadProgress from './components/Screens/UploadProgress';
 import { useTranslation } from 'react-i18next';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const getContributors = (values: FieldValues) => {
   const contributorsObject: {
@@ -226,6 +227,8 @@ const EditAndUpload = () => {
     setIsQueryParamCheckComplete(true);
   }, [id, contentId, location, isLoading, isContentLoading]);
   const { t } = useTranslation();
+
+  useDocumentTitle(editMode ? 'Edit Content' : 'Upload Content');
 
   const mediaType = watch('type');
   const mediaLink = watch('link');
@@ -479,7 +482,7 @@ const EditAndUpload = () => {
           !formState.isValid ||
           (screenIndex === 0 && !isMediaProperFileType) ||
           (screenIndex === 0 &&
-            mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
+            ['video', 'audio', 'pdf', 'document'].includes(mediaType) &&
             !isMediaProperFileType) ||
           (screenIndex === 0 &&
             mediaType === 'link' &&
@@ -510,7 +513,7 @@ const EditAndUpload = () => {
               ? false
               : !formState.isValid ||
                 (screenIndex === 0 &&
-                  mediaType === ('video' || 'audio' || 'pdf' || 'document') &&
+                  ['video', 'audio', 'pdf', 'document'].includes(mediaType) &&
                   !isMediaProperFileType) ||
                 (screenIndex === 0 &&
                   mediaType === 'link' &&
@@ -521,7 +524,7 @@ const EditAndUpload = () => {
                 (!mediaLink && !isMediaSelected) ||
                 (screenIndex === 1 &&
                   !isVTTSelected &&
-                  mediaType in ['video', 'audio'])
+                  ['video', 'audio'].includes(mediaType))
           }
           aria-label="Form footer with navigation and submit controls"
         />
