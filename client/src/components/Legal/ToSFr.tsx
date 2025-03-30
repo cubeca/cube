@@ -52,13 +52,18 @@ const ToSFr = () => {
         </p>
         <h5>2.4. Contenu du profil</h5>
         <p>
-          Vous conservez les droits d&apos;auteur et autres droits que vous avez sur votre Profil. En
-          soumettant du matériel à votre Profil, vous nous accordez une licence mondiale,
-          non exclusive, perpétuelle, irrévocable, libre de redevances, cessible,
-          transférable et pouvant faire l&apos;objet d&apos;une sous-licence pour utiliser, accéder, stocker,
-          reproduire, adapter, traduire, publier, exécuter ou afficher publiquement,
-          modifier, republier, créer des œuvres dérivées et distribuer ce
-          matériel en relation avec notre fourniture des services Cube.
+        Vous conservez les droits d&apos;auteur et autres droits sur votre Profil. En soumettant du contenu sur votre Profil, vous nous accordez une licence mondiale, non exclusive, perpétuelle, irrévocable, libre de droits, cessible, transférable et sous-licenciable pour accéder, stocker, reproduire, traduire, publier, afficher publiquement et distribuer ce contenu dans le cadre de la fourniture des services CubeCommons. 
+        Les utilisateurs conservent l&apos;entière propriété du contenu qu&apos;ils téléchargent. CubeCommons n&apos;utilisera le Contenu du Profil que pour sa fonction principale (le visionnage), sauf si l&apos;utilisateur y consent explicitement ou donne son consentement écrit pour des utilisations supplémentaires. Les utilisateurs institutionnels peuvent désigner des (&quot;Catégories d&apos;utilisation &quot;) pour préciser les actions autorisées et restreintes, y compris, mais sans s&apos;y limiter:</p>
+        <p> 
+          <li>Recadrage, superposition de texte ou toute modification d&apos;images, de vidéos ou de sons;</li>
+
+          <li>Utilisation du contenu dans des supports marketing ou promotionnels;</li>
+
+          <li>Restrictions spécifiques au contexte, telles que l&apos;utilisation en exposition uniquement.</li>
+        </p>
+      <p>
+      Les utilisateurs institutionnels sont responsables de la conformité de tout contenu téléchargé avec leurs propres accords de prêt, contrats d&apos;artiste ou restrictions de tiers. CubeCommons décline toute responsabilité en cas de litige découlant du non-respect de ces accords par un utilisateur. 
+      Les utilisateurs peuvent supprimer leur contenu à tout moment ou demander la suppression de contenu de leurs supports marketing en envoyant un courriel à <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a>. CubeCommons fera tout son possible pour répondre aux demandes de suppression dans les meilleurs délais.
         </p>
         <h5>2.5. Responsabilité</h5>
         <p>
@@ -66,6 +71,12 @@ const ToSFr = () => {
           votre Profil. Vous, et non Cube Commons, êtes responsable de vous assurer
           que tout le matériel dans votre Profil est exact, légal et n&apos;enfreint pas
           ou ne viole pas les droits de quiconque ou notre Code de conduite.
+        </p>
+        <p>
+        Les utilisateurs sont responsables de s&apos;assurer qu&apos;ils disposent des droits et autorisations nécessaires pour téléverser du contenu. CubeCommons ne modifiera, n&apos;utilisera ni ne promouvra le contenu au-delà de l&apos;usage convenu, à l&apos;exception de la visibilité générale sur la plateforme, ce qui peut inclure une image ou un court enregistrement d&apos;écran montrant la page de recherche ou les pages de profil de CubeCommons dans les supports marketing et promotionnels. 
+        CubeCommons décline toute responsabilité en cas de réclamation, de litige ou de poursuite judiciaire résultant du non-respect par un utilisateur des contrats d&apos;artiste, des accords de licence ou d&apos;autres obligations de tiers en vigueur.
+        </p>
+        <p>Si les utilisateurs ou les membres institutionnels souhaitent que du contenu soit retiré de leurs supports marketing ou promotionnels, ils peuvent en faire la demande à <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a>. CubeCommons mettra tout en œuvre pour accéder rapidement à ces demandes.
         </p>
         <h5>2.6. Mineurs</h5>
         <p>
@@ -127,7 +138,7 @@ const ToSFr = () => {
           Si vous pensez qu&apos;un Membre de la communauté, un Créateur ou un Contenu
           enfreint le Code de conduite, ou qu&apos;un Contenu n&apos;a pas été classé de
           manière appropriée, vous pouvez nous le signaler par email
-          <a href="mailto:ash@cubecommons.ca">ash@cubecommons.ca</a>. Cube Commons
+          <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a>. Cube Commons
           examine tous les Signalements et conserve des enregistrements des mesures
           prises pour y répondre.
         </p>
