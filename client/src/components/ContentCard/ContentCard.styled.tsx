@@ -21,6 +21,21 @@ export const Thumbnail = styled(Box)`
   background: no-repeat center/cover;
 `;
 
+export const ImageWrapper = styled(Box)`
+  position: relative;
+  padding-bottom: 100%;
+  overflow: hidden;
+  
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
 export const Data = styled(Stack)`
   justify-content: space-between;
   margin-top: 8px;
