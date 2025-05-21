@@ -65,6 +65,7 @@ const TextInput: FC<TagInputAutocompleteProps> = ({
 
         return (
           <FormControl
+            name={name}
             className={className}
             id={id}
             label={label}
