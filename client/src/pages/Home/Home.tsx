@@ -6,9 +6,12 @@ import DigitalNeighboursPanel from './components/DigitalNeighboursPanel';
 import HeroPanel from './components/HeroPanel';
 import VirtualExperiencesPanel from './components/VirtualExperiencesPanel';
 import LanguagesPanel from './components/LanguagesPanel';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import TagOfTheWeek from '../Search/components/TagOfTheWeek';
 
-const About = () => (
+const About = () => {
+  useDocumentTitle('Home');
+  return (
   <Stack>
     <HeroPanel />
     <TagOfTheWeek />
@@ -19,6 +22,7 @@ const About = () => (
     <DigitalNeighboursPanel />
     <Footer />
   </Stack>
-);
+ );
+};
 
 export default About;

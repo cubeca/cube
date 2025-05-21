@@ -17,6 +17,7 @@ import PlaylistPanel from 'components/PlaylistPanel';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import usePlaylist from 'hooks/usePlaylist';
 import useContentDetails from 'hooks/useContentDetails';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const User = () => {
   const user = getAuthTokenPayload();
@@ -58,6 +59,8 @@ const User = () => {
     setIsPlaylistModalOpen(true);
   };
 
+  useDocumentTitle(user?.name ? `${user.name}'s Profile` : 'User Profile');
+  
   return (
     <Box>
       <Grid container>

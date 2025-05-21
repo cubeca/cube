@@ -12,10 +12,13 @@ import { useParams } from 'react-router-dom';
 import { updatePassword } from 'api/auth';
 import PasswordInput from 'components/form/PasswordInput';
 import { useNavigate } from 'react-router-dom';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const ResetPassword = () => {
   const { t } = useTranslation('common');
   const { token } = useParams();
+    // Use translation for accessibility and bilingual support
+    useDocumentTitle(t('resetPassword.pageTitle', 'Create New Password'));
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);

@@ -12,6 +12,7 @@ import { ReactComponent as PlaySymbol } from 'assets/icons/play-symbol.svg';
 import CtaImage from 'assets/images/home-video-cover.jpeg';
 import HeroCTA from 'components/heroCTA/HeroCTA';
 import * as s from './Login.styled';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const Login = () => {
   const { t } = useTranslation('common');
@@ -29,6 +30,8 @@ const Login = () => {
 
   const signUpForm = isUserSignup ? <UserSignupForm /> : <CreatorSignupForm />;
 
+  useDocumentTitle(isLogin ? 'Login' : 'Sign Up');
+  
   return (
     <Stack>
       <Grid container>
