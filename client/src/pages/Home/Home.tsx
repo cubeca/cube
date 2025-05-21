@@ -7,12 +7,14 @@ import HeroPanel from './components/HeroPanel';
 import VirtualExperiencesPanel from './components/VirtualExperiencesPanel';
 import LanguagesPanel from './components/LanguagesPanel';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import TagOfTheWeek from '../Search/components/TagOfTheWeek';
 
 const About = () => {
   useDocumentTitle('Home');
   return (
   <Stack>
     <HeroPanel />
+    <TagOfTheWeek />
     <CenterColumnPanel />
     <VirtualExperiencesPanel />
     <AccessibilityPanel />
