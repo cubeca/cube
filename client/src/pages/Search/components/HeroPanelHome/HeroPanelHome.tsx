@@ -1,7 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
-import TagOfTheWeek from '../TagOfTheWeek';
 import HeroHome from 'assets/images/hero-home-page.jpeg';
 import CtaImage from 'assets/images/home-video-cover.jpeg';
 import HeroCTA from 'components/heroCTA';
@@ -40,8 +39,6 @@ const HeroPanelHome = () => {
           </Grid>
         </Grid>
       </s.Content>
-
-      <TagOfTheWeek />
     </s.HeroPanelHome>
   );
 };

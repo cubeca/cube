@@ -3,6 +3,7 @@ import { pdfjs, Document, Page } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import type { PDFDocumentProxy } from 'pdfjs-dist';
+import FocusTrap from 'focus-trap-react';
 import {
   KeyboardArrowLeft,
   KeyboardArrowRight,
@@ -57,60 +58,66 @@ const PDFModal = ({
   }
 
   return (
-    <s.FullscreenModalContainer onClick={handleClose}>
-      <s.StyledAbsoluteIconButton
-        aria-label="Close"
-        onClick={handleClose}
-        sx={{
-          color: 'primary.main'
-        }}
-      >
-        <Close />
-      </s.StyledAbsoluteIconButton>
+    <FocusTrap>
+      <s.FullscreenModalContainer onClick={handleClose}>
+        <s.StyledAbsoluteIconButton
+          aria-label="Close"
+          onClick={handleClose}
+          sx={{
+            color: 'primary.main'
+          }}
+        >
+          <Close />
+        </s.StyledAbsoluteIconButton>
 
-      <s.ModalPageContainer>
-        <s.ArrowIconButton
-          aria-label="Previous Page"
-          onClick={goToPreviousPage}
-          disabled={currentPage === 1}
-          sx={{
-            color: 'primary.main',
-            display: 'block',
-            height: '100px',
-            '& svg': {
-              fontSize: '4rem'
-            }
-          }}
-        >
-          <KeyboardArrowLeft />
-        </s.ArrowIconButton>
-        <Box onClick={(event) => event.stopPropagation()}>
-          <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
-            <Page
-              pageNumber={currentPage}
-              width={screenWidth < 1000 ? screenWidth : undefined}
-              height={window.innerHeight}
-              loading={null}
-            />
-          </Document>
-        </Box>
-        <s.ArrowIconButton
-          aria-label="Next Page"
-          onClick={goToNextPage}
-          disabled={currentPage === numPages}
-          sx={{
-            color: 'primary.main',
-            display: 'block',
-            height: '100px',
-            '& svg': {
-              fontSize: '4rem'
-            }
-          }}
-        >
-          <KeyboardArrowRight />
-        </s.ArrowIconButton>
-      </s.ModalPageContainer>
-    </s.FullscreenModalContainer>
+        <s.ModalPageContainer>
+          <s.ArrowIconButton
+            aria-label="Previous Page"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+            sx={{
+              color: 'primary.main',
+              display: 'block',
+              height: '100px',
+              '& svg': {
+                fontSize: '4rem'
+              }
+            }}
+          >
+            <KeyboardArrowLeft />
+          </s.ArrowIconButton>
+          <Box
+            onClick={(event) => event.stopPropagation()}
+            tabIndex={0} // Make the PDF container focusable
+            aria-label={`PDF document, page ${currentPage} of ${numPages}`}
+          >
+            <Document file={url} onLoadSuccess={onDocumentLoadSuccess}>
+              <Page
+                pageNumber={currentPage}
+                width={screenWidth < 1000 ? screenWidth : undefined}
+                height={window.innerHeight}
+                loading={null}
+              />
+            </Document>
+          </Box>
+          <s.ArrowIconButton
+            aria-label="Next Page"
+            onClick={goToNextPage}
+            disabled={currentPage === numPages}
+            sx={{
+              color: 'primary.main',
+              display: 'block',
+              height: '100px',
+              '& svg': {
+                fontSize: '4rem'
+              }
+            }}
+          >
+            <KeyboardArrowRight />
+          </s.ArrowIconButton>
+        </s.ModalPageContainer>
+      </s.FullscreenModalContainer>
+    </FocusTrap>
   );
 };
 
