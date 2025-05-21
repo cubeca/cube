@@ -6,10 +6,12 @@ import DigitalNeighboursPanel from './components/DigitalNeighboursPanel';
 import HeroPanel from './components/HeroPanel';
 import VirtualExperiencesPanel from './components/VirtualExperiencesPanel';
 import LanguagesPanel from './components/LanguagesPanel';
+import TagOfTheWeek from '../Search/components/TagOfTheWeek';
 
 const About = () => (
   <Stack>
     <HeroPanel />
+    <TagOfTheWeek />
     <CenterColumnPanel />
     <VirtualExperiencesPanel />
     <AccessibilityPanel />
