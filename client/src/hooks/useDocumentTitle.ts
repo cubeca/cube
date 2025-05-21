@@ -5,7 +5,7 @@ import { useEffect } from 'react';
  * @param title - The page-specific title
  * @param siteName - Optional site name to append (defaults to 'Cube')
  */
-export const useDocumentTitle = (title: string, siteName: string = 'Cube') => {
+export const useDocumentTitle = (title: string, siteName = 'Cube') => {
   useEffect(() => {
     // Ensure the title is properly formatted for screen readers
     const formattedTitle = `${title} | ${siteName}`;
