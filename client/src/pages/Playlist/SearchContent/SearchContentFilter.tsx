@@ -37,38 +37,43 @@ const SearchContentFilter: FC<SearchContentFilterProps> = ({
     <s.Filters>
       <form onChange={(e) => handleSearchTermChange(e)}>
         <TextInput
-          id="searchFilter"
-          name="searchFilter"
-          className="searchFilter"
+          id="search"
+          name="search"
+          label={t('Search/Recherche')}
           control={control}
           variant="standard"
-          placeholder="Search/Recherche"
+          placeholder={t('Search/Recherche')}
           sx={{ fontSize: '2rem' }}
+          aria-label={t('Search content')}
         />
 
         <Select
+          id="category-filter"
           label={t('Filter/Filtre')}
           className="typeFilter"
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e)}
+          aria-label={t('Filter content by category')}
         >
-          <MenuItem.li value={'all'}>{t('All/Tout')}</MenuItem.li>
-          <MenuItem.li value={SearchFiltersCategoryEnum.Video}>
+           <MenuItem.li value={'all'} role="option">
+            {t('All/Tout')}
+          </MenuItem.li>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Video} role="option">
             {t('Video')}
           </MenuItem.li>
-          <MenuItem.li value={SearchFiltersCategoryEnum.Audio}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Audio} role="option">
             {t('Audio')}
           </MenuItem.li>
-          <MenuItem.li value={SearchFiltersCategoryEnum.ActivityBook}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.ActivityBook} role="option">
             {t('Activity Book')}
           </MenuItem.li>
-          <MenuItem.li value={SearchFiltersCategoryEnum.DigitalPublications}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.DigitalPublications} role="option">
             {t('Digital Publication')}
           </MenuItem.li>
-          <MenuItem.li value={SearchFiltersCategoryEnum.Collaborations}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.Collaborations} role="option">
             {t('Collaboration')}
           </MenuItem.li>
-          <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage}>
+          <MenuItem.li value={SearchFiltersCategoryEnum.SignLanguage} role="option">
             {t('Has Sign Language')}
           </MenuItem.li>
         </Select>
