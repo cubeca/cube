@@ -459,9 +459,10 @@ const Video = () => {
                     <s.Action
                       to={''}
                       onClick={openEmbedModal}
-                      aria-label="button to open the embed code"
+                      aria-label="button to see embed code"
                     >
-                      Embed
+                      <p>Embed</p>
+                      <p lang="fr">Intégrer</p>
                     </s.Action>
                   </s.ActionsWrapper>
                 )}
@@ -472,7 +473,8 @@ const Video = () => {
                     onClick={openPlaylistModal}
                     aria-label="button to add this content to a playlist"
                   >
-                    Add to Playlist
+                    <p>Add to Playlist</p>
+                    <p lang="fr">Ajouter à Playlist</p>
                   </s.Action>
                 </s.ActionsWrapper>
                 <s.ActionsWrapper>
@@ -482,7 +484,8 @@ const Video = () => {
                     onClick={openReportContentModal}
                     aria-label="button to open a form you can use to report this content"
                   >
-                    Report Content
+                    <p>Report Content</p>
+                    <p lang="fr">Contenu du rapport</p>
                   </s.Action>
                 </s.ActionsWrapper>
                 {loggedInProfileId === profileId && (
@@ -535,7 +538,7 @@ const Video = () => {
                     <s.FrenchHeaders
                       component="h5"
                       variant="h5"
-                      aria-label="french translation"
+                      lang='fr'
                     >
                       {t('Play Page Header 1FR')}
                     </s.FrenchHeaders>
@@ -631,7 +634,7 @@ const Video = () => {
                       <s.FrenchHeaders
                         component="h5"
                         variant="h5"
-                        aria-label="french translation"
+                        lang='fr'
                       >
                         {t('Play Page Header 2FR')}
                       </s.FrenchHeaders>
@@ -678,7 +681,7 @@ const Video = () => {
                       <s.FrenchHeaders
                         component="h5"
                         variant="h5"
-                        aria-label="french translation"
+                        lang='fr'
                       >
                         {content?.languageTags &&
                         content?.languageTags.length > 1

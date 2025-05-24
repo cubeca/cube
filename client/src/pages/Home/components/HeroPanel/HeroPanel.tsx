@@ -18,12 +18,12 @@ const HeroPanel = () => {
             <Typography component="h1" variant="h1">
               {t('discover')}
             </Typography>
-            <Typography component="h3" variant="h3">
+            <Typography component="h3" variant="h3" lang="fr">
               {t('discoverFR')}
             </Typography>
             <s.ExtraTopMargin>
               <Typography component="p" variant="body1">
-                {t('heroText')} <span>{t('heroTextFR')}</span>
+                {t('heroText')} <span lang="fr">{t('heroTextFR')}</span>
               </Typography>
             </s.ExtraTopMargin>
 

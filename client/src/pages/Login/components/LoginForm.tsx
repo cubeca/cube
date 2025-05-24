@@ -65,7 +65,7 @@ export const LoginForm = ({
         setIsUnverifiedLogin(true);
       }
     } catch (e: any) {
-      setErrorMessage(e.response?.data || t('An Error occured during login'));
+      setErrorMessage(e.response?.data || t('An Error occured during login | Une erreur s`est produite lors de la connexion'));
     }
   };
 
@@ -80,21 +80,31 @@ export const LoginForm = ({
         <Box pt={4}>
           {isLinkResent ? (
             <Typography>
-              {t(
-                'An <b>Email verification link</b> has been resent to the provided email address.'
+              <p>
+              {t('An <b>Email verification link</b> has been resent to the provided email address.'
               )}
+              </p>
+              <p lang="fr">
+              {t('Un <b>lien de vérification par e-mail</b> a été renvoyé à l`adresse e-mail fournie.'
+              )}
+              </p>
             </Typography>
           ) : (
             <ErrorMessage>
-              {t(
-                'Email is unverified. <b>Check your email</b> for a verification link, or resend to provided email address.'
+              <p>
+              {t('Email is unverified. <b>Check your email</b> for a verification link, or resend to provided email address.'
               )}
+              </p>
+              <p lang="fr">
+              {t('L e-mail n`est pas vérifié. <b>Vérifiez votre e-mail</b> pour obtenir un lien de vérification ou renvoyez-le à l`adresse e-mail fournie.'
+              )}
+              </p>
             </ErrorMessage>
           )}
         </Box>
         {!isLinkResent ? (
           <Button type="submit" onClick={handleResendVerification} fullWidth>
-            {t('Resend Email Verification Link')}
+            {t('Resend Email Verification Link |FR| Renvoyer le lien de vérification par e-mail')}
           </Button>
         ) : null}
       </Box>
@@ -105,21 +115,36 @@ export const LoginForm = ({
     <>
       {emailVerified && (
         <Typography variant="h4" component="h2" pb={4}>
+          <p>
           {t('Email Verified. Please login.')}
+          </p>
+          <p lang="fr">
+          {t('E-mail vérifié. Veuillez vous connecter.')}
+          </p>
         </Typography>
       )}
       {passwordReset && (
         <Typography variant="h4" component="h2" pb={4}>
+          <p>
           {t('Password reset successful. Please login with your new password.')}
+          </p>
+          <p lang="fr"> 
+          {t('Réinitialisation du mot de passe réussie. Veuillez vous connecter avec votre nouveau mot de passe.')}
+          </p>
         </Typography>
       )}
       {invalidToken && (
         <Typography variant="h4" component="h2" pb={4}>
+          <p>
           {t('Session has expired. Please login again.')}
+          </p>
+          <p lang="fr">
+          {t('Votre session a expiré. Veuillez vous reconnecter.')}
+          </p>
         </Typography>
       )}
       <Typography variant="h3" component="h3" pb={4}>
-        {t('Login')}
+        {t('Login | Connexion')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
@@ -128,7 +153,7 @@ export const LoginForm = ({
             name="email"
             label={t('Email')}
             fullWidth
-            helperText={t('Email address required')}
+            helperText={t('Email address required |FR| Email Requis')}
             variant="outlined"
           />
           <PasswordInput
@@ -136,7 +161,7 @@ export const LoginForm = ({
             name="password"
             label={t('Password | Mot de passe')}
             fullWidth
-            helperText={t('Password required')}
+            helperText={t('Password required |FR| Requis')}
             variant="outlined"
           />
           {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
@@ -152,10 +177,10 @@ export const LoginForm = ({
               onClick={handleSubmit(onSubmit)}
               fullWidth
             >
-              {t('Login | Connexion')}
+              {t('Login |FR| Connexion')}
             </Button>
             <Box pt={4}>
-              <Link to="/forgot-password">{t('Forgot Password | Oublié Votre Mot de Passe ?')}</Link>
+              <Link to="/forgot-password">{t('Forgot Password ? |FR| Oublié Votre Mot de Passe ?')}</Link>
             </Box>
           </Box>
         </Stack>

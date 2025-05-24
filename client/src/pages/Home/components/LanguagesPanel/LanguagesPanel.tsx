@@ -37,14 +37,14 @@ const LanguagesPanel = () => {
       frenchText={
         <s.FRText>
             <s.Headline>
-          <Typography variant="h1">
+          <Typography variant="h1" lang="fr">
             {t('Langues')}
           </Typography>
           </s.Headline>
-        <Typography component="p" variant="body1">
+        <Typography component="p" variant="body1" lang="fr">
             {t('languageTextFRP1')}
         </Typography>
-        <Typography component="p" variant="body1">
+        <Typography component="p" variant="body1" lang="fr">
             {t('languageTextFRP2')}
         </Typography>
         </s.FRText>

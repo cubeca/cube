@@ -68,13 +68,13 @@ const CenterColumnPanel = () => {
               <Button sx={{marginBottom:"40px"}} href="https://github.com/cubeca/cube?tab=readme-ov-file#readme">
               Cubeca Github Repo
               </Button>
-              <Typography component="p" variant="h3">
+              <Typography component="p" variant="h3" lang="fr">
                 {t('daoFR')}
               </Typography>
-              <Typography component="p" variant="body2">
+              <Typography component="p" variant="body2" lang="fr">
                 {t('daoTaglineFR')}
               </Typography>
-              <Typography component="p" variant="body2">
+              <Typography component="p" variant="body2" lang="fr">
                 {t('daoTextFR')}
               </Typography>
             </s.CenterColumnTextSection>
@@ -96,7 +96,7 @@ const CenterColumnPanel = () => {
               </Typography>
               <Typography component="p">{t('creatorsText')}</Typography>
               <Typography component="p">{t('creatorsList')}</Typography>
-              <Typography component="p" variant="h3">
+              <Typography component="p" variant="h3" lang="fr">
                 {t('creatorsFR')}
               </Typography>
               <Typography variant="body2">{t('creatorsTextFR')}</Typography>

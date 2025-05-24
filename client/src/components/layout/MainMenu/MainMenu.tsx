@@ -238,9 +238,9 @@ const MainMenu = ({
           |FR| Glossaire des Icônes
         </Typography>
 
-        <Typography component="h4">Accessibilité</Typography>
+        <Typography lang="fr" component="h4">Accessibilité</Typography>
 
-        <MenuList>
+        <MenuList lang="fr">
           <MenuItem
             text={t('Langage des Signes')}
             icon={<SignLanguageIcon fontSize="small" />}
