@@ -56,7 +56,7 @@ const Login = () => {
                 <Typography component="h3" variant="h3" color="secondary">
                   {t('User Guide Login Page Title')}
                 </Typography>
-                <Typography component="h5" variant="h5" color="secondary">
+                <Typography component="h5" variant="h5" color="secondary" lang="fr">
                   {t('User Guide Login Page TitleFR')}
                 </Typography>
 
@@ -100,23 +100,23 @@ const Login = () => {
 
                 <Typography component="p" variant="body1" color="secondary">
                   {t('User Guide Login Page')}
-                  <span>{t('User Guide Login PageFR')}</span>
+                  <span lang="fr">{t('User Guide Login PageFR')}</span>
                 </Typography>
 
                 <Button
                   color="secondary"
                   onClick={() => navigate('/signup?type=user')}
-                  aria-label="Button to Go to User SignUp form"
+                  aria-label="Button to Go to User SignUp form in English and French"
                 >
                   {t('User Sign-Up | S`inscrire')}
                 </Button>
 
                 <Typography component="p" variant="body1" color="secondary">
                   {t('User Guide Login Account Description')}
-                  <span>{t('User Guide Login Account DescriptionFR')}</span>
+                  <span lang="fr">{t('User Guide Login Account DescriptionFR')}</span>
                 </Typography>
 
-                <Button color="secondary" onClick={() => navigate('/signup?')} aria-label="Button to Go to Creator SignUp form">
+                <Button color="secondary" onClick={() => navigate('/signup?')} aria-label="Button to Go to Creator SignUp form in English and French">
                   {t('Creator Sign-Up | S`inscrire')}
                 </Button>
               </s.CTAMessage>
@@ -127,27 +127,27 @@ const Login = () => {
                 <Typography component="h3" variant="h3" color="secondary">
                   {t('Creator SingUp')}
                 </Typography>
-                <Typography component="h5" variant="h5" color="secondary">
+                <Typography component="h5" variant="h5" color="secondary" lang="fr">
                   {t('Creator SingUpFR')}
                 </Typography>
 
                 <Typography component="p" variant="body2" color="secondary">
                   {t('Creator Benefits')}
-                  <span>{t('Creator BenefitsFR')}</span>
+                  <span lang="fr">{t('Creator BenefitsFR')}</span>
                 </Typography>
 
-                <Button color="secondary" onClick={() => navigate('/signup')}>
+                <Button color="secondary" onClick={() => navigate('/signup')} aria-label="Button to Go to Creator SignUp form in English and French">
                   {t('Creator Sign-Up | S`inscrire')}
                 </Button>
 
                 <Typography component="h3" variant="h3" color="secondary">
                   {t('Account')}
                 </Typography>
-                <Typography component="h5" variant="h5" color="secondary">
+                <Typography component="h5" variant="h5" color="secondary" lang="fr">
                   {t('AccountFR')}
                 </Typography>
 
-                <Button color="secondary" onClick={() => navigate('/login')} aria-label="Button to Go to Login form">
+                <Button color="secondary" onClick={() => navigate('/login')} aria-label="Button to Go to Login form in English and French">
                   {t('Login | Connexion')}
                 </Button>
               </s.CTAMessage>
@@ -158,30 +158,30 @@ const Login = () => {
                 <Typography component="h3" variant="h3" color="secondary">
                   {t('User SignUp')}
                 </Typography>
-                <Typography component="h5" variant="h5" color="secondary">
+                <Typography component="h5" variant="h5" color="secondary" lang="fr">
                   {t('User SignUpFR')}
                 </Typography>
 
                 <Typography component="p" variant="body2" color="secondary">
                   {t('UserBenefits')}
-                  <span>{t('UserBenefitsFR')}</span>
+                  <span lang="fr">{t('UserBenefitsFR')}</span>
                 </Typography>
 
                 <Button
                   color="secondary"
                   onClick={() => navigate('/signup?type=user')}
-                  aria-label="Button to Go to User SignUp form">
+                  aria-label="Button to Go to User SignUp form in English and French">
                   {t('User Sign-Up | S`inscrire')}
                 </Button>
 
                 <Typography component="h3" variant="h3" color="secondary">
                   {t('Account')}
                 </Typography>
-                <Typography component="h5" variant="h5" color="secondary">
+                <Typography component="h5" variant="h5" color="secondary" lang="fr">
                   {t('AccountFR')}
                 </Typography>
                 <Button color="secondary" onClick={() => navigate('/login')}
-                aria-label="Button to Go to Login form">
+                aria-label="Button to Go to Login form in English and French">
                   {t('Login | Connexion')}
                 </Button>
               </s.CTAMessage>
