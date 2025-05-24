@@ -284,7 +284,7 @@ const EditProfileForm = ({
               theme="dark"
               sitekey={hCaptchaKey}
               onVerify={onCaptchaSuccess}
-              aria-label="captcha"
+              aria-hidden="true"
             />
           </Box>
         </Grid>

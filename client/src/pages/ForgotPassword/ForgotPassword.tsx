@@ -97,6 +97,7 @@ const ForgotPassword = () => {
             theme="dark"
             sitekey={hCaptchaKey}
             onVerify={onCaptchaSuccess}
+            aria-hidden="true"
           />
           <Button
             color="primary"
