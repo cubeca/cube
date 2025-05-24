@@ -51,6 +51,7 @@ const TextInput: FC<WhitelistInputProps> = ({
         return (
           <s.FieldWrapper colormode={colormode} sx={{ width: '100%' }}>
             <FormControl
+              name={name}
               className={className}
               id={id}
               label={label}

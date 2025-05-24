@@ -9,9 +9,9 @@ import { ContentLists } from 'types/enums';
 import * as s from './TagOfTheWeek.styled';
 
 import FPOThumb1 from 'assets/images/fpo/cont-art-gal-thumb1.png';
-import FPOThumb2 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
-import FPOThumb3 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
-import FPOThumb4 from 'assets/images/fpo/third-top-thumb.png';
+import FPOThumb2 from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
+import FPOThumb3 from 'assets/images/fpo/weft-wrap-remai-thumb.png';
+import FPOThumb4 from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
 import FPOThumb5 from 'assets/images/fpo/Hot-Orange-Furrow-Robert-Christie.png';
 import FPOThumb6 from 'assets/images/fpo/cheryl-lhirondelle-artengine1.png';
 import { useTranslation } from 'react-i18next';
@@ -34,9 +34,9 @@ const Content = () => {
     {
       id: 1,
       thumbnailUrl: FPOThumb2,
-      title: 'Faye HeavyShield, CAG (French)',
-      url: 'https://cubecommons.ca/content/9dc02c2f-6d9c-485b-971d-818f23b3267b',
-      icon: 'video',
+      title: 'Faye HeavyShield, CAG (English)',
+      url: 'https://cubecommons.ca/content/642afc53-60f2-4eb7-89eb-459b8d6ce0be',
+      icon: 'audio',
       hasSignLanguage: false
     },
     {
@@ -50,15 +50,15 @@ const Content = () => {
     {
       id: 3,
       thumbnailUrl: FPOThumb3,
-      title: 'Faye HeavyShield, CAG (English)',
-      url: 'https://cubecommons.ca/content/642afc53-60f2-4eb7-89eb-459b8d6ce0be',
+      title:'Warp & Weft - Exhibition Introduction, Remai Modern',
+      url: 'https://www.cubecommons.ca/content/58f17b7d-a749-4cd6-984b-18ad8024e682',
       icon: 'audio',
       hasSignLanguage: false
     },
     {
       id: 4,
       thumbnailUrl: FPOThumb1,
-      title: 'Alex Morrison, Nooks and Corners',
+      title: '亞歷克斯 · 莫里森：角落',
       url: 'https://cubecommons.ca/content/4f0b89ba-9104-4806-91c4-a86cb71a2751',
       icon: 'video',
       hasSignLanguage: false
@@ -66,9 +66,8 @@ const Content = () => {
     {
       id: 5,
       thumbnailUrl: FPOThumb4,
-      title:
-        'XICANX Dreamers + Changemakers / Soñadores + creadores del cambio',
-      url: 'https://www.cubecommons.ca/content/bc3610ab-9bf6-4283-81a9-ce1287a45570',
+      title: 'Faye HeavyShield, CAG (French)',
+      url: 'https://cubecommons.ca/content/9dc02c2f-6d9c-485b-971d-818f23b3267b',
       icon: 'video',
       hasSignLanguage: false
     }

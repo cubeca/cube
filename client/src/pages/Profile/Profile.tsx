@@ -28,6 +28,7 @@ import AddToPlaylistModal from 'components/AddToPlaylistModal';
 import usePlaylist from 'hooks/usePlaylist';
 import { useParams } from 'react-router-dom';
 import PrivateContent from './PrivateContent';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const Profile = () => {
   const user = getAuthTokenPayload();
@@ -38,7 +39,10 @@ const Profile = () => {
   const [userId, setUserId] = useState('');
   const [profileId, setProfileId] = useState('');
   const { tag: navigatedProfileTag } = useParams();
+  const { tag } = useParams();
 
+  useDocumentTitle(`Profile - ${tag || ''}`);
+  
   useEffect(() => {
     setProfileId(profile?.profileId || '');
   }, [profile]);

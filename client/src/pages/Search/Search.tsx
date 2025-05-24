@@ -4,8 +4,10 @@ import HeroPanelHome from './components/HeroPanelHome';
 import CategorizedContent from './components/CategorizedContent';
 import Footer from 'components/layout/Footer';
 import { useEffect, useRef } from 'react';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const Home = () => {
+  useDocumentTitle('Search Content');
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const searchTerm = queryParams.get('searchTerm');

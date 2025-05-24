@@ -19,8 +19,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import SubtitlesIcon from '@mui/icons-material/Subtitles';
 import useContentDetails from 'hooks/useContentDetails';
 
-import { ReactComponent as LinkIcon } from 'assets/icons/link.svg';
-
 import MoreContent from './MoreContent';
 import Collaborators from './Collaborators';
 
@@ -40,6 +38,7 @@ import LoadingCubes from 'assets/animations/loading-cubes.json';
 import { useLocation } from 'react-router-dom';
 import ReportContentModal from 'components/ReportContentModal';
 import AddToPlaylistModal from 'components/AddToPlaylistModal';
+import NotLoggedInModal from 'components/NotLoggedInModal';
 import { getAuthTokenPayload } from 'utils/auth';
 import { getProfileTag } from 'utils/auth';
 import useAuth from 'hooks/useAuth';
@@ -54,6 +53,8 @@ const Video = () => {
   const { data: content, isLoading, refetch } = useContentDetails();
   const createdAt = content?.createdAt;
 
+  useDocumentTitle(content?.title ? `${content.title}` : 'View Content');
+  
   function useQuery() {
     return new URLSearchParams(useLocation().search);
   }
@@ -85,6 +86,7 @@ const Video = () => {
   const [subtitleUrl, setSubtitleUrl] = useState('');
   const [subtitleIsLoading, setSubtitleIsLoading] = useState(true);
   const [showEmbedModal, setShowEmbedModal] = useState(false);
+  const [isNotLoggedInModalOpen, setIsNotLoggedInModalOpen] = useState(false);
   const [isReportContentModalOpen, setIsReportContentModalOpen] =
     useState(false);
   const [userId, setUserId] = useState('');
@@ -219,6 +221,7 @@ const Video = () => {
     setIsEmbedModalOpen(false);
     setIsReportContentModalOpen(false);
     setIsPlaylistModalOpen(false);
+    setIsNotLoggedInModalOpen(false);
   }
 
   const openEmbedModal = () => {
@@ -228,7 +231,7 @@ const Video = () => {
     if (isLoggedIn) {
       setIsPlaylistModalOpen(true);
     } else {
-      window.location.href = '/login';
+      setIsNotLoggedInModalOpen(true);
     }
   };
 
@@ -311,7 +314,9 @@ const Video = () => {
         style={{ width: '170px', height: '170px' }}
         aria-hidden="true"
       />
-      <s.LoadingText component="h2">Loading your updated content...</s.LoadingText>
+      <s.LoadingText component="h2">
+        Loading your updated content...
+      </s.LoadingText>
     </s.UpdateWrapper>
   );
 
@@ -383,6 +388,7 @@ const Video = () => {
         isOpen={isReportContentModalOpen}
         onClose={handleClose}
       />
+      <NotLoggedInModal isOpen={isNotLoggedInModalOpen} onClose={handleClose} />
 
       <Grid container justifyContent="center">
         <Grid xs={12} md={9}>
@@ -412,7 +418,7 @@ const Video = () => {
                 </s.EditDeleteWrapper>
               )}
             </Box>
-            <Typography  component="p" variant="body2" sx={{ my: 1 }}>
+            <Typography component="p" variant="body2" sx={{ my: 1 }}>
               {formattedCreatedDate}
             </Typography>
             {formattedExpiryDate && (
@@ -523,12 +529,16 @@ const Video = () => {
               <>
                 <Stack aria-label="contributors to the making of this content">
                   <s.Headers>
-                  <Typography component="h5" variant="h5">
-                    {t('Play Page Header 1')}
-                  </Typography>
-                  <s.FrenchHeaders component="h5" variant="h5" aria-label="french translation">
-                    {t('Play Page Header 1FR')}
-                  </s.FrenchHeaders>
+                    <Typography component="h5" variant="h5">
+                      {t('Play Page Header 1')}
+                    </Typography>
+                    <s.FrenchHeaders
+                      component="h5"
+                      variant="h5"
+                      aria-label="french translation"
+                    >
+                      {t('Play Page Header 1FR')}
+                    </s.FrenchHeaders>
                   </s.Headers>
                   {content?.contributors &&
                     Object.entries(content?.contributors)
@@ -561,7 +571,7 @@ const Video = () => {
                                   contributors.length
                                 )
                               )}
-                              :&nbsp; 
+                              :&nbsp;
                             </Typography>
 
                             <Typography
@@ -615,6 +625,7 @@ const Video = () => {
                 {(content?.tags?.length || 0) > 0 && (
                   <Stack>
                     <s.Headers>
+<<<<<<< HEAD
                   <Typography component="h5" variant="h5">
                     {t('Play Page Header 2')}
                   </Typography>
@@ -630,6 +641,19 @@ const Video = () => {
                         />
                       </Box>
                   </s.Headers>
+=======
+                      <Typography component="h5" variant="h5">
+                        {t('Play Page Header 2')}
+                      </Typography>
+                      <s.FrenchHeaders
+                        component="h5"
+                        variant="h5"
+                        aria-label="french translation"
+                      >
+                        {t('Play Page Header 2FR')}
+                      </s.FrenchHeaders>
+                    </s.Headers>
+>>>>>>> main
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.tags || [])
                         .join(', ')
@@ -662,6 +686,7 @@ const Video = () => {
                 )}
                 {(content?.languageTags?.length || 0) > 0 && (
                   <Stack>
+<<<<<<< HEAD
                      <s.Headers>
                   <Typography component="h5" variant="h5">
                   {content?.languageTags && content?.languageTags.length > 1
@@ -681,6 +706,26 @@ const Video = () => {
                         />
                       </Box>
                   </s.Headers>             
+=======
+                    <s.Headers>
+                      <Typography component="h5" variant="h5">
+                        {content?.languageTags &&
+                        content?.languageTags.length > 1
+                          ? t('Play Page Header 3LanguagePlural')
+                          : t('Play Page Header 3LanguageSingular')}
+                      </Typography>
+                      <s.FrenchHeaders
+                        component="h5"
+                        variant="h5"
+                        aria-label="french translation"
+                      >
+                        {content?.languageTags &&
+                        content?.languageTags.length > 1
+                          ? t('Play Page Header 3LanguagePluralFR')
+                          : t('Play Page Header 3LanguageSingularFR')}
+                      </s.FrenchHeaders>
+                    </s.Headers>
+>>>>>>> main
                     <s.Tags sx={{ display: 'flex' }}>
                       {(content?.languageTags || [])
                         .join(', ')
