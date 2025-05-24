@@ -83,6 +83,13 @@ const MainMenu = ({
       ref={previousFocusRef}
       aria-label="button to open main menu"
     >
+      <s.CloseButton 
+        onClick={onClose}
+        aria-label={t('Close Menu')}
+      >
+        <CloseIcon />
+      </s.CloseButton>
+
       <MenuItem
         onClick={() => handleMenuClick('/search')}
         text={t('Search')}

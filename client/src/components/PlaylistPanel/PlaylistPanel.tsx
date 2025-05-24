@@ -394,10 +394,19 @@ const PlaylistPanel: React.FC<Props> = ({
                         </s.IconContainer>
                       </s.TextFieldContainer>
                     ) : (
+                      <>
+                      {cameFromSinglePlaylist ? (
+                        <s.PlaylistTitle>
+                          {editedTitles[playlist.id] ||
+                            localPlaylists.find(
+                              (p: any) => p.id === playlist.id
+                            )?.data.title}
+                        </s.PlaylistTitle>
+                      ) : (
                       <Link
                         to={`/playlist/${playlist.id}`}
                         style={{ textDecoration: 'inherit' }}
-                        tabIndex={-1}
+                        aria-label={`View playlist: ${editedTitles[playlist.id] || localPlaylists.find((p: any) => p.id === playlist.id)?.data.title}`}
                       >
                         <s.PlaylistTitle>
                           {editedTitles[playlist.id] ||
@@ -406,6 +415,8 @@ const PlaylistPanel: React.FC<Props> = ({
                             )?.data.title}
                         </s.PlaylistTitle>
                       </Link>
+                          )}
+                          </>
                     )}
                   </s.PlaylistTitleSubContainer>
                   <s.EditWrapper>

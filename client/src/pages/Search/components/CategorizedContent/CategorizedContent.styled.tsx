@@ -13,12 +13,11 @@ export const ContentWrapper = styled(Box)`
 `;
 
 export const ContentHeader = styled(Grid)`
-  margin-top: 16px;
-  margin-bottom: 32px;
+margin-top: 32px;
+margin-bottom: 32px;
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    margin-top: 32px;
-    margin-top: 0;
+    margin-top: 24px;
   }
 
   span {

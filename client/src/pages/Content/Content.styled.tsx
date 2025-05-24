@@ -110,7 +110,7 @@ export const CollaboratorName = styled(Typography)`
     text-decoration: none;
 
     &:hover {
-      text-decoration: underline;
+   
     }
   }
 `;
@@ -122,7 +122,7 @@ export const CollaboratorSocial = styled(MuiLink)`
   text-decoration: none;
 
   &:hover {
-    text-decoration: underline;
+    
   }
 `;
 
@@ -136,7 +136,7 @@ export const Action = styled(Link)`
     text-decoration: none;
 
     &:hover {
-      text-decoration: underline;
+   
     }
   }
 `;
@@ -181,7 +181,7 @@ export const Tag = styled(Typography)`
   font-weight: 400;
   font-weight: 400;
   line-height: 21px;
-  text-decoration: ${(props) => (props.underline ? 'underline' : 'none')};
+
 `;
 
 export const LoadingWrapper = styled(Box)`
@@ -219,7 +219,7 @@ export const EditSubsButton = styled(MuiLink)`
   font-style: normal;
   font-weight: 500;
   line-height: 26px;
-  text-decoration-line: underline;
+
   margin-right: 22px;
 `;
 

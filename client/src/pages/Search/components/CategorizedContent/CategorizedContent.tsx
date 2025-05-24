@@ -248,7 +248,7 @@
  
            {(categoryFilter === 'all' || categoryFilter === undefined) && (
              <>
-               <s.ContentHeader container>
+               <s.ContentHeader>
                  <Grid>
                    <Typography component="h3" variant="h3">
                      <span>Profiles</span>

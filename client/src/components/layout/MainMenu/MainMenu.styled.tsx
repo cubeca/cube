@@ -64,6 +64,7 @@ export const MenuHashItem = styled('li')`
   padding: 6px 20px;
   border: none !important;
   outline: none !important;
+  transition: background-color 0.2s ease;
 
   a {
     display: block;
@@ -73,22 +74,19 @@ export const MenuHashItem = styled('li')`
     font-weight: 500 !important;
     line-height: 1.5;
     margin-bottom: 1px;
-    /* margin-top: 1px; */
     outline: none !important;
     border: none !important;
   }
 
   &:hover {
     background-color: rgba(255, 255, 255, 0.3);
-    border: none;
   }
   &:focus {
     background-color: rgba(255, 255, 255, 0.1);
-    border: none;
   }
-  &:active {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: none;
+  &:focus-visible {
+    outline: 2px solid ${(props) => props.theme.palette.background.default};
+    outline-offset: -2px;
   }
 `;
 
@@ -133,7 +131,7 @@ export const Item = styled(MuiMenuItem)`
   margin-bottom: 1px;
   padding-left: 20px;
   padding-right: 20px;
-
+  transition: background-color 0.2s ease;
   cursor: ${(props) => (props.active ? 'pointer' : 'default')};
 
   pointer-events: ${(props) => (props.active ? 'auto' : 'none')};
@@ -141,14 +139,48 @@ export const Item = styled(MuiMenuItem)`
   .MuiTypography-root {
     font-size: ${(props) =>
       props.active ? props.theme.typography.body1.fontSize : '15px'} !important;
-
     font-weight: ${(props) => (props.active ? '500' : '400')} !important;
+    color: ${(props) => props.theme.palette.background.default} !important;
   }
 
   &:hover {
     background-color: ${(props) =>
-      props.active
-        ? 'rgba(255, 255, 255, 0.3)'
-        : props.theme.palette.primary.main};
-  }
-`;
+      props.active ? 'rgba(255, 255, 255, 0.3)' : 'transparent'};
+    }
+
+    &:focus-visible {
+      background-color: rgba(255, 255, 255, 0.1);
+      outline: 2px solid ${(props) => props.theme.palette.background.default};
+      outline-offset: -2px;
+    }
+  `;
+  
+  export const CloseButton = styled('button')`
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    margin: 0;
+    cursor: pointer;
+    color: ${(props) => props.theme.palette.background.default};
+    transition: opacity 0.2s ease;
+    z-index: 2000;
+  
+    &:hover {
+      opacity: 0.8;
+    }
+  
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  
+    &:focus-visible {
+      outline: 2px solid ${(props) => props.theme.palette.background.default};
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  `;
+  
