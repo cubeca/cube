@@ -57,7 +57,7 @@ const DigitalNeighboursPanel = () => {
       <Typography component="h2" variant="h2">
         {t('digitalNeighbours')}
       </Typography>
-      <Typography component="h3" variant="h3">
+      <Typography component="h3" variant="h3" lang="fr">
         {t('digitalNeighboursFR')}
       </Typography>
       <Grid container justifyContent="center">
@@ -67,7 +67,7 @@ const DigitalNeighboursPanel = () => {
             </Typography>
         </Grid>
         <Grid xs={12} md={4} padding="1rem">
-            <Typography component="p" variant="body1" textAlign="center">
+            <Typography component="p" variant="body1" textAlign="center" lang="fr">
               {t('digitalNeighboursTextFR')}
             </Typography>
         </Grid>

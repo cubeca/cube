@@ -59,7 +59,7 @@ export const UserSignupForm = () => {
 
       setIsFormSubmitted(true);
     } catch (e: any) {
-      setErrorMessage(e.response?.data || t('An Error occured during sign up'));
+      setErrorMessage(e.response?.data || t('An Error occured during sign up | Une erreur s`est produite lors de l`inscription'));
     }
   };
   const onSubmit = async (data: FieldValues) => {
@@ -79,15 +79,15 @@ export const UserSignupForm = () => {
     return (
       <>
         <Typography variant="h2" component="h2" color="#D9FFEE" pb={4}>
-          {t('Verify Email Header')}
+          {t('Verify Email Header | Vérifier le titre de l`e-mail')}
         </Typography>
         <Typography variant="h4" component="h4" pb={4}>
           {t('Verify Email Body')}
         </Typography>
         <Typography variant="h3" component="h3" color="#D9FFEE" pb={4}>
-          Thank you ! Merci!
+        {t('Thank you ! Merci!')}
         </Typography>
-        <Typography variant="h4" component="h4" pb={4}>
+        <Typography variant="h4" component="h4" pb={4} lang="fr">
           {t('Verify Email BodyFR')}
         </Typography>
       </>
@@ -99,7 +99,7 @@ export const UserSignupForm = () => {
       <Typography variant="h3" component="h3" pb={4}>
         {t('Sign up for a User Account')}
       </Typography>
-      <Typography variant="h5" component="h5" pb={4}>
+      <Typography variant="h5" component="h5" pb={4} lang="fr">
         {t('Inscrivez-vous pour un compte `User`')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -107,18 +107,18 @@ export const UserSignupForm = () => {
           <TextInput
             control={control}
             name="firstName"
-            label={t('First name | Prénom')}
+            label={t('First name |FR| Prénom')}
             fullWidth
-            helperText={t('First name required')}
+            helperText={t('First name required |FR| Requis')}
             variant="outlined"
             placeholder="First"
           />
           <TextInput
             control={control}
             name="lastName"
-            label={t('Last name | Nom de famille')}
+            label={t('Last name |FR| Nom de famille')}
             fullWidth
-            helperText={t('Last name required')}
+            helperText={t('Last name required |FR| Requis')}
             variant="outlined"
             placeholder="Last"
           />
@@ -129,16 +129,16 @@ export const UserSignupForm = () => {
             name="email"
             label={t('E-mail')}
             fullWidth
-            helperText={t('E-mail address required')}
+            helperText={t('E-mail address required |FR| Requis')}
             variant="outlined"
             placeholder="name@example.com"
           />
           <PasswordInput
             control={control}
             name="password"
-            label={t('Password | Mot de passe')}
+            label={t('Password |FR| Mot de passe')}
             fullWidth
-            helperText={t('Password required')}
+            helperText={t('Password required |FR| Requis')}
             variant="outlined"
           />
           <Typography fontSize="small" pb={4}>
@@ -147,7 +147,7 @@ export const UserSignupForm = () => {
           <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
             {t('Account FeesP2')}
           </Typography>
-          <Typography variant="h4" color="#95F5CB" component="h4" pb={4}>
+          <Typography variant="h4" color="#95F5CB" component="h4" pb={4} lang="fr">
             {t('Account FeesP2FR')}
           </Typography>
           <CheckboxInput
@@ -184,7 +184,7 @@ export const UserSignupForm = () => {
               onClick={handleSubmit(onSubmit)}
               fullWidth
             >
-              {t('Review Terms | Consultez les Conditions')}
+              {t('Review Terms |FR| Consultez les Conditions')}
             </Button>
           </Box>
         </Stack>

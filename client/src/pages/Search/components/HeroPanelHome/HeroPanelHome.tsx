@@ -21,7 +21,7 @@ const HeroPanelHome = () => {
               <Typography component="h1" variant="h1">
                 {t('searchPage')}
               </Typography>
-              <Typography component="h2" variant="h3" aria-label="French translation">
+              <Typography component="h2" variant="h3" lang="fr">
                 {t('searchPageFR')}
               </Typography>
             </s.Headline>

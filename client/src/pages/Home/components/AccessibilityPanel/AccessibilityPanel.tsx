@@ -24,7 +24,7 @@ const AccessibilityPanel = () => {
         <Typography component="h2" variant="h2" textAlign="center">
           {t('accessibility')}
         </Typography>
-        <Typography component="h3" variant="h3" textAlign="center">
+        <Typography component="h3" variant="h3" textAlign="center" lang="fr">
           {t('accessibilityFR')}
         </Typography>
         <Grid container justifyContent="center">
@@ -34,7 +34,7 @@ const AccessibilityPanel = () => {
             </Typography>
           </Grid>
           <Grid xs={12} md={4} padding="1rem">
-            <Typography component="p" variant="body1" textAlign="center">
+            <Typography component="p" variant="body1" textAlign="center" lang="fr">
               {t('accessibilityTextFR')}
             </Typography>
           </Grid>
@@ -73,7 +73,10 @@ const AccessibilityPanel = () => {
           <s.IconDefinition alignItems="center">
             <SignLanguageIcon />
             <Typography component="p" variant="body2">
-              {t('Sign Language/ Langage des Signes')}
+              {t('Sign Language')}
+            </Typography>
+            <Typography component="p" variant="body2" lang="fr">
+              {t('Langage des Signes')}
             </Typography>
           </s.IconDefinition>
         </Grid>
@@ -81,7 +84,10 @@ const AccessibilityPanel = () => {
           <s.IconDefinition alignItems="center">
             <VoiceChatIcon />
             <Typography component="p" variant="body2">
-              {t('Text to Speech/ Texte pour Parler')}
+              {t('Text to Speech')}
+            </Typography>
+            <Typography component="p" variant="body2" lang="fr">
+              {t('Texte pour Parler')}
             </Typography>
           </s.IconDefinition>
         </Grid>
@@ -89,7 +95,10 @@ const AccessibilityPanel = () => {
           <s.IconDefinition alignItems="center">
             <SubtitlesIcon />
             <Typography component="p" variant="body2">
-              {t('Subtitles/ Sous-titres')}
+              {t('Subtitles')}
+            </Typography>
+            <Typography component="p" variant="body2" lang="fr">
+              {t('Sous-titres')}
             </Typography>
           </s.IconDefinition>
         </Grid>

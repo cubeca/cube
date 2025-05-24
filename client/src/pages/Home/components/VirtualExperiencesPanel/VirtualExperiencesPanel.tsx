@@ -18,14 +18,14 @@ const VirtualExperiencesPanel = () => {
           <Typography variant="h1">
             {t('virtual')}
           </Typography>
-          <Typography component="h3" variant="h3">
+          <Typography component="h3" variant="h3" lang="fr">
             {t('virtualFR')}
           </Typography>
           </s.Headline>
           <Typography component="p">
             {t('virtualText')}
           </Typography>
-          <Typography component="p" variant="body2">
+          <Typography component="p" variant="body2" lang="fr">
             {t('virtualTextFR')}
           </Typography>
           <s.LinkWrapper>

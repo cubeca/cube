@@ -128,17 +128,23 @@ export const CollaboratorSocial = styled(MuiLink)`
 
 export const Action = styled(Link)`
   color: ${(props) => props.theme.palette.primary.light} !important;
-  font-weight: 500;
-  margin-left: 0.5rem;
+  color: ${(props) => props.theme.palette.primary.main};
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
 
-  a {
-    color: inherit;
-    text-decoration: none;
-
+  p {
+    display: inline;
+    margin: 0;
+    &:not(:last-child)::after {
+      content: ' | ';
+      color: ${(props) => props.theme.palette.primary.main};
+    }
+  }
     &:hover {
       text-decoration: underline;
     }
-  }
+  
 `;
 
 export const ActionsWrapper = styled(Box)`
