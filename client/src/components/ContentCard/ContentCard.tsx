@@ -12,98 +12,6 @@
  * @param {string} [coverImageAltText] The alt text for the cover image (optional).
  */
 
-<<<<<<< HEAD
-import { Typography } from '@mui/material';
-import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-import ListItemIcon from '@mui/icons-material/List';
-import LinkIcon from '@mui/icons-material/Link';
-import SignLanguageIcon from '@mui/icons-material/SignLanguage';
-import DocIcon from '@mui/icons-material/Article';
-import { ReactComponent as PlaylistIcon } from '../../assets/icons/playlist.svg';
-import * as s from './ContentCard.styled';
-
-export interface ContentCardProps {
-  url: string;
-  creator?: string;
-  image: string;
-  title: string;
-  icon?: string;
-  hasSignLanguage?: boolean;
-  coverImageAltText?: string;
-}
-
-const ContentCard: FC<ContentCardProps> = ({
-  title,
-  image,
-  icon,
-  url,
-  hasSignLanguage,
-  coverImageAltText
-}) => {
-  // Clean the URL for the image to prevent errors originating from special characters
-  const cleanedUrl = image
-    .replace(/'/g, '%27')
-    .replace(/\(/g, '%28')
-    .replace(/\)/g, '%29')
-    .replace(/ /g, '%20');
-
-    const contentType = icon === 'video' ? 'Video' 
-    : icon === 'audio' ? 'Audio'
-    : icon === 'pdf' ? 'PDF Document'
-    : icon === 'link' ? 'External Link'
-    : icon === 'playlist' ? 'Playlist'
-    : icon === 'document' ? 'Document'
-    : 'Content';
-
-  const ariaLabel = `${title}${hasSignLanguage ? ', includes sign language' : ''}. Type: ${contentType}`;
-
-  return (
-    <s.ContentCard className="content-card">
-      <Link to={url} title={title} aria-label={ariaLabel}>
-        <s.Thumbnail
-        className="content-thumbnail"
-          sx={{
-            backgroundImage: `url('${cleanedUrl}')`
-          }}
-          aria-label={coverImageAltText}
-          role="img"
-        >
-        </s.Thumbnail>
-
-        <s.Data direction="row" alignItems="space-between">
-          <Typography component="h4" className="title">
-            {title}
-          </Typography>
-          <div className="types" aria-hidden="true">
-            {icon === 'video' ? (
-              <PlayArrowIcon fontSize="small"/>
-            ) : icon === 'audio' ? (
-              <VolumeUpIcon fontSize="small"/>
-            ) : icon === 'pdf' ? (
-              <MenuBookIcon fontSize="small"/>
-            ) : icon === 'link' ? (
-              <LinkIcon fontSize="small"/>
-            ) : icon === 'playlist' ? (
-              <ListItemIcon fontSize="small"/>
-            ) : icon === 'document' ? (
-              <DocIcon fontSize="small"/>
-            ) : (
-              <></>
-            )}
-            {hasSignLanguage && <SignLanguageIcon fontSize="small"/>}
-          </div>
-        </s.Data>
-      </Link>
-    </s.ContentCard>
-  );
-};
-
-export default ContentCard;
-=======
  import { Typography } from '@mui/material';
  import { FC, useState } from 'react';
  import { Link } from 'react-router-dom';
@@ -140,12 +48,13 @@ export default ContentCard;
    const [hasImageError, setHasImageError] = useState(false);
  
    // Clean the URL for the image to prevent errors originating from special characters
-   const cleanedUrl = image ? image
+   // Only clean the URL if we have an image and haven't encountered an error
+   const cleanedUrl = !hasImageError && image ? image
      .replace(/'/g, '%27')
      .replace(/\(/g, '%28')
      .replace(/\)/g, '%29')
      .replace(/ /g, '%20')
-     : '/default-profile.png'; // Provide a default image
+     : '/default-profile.png';
  
    const contentType = icon === 'video' ? 'Video' 
      : icon === 'audio' ? 'Audio'
@@ -190,6 +99,7 @@ export default ContentCard;
                style={imageStyle}
                onLoad={() => setIsImageLoaded(true)}
                onError={(e) => {
+                 setHasImageError(true);
                  e.currentTarget.src = '/default-profile.png';
                  setHasImageError(true);
                  setIsImageLoaded(true);
@@ -229,4 +139,3 @@ export default ContentCard;
  };
  
  export default ContentCard;
->>>>>>> main
