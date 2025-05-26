@@ -60,7 +60,18 @@ export const Filters = styled(Stack)`
 
           &::placeholder {
             color: black !important;
+            opacity: 1;
+          }
+        }
 
+        .MuiInput-input {
+          color: black !important;
+        }
+
+        .MuiInputBase-input {
+          color: black !important;
+          &::placeholder {
+            color: black !important;
             opacity: 1;
           }
         }
@@ -72,17 +83,34 @@ export const Filters = styled(Stack)`
     color: black !important;
 
     .MuiInputBase-root {
-      border: 1px solid black !important;
+      border: 2px solid rgba(0, 0, 0, 0.7) !important;
+      transition: all 0.2s ease;
+      color: black !important;
+
+      &:hover {
+        border: 3px solid rgba(0, 0, 0, 0.8) !important;
+      }
+
+      &:focus-within {
+        border: 3px solid black !important;
+        outline: 2px solid black;
+        outline-offset: 2px;
+      }
+      .MuiSelect-select {
+        color: black !important;
+      }
     }
 
     .MuiFormLabel-root {
       top: -15px;
+      color: black !important;
     }
 
     .MuiInputBase-root,
     .MuiFormLabel-root {
       margin-bottom: 0 !important;
-      color: black;
+      color: black !important;
+    
     }
 
     .MuiMenuItem-root {
@@ -95,8 +123,7 @@ export const Filters = styled(Stack)`
       fill: black !important;
     }
     & .MuiOutlinedInput-notchedOutline {
-      border-color: 'rgba(228, 219, 233, 0.25)';
-      color: black;
+      border: none;
     }
     & .Mui-focused .MuiOutlinedInput-notchedOutline {
       border-color: 'rgba(228, 219, 233, 0.25)';
