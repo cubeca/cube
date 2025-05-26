@@ -39,12 +39,14 @@ const SearchContentFilter: FC<SearchContentFilterProps> = ({
         <TextInput
           id="search"
           name="search"
-          label={t('Search/Recherche')}
+          label={t('')}
           control={control}
           variant="standard"
           placeholder={t('Search/Recherche')}
           sx={{ fontSize: '2rem' }}
           aria-label={t('Search content')}
+          colormode="dark"
+          className="searchFilter"
         />
 
         <Select
