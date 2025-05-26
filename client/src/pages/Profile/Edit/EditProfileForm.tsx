@@ -135,7 +135,11 @@ const EditProfileForm = ({
                   aria-label="user profile hero"
                 />
               )}
-              <label htmlFor={heroIdUpload} style={{ cursor: 'pointer' }}>
+              <s.UploadButton
+                onClick={() => document.getElementById(heroIdUpload)?.click()}
+                type="button"
+                aria-label="Upload banner image"
+              >
                 <CameraIcon />
                 <Typography>Upload Banner Image</Typography>
                 <input
@@ -145,7 +149,7 @@ const EditProfileForm = ({
                   style={{ display: 'none' }}
                   aria-label="upload banner image"
                 />
-              </label>
+               </s.UploadButton>
             </>
           )}
         </s.EditProfileHeroBg>
@@ -170,7 +174,11 @@ const EditProfileForm = ({
             )}
           </s.ImageInner>
           <s.EditWrapper>
-            <label htmlFor={logoIdUpload} style={{ cursor: 'pointer' }}>
+          <s.UploadButton
+              onClick={() => document.getElementById(logoIdUpload)?.click()}
+              type="button"
+              aria-label="Upload profile picture"
+            >
               <CameraIcon />
               <Typography>Profile Pic</Typography>
               <input
@@ -180,7 +188,7 @@ const EditProfileForm = ({
                 style={{ display: 'none' }}
                 aria-label="upload profile picture"
               />
-            </label>
+            </s.UploadButton>
           </s.EditWrapper>
         </s.ImageWrapper>
       </s.EditProfileImagesWrapper>
@@ -276,7 +284,7 @@ const EditProfileForm = ({
               theme="dark"
               sitekey={hCaptchaKey}
               onVerify={onCaptchaSuccess}
-              aria-label="captcha"
+              aria-hidden="true"
             />
           </Box>
         </Grid>

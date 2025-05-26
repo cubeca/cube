@@ -12,6 +12,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import * as s from './Legal.styled';
 import ToS from './ToS';
+import ToSFr from './ToSFr';
 import * as DarkContent from 'components/DarkContent.styled';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -54,17 +55,23 @@ function BootstrapDialogTitle(props: DialogTitleProps) {
 }
 
 const LegalModalNav = () => {
-  const { t } = useTranslation();
   const [legalDisplay, setLegalDisplay] = useState(false);
-
+  const [isFrench, setIsFrench] = useState(false);
+  const { t } = useTranslation();
   return (
     <>
-      <s.NavLink onClick={() => setLegalDisplay(true)}>
+        <s.NavLink onClick={() => {
+        setIsFrench(false);
+        setLegalDisplay(true);
+      }} aria-haspopup="dialog" lang="en"> 
         {t(
           'Our Code of Conduct is Defined by our Terms of Service and Privacy Policy'
         )}
       </s.NavLink>
-      <s.NavLink onClick={() => setLegalDisplay(true)}>
+      <s.NavLink onClick={() => {
+        setIsFrench(true);
+        setLegalDisplay(true);
+      }} aria-haspopup="dialog" lang="fr"> 
         {t(
           'Notre code de conduite est défini par nos conditions d`utilisation et notre politique de confidentialité.'
         )}
@@ -83,7 +90,7 @@ const LegalModalNav = () => {
         </BootstrapDialogTitle>
         <DialogContent dividers>
           <DarkContent.Wrapper>
-            <ToS />
+          {isFrench ? <ToSFr /> : <ToS />}
           </DarkContent.Wrapper>
         </DialogContent>
         <DialogActions>

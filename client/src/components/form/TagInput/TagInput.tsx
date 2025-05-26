@@ -50,6 +50,7 @@ const TextInput: FC<TagInputProps> = ({
       render={({ field, fieldState: { error } }) => {
         return (
           <FormControl
+            name={name}
             className={className}
             id={id}
             label={label}

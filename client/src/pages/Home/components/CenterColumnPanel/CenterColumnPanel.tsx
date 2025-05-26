@@ -2,14 +2,14 @@ import { Typography } from '@mui/material';
 import Button from 'components/Button';
 import Grid from '@mui/system/Unstable_Grid';
 import { useTranslation } from 'react-i18next';
-import FirstTopThumb from 'assets/images/fpo/cont-art-gal-thumb1.png';
-import SecondTopThumb from 'assets/images/fpo/daniels-joffe-PhQ4CpXLEX4-unsplash-thumb.png';
+import FirstTopThumb from 'assets/images/collaborations.jpg';
+import SecondTopThumb from 'assets/images/creators.jpg';
 import ThirdTopThumb from 'assets/images/fpo/pawel-czerwinski-Kd_IiyO7IqQ-unsplash-thumb.png';
-import FourthTopThumb from 'assets/images/fpo/third-top-thumb.png';
+import FourthTopThumb from 'assets/images/fpo/lydia-thumb.png';
 import FirstBottomThumb from 'assets/images/fpo/first-bottom-thumb.png';
 import SecondBottomThumb from 'assets/images/fpo/coline-beulin-oLWGI-Q76Yc-unsplash-thumb.png';
 import ThirdBottomThumb from 'assets/images/fpo/third-bottom-thumb.png';
-import FourthBottomThumb from 'assets/images/fpo/eldar-nazarov-gnYfMrL0rck-unsplash-thumb.png';
+import FourthBottomThumb from 'assets/images/fpo/billetto-editorial-dGYN1ApujRo-unsplash-thumb.png';
 import ThumbnailGrid from '../ThumbnailGrid';
 import * as s from './CenterColumnPanel.styled';
 import * as DarkContent from 'components/DarkContent.styled';
@@ -44,7 +44,7 @@ const CenterColumnPanel = () => {
   return (
     <s.CenterColumnPanel>
       <Grid container>
-        <Grid xs={12} md={3}>
+        <Grid xs={0} md={3}>
           <ThumbnailGrid
             thumbs={topThumbGrid}
             alignment={'top'}

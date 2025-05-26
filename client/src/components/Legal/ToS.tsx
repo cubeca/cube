@@ -52,13 +52,15 @@ const ToS = () => {
       </p>
       <h5>2.4. Profile Content</h5>
       <p>
-        You retain copyright and other rights you have in your Profile. By
-        submitting material to your Profile, you grant us a worldwide,
-        non-exclusive, perpetual, irrevocable, royalty-free, assignable,
-        transferable, and sub-licensable license to use, access, store,
-        reproduce, adapt, translate, publish, publicly perform or display,
-        modify, repost, create derivative works from, and distribute such
-        material in connection with our providing the Cube Services.
+        You retain copyright and other rights you have in your Profile. By submitting material to your Profile, you grant us a worldwide, non-exclusive, perpetual, irrevocable, royalty-free, assignable, transferable, and sub-licensable license to access, store, reproduce, translate, publish, publicly display, and distribute such material in connection with our providing the CubeCommons services.
+        Users retain full ownership of their uploaded content. CubeCommons will only use Profile Content for its primary function—audience viewing—unless the user explicitly opts in or provides written consent for additional uses.
+        Institutional users may designate (“Categories of Use”) to specify permitted and restricted actions, including but not limited to:</p>
+        <p>
+          <li>Cropping, text overlay, or any modifications to images, videos, or sound.</li>
+        <li>Use of content in marketing or promotional materials.</li> 
+        <li>Context-specific restrictions, such as exhibition-only use.</li>
+        </p> 
+        <p>Institutional users are responsible for ensuring that any uploaded content complies with their own loan agreements, artist contracts, or third-party restrictions. CubeCommons is not liable for any disputes arising from a user’s failure to comply with such agreements. Users may remove their content at any time or request the removal of content from marketing materials by emailing <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a> will make reasonable efforts to comply with removal requests in a timely manner.
       </p>
       <h5>2.5. Responsibility</h5>
       <p>
@@ -66,6 +68,13 @@ const ToS = () => {
         your Profile. You, and not Cube Commons, are responsible for ensuring
         that all material in your Profile is accurate, lawful, and does not
         infringe or violate anyone’s rights or our Code of Conduct.
+      </p>
+      <p>
+      Users are responsible for ensuring they have the necessary rights and permissions to upload content. CubeCommons will not alter, use, or promote content beyond its agreed-upon use, except for general platform visibility, which may include an image or short screen recording showing the CubeCommons Search page or Profile pages in marketing and promotional materials.
+      CubeCommons is not liable for any claims, disputes, or legal actions resulting from a user’s failure to comply with existing artist contracts, licensing agreements, or other third-party obligations.
+      </p>
+      <p>
+      In cases where users or institutional members require content removal from marketing or promotional materials, they may submit a request to <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a>. CubeCommons will make every effort to comply with such requests promptly.
       </p>
       <h5>2.6. Minors</h5>
       <p>
@@ -141,7 +150,7 @@ const ToS = () => {
         If you believe a Community Member, Creator, or Content is in violation
         of the Code of Conduct, or that Content has not been rated
         appropriately, you can report it to us by email
-        <a href="mailto:ash@cubecommons.ca">ash@cubecommons.ca</a>. Cube Commons
+        <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a>. Cube Commons
         reviews all Reports and keeps records of steps taken to address them.
       </p>
       <h5>4.4. Response</h5>
@@ -510,7 +519,7 @@ const ToS = () => {
         a person under the age of 13, please contact us
       </h5>
       <p>
-        <a href="mailto:ash@cubecommons.ca">ash@cubecommons.ca</a>
+        <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a>
       </p>
       <h4>8. User Rights</h4>
       <h5>8.1. Rights to Access and Correction</h5>
@@ -520,7 +529,7 @@ const ToS = () => {
         us to correct it. If you ask us to delete it, we will delete it
         entirely. If you want to see the personal information we have stored
         about you, you can make a request by email to:{' '}
-        <a href="mailto:ash@cubecommons.ca">ash@cubecommons.ca</a>
+        <a href="mailto:ash@cubecommons.ca">ash @ cubecommons.ca</a>
       </p>
       <h5>8.2. Right to Withdraw Consent and Right to Erasure</h5>
       <p>

@@ -40,10 +40,19 @@ const EmbedToggleInput = ({
         >
           <s.FormLabel
             control={
-              <s.EmbedToggleSwitch
+              <s.EmbedToggleButton
+                type="button"
+                role="switch"
+                aria-checked={field.value}
                 defaultChecked={true}
                 checked={field.value}
-                onChange={(e: any) => field.onChange(e.target.checked)}
+                onClick={() => field.onChange(!field.value)}
+                onKeyDown={(e: React.KeyboardEvent) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    field.onChange(!field.value);
+                  }
+                }}
                 colormode={colormode}
               />
             }
