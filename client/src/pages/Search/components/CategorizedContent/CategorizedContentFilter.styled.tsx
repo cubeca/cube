@@ -71,6 +71,10 @@ export const Filters = styled(Stack)`
           &::placeholder {
             opacity: 1;
           }
+
+          &:focus {
+            background-color: rgba(255, 255, 255, 0.05);
+          }
         }
       }
     }

@@ -48,12 +48,13 @@
    const [hasImageError, setHasImageError] = useState(false);
  
    // Clean the URL for the image to prevent errors originating from special characters
-   const cleanedUrl = image ? image
+   // Only clean the URL if we have an image and haven't encountered an error
+   const cleanedUrl = !hasImageError && image ? image
      .replace(/'/g, '%27')
      .replace(/\(/g, '%28')
      .replace(/\)/g, '%29')
      .replace(/ /g, '%20')
-     : '/default-profile.png'; // Provide a default image
+     : '/default-profile.png';
  
    const contentType = icon === 'video' ? 'Video' 
      : icon === 'audio' ? 'Audio'
@@ -98,6 +99,7 @@
                style={imageStyle}
                onLoad={() => setIsImageLoaded(true)}
                onError={(e) => {
+                 setHasImageError(true);
                  e.currentTarget.src = '/default-profile.png';
                  setHasImageError(true);
                  setIsImageLoaded(true);
