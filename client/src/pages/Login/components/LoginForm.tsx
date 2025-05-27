@@ -145,6 +145,7 @@ export const LoginForm = ({
               theme="dark"
               sitekey={hCaptchaKey}
               onVerify={onCaptchaSuccess}
+              aria-hidden="true"
             />
             <Button
               type="submit"

@@ -37,6 +37,7 @@ const ChipInput: FC<ChipInputProps> = ({
       defaultValue={defaultValue}
       render={({ field, fieldState: { error } }) => (
         <FormControl
+          name={name}
           className={className}
           id={id}
           label={label}

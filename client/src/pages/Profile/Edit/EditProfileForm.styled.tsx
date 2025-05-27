@@ -6,6 +6,7 @@ export const EditProfileImagesWrapper = styled(Stack)`
   margin-left: -20px;
   margin-right: -20px;
   margin-bottom: 30px;
+  tabindex: "0"
 
   ${(props) => props.theme.breakpoints.up('sm')} {
     margin-left: -24px;
@@ -13,32 +14,23 @@ export const EditProfileImagesWrapper = styled(Stack)`
   }
 `;
 
-export const EditProfileHeroBg = styled(Box)`
-  position: relative;
-  width: 100%;
-  height: 160px;
-
-  img {
+export const UploadButton = styled('button')`
     display: block;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  label {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: calc(100%);
-    height: calc(100%);
     padding: 0;
     border: 0;
     background: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    z-index: 1;
+    outline: none;
+
+    &:focus {
+      box-shadow: 0 0 0 3px ${(props) => props.theme.palette.primary.main};
+    }
 
     p {
       position: absolute;
@@ -64,15 +56,31 @@ export const EditProfileHeroBg = styled(Box)`
         fill: ${(props) => props.theme.palette.primary.light};
       }
     }
-  }
 `;
+export const EditProfileHeroBg = styled(Box)`
+  position: relative;
+  width: 100%;
+  height: 160px;
 
+  img {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  `;
+  
 export const ImageWrapper = styled(Box)`
   position: absolute;
   top: calc(50% - 60px);
   right: 30px;
   width: 120px;
   height: 120px;
+  z-index: 2;
 `;
 
 export const ImageInner = styled('a')`
