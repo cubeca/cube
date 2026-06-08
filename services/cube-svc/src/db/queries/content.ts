@@ -1,5 +1,5 @@
 import { Content, Vtt, User } from '../models';
-import { Op, Sequelize } from 'sequelize';
+import { Op } from 'sequelize';
 
 /**
  * Get content by its ID.
@@ -160,22 +160,6 @@ export const searchContent = async (offset: number, limit: number, filters: any,
     });
   }
 
-  // Exclude expired content (expiry date is in the past) and not-yet-live content (live date is in the future)
-  if (!whereClause[Op.and]) {
-    whereClause[Op.and] = [];
-  }
-
-  const now = new Date().toISOString();
-
-  // Only include content where expiry is null/not set OR expiry is in the future
-  whereClause[Op.and].push(
-    Sequelize.literal(`(data->>'expiry' IS NULL OR data->>'expiry' = '' OR data->>'expiry' >= '${now}')`)
-  );
-
-  // Only include content where live is null/not set OR live is in the past
-  whereClause[Op.and].push(
-    Sequelize.literal(`(data->>'live' IS NULL OR data->>'live' = '' OR data->>'live' <= '${now}')`)
-  );
 
   const contentList = await Content.findAll({
     where: whereClause,
