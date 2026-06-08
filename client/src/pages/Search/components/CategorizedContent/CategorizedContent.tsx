@@ -63,9 +63,57 @@
      }
    }, [tagSearchTerm, languageSearchTerm, isPlaylistLoading, isContentLoading]);
  
-   const fetchSearchResults = useCallback(
-     async (newContentOffset: number, newProfileOffset: number) => {
+   const filterLiveContent = (items: ContentStorage[]) => {
+     const now = new Date();
+     return items.filter((item: any) => {
+       const expiryDate = new Date(item.expiry);
+       const liveDate = new Date(item.live);
+       return (
+         (expiryDate >= now || !item.expiry) &&
+         (!item.live || liveDate <= now)
+       );
+     });
+   };
+ 
+   const fetchContentSearchResults = useCallback(
+     async (newContentOffset: number) => {
        setIsContentLoading(true);
+       try {
+         const searchFilters: SearchFilters = {
+           category: categoryFilter === 'all' ? undefined : categoryFilter
+         };
+ 
+         const results = await searchContent(
+           debouncedSearchTerm.trim(),
+           newContentOffset,
+           newContentOffset === 0 ? 12 : contentLimit,
+           searchFilters
+         );
+ 
+         const visibleResults = filterLiveContent(results);
+ 
+         if (newContentOffset === 0) {
+           setContentResults(visibleResults);
+         } else if (visibleResults.length > 0) {
+           setContentResults((prevContentResults) => [
+             ...prevContentResults,
+             ...visibleResults
+           ]);
+         }
+ 
+         setHasMoreContentToLoad(results.length > 0);
+         setContentOffset(newContentOffset + (newContentOffset === 0 ? 12 : contentLimit));
+       } catch (error) {
+         setError('Failed to load search results/ Échec du chargement des résultats de recherche');
+       } finally {
+         setIsContentLoading(false);
+       }
+     },
+     [debouncedSearchTerm, categoryFilter, contentLimit]
+   );
+ 
+   const fetchProfileSearchResults = useCallback(
+     async (newProfileOffset: number) => {
        setIsProfileLoading(true);
        try {
          const searchFilters: SearchFilters = {
@@ -88,28 +136,15 @@
            ]);
          }
  
-         setHasMoreProfilesToLoad(results.profileResults.length === 3);
+         setHasMoreProfilesToLoad(results.profileResults.length === (newProfileOffset === 0 ? 3 : profileLimit));
          setProfileOffset(newProfileOffset + (newProfileOffset === 0 ? 3 : profileLimit));
- 
-         if (newContentOffset === 0) {
-           setContentResults(results.contentResults);
-         } else if (results.contentResults.length > 0) {
-           setContentResults((prevContentResults) => [
-             ...prevContentResults,
-             ...results.contentResults
-           ]);
-         }
- 
-         setHasMoreContentToLoad(results.contentResults.length > 0);
-         setContentOffset(newContentOffset + (newContentOffset === 0 ? 11 : contentLimit));
        } catch (error) {
          setError('Failed to load search results/ Échec du chargement des résultats de recherche');
        } finally {
-         setIsContentLoading(false);
          setIsProfileLoading(false);
        }
      },
-     [debouncedSearchTerm, categoryFilter, profileLimit, contentLimit]
+     [debouncedSearchTerm, categoryFilter, profileLimit]
    );
  
    const fetchPlaylistSearchResults = useCallback(
@@ -147,34 +182,17 @@
      [debouncedSearchTerm, categoryFilter]
    );
  
-   const fetchInitialProfiles = useCallback(async () => {
-     setIsProfileLoading(true);
-     try {
-       const results = await search('', 0, 3, {});
-       setProfileResults(results.profileResults);
-       setHasMoreProfilesToLoad(results.profileResults.length === 3);
-       setProfileOffset(3);
-     } catch (error) {
-       setError('Failed to load profiles/ Échec du chargement des profils');
-     } finally {
-       setIsProfileLoading(false);
-     }
-   }, []);
- 
-   useEffect(() => {
-     fetchInitialProfiles();
-   }, [fetchInitialProfiles]);
- 
-   useEffect(() => {
-     fetchSearchResults(0, 0);
-   }, [fetchSearchResults]);
- 
-   useEffect(() => {
-     fetchPlaylistSearchResults(0);
-   }, [fetchPlaylistSearchResults]);
+    useEffect(() => {
+      setContentOffset(0);
+      setPlaylistOffset(0);
+      setProfileOffset(0);
+      fetchContentSearchResults(0);
+      fetchPlaylistSearchResults(0);
+      fetchProfileSearchResults(0);
+    }, [debouncedSearchTerm, categoryFilter]);
  
    const handleContentLoadMore = () => {
-     fetchSearchResults(contentOffset, profileOffset);
+     fetchContentSearchResults(contentOffset);
    };
  
    const handlePlaylistLoadMore = () => {
@@ -182,7 +200,7 @@
    };
  
    const handleProfileLoadMore = () => {
-     fetchSearchResults(contentOffset, profileOffset);
+     fetchProfileSearchResults(profileOffset);
    };
  
    return (
@@ -325,16 +343,7 @@
                    <p>{error}</p>
                  ) : (
                    contentResults
-                     ?.filter((key: any) => {
-                       const expiryDate = new Date(key.expiry);
-                       const liveDate = new Date(key.live);
-                       // show content in between the expiry and live date range
-                       return (
-                         (expiryDate >= new Date() || !key.expiry) &&
-                         (!key.live || liveDate <= new Date())
-                       );
-                     })
-                     .map((key: any) => (
+                     ?.map((key: any) => (
                        <ContentCard
                          key={key.id}
                          image={
