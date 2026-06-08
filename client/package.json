@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@cubeca/cube-svc-client-oas-axios": "^0.9.76",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@fontsource/inter": "^4.5.15",
     "@fontsource/roboto": "^5.0.8",
     "@fontsource/rubik": "^4.5.14",
@@ -65,6 +67,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@types/react-dom": "^18.3.7",
     "@types/react-router-hash-link": "^2.4.9",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",

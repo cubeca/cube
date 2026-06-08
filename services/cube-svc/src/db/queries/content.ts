@@ -160,6 +160,29 @@ export const searchContent = async (offset: number, limit: number, filters: any,
     });
   }
 
+  // Exclude expired content (expiry date is in the past) and not-yet-live content (live date is in the future)
+  if (!whereClause[Op.and]) {
+    whereClause[Op.and] = [];
+  }
+
+  // Only include content where expiry is null/not set OR expiry is in the future
+  whereClause[Op.and].push({
+    [Op.or]: [
+      { 'data.expiry': { [Op.is]: null } },
+      { 'data.expiry': { [Op.eq]: '' } },
+      { 'data.expiry': { [Op.gte]: new Date().toISOString() } }
+    ]
+  });
+
+  // Only include content where live is null/not set OR live is in the past
+  whereClause[Op.and].push({
+    [Op.or]: [
+      { 'data.live': { [Op.is]: null } },
+      { 'data.live': { [Op.eq]: '' } },
+      { 'data.live': { [Op.lte]: new Date().toISOString() } }
+    ]
+  });
+
   const contentList = await Content.findAll({
     where: whereClause,
     order: [['created_at', 'DESC']],
