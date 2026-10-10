@@ -34,16 +34,22 @@ const ForgotPassword = () => {
   };
 
   const onSubmit = async (data: FieldValues) => {
-    const { email } = data;
-    setErrorMessage('');
+  const { email } = data;
+  setErrorMessage('');
 
-    try {
-      await forgotPassword(email);
-      setIsEmailSubmitted(true);
-    } catch (e: any) {
-      setErrorMessage('Sorry, no account found with that email address.');
-    }
-  };
+  try {
+    await forgotPassword(email);
+    setIsEmailSubmitted(true);
+  } catch (e: any) {
+    // Log the real error so future bug reports aren't a mystery
+    console.error('Password reset request failed:', e);
+    setErrorMessage(
+      t(
+        'Something went wrong sending the reset email. Please try again in a few minutes, and contact us if it keeps happening.'
+      )
+    );
+  }
+};
 
   if (isEmailSubmitted) {
     return (
