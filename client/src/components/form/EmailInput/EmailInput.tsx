@@ -16,12 +16,12 @@ const EmailInput: FC<TextInputProps> = (props) => {
           message: t('Invalid Email Format')
         },
         minLength: {
-          value: 8,
-          message: t('Minimum email length of 8 characters')
+          value: 6,
+          message: t('Minimum email length of 6 characters')
         },
         maxLength: {
-          value: 40,
-          message: t('Maximum email length of 40 characters')
+          value: 140,
+          message: t('Maximum email length of 140 characters')
         }
       }}
     />
