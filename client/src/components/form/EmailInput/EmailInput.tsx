@@ -10,20 +10,17 @@ const EmailInput: FC<TextInputProps> = (props) => {
     <TextInput
       {...props}
       colormode={props.colormode}
-      rules={{
-        pattern: {
-          value: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
-          message: t('Invalid Email Format')
-        },
-        minLength: {
-          value: 6,
-          message: t('Minimum email length of 6 characters')
-        },
-        maxLength: {
-          value: 140,
-          message: t('Maximum email length of 140 characters')
-        }
-      }}
+     rules={{
+  pattern: {
+    // Accepts uppercase letters and modern long TLDs like .photography
+    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    message: t('Invalid Email Format')
+  },
+  maxLength: {
+    value: 180, // the actual maximum length of an email address
+    message: t('Maximum email length of 180 characters')
+  }
+}}
     />
   );
 };
