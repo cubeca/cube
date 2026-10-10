@@ -49,6 +49,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
   }
 
   const { name, email, organization, website, tag, password, hasAcceptedNewsletter = false, hasAcceptedTerms = false, isOver18 } = req.body;
+  const normalizedEmail = (email as string).toLowerCase().trim();
 
   try {
     const hashedPassword = await hashPassword(password);
@@ -63,7 +64,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
         profileId = r.id as string;
         permissionIds.push('contentEditor');
 
-        await sendProfileRegistrationNotification(name, email, organization, website, tag);
+        await sendProfileRegistrationNotification(name, normalizedEmail, organization, website, tag);
       } catch (error) {
         console.error('Error creating profile for user. Organization name, website or tag already exist', organization, website, tag);
         return res.status(400).send('Error creating profile for user. Organization name, website, or tag already exists');
@@ -71,7 +72,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
     }
 
     // Insert User Identity
-    const r = await db.insertIdentity(name, email, profileId, encryptedPassword, permissionIds, hasAcceptedNewsletter, hasAcceptedTerms, isOver18);
+    const r = await db.insertIdentity(name, normalizedEmail, profileId, encryptedPassword, permissionIds, hasAcceptedNewsletter, hasAcceptedTerms, isOver18);
 
     const user = r;
     const encoder = new UuidEncoder('base36');
@@ -81,7 +82,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
       expiresIn: '7d'
     });
 
-    await sendVerificationEmail(name, email, token);
+    await sendVerificationEmail(name, normalizedEmail, token);
 
     res.status(201).json({ id: user.id, jwt: token });
   } catch (error: any) {
@@ -117,7 +118,7 @@ identity.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res
   }
 
   try {
-    const r = await db.selectUserByEmail(email);
+    const r = await db.selectUserByEmail((email as string).toLowerCase().trim());
     if (!r) {
       return res.status(403).send('Invalid email or password');
     }
@@ -214,7 +215,7 @@ identity.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Re
 
     await db.updateEmail(uuid, email);
     await db.updateEmailVerification(uuid, false);
-    await sendVerificationEmail('', email, user.token);
+    await sendVerificationEmail('', normalizedEmail, user.token);
     res.send('OK');
   } catch (error: any) {
     console.error('Error updating email: ', error);
@@ -375,7 +376,7 @@ identity.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), asyn
     if (dbUser) {
       const name = dbUser.name;
       const email = dbUser.email;
-      await sendVerificationEmail(name, email, user.token);
+      await sendVerificationEmail(name, normalizedEmail, user.token);
     } else {
       return res.status(401).send('Incorrect id provided');
     }
