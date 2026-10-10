@@ -336,16 +336,23 @@ identity.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Re
     return res.status(400).send('Email is required');
   }
 
+  // Normalize: emails are not case-sensitive in the real world,
+  // but database lookups are. Lowercase + trim so 'Ash@X.com '
+  // matches the stored 'ash@x.com'.
+  const normalizedEmail = (email as string).toLowerCase().trim();
+
   try {
-    const user = await db.selectUserByEmail(email as string);
+    const user = await db.selectUserByEmail(normalizedEmail);
     if (user) {
-      await sendPasswordResetEmail(email);
+      await sendPasswordResetEmail(normalizedEmail);
     } else {
-      return res.status(403).send('Email does not exist');
+      console.log('Password reset request failure - check your email is correct');
     }
   } catch (error: any) {
+    // This fires when the reset email fails to SEND 
+    // a real server-side failure the user should retry.
     console.error('Error occurred sending password reset email: ', error);
-    return res.status(500).send('Error updating email');
+    return res.status(500).send('Error sending password reset email - please try again in an hour it may be your connection');
   }
 
   res.send('OK');
