@@ -197,6 +197,7 @@ identity.post('/auth/anonymous', async (_req: Request, res: Response) => {
  */
 identity.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { uuid, email } = req.body;
+  const normalizedEmail = (email as string).toLowerCase().trim();
 
   if (!uuid || !email) {
     return res.status(401).send('Invalid Request Body. uuid and email are required.');
@@ -208,14 +209,14 @@ identity.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Re
       return res.status(401).send('Unauthorized to update email for this user.');
     }
 
-    const existingUser = await db.selectUserByEmail(email);
+    const existingUser = await db.selectUserByEmail(normalizedEmail);  // <-- changed
     if (existingUser) {
       return res.status(409).json('Email is in use by another user');
     }
 
-    await db.updateEmail(uuid, email);
+    await db.updateEmail(uuid, normalizedEmail);                       // <-- changed
     await db.updateEmailVerification(uuid, false);
-    await sendVerificationEmail('', normalizedEmail, user.token);
+    await sendVerificationEmail('', normalizedEmail, user.token);      // <-- changed
     res.send('OK');
   } catch (error: any) {
     console.error('Error updating email: ', error);
@@ -376,7 +377,7 @@ identity.post('/auth/resend-email-verification', allowIfAnyOf('anonymous'), asyn
     if (dbUser) {
       const name = dbUser.name;
       const email = dbUser.email;
-      await sendVerificationEmail(name, normalizedEmail, user.token);
+      await sendVerificationEmail(name, email, user.token);
     } else {
       return res.status(401).send('Incorrect id provided');
     }
