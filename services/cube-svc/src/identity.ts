@@ -49,6 +49,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
   }
 
   const { name, email, organization, website, tag, password, hasAcceptedNewsletter = false, hasAcceptedTerms = false, isOver18 } = req.body;
+  const normalizedEmail = (email as string).toLowerCase().trim();
 
   try {
     const hashedPassword = await hashPassword(password);
@@ -63,7 +64,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
         profileId = r.id as string;
         permissionIds.push('contentEditor');
 
-        await sendProfileRegistrationNotification(name, email, organization, website, tag);
+        await sendProfileRegistrationNotification(name, normalizedEmail, organization, website, tag);
       } catch (error) {
         console.error('Error creating profile for user. Organization name, website or tag already exist', organization, website, tag);
         return res.status(400).send('Error creating profile for user. Organization name, website, or tag already exists');
@@ -71,7 +72,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
     }
 
     // Insert User Identity
-    const r = await db.insertIdentity(name, email, profileId, encryptedPassword, permissionIds, hasAcceptedNewsletter, hasAcceptedTerms, isOver18);
+    const r = await db.insertIdentity(name, normalizedEmail, profileId, encryptedPassword, permissionIds, hasAcceptedNewsletter, hasAcceptedTerms, isOver18);
 
     const user = r;
     const encoder = new UuidEncoder('base36');
@@ -81,7 +82,7 @@ identity.post('/auth/user', allowIfAnyOf('anonymous'), validateUserCreateInput, 
       expiresIn: '7d'
     });
 
-    await sendVerificationEmail(name, email, token);
+    await sendVerificationEmail(name, normalizedEmail, token);
 
     res.status(201).json({ id: user.id, jwt: token });
   } catch (error: any) {
@@ -117,7 +118,7 @@ identity.post('/auth/login', allowIfAnyOf('anonymous'), async (req: Request, res
   }
 
   try {
-    const r = await db.selectUserByEmail(email);
+    const r = await db.selectUserByEmail((email as string).toLowerCase().trim());
     if (!r) {
       return res.status(403).send('Invalid email or password');
     }
@@ -196,6 +197,7 @@ identity.post('/auth/anonymous', async (_req: Request, res: Response) => {
  */
 identity.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Response) => {
   const { uuid, email } = req.body;
+  const normalizedEmail = (email as string).toLowerCase().trim();
 
   if (!uuid || !email) {
     return res.status(401).send('Invalid Request Body. uuid and email are required.');
@@ -207,14 +209,14 @@ identity.put('/auth/email', allowIfAnyOf('active'), async (req: Request, res: Re
       return res.status(401).send('Unauthorized to update email for this user.');
     }
 
-    const existingUser = await db.selectUserByEmail(email);
+    const existingUser = await db.selectUserByEmail(normalizedEmail);  // <-- changed
     if (existingUser) {
       return res.status(409).json('Email is in use by another user');
     }
 
-    await db.updateEmail(uuid, email);
+    await db.updateEmail(uuid, normalizedEmail);                       // <-- changed
     await db.updateEmailVerification(uuid, false);
-    await sendVerificationEmail('', email, user.token);
+    await sendVerificationEmail('', normalizedEmail, user.token);      // <-- changed
     res.send('OK');
   } catch (error: any) {
     console.error('Error updating email: ', error);
@@ -336,16 +338,23 @@ identity.post('/auth/forgot-password', allowIfAnyOf('anonymous'), async (req: Re
     return res.status(400).send('Email is required');
   }
 
+  // Normalize: emails are not case-sensitive in the real world,
+  // but database lookups are. Lowercase + trim so 'Ash@X.com '
+  // matches the stored 'ash@x.com'.
+  const normalizedEmail = (email as string).toLowerCase().trim();
+
   try {
-    const user = await db.selectUserByEmail(email as string);
+    const user = await db.selectUserByEmail(normalizedEmail);
     if (user) {
-      await sendPasswordResetEmail(email);
+      await sendPasswordResetEmail(normalizedEmail);
     } else {
-      return res.status(403).send('Email does not exist');
+      console.log('Password reset request failure - check your email is correct');
     }
   } catch (error: any) {
+    // This fires when the reset email fails to SEND 
+    // a real server-side failure the user should retry.
     console.error('Error occurred sending password reset email: ', error);
-    return res.status(500).send('Error updating email');
+    return res.status(500).send('Error sending password reset email - please try again in an hour it may be your connection');
   }
 
   res.send('OK');

@@ -66,9 +66,11 @@ export const updatePassword = async ({
 };
 
 export const forgotPassword = async (email: string) => {
-  const anonToken = getAuthToken();
+  // Always get a fresh anonymous token: the one in localStorage
+  // may be expired.
+  const anonToken = await anonymousJWT();
   return await authApi.forgotPassword(
-    { email },
+    { email: email.toLowerCase().trim() },
     { headers: { Authorization: `Bearer ${anonToken}` } }
   );
 };
