@@ -83,26 +83,47 @@
            category: categoryFilter === 'all' ? undefined : categoryFilter
          };
  
-         const results = await searchContent(
-           debouncedSearchTerm.trim(),
-           newContentOffset,
-           newContentOffset === 0 ? 12 : contentLimit,
-           searchFilters
+         const limit = newContentOffset === 0 ? 12 : contentLimit;
+         let currentOffset = newContentOffset;
+         let allVisibleResults: ContentStorage[] = [];
+         let hasMore = true;
+         const maxFetchAttempts = 5;
+         let attempts = 0;
+ 
+         // On initial load, keep fetching until we have enough visible (non-expired) results
+         // or until there are no more results from the API
+         do {
+           const results = await searchContent(
+             debouncedSearchTerm.trim(),
+             currentOffset,
+             limit,
+             searchFilters
+           );
+ 
+           const visibleResults = filterLiveContent(results);
+           allVisibleResults = [...allVisibleResults, ...visibleResults];
+ 
+           hasMore = results.length > 0;
+           currentOffset += limit;
+           attempts++;
+         } while (
+           newContentOffset === 0 &&
+           allVisibleResults.length < 12 &&
+           hasMore &&
+           attempts < maxFetchAttempts
          );
  
-         const visibleResults = filterLiveContent(results);
- 
          if (newContentOffset === 0) {
-           setContentResults(visibleResults);
-         } else if (visibleResults.length > 0) {
+           setContentResults(allVisibleResults);
+         } else if (allVisibleResults.length > 0) {
            setContentResults((prevContentResults) => [
              ...prevContentResults,
-             ...visibleResults
+             ...allVisibleResults
            ]);
          }
  
-         setHasMoreContentToLoad(results.length > 0);
-         setContentOffset(newContentOffset + (newContentOffset === 0 ? 12 : contentLimit));
+         setHasMoreContentToLoad(hasMore);
+         setContentOffset(currentOffset);
        } catch (error) {
          setError('Failed to load search results/ Échec du chargement des résultats de recherche');
        } finally {

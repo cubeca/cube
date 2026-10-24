@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as a base image
-FROM node:14
+FROM node:18
 
 # Specify the license using the LABEL instruction
 LABEL org.opencontainers.image.licenses="MIT"
