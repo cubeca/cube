@@ -10,6 +10,8 @@ import ErrorMessage from 'components/form/ErrorMessage';
 import { Box } from '@mui/system';
 import Grid from '@mui/system/Unstable_Grid';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { useNavigate } from 'react-router-dom';
+import { isPasswordResetRequired } from 'copy/passwordRefresh';
 
 interface ChangePasswordDialogProps {
   isOpen: boolean;
@@ -21,6 +23,7 @@ const ChangePasswordDialog = ({
   onClose
 }: ChangePasswordDialogProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { control, handleSubmit, reset } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
   const [isPasswordUpdated, setIsPasswordUpdated] = useState(false);
@@ -41,13 +44,17 @@ const ChangePasswordDialog = ({
     }
 
     try {
-      updatePassword({ currentPassword, newPassword });
+      await updatePassword({ currentPassword, newPassword });
       reset();
       setIsPasswordUpdated(true);
     } catch (e: any) {
-      setErrorMessage(
-        e.response.data || t('An error occurred while updating password')
-      );
+      if (isPasswordResetRequired(e)) {
+        onClose();
+        navigate('/forgot-password', { state: { passwordRefresh: true } });
+        return;
+      }
+      const data = e.response?.data;
+      setErrorMessage(typeof data === 'string' ? data : t('An error occurred while updating password'));
     }
   };
 

@@ -18,6 +18,8 @@ import EmailInput from 'components/form/EmailInput';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { Box } from '@mui/system';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import { useLocation } from 'react-router-dom';
+import { PASSWORD_REFRESH_MESSAGE } from 'copy/passwordRefresh';
 
 const ForgotPassword = () => {
   const { t } = useTranslation('common');
@@ -28,6 +30,8 @@ const ForgotPassword = () => {
   const [isEmailSubmitted, setIsEmailSubmitted] = useState(false);
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const hCaptchaKey = process.env.REACT_APP_HCAPTCHA_KEY || '';
+  const location = useLocation();
+  const passwordRefresh = Boolean((location.state as { passwordRefresh?: boolean } | null)?.passwordRefresh);
 
   const onCaptchaSuccess = () => {
     setCaptchaVerified(true);
@@ -45,7 +49,7 @@ const ForgotPassword = () => {
     }
   };
 
-  if (isEmailSubmitted) {
+  if (isEmailSubmitted || passwordRefresh) {
     return (
       <Grid
         container
@@ -57,7 +61,7 @@ const ForgotPassword = () => {
         <Grid item>
           <Stack direction="column">
             <Typography component="h2">
-              {t('Check your email for an update password link.')}
+              {passwordRefresh ? t(PASSWORD_REFRESH_MESSAGE) : t('Check your email for an update password link.')}
             </Typography>
             <Link to="/login">{t('Back to Login')}</Link>
           </Stack>

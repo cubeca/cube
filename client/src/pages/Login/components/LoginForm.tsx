@@ -14,6 +14,7 @@ import { resendEmailVerification } from 'api/auth';
 import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { set } from 'date-fns';
 import { getUser } from 'utils/auth';
+import { isPasswordResetRequired } from 'copy/passwordRefresh';
 
 interface LoginFormProps {
   emailVerified?: boolean;
@@ -65,7 +66,12 @@ export const LoginForm = ({
         setIsUnverifiedLogin(true);
       }
     } catch (e: any) {
-      setErrorMessage(e.response?.data || t('An Error occured during login'));
+      if (isPasswordResetRequired(e)) {
+        navigate('/forgot-password', { state: { passwordRefresh: true } });
+        return;
+      }
+      const data = e.response?.data;
+      setErrorMessage(typeof data === 'string' ? data : t('An Error occured during login'));
     }
   };
 
