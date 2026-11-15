@@ -1,0 +1,82 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cube-svc",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-15",
+  // pg talks to Hyperdrive over node:net. Required by Cloudflare's Hyperdrive + node-postgres guide.
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  // Always deploy with `--env dev` or `--env production`.
+  // A bare `wrangler deploy` has no Hyperdrive/R2 bindings and no custom domain.
+  "env": {
+    "dev": {
+      "name": "cube-svc-dev",
+      "workers_dev": false,
+      "routes": [
+        {
+          "pattern": "cube-svc-dev.cubecommons.ca",
+          "custom_domain": true
+        }
+      ],
+      "vars": {
+        // Unchanged from the Cloud Run dev service. The client already calls this host.
+        "CUBE_SVC_HOST": "https://cube-svc-dev.cubecommons.ca",
+        "HOST": "https://www-dev.cubecommons.ca",
+        "DB_SCHEMA": "cube",
+        "CLOUDFLARE_ACCOUNT_ID": "812b8374abe5aa28e1ff4b96f82e1340",
+        "CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN": "customer-ayah89x7bps0l5b8.cloudflarestream.com",
+        "CLOUDFLARE_R2_BUCKET_NAME": "cubecommons-dev",
+        "CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL": "https://pub-3ced16ee967249a58b58e7c1ec6ca05e.r2.dev"
+      },
+      "hyperdrive": [
+        {
+          "binding": "HYPERDRIVE",
+          // REPLACE_WITH_DEV_HYPERDRIVE_ID
+          // Create with: npx wrangler hyperdrive create cube-svc-dev --connection-string "$COCKROACH_DB_CONNECTION_STRING"
+          "id": "00000000-0000-4000-8000-0000000000d1",
+          "localConnectionString": "postgresql://root:root@127.0.0.1:26257/defaultdb?sslmode=disable"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "R2_BUCKET",
+          "bucket_name": "cubecommons-dev"
+        }
+      ]
+    },
+    "production": {
+      "name": "cube-svc-prod",
+      "workers_dev": false,
+      "routes": [
+        {
+          "pattern": "cube-svc.cubecommons.ca",
+          "custom_domain": true
+        }
+      ],
+      "vars": {
+        // Unchanged from the Cloud Run production service.
+        "CUBE_SVC_HOST": "https://cube-svc.cubecommons.ca",
+        "HOST": "https://cubecommons.ca",
+        "DB_SCHEMA": "cube",
+        "CLOUDFLARE_ACCOUNT_ID": "812b8374abe5aa28e1ff4b96f82e1340",
+        "CLOUDFLARE_STREAM_CUSTOMER_SUBDOMAIN": "customer-ayah89x7bps0l5b8.cloudflarestream.com",
+        "CLOUDFLARE_R2_BUCKET_NAME": "cubecommons-prod",
+        "CLOUDFLARE_R2_PUBLIC_BUCKET_BASE_URL": "https://files.cubecommons.ca"
+      },
+      "hyperdrive": [
+        {
+          "binding": "HYPERDRIVE",
+          // REPLACE_WITH_PROD_HYPERDRIVE_ID
+          // Create with: npx wrangler hyperdrive create cube-svc-prod --connection-string "$COCKROACH_DB_CONNECTION_STRING"
+          "id": "00000000-0000-4000-8000-0000000000d2"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "R2_BUCKET",
+          "bucket_name": "cubecommons-prod"
+        }
+      ]
+    }
+  }
+}

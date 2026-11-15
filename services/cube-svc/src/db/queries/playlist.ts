@@ -1,235 +1,85 @@
-import { Playlist } from '../models';
-import { Op } from 'sequelize';
+import type { Sql } from '../sql';
+import { table } from '../schema';
+import { JSON_COLUMNS, type JsonRow } from '../types';
+import { listByJsonIdStatement, searchPlaylistStatement } from '../search';
 
-interface PlaylistData {
-  contentIds: string[];
+export async function getPlaylistById(sql: Sql, schema: string, playlistId: string): Promise<JsonRow | null> {
+  const rows = await sql.query<JsonRow>(`SELECT ${JSON_COLUMNS} FROM ${table(schema, 'playlists')} WHERE id = $1 LIMIT 1`, [playlistId]);
+  return rows[0] ?? null;
 }
 
-/**
- * Get a playlist by its ID.
- *
- * @function
- * @name getPlaylistById
- * @param {string} playlistId - The ID of the playlist to retrieve.
- * @returns {Promise<Playlist|null>} The playlist object, or null if not found.
- */
-export const getPlaylistById = async (playlistId: string) => {
-  return await Playlist.findOne({
-    where: {
-      id: playlistId
-    }
-  });
-};
+export async function listPlaylistsByProfileOrUserId(
+  sql: Sql,
+  schema: string,
+  offset: number,
+  limit: number,
+  profileId?: string,
+  userId?: string
+): Promise<JsonRow[]> {
+  const matches: { column: string; value: unknown }[] = [];
+  if (profileId) matches.push({ column: 'profileId', value: profileId });
+  if (userId) matches.push({ column: 'userId', value: userId });
+  const statement = listByJsonIdStatement(table(schema, 'playlists'), offset, limit, matches, true);
+  return sql.query<JsonRow>(statement.text, statement.params);
+}
 
-/**
- * List playlists by profile ID or user ID with pagination.
- *
- * @function
- * @name listPlaylistsByProfileOrUserId
- * @param {number} offset - The offset for pagination.
- * @param {number} limit - The limit for pagination.
- * @param {string} [profileId] - The profile ID to filter playlists.
- * @param {string} [userId] - The user ID to filter playlists.
- * @returns {Promise<Playlist[]>} The list of playlists that match the criteria.
- */
-export const listPlaylistsByProfileOrUserId = async (offset: number, limit: number, profileId?: string, userId?: string) => {
-  const whereClause: any = {
-    [Op.and]: [
-      {
-        [Op.or]: [
-          profileId
-            ? [
-                {
-                  'data.profileId': {
-                    [Op.eq]: profileId
-                  }
-                }
-              ]
-            : [],
-          userId
-            ? [
-                {
-                  'data.userId': {
-                    [Op.eq]: userId
-                  }
-                }
-              ]
-            : []
-        ]
-      }
-    ]
-  };
+export async function searchPlaylist(
+  sql: Sql,
+  schema: string,
+  offset: number,
+  limit: number,
+  filters: Record<string, unknown>,
+  searchTerm: string
+): Promise<JsonRow[]> {
+  const statement = searchPlaylistStatement(table(schema, 'playlists'), offset, limit, filters, searchTerm);
+  return sql.query<JsonRow>(statement.text, statement.params);
+}
 
-  const playlistList = await Playlist.findAll({
-    where: whereClause,
-    order: [['created_at', 'DESC']],
-    offset,
-    limit
-  });
+export async function insertPlaylist(sql: Sql, schema: string, data: Record<string, unknown>): Promise<JsonRow> {
+  const rows = await sql.query<JsonRow>(
+    `INSERT INTO ${table(schema, 'playlists')} (id, created_at, updated_at, data)
+     VALUES (gen_random_uuid(), now(), now(), $1::jsonb)
+     RETURNING ${JSON_COLUMNS}`,
+    [JSON.stringify(data)]
+  );
+  const row = rows[0];
+  if (!row) throw new Error('Failed to insert playlist');
+  return row;
+}
 
-  return playlistList;
-};
+export async function updatePlaylist(sql: Sql, schema: string, playlistId: string, data: Record<string, unknown>): Promise<JsonRow | null> {
+  const rows = await sql.query<JsonRow>(
+    `UPDATE ${table(schema, 'playlists')} SET data = $2::jsonb WHERE id = $1 RETURNING ${JSON_COLUMNS}`,
+    [playlistId, JSON.stringify(data)]
+  );
+  return rows[0] ?? null;
+}
 
-/**
- * Search playlists based on filters and a search term with pagination.
- *
- * @function
- * @name searchPlaylist
- * @param {number} offset - The offset for pagination.
- * @param {number} limit - The limit for pagination.
- * @param {Object} filters - The filters to apply to the search.
- * @param {string} searchTerm - The search term to use.
- * @returns {Promise<Playlist[]>} The list of playlists that match the search criteria.
- */
-export const searchPlaylist = async (offset: number, limit: number, filters: any, searchTerm: string) => {
-  const searchTerms = searchTerm
-    .split('&')
-    .map((term) => term.trim())
-    .filter((term) => term);
+export async function addContentToPlaylist(sql: Sql, schema: string, playlistId: string, contentId: string): Promise<JsonRow | null> {
+  const playlist = await getPlaylistById(sql, schema, playlistId);
+  if (!playlist) return null;
+  const contentIds = Array.isArray(playlist.data.contentIds) ? (playlist.data.contentIds as string[]) : [];
+  if (contentIds.includes(contentId)) return null;
+  return updatePlaylist(sql, schema, playlistId, { ...playlist.data, contentIds: [...contentIds, contentId] });
+}
 
-  const whereClause: any = {
-    [Op.and]: [
-      {
-        [Op.and]: [
-          ...searchTerms.map((term: string) => ({
-            data: {
-              [Op.or]: [{ title: { [Op.iLike]: `%${term}%` } }, { description: { [Op.iLike]: `%${term}%` } }]
-            }
-          })),
-          ...(filters.profileId
-            ? [
-                {
-                  'data.profileId': {
-                    [Op.eq]: filters.profileId
-                  }
-                }
-              ]
-            : []),
-          ...(filters.contentId
-            ? [
-                {
-                  'data.contentIds': {
-                    [Op.iLike]: `%${filters.contentId}%`
-                  }
-                }
-              ]
-            : [])
-        ]
-      }
-    ]
-  };
+export async function removeContentFromPlaylist(sql: Sql, schema: string, playlistId: string, contentId: string): Promise<JsonRow | null> {
+  const playlist = await getPlaylistById(sql, schema, playlistId);
+  if (!playlist) return null;
+  const contentIds = Array.isArray(playlist.data.contentIds) ? (playlist.data.contentIds as string[]) : [];
+  const updated = contentIds.filter((id) => id !== contentId);
+  return updatePlaylist(sql, schema, playlistId, { ...playlist.data, contentIds: updated });
+}
 
-  const playlistList = await Playlist.findAll({
-    where: whereClause,
-    offset,
-    limit
-  });
+export async function isUserAssociatedToPlaylist(sql: Sql, schema: string, uuid: string, playlistId: string): Promise<boolean> {
+  const rows = await sql.query(`SELECT id FROM ${table(schema, 'playlists')} WHERE id = $2 AND ("data"#>>'{userId}') = $1 LIMIT 1`, [
+    uuid,
+    playlistId
+  ]);
+  return rows.length > 0;
+}
 
-  return playlistList;
-};
-
-/**
- * Add content to a playlist.
- *
- * @function
- * @name addContentToPlaylist
- * @param {string} playlistId - The ID of the playlist to update.
- * @param {string} contentId - The ID of the content to add to the playlist.
- * @returns {Promise<Playlist|null>} The updated playlist object, or null if not found.
- */
-export const addContentToPlaylist = async (playlistId: string, contentId: string) => {
-  const playlist = (await Playlist.findOne({ where: { id: playlistId } })) as { data: PlaylistData };
-
-  if (playlist) {
-    const contentIds = playlist.data.contentIds || [];
-    if (!contentIds.includes(contentId)) {
-      const updatedData = { ...playlist.data, contentIds: [...contentIds, contentId] };
-      return await Playlist.update({ data: updatedData }, { where: { id: playlistId }, returning: true });
-    }
-  }
-};
-
-/**
- * Remove content from a playlist.
- *
- * @function
- * @name removeContentFromPlaylist
- * @param {string} playlistId - The ID of the playlist to update.
- * @param {string} contentId - The ID of the content to remove from the playlist.
- * @returns {Promise<Playlist|null>} The updated playlist object, or null if not found.
- */
-export const removeContentFromPlaylist = async (playlistId: string, contentId: string) => {
-  const playlist = (await Playlist.findOne({ where: { id: playlistId } })) as { data: PlaylistData };
-
-  if (playlist) {
-    const contentIds = playlist.data.contentIds || [];
-    const updatedContentIds = contentIds.filter((id: string) => id !== contentId);
-    const updatedData = { ...playlist.data, contentIds: updatedContentIds };
-    return await Playlist.update({ data: updatedData }, { where: { id: playlistId }, returning: true });
-  }
-};
-
-/**
- * Check if a user is associated with a playlist.
- *
- * @function
- * @name isUserAssociatedToPlaylist
- * @param {string} uuid - The UUID of the user.
- * @param {string} playlistId - The ID of the playlist.
- * @returns {Promise<boolean>} True if the user is associated with the playlist, false otherwise.
- */
-export const isUserAssociatedToPlaylist = async (uuid: string, playlistId: string) => {
-  const user = await Playlist.findOne({ where: { 'data.userId': uuid, id: playlistId } });
-  return !!user;
-};
-
-/**
- * Delete a playlist by its ID.
- *
- * @function
- * @name deletePlaylist
- * @param {string} playlistId - The ID of the playlist to delete.
- * @returns {Promise<void>} A promise that resolves when the playlist is deleted.
- */
-export const deletePlaylist = async (playlistId: string) => {
-  return await Playlist.destroy({ where: { id: playlistId } });
-};
-
-/**
- * Insert a new playlist into the database.
- *
- * @function
- * @name insertPlaylist
- * @param {Object} data - The data of the playlist to insert.
- * @returns {Promise<Playlist>} The inserted playlist object.
- */
-export const insertPlaylist = async (data: any) => {
-  return await Playlist.create({ data });
-};
-
-/**
- * Update a playlist in the database.
- *
- * @function
- * @name updatePlaylist
- * @param {string} playlistId - The ID of the playlist to update.
- * @param {Object} data - The updated data of the playlist.
- * @returns {Promise<Playlist>} The updated playlist object.
- */
-export const updatePlaylist = async (playlistId: string, data: any) => {
-  const updatedPlaylist = await Playlist.update({ data }, { where: { id: playlistId }, returning: true });
-  return updatedPlaylist[1][0];
-};
-
-/**
- * List playlists with pagination.
- *
- * @function
- * @name listPlaylists
- * @param {number} offset - The offset for pagination.
- * @param {number} limit - The limit for pagination.
- * @returns {Promise<Playlist[]>} The list of playlists.
- */
-export const listPlaylists = async (offset: number, limit: number) => {
-  return await Playlist.findAll({ offset, limit });
-};
+export async function deletePlaylist(sql: Sql, schema: string, playlistId: string): Promise<number> {
+  const rows = await sql.query<{ id: string }>(`DELETE FROM ${table(schema, 'playlists')} WHERE id = $1 RETURNING id`, [playlistId]);
+  return rows.length;
+}
