@@ -1,166 +1,81 @@
-import { User } from '../models';
+import type { Sql } from '../sql';
+import { table } from '../schema';
+import { USER_COLUMNS, type UserRow } from '../types';
 
 /**
- * Insert a new user identity into the database.
- *
- * @function
- * @name insertIdentity
- * @param {string} name - The name of the user.
- * @param {string} email - The email of the user.
- * @param {string} profileId - The profile ID associated with the user.
- * @param {string} password - The password of the user.
- * @param {string[]} permissionIds - The list of permission IDs for the user.
- * @param {boolean} hasAcceptedTerms - Whether the user has accepted the terms.
- * @param {boolean} hasAcceptedNewsletter - Whether the user has accepted the newsletter.
- * @param {boolean} isOver18 - Whether the user is over 18 years old.
- * @returns {Promise<User>} The inserted user object.
- * @throws {Error} If the insertion fails.
+ * Column mapping matches the existing function, whose parameter names are swapped
+ * relative to the route call. `hasAcceptedTerms` here is the request's
+ * `hasAcceptedNewsletter`, and the next argument is the request's `hasAcceptedTerms`.
  */
-export const insertIdentity = async (
+export async function insertIdentity(
+  sql: Sql,
+  schema: string,
   name: string,
   email: string,
   profileId: string,
   password: string,
-  permissionIds: string[],
   hasAcceptedTerms: boolean,
   hasAcceptedNewsletter: boolean,
-  isOver18: boolean
-) => {
+  isOver18: boolean,
+  permissionIds: string[]
+): Promise<UserRow> {
   try {
-    const user = await User.create({
-      name,
-      email,
-      profile_id: profileId,
-      password,
-      permission_ids: permissionIds,
-      is_active: false,
-      has_accepted_terms: hasAcceptedTerms,
-      has_accepted_newsletter: hasAcceptedNewsletter,
-      is_over_18: isOver18
-    });
-
-    return user;
+    const rows = await sql.query<UserRow>(
+      `INSERT INTO ${table(schema, 'users')}
+        (id, name, email, profile_id, password, permission_ids, is_active, has_verified_email, has_accepted_terms, has_accepted_newsletter, is_over_18)
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, false, false, $6, $7, $8)
+       RETURNING ${USER_COLUMNS}`,
+      [name, email, profileId, password, permissionIds, hasAcceptedTerms, hasAcceptedNewsletter, isOver18]
+    );
+    const row = rows[0];
+    if (!row) throw new Error('Failed to insert identity');
+    return row;
   } catch (error) {
+    if (error instanceof Error && error.message === 'Failed to insert identity') throw error;
     throw new Error('Failed to insert identity');
   }
-};
+}
 
-/**
- * Update the email address of a user.
- *
- * @function
- * @name updateEmail
- * @param {string} id - The ID of the user.
- * @param {string} email - The new email address of the user.
- * @throws {Error} If the user is not found.
- */
-export const updateEmail = async (id: string, email: string) => {
-  const user = await User.findByPk(id);
-  if (user) {
-    user.email = email;
-    user.has_verified_email = false;
-    await user.save();
-  } else {
-    throw new Error('User not found');
-  }
-};
+export async function updateEmail(sql: Sql, schema: string, id: string, email: string): Promise<void> {
+  const rows = await sql.query(`UPDATE ${table(schema, 'users')} SET email = $2, has_verified_email = false WHERE id = $1 RETURNING id`, [
+    id,
+    email
+  ]);
+  if (!rows[0]) throw new Error('User not found');
+}
 
-/**
- * Update the password of a user.
- *
- * @function
- * @name updatePassword
- * @param {string} id - The ID of the user.
- * @param {string} password - The new password of the user.
- * @throws {Error} If the user is not found.
- */
-export const updatePassword = async (id: string, password: string) => {
-  const user = await User.findByPk(id);
-  if (user) {
-    user.password = password;
-    await user.save();
-  } else {
-    throw new Error('User not found');
-  }
-};
+export async function updatePassword(sql: Sql, schema: string, id: string, password: string): Promise<void> {
+  const rows = await sql.query(`UPDATE ${table(schema, 'users')} SET password = $2 WHERE id = $1 RETURNING id`, [id, password]);
+  if (!rows[0]) throw new Error('User not found');
+}
 
-/**
- * Select a user by their email address.
- *
- * @function
- * @name selectUserByEmail
- * @param {string} email - The email address of the user.
- * @returns {Promise<User|null>} The user object, or null if not found.
- */
-export const selectUserByEmail = async (email: string) => {
-  return await User.findOne({ where: { email } });
-};
+export async function selectUserByEmail(sql: Sql, schema: string, email: string): Promise<UserRow | null> {
+  const rows = await sql.query<UserRow>(`SELECT ${USER_COLUMNS} FROM ${table(schema, 'users')} WHERE email = $1 LIMIT 1`, [email]);
+  return rows[0] ?? null;
+}
 
-/**
- * Select a user by their ID.
- *
- * @function
- * @name selectUserByID
- * @param {string} id - The ID of the user.
- * @returns {Promise<User|null>} The user object, or null if not found.
- */
-export const selectUserByID = async (id: string) => {
-  return await User.findByPk(id);
-};
+export async function selectUserByID(sql: Sql, schema: string, id: string): Promise<UserRow | null> {
+  const rows = await sql.query<UserRow>(`SELECT ${USER_COLUMNS} FROM ${table(schema, 'users')} WHERE id = $1 LIMIT 1`, [id]);
+  return rows[0] ?? null;
+}
 
-/**
- * Update the email verification status of a user.
- *
- * @function
- * @name updateEmailVerification
- * @param {string} id - The ID of the user.
- * @param {boolean} hasBeenVerified - The new email verification status.
- * @throws {Error} If the user is not found.
- */
-export const updateEmailVerification = async (id: string, hasBeenVerified: boolean) => {
-  const user = await User.findByPk(id);
-  if (user) {
-    user.has_verified_email = hasBeenVerified;
-    await user.save();
-  } else {
-    throw new Error('User not found');
-  }
-};
+export async function updateEmailVerification(sql: Sql, schema: string, id: string, hasBeenVerified: boolean): Promise<void> {
+  const rows = await sql.query(`UPDATE ${table(schema, 'users')} SET has_verified_email = $2 WHERE id = $1 RETURNING id`, [id, hasBeenVerified]);
+  if (!rows[0]) throw new Error('User not found');
+}
 
-/**
- * Add permission IDs to a user.
- *
- * @function
- * @name addPermissionIds
- * @param {string} id - The ID of the user.
- * @param {string[]} perms - The permission IDs to add.
- * @throws {Error} If the user is not found.
- */
-export const addPermissionIds = async (id: string, perms: string[]) => {
-  const user = await User.findByPk(id);
-  if (user) {
-    user.permission_ids = [...user.permission_ids, ...perms];
-    await user.save();
-  } else {
-    throw new Error('User not found');
-  }
-};
+export async function addPermissionIds(sql: Sql, schema: string, id: string, perms: string[]): Promise<void> {
+  const rows = await sql.query(
+    `UPDATE ${table(schema, 'users')}
+     SET permission_ids = COALESCE(permission_ids, '{}') || $2::varchar[]
+     WHERE id = $1
+     RETURNING id`,
+    [id, perms]
+  );
+  if (!rows[0]) throw new Error('User not found');
+}
 
-/**
- * Update the active status of a user.
- *
- * @function
- * @name updateActiveStatus
- * @param {string} id - The ID of the user.
- * @param {boolean} status - The new active status of the user.
- * @throws {Error} If the user is not found.
- */
-export const updateActiveStatus = async (id: string, status: boolean) => {
-  const user = await User.findByPk(id);
-  if (user) {
-    user.is_active = status;
-    await user.save();
-  } else {
-    throw new Error('User not found');
-  }
-};
+export async function updateActiveStatus(sql: Sql, schema: string, id: string, status: boolean): Promise<void> {
+  const rows = await sql.query(`UPDATE ${table(schema, 'users')} SET is_active = $2 WHERE id = $1 RETURNING id`, [id, status]);
+  if (!rows[0]) throw new Error('User not found');
+}

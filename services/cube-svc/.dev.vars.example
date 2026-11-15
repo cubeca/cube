@@ -1,0 +1,13 @@
+# Copy to .dev.vars for `wrangler dev`. Never commit .dev.vars.
+# These are Worker secrets. The CockroachDB connection string is NOT one of them;
+# it is stored on the Hyperdrive config (see wrangler.jsonc).
+
+ENCRYPT_SECRET=
+JWT_TOKEN_SECRET=
+BREVO_API_KEY=
+CONTACT_US_EMAIL=
+REPORT_ABUSE_EMAIL=
+NOTIFICATION_EMAIL=
+CLOUDFLARE_API_TOKEN=
+CLOUDFLARE_R2_ACCESS_KEY_ID=
+CLOUDFLARE_R2_SECRET_ACCESS_KEY=

@@ -1,215 +1,94 @@
-import { Profile, User } from '../models';
-import { Op, OrderItem, Sequelize } from 'sequelize';
+import type { Sql } from '../sql';
+import { table } from '../schema';
+import { PROFILE_COLUMNS, type ProfileRow } from '../types';
+import { searchProfilesStatement } from '../search';
 
-/**
- * Insert a new profile into the database.
- *
- * @function
- * @name insertProfile
- * @param {string} organization - The organization name.
- * @param {string} website - The website URL.
- * @param {string} tag - The tag associated with the profile.
- * @returns {Promise<Profile>} The inserted profile object.
- * @throws {Error} If the insertion fails.
- */
-export const insertProfile = async (organization: string, website: string, tag: string) => {
+export async function insertProfile(sql: Sql, schema: string, organization: string, website: string, tag: string): Promise<ProfileRow> {
   try {
-    const profile = await Profile.create({
-      organization,
-      website,
-      tag,
-      herofileid: '',
-      logofileid: '',
-      description: '',
-      descriptionfileid: '',
-      budget: '',
-      status: 'active'
-    });
-
-    return profile;
+    const rows = await sql.query<ProfileRow>(
+      `INSERT INTO ${table(schema, 'profiles')}
+        (id, organization, website, tag, herofileid, logofileid, description, descriptionfileid, budget, status)
+       VALUES (gen_random_uuid(), $1, $2, $3, '', '', '', '', '', 'active')
+       RETURNING ${PROFILE_COLUMNS}`,
+      [organization, website, tag]
+    );
+    const row = rows[0];
+    if (!row) throw new Error('Failed to insert profile');
+    return row;
   } catch (error) {
+    if (error instanceof Error && error.message === 'Failed to insert profile') throw error;
     throw new Error('Failed to insert profile');
   }
-};
+}
 
-/**
- * Select a profile by its ID.
- *
- * @function
- * @name selectProfileByID
- * @param {string} id - The ID of the profile to retrieve.
- * @returns {Promise<Profile|null>} The profile object, or null if not found.
- */
-export const selectProfileByID = async (id: string) => {
-  return await Profile.findOne({
-    where: {
-      id: id
-    }
-  });
-};
+export async function selectProfileByID(sql: Sql, schema: string, id: string): Promise<ProfileRow | null> {
+  const rows = await sql.query<ProfileRow>(`SELECT ${PROFILE_COLUMNS} FROM ${table(schema, 'profiles')} WHERE id = $1 LIMIT 1`, [id]);
+  return rows[0] ?? null;
+}
 
-/**
- * Select profiles by a list of IDs.
- *
- * @function
- * @name selectProfilesByIdList
- * @param {string[]} idList - The list of profile IDs to retrieve.
- * @returns {Promise<Profile[]>} The list of profile objects.
- */
-export const selectProfilesByIdList = async (idList: string[]) => {
-  const r = await Profile.findAll({
-    where: {
-      id: {
-        [Op.in]: idList
-      }
-    }
-  });
+export async function selectProfilesByIdList(sql: Sql, schema: string, idList: string[]): Promise<ProfileRow[]> {
+  if (idList.length === 0) return [];
+  return sql.query<ProfileRow>(`SELECT ${PROFILE_COLUMNS} FROM ${table(schema, 'profiles')} WHERE id = ANY($1::uuid[])`, [idList]);
+}
 
-  return r;
-};
+export async function selectAllProfiles(sql: Sql, schema: string): Promise<Pick<ProfileRow, 'id' | 'organization' | 'tag'>[]> {
+  return sql.query(`SELECT id, organization, tag FROM ${table(schema, 'profiles')}`);
+}
 
-/**
- * Select all profiles.
- *
- * @function
- * @name selectAllProfiles
- * @returns {Promise<Profile[]>} The list of all profile objects.
- */
-export const selectAllProfiles = async () => {
-  return await Profile.findAll({
-    attributes: ['id', 'organization', 'tag']
-  });
-};
-
-/**
- * Select a profile by its tag.
- *
- * @function
- * @name selectProfileByTag
- * @param {string} tag - The tag of the profile to retrieve.
- * @returns {Promise<Profile|null>} The profile object, or null if not found.
- */
-export const selectProfileByTag = async (tag: string) => {
-  return await Profile.findOne({
-    where: Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('tag')), Sequelize.fn('LOWER', tag))
-  });
-};
-
-/**
- * Update a profile by its ID.
- *
- * @function
- * @name updateProfile
- * @param {string} profileId - The ID of the profile to update.
- * @param {string} organization - The updated organization name.
- * @param {string} website - The updated website URL.
- * @param {string} heroFileId - The updated hero file ID.
- * @param {string} logoFileId - The updated logo file ID.
- * @param {string} description - The updated description.
- * @param {string} descriptionFileId - The updated description file ID.
- * @param {string} budget - The updated budget.
- * @param {string} status - The updated status.
- * @returns {Promise<Profile>} The updated profile object.
- */
-export const updateProfile = async (
-  profileId: string,
-  organization: string,
-  website: string,
-  heroFileId: string,
-  logoFileId: string,
-  description: string,
-  descriptionFileId: string,
-  budget: string,
-  status: string
-) => {
-  const updatedProfile = await Profile.update(
-    {
-      organization,
-      website,
-      herofileid: heroFileId,
-      logofileid: logoFileId,
-      description,
-      descriptionfileid: descriptionFileId,
-      budget,
-      status
-    },
-    {
-      where: {
-        id: profileId
-      },
-      returning: true
-    }
+export async function selectProfileByTag(sql: Sql, schema: string, tag: string): Promise<ProfileRow | null> {
+  const rows = await sql.query<ProfileRow>(
+    `SELECT ${PROFILE_COLUMNS} FROM ${table(schema, 'profiles')} WHERE LOWER("tag") = LOWER($1) LIMIT 1`,
+    [tag]
   );
+  return rows[0] ?? null;
+}
 
-  return updatedProfile[1][0];
-};
-
-/**
- * Check if a user is associated with a profile.
- *
- * @function
- * @name isUserAssociatedToProfile
- * @param {string} uuid - The UUID of the user.
- * @param {string} profileId - The ID of the profile.
- * @returns {Promise<boolean>} True if the user is associated with the profile, false otherwise.
- */
-export const isUserAssociatedToProfile = async (uuid: string, profileId: string) => {
-  const exists = await User.findOne({
-    where: {
-      id: uuid,
-      profile_id: profileId
-    }
-  });
-
-  return !!exists;
-};
-
-/**
- * Search profiles based on filters and a search term with pagination.
- *
- * @function
- * @name searchProfiles
- * @param {number} offset - The offset for pagination.
- * @param {number} limit - The limit for pagination.
- * @param {Object} filters - The filters to apply to the search.
- * @param {string} searchTerm - The search term to use.
- * @returns {Promise<Profile[]>} The list of profiles that match the search criteria.
- */
-export const searchProfiles = async (offset: number, limit: number, filters: any, searchTerm: string) => {
-  let whereClauses: any = {};
-
-  const searchTerms = searchTerm
-    .split('&')
-    .map((term) => term.trim())
-    .filter((term) => term);
-
-  whereClauses = searchTerms.map((term) => ({
-    [Op.or]: [
-      { organization: { [Op.iLike]: `%${term}%` } },
-      { website: { [Op.iLike]: `%${term}%` } },
-      { tag: { [Op.iLike]: `%${term}%` } },
-      { description: { [Op.iLike]: `%${term}%` } }
-    ]
-  }));
-
-  if (filters.status) {
-    whereClauses[Op.and] = whereClauses[Op.and] || [];
-    whereClauses[Op.and].push({
-      status: {
-        [Op.iLike]: `%${filters.status}%`
-      }
-    });
-  }
-
-  const options = {
-    where: {
-      [Op.or]: whereClauses
-    },
-    order: [['organization', 'ASC']] as OrderItem[],
-    limit,
-    offset
+export async function updateProfile(
+  sql: Sql,
+  schema: string,
+  profileId: string,
+  organization: string | undefined,
+  website: string | undefined,
+  heroFileId: string | null | undefined,
+  logoFileId: string | null | undefined,
+  description: string | null | undefined,
+  descriptionFileId: string | null | undefined,
+  budget: string | null | undefined,
+  status: string | null | undefined
+): Promise<ProfileRow | null> {
+  const sets: string[] = [];
+  const params: unknown[] = [];
+  const add = (column: string, value: string | null | undefined) => {
+    if (value === undefined) return;
+    params.push(value);
+    sets.push(`"${column}" = $${params.length}`);
   };
 
-  const result: Profile[] = await Profile.findAll(options);
-  return result;
-};
+  add('organization', organization);
+  add('website', website);
+  add('herofileid', heroFileId);
+  add('logofileid', logoFileId);
+  add('description', description);
+  add('descriptionfileid', descriptionFileId);
+  add('budget', budget);
+  add('status', status);
+
+  if (sets.length === 0) return selectProfileByID(sql, schema, profileId);
+
+  params.push(profileId);
+  const rows = await sql.query<ProfileRow>(
+    `UPDATE ${table(schema, 'profiles')} SET ${sets.join(', ')} WHERE id = $${params.length} RETURNING ${PROFILE_COLUMNS}`,
+    params
+  );
+  return rows[0] ?? null;
+}
+
+export async function isUserAssociatedToProfile(sql: Sql, schema: string, uuid: string, profileId: string): Promise<boolean> {
+  const rows = await sql.query(`SELECT id FROM ${table(schema, 'users')} WHERE id = $1 AND profile_id = $2 LIMIT 1`, [uuid, profileId]);
+  return rows.length > 0;
+}
+
+export async function searchProfiles(sql: Sql, schema: string, offset: number, limit: number, searchTerm: string): Promise<ProfileRow[]> {
+  const statement = searchProfilesStatement(table(schema, 'profiles'), offset, limit, searchTerm);
+  return sql.query<ProfileRow>(statement.text, statement.params);
+}
