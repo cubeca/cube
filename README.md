@@ -66,7 +66,9 @@ There is a small set of user permissions that are associated to the user record 
 
 ### Cloud Infrastructure
 
-The above services are packaged into Docker containers and deployed to Google Cloud Run for resource, instance, and scalability management. These docker containers can be deployed using any server structure that you wish.
+`cube-svc` deploys with Cloudflare Workers Builds: pushes to `main` deploy dev, and pushes to `deploy-production` deploy production. GitHub Actions does not deploy it. The Dockerfile and `docker-compose.yaml` under `services/cube-svc` are for running the service locally.
+
+The VTT functions still deploy to Google Cloud Functions.
 
 ### Front-End Hosting
 
@@ -135,7 +137,7 @@ cp .env.example .env
 
 - Add the values for the database keys to `.env`.
 - Update the values `COCKROACH_DB_CONNECTION_STRING`, `BREVO_API_KEY` and everything prefixed with `CLOUDFLARE_`.
-- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used for the identity server (configured in GCP).
+- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value configured for the deployed identity service.
 
 ```
 npm i
