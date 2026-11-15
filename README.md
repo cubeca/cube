@@ -35,13 +35,12 @@ This is the front-end user interface in the form of a typical React application.
 
 ### /services
 
-This includes the `cube-svc` microservice that supports all operations. Additionally, there is a VTT service responsible for coordinating subtitle generation between GCP and OpenAI.
+This includes the `cube-svc` microservice that supports all operations.
 
 - **/cube-svc/src/cloudflare:** APIs related to uploading files to Cloudflare. Specifically, it can retrieve a TUS upload URL for media files on behalf of the client.
 - **/cube-svc/src/content:** APIs related to storing metadata about uploaded files and file IDs for retrieving the actual content from Cloudflare.
 - **/cube-svc/src/identity:** APIs related to authenticating the user, creating a user account, email verification, and password management. This service is responsible for providing an authentication JWT used to identify the user.
 - **/cube-svc/src/profile:** APIs related to operations of a creator profile.
-- **/vtt:** Set of functions designed for a publisher-subscriber model generating subtitles (optionally requested by the user) upon successful content uploads.
 
 ## Project Infrastructure
 
@@ -67,8 +66,6 @@ There is a small set of user permissions that are associated to the user record 
 ### Cloud Infrastructure
 
 `cube-svc` deploys with Cloudflare Workers Builds: pushes to `main` deploy dev, and pushes to `deploy-production` deploy production. GitHub Actions does not deploy it. The Dockerfile and `docker-compose.yaml` under `services/cube-svc` are for running the service locally.
-
-The VTT functions still deploy to Google Cloud Functions.
 
 ### Front-End Hosting
 
@@ -197,7 +194,7 @@ For any questions or support, please contact us at [support@cubecommons.ca](mail
 
 A section to document any known issues or bugs.
 
-- Issue 1: VTT Generation is currently disabled. Due to some challenges with the publisher-subscriber model, it is turned off.
+- Issue 1: Subtitle generation (VTT) has been decommissioned. The Cloud Functions and their GitHub Actions deploy have been removed. The `vtt` table remains in the schema.
 
 Please report any new issues in the GitHub issues section.
 
