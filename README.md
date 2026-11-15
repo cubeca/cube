@@ -65,7 +65,7 @@ There is a small set of user permissions that are associated to the user record 
 
 ### Cloud Infrastructure
 
-`cube-svc` deploys with Cloudflare Workers Builds: pushes to `main` deploy dev, and pushes to `deploy-production` deploy production. GitHub Actions does not deploy it. The Dockerfile and `docker-compose.yaml` under `services/cube-svc` are for running the service locally.
+`cube-svc` deploys with Cloudflare Workers Builds: pushes to `main` deploy dev, and pushes to `deploy-production` deploy production. GitHub Actions does not deploy it. Run it locally with `npm run start` in `services/cube-svc`.
 
 ### Front-End Hosting
 
@@ -117,7 +117,7 @@ Formatting "New Issues" as Requests or Proposals:
 
 ### 1. Create Database Tables
 
-- Install/setup an account with a PostgreSQL database solution. CubeCommons utilizes Cockroach Lab's CockroachDB to host a cloud based scalable database
+- Use a hosted CockroachDB or Postgres instance, or a local Cockroach node (`cockroach start-single-node --insecure`). Put the connection string in `COCKROACH_DB_CONNECTION_STRING`.
 - Create a database called `cube` with tables: `content`, `files`, `playlists`, `profiles`, `users`, and `vtt`.
 - Deploy the schemas located in `/sql/cockroach_init.sql`.
 
