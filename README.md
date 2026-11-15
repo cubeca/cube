@@ -35,13 +35,12 @@ This is the front-end user interface in the form of a typical React application.
 
 ### /services
 
-This includes the `cube-svc` microservice that supports all operations. Additionally, there is a VTT service responsible for coordinating subtitle generation between GCP and OpenAI.
+This includes the `cube-svc` microservice that supports all operations.
 
 - **/cube-svc/src/cloudflare:** APIs related to uploading files to Cloudflare. Specifically, it can retrieve a TUS upload URL for media files on behalf of the client.
 - **/cube-svc/src/content:** APIs related to storing metadata about uploaded files and file IDs for retrieving the actual content from Cloudflare.
 - **/cube-svc/src/identity:** APIs related to authenticating the user, creating a user account, email verification, and password management. This service is responsible for providing an authentication JWT used to identify the user.
 - **/cube-svc/src/profile:** APIs related to operations of a creator profile.
-- **/vtt:** Set of functions designed for a publisher-subscriber model generating subtitles (optionally requested by the user) upon successful content uploads.
 
 ## Project Infrastructure
 
@@ -66,7 +65,7 @@ There is a small set of user permissions that are associated to the user record 
 
 ### Cloud Infrastructure
 
-The above services are packaged into Docker containers and deployed to Google Cloud Run for resource, instance, and scalability management. These docker containers can be deployed using any server structure that you wish.
+`cube-svc` deploys with Cloudflare Workers Builds: pushes to `main` deploy dev, and pushes to `deploy-production` deploy production. GitHub Actions does not deploy it. Run it locally with `npm run start` in `services/cube-svc`.
 
 ### Front-End Hosting
 
@@ -118,7 +117,7 @@ Formatting "New Issues" as Requests or Proposals:
 
 ### 1. Create Database Tables
 
-- Install/setup an account with a PostgreSQL database solution. CubeCommons utilizes Cockroach Lab's CockroachDB to host a cloud based scalable database
+- Use a hosted CockroachDB or Postgres instance, or a local Cockroach node (`cockroach start-single-node --insecure`). Put the connection string in `COCKROACH_DB_CONNECTION_STRING`.
 - Create a database called `cube` with tables: `content`, `files`, `playlists`, `profiles`, `users`, and `vtt`.
 - Deploy the schemas located in `/sql/cockroach_init.sql`.
 
@@ -135,7 +134,7 @@ cp .env.example .env
 
 - Add the values for the database keys to `.env`.
 - Update the values `COCKROACH_DB_CONNECTION_STRING`, `BREVO_API_KEY` and everything prefixed with `CLOUDFLARE_`.
-- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value used for the identity server (configured in GCP).
+- For the `JWT_TOKEN_SECRET` it can be any value, but must match the value configured for the deployed identity service.
 
 ```
 npm i
@@ -195,7 +194,7 @@ For any questions or support, please contact us at [support@cubecommons.ca](mail
 
 A section to document any known issues or bugs.
 
-- Issue 1: VTT Generation is currently disabled. Due to some challenges with the publisher-subscriber model, it is turned off.
+- Issue 1: Subtitle generation (VTT) has been decommissioned. The Cloud Functions and their GitHub Actions deploy have been removed. The `vtt` table remains in the schema.
 
 Please report any new issues in the GitHub issues section.
 

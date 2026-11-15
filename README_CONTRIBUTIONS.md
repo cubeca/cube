@@ -29,7 +29,7 @@ If you find a bug or have a feature request, please [open a new issue](https://g
    ```
 4. **Setup your local environment**:
    - Once the code is downloaded locally, open the `README` and scroll to "Project Infrastructure" to learn how the project is setup and guidelines on what external tools are needed to run your own instance.
-   - _Cube Commons utilizes a serverless database solution called Cockroach, an email unification system called Brevo, and Docker containers deployed through Google Cloud Run. Some of these tools offer free options, however you can choose to use other services (* except for Brevo which is required by the code *)._
+   - _Cube Commons utilizes a serverless database solution called Cockroach and an email unification system called Brevo. Some of these tools offer free options, however you can choose to use other services (* except for Brevo which is required by the code *)._
 
 5. **Create a new branch and name it after the featur your code provides. Ex: '-b feature/new-tagging-feature'**:
    ```sh

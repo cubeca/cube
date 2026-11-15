@@ -9,7 +9,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "npx eslint",
     "prettier": "npx prettier --write .",
-    "docker-compose": "docker-compose up --build cube-svc",
     "serve": "node build/index.js"
   },
   "author": "",
