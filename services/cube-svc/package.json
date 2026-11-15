@@ -12,7 +12,6 @@
     "build": "wrangler deploy --dry-run --env dev --outdir dist",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "reencrypt-passwords": "node scripts/reencrypt-passwords.mjs",
     "start": "wrangler dev --env dev"
   },
   "license": "ISC",

@@ -11,7 +11,7 @@ import {
   sendProfileRegistrationNotification,
   sendVerificationEmail
 } from '../services/email';
-import { encryptString, readStoredBcryptHash } from '../utils/crypto';
+import { decryptString, encryptString } from '../utils/crypto';
 import { text, readJsonBody } from '../utils/http';
 import { signCubeJwt } from '../utils/jwt';
 import { comparePassword, hashPassword } from '../utils/passwords';
@@ -21,9 +21,6 @@ import { validateUserCreateInput } from '../utils/validate-user';
 function schemaOf(env: { DB_SCHEMA?: string }): string {
   return env.DB_SCHEMA || 'cube';
 }
-
-/** Stored password cannot be read with the current ENCRYPT_SECRET. The reset email was sent. */
-export const PASSWORD_RESET_REQUIRED = 'PASSWORD_RESET_REQUIRED';
 
 export function registerIdentity(app: Hono<AppEnv>): void {
   app.post('/auth/user', allowIfAnyOf('anonymous'), async (c) => {
@@ -96,16 +93,10 @@ export function registerIdentity(app: Hono<AppEnv>): void {
     if (!email || !password) return text(c, 'Invalid request body. Username and password must be provided.', 401);
 
     try {
-      const sql = c.get('sql');
-      const schema = schemaOf(c.env);
-      const user = await identityDb.selectUserByEmail(sql, schema, email);
+      const user = await identityDb.selectUserByEmail(c.get('sql'), schemaOf(c.env), email);
       if (!user) return text(c, 'Invalid email or password', 403);
-      const storedHash = readStoredBcryptHash(user.password, c.env.ENCRYPT_SECRET);
-      if (!storedHash) {
-        await sendPasswordResetEmail(c.env, sql, schema, email);
-        return c.json({ code: PASSWORD_RESET_REQUIRED }, 403);
-      }
-      if (!(await comparePassword(password, storedHash))) return text(c, 'Invalid email or password', 403);
+      const decryptedPassword = decryptString(user.password, c.env.ENCRYPT_SECRET);
+      if (!(await comparePassword(password, decryptedPassword))) return text(c, 'Invalid email or password', 403);
 
       const token = await signCubeJwt(
         { sub: user.id, aud: user.permission_ids ?? [] },
@@ -185,12 +176,8 @@ export function registerIdentity(app: Hono<AppEnv>): void {
       const user = await identityDb.selectUserByID(sql, schema, userId);
       if (!user) return text(c, 'Invalid: Unable to verify user.', 403);
       if (currentPassword) {
-        const storedHash = readStoredBcryptHash(user.password, c.env.ENCRYPT_SECRET);
-        if (!storedHash) {
-          await sendPasswordResetEmail(c.env, sql, schema, user.email);
-          return c.json({ code: PASSWORD_RESET_REQUIRED }, 403);
-        }
-        if (!(await comparePassword(currentPassword, storedHash))) {
+        const decryptedPassword = decryptString(user.password, c.env.ENCRYPT_SECRET);
+        if (!(await comparePassword(currentPassword, decryptedPassword))) {
           return text(c, "Unable to verify user's existing password", 403);
         }
       }
